@@ -1,24 +1,14 @@
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for the application as well as bundling up all the JS files.
- |
- */
-
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const mix = require('laravel-mix');
 const autoPreprocess = require('svelte-preprocess');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 require('laravel-mix-svelte');
 
 mix.setPublicPath('./public_html');
 
 let fs = require('fs-extra');
-
-let modules = fs.readdirSync('./main/app/Modules'); // Make sure the path of your modules are correct
+let modules = fs.readdirSync('./main/app/Modules');
 
 if (modules && modules.length > 0) {
 	modules.forEach((module) => {
@@ -31,13 +21,25 @@ if (modules && modules.length > 0) {
 
 mix.webpackConfig({
 	output: {
-		chunkFilename: '[name].js?id=[chunkhash]',
+		filename: "[name].[chunkhash].js",
+		chunkFilename: "[name].[chunkhash].js",
 	},
 	resolve: {
 		alias: {
 			ziggy: path.resolve('./main/vendor/tightenco/ziggy/dist/js/route.js'),
 		},
 	},
+	plugins: [
+  /**
+  * To strip all locales except“ en”
+  */
+  new MomentLocalesPlugin(),
+    new CleanWebpackPlugin({
+			dry: false,
+			cleanOnceBeforeBuildPatterns: ['js/*', './*.js', 'robots.txt']
+
+		}),
+  ]
 });
 
 mix.babelConfig({
@@ -79,21 +81,35 @@ mix
 		}
 	})
 	.extract()
-	.mergeManifest();
+	.mergeManifest()
+	.then(() => {
+		const _ = require('lodash')
+		// let manifestData = require( './public_html/mix-manifest' )
+		let oldManifestData = JSON.parse(fs.readFileSync('./public_html/mix-manifest.json', 'utf-8'))
+		let newManifestData = {};
 
-if (mix.inProduction()) {
-	mix.version()
-		.then(() => {
-			const convertToFileHash = require("laravel-mix-make-file-hash");
-			convertToFileHash({
-				publicPath: "./public_html",
-				manifestFilePath: "./public_html/mix-manifest.json",
-				blacklist: ["user-*", "public*", "super-*"],
-				keepBlacklistedEntries: true,
-				// debug: true
-			});
+		_.map(oldManifestData, (actualFilename, mixKeyName) => {
+			if (_.startsWith(mixKeyName, '/css')) {
+				/** Exclude CSS files from renaming for now till we start cache busting them */
+				newManifestData[mixKeyName] = actualFilename;
+			} else {
+				let newMixKeyName = _.split(mixKeyName, '.')
+					.tap(o => {
+						_.pullAt(o, 1);
+					})
+					.join('.')
+
+				/** If the js extension has been stripped we add it back */
+				newMixKeyName = _.endsWith(newMixKeyName, '.js') ? newMixKeyName : newMixKeyName + '.js'
+
+				newManifestData[newMixKeyName] = actualFilename;
+			}
+
 		});
-}
+
+		let data = JSON.stringify(newManifestData, null, 2);
+		fs.writeFileSync('./public_html/mix-manifest.json', data);
+	})
 
 if (!mix.inProduction()) {
 	mix.sourceMaps()
