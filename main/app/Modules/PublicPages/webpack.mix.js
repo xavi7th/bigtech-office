@@ -1,54 +1,40 @@
-const dotenvExpand = require( 'dotenv-expand' );
-const config = require( 'dotenv' ).config( {
-    path: __dirname + '/../../../.env',
-    // debug: true
-} );
-dotenvExpand( config );
+const mix = require('laravel-mix');
+require('laravel-mix-merge-manifest');
 
-// console.log( config );
+mix.webpackConfig({
+	resolve: {
+		extensions: ['.js', '.svelte', '.json'],
+		alias: {
+			'@public-pages': __dirname + '/Resources/js/Pages',
+			'@public-assets': __dirname + '/Resources',
+			'@public-shared': __dirname + '/Resources/js/Shared'
+		},
+	},
+})
 
-const mix = require( 'laravel-mix' );
-require( 'laravel-mix-merge-manifest' );
+if (['buildcss'].includes(process.env.npm_config_section)) {
+	mix.copyDirectory(__dirname + '/Resources/img', 'public_html/img');
+	mix.copyDirectory(__dirname + '/Resources/fonts', 'public_html/fonts');
 
-mix.webpackConfig( {
-    resolve: {
-        extensions: [ '.js', '.svelte', '.json' ],
-        alias: {
-            '@public-pages': __dirname + '/Resources/js/Pages',
-            '@public-assets': __dirname + '/Resources'
-        },
-    },
-} )
-
-// mix.scripts( [
-//     __dirname + '/Resources/js/vendor/jquery-3.2.1.min.js',
-//     __dirname + '/Resources/js/vendor/popper.min.js',
-//     __dirname + '/Resources/js/vendor/bootstrap.min.js',
-//     __dirname + '/Resources/js/vendor/simplebar.min.js',
-//     __dirname + '/Resources/js/vendor/jquery.dataTables.min.js',
-//     __dirname + '/Resources/js/vendor/dataTables.responsive.min.js',
-//     __dirname + '/Resources/js/vendor/chartjs.min.js',
-//     __dirname + '/Resources/js/vendor/morris.min.js',
-//     __dirname + '/Resources/js/vendor/jquery.sparkline.min.js',
-//     __dirname + '/Resources/js/vendor/js/jquery.peity.min.js',
-//     __dirname + '/Resources/js/vendor/raphael.min.js',
-// ], 'public_html/js/admin-app-vendor.js' );
-
-
-// mix.scripts( [
-//     __dirname + '/Resources/js/vendor/index.js'
-// ], 'public_html/js/admin-dashboard.js' );
-
-// mix.scripts( [
-//     __dirname + '/Resources/js/vendor/main.js'
-// ], 'public_html/js/admin-nav.js' );
-
-// mix.copyDirectory( __dirname + '/Resources/img', 'public_html/img' );
-// mix.copyDirectory( __dirname + '/Resources/fonts', 'public_html/fonts' );
-
-
-if ( [ 'buildcss' ].includes( process.env.npm_config_section ) ) {
-    mix.sass( __dirname + '/Resources/sass/app.scss', 'css/app.css' )
+	mix.sass(__dirname + '/Resources/sass/app.scss', 'css/app.css')
 } else {
-    mix.js( __dirname + '/Resources/js/app.js', 'js/app.js' )
+
+	mix.scripts([
+      __dirname + '/Resources/js/vendor/jquery.min.js',
+      __dirname + '/Resources/js/vendor/bootstrap.bundle.min.js',
+      __dirname + '/Resources/js/vendor/owl.carousel.min.js',
+      __dirname + '/Resources/js/vendor/nouislider.min.js',
+      __dirname + '/Resources/js/vendor/photoswipe.min.js',
+      __dirname + '/Resources/js/vendor/photoswipe-ui-default.min.js',
+      __dirname + '/Resources/js/vendor/select2.min.js',
+      __dirname + '/Resources/js/vendor/number.js',
+      __dirname + '/Resources/js/vendor/svg4everybody.min.js',
+  ], 'public_html/js/public-vendor.js');
+
+	mix.scripts([
+      __dirname + '/Resources/js/vendor/main.js',
+      __dirname + '/Resources/js/vendor/header.js'
+  ], 'public_html/js/public-init.js');
+
+	mix.js(__dirname + '/Resources/js/app.js', 'js/app.js')
 }

@@ -48,114 +48,140 @@ use App\Modules\AppUser\Models\AppUser;
  */
 class User extends Authenticatable //implements JWTSubject
 {
-	use Notifiable, SoftDeletes;
+  use Notifiable, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
-		'name', 'email', 'password',
-	];
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array
+   */
+  protected $fillable = [
+    'name', 'email', 'password',
+  ];
 
-	/**
-	 * The attributes that should be hidden for arrays.
-	 *
-	 * @var array
-	 */
-	protected $hidden = [
-		'password', 'remember_token',
-	];
+  /**
+   * The attributes that should be hidden for arrays.
+   *
+   * @var array
+   */
+  protected $hidden = [
+    'password', 'remember_token',
+  ];
 
-	/**
-	 * The attributes that should be cast to native types.
-	 *
-	 * @var array
-	 */
-	protected $casts = [
-		'email_verified_at' => 'datetime',
-	];
+  /**
+   * The attributes that should be cast to native types.
+   *
+   * @var array
+   */
+  protected $casts = [
+    'email_verified_at' => 'datetime',
+  ];
 
 
-	public function activities()
-	{
-		return $this->morphMany(ActivityLog::class, 'user')->latest();
-	}
+  public function expenses()
+  {
+    return $this->morphMany(Expense::class, 'recorder')->latest();
+  }
 
-	public function setPasswordAttribute($value)
-	{
-		$this->attributes['password'] = bcrypt($value);
-	}
 
-	/**
-	 * Check if the currently authenticated user's status
-	 *
-	 * @return bool
-	 */
+  public function activities()
+  {
+    return $this->morphMany(ActivityLog::class, 'user')->latest();
+  }
 
-	public function isAppUser(): bool
-	{
-		return $this instanceof AppUser;
-	}
+  public function setPasswordAttribute($value)
+  {
+    $this->attributes['password'] = bcrypt($value);
+  }
 
-	public function isAdmin(): bool
-	{
-		return $this instanceof Admin;
-	}
+  /**
+   * Check if the currently authenticated user's status
+   *
+   * @return bool
+   */
 
-	public function isSuperAdmin(): bool
-	{
-		return $this instanceof SuperAdmin;
-	}
+  public function isAppUser(): bool
+  {
+    return $this instanceof AppUser;
+  }
 
-	/**
-	 * Returns the dashboard route of the authenticated user
-	 *
-	 * @return void
-	 */
-	public function dashboardRoute(): string
-	{
-		if ($this->isAppUser()) {
-			return  'appuser.dashboard';
-		} else if ($this->isAdmin()) {
-			return 'admin.dashboard';
-		} else if ($this->isSuperAdmin()) {
-			return 'superadmin.dashboard';
-		} else {
-			return 'app.login';
-		}
-	}
+  public function isAdmin(): bool
+  {
+    return $this instanceof Admin;
+  }
+
+  public function isSuperAdmin(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
 
 
 
+  /**
+   * Returns the dashboard route of the authenticated user
+   *
+   * @return void
+   */
+  public function dashboardRoute(): string
+  {
+    if ($this->isAppUser()) {
+      return  'appuser.dashboard';
+    } else if ($this->isAdmin()) {
+      return 'admin.dashboard';
+    } else if ($this->isSuperAdmin()) {
+      return 'superadmin.dashboard';
+    } else {
+      return 'app.login';
+    }
+
+    if (Auth::admin()) {
+      return 'admin.dashboard';
+    } else if (Auth::normalAdmin()) {
+      return 'normaladmin.dashboard';
+    } else if (Auth::accountant()) {
+      return 'accountant.dashboard';
+    } else if (Auth::accountOfficer()) {
+      return 'accountofficer.dashboard';
+    } else if (Auth::salesRep()) {
+      return 'salesrep.dashboard';
+    } else if (Auth::appUser()) {
+      return 'appuser.dashboard';
+    } else if (Auth::customerSupport()) {
+      return 'customersupport.dashboard';
+    } else {
+      abort(403, 'Invalid user');
+    }
+  }
 
 
-	public function toFlare(): array
-	{
-		// Only `id` will be sent to Flare.
-		return [
-			'id' => $this->id
-		];
-	}
 
-	/**
-	 * Get the identifier that will be stored in the subject claim of the JWT.
-	 *
-	 * @return mixed
-	 */
-	public function getJWTIdentifier()
-	{
-		return $this->getKey();
-	}
 
-	/**
-	 * Return a key value array, containing any custom claims to be added to the JWT.
-	 *
-	 * @return array
-	 */
-	public function getJWTCustomClaims()
-	{
-		return [];
-	}
+
+  public function toFlare(): array
+  {
+    // Only `id` will be sent to Flare.
+    return [
+      'id' => $this->id
+    ];
+  }
+
+  /**
+   * Get the identifier that will be stored in the subject claim of the JWT.
+   *
+   * @return mixed
+   */
+  public function getJWTIdentifier()
+  {
+    return $this->getKey();
+  }
+
+  /**
+   * Return a key value array, containing any custom claims to be added to the JWT.
+   *
+   * @return array
+   */
+  public function getJWTCustomClaims()
+  {
+    return [];
+  }
 }

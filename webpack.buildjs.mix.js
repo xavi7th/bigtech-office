@@ -9,47 +9,92 @@
  |
  */
 
-const mix = require( 'laravel-mix' );
-require( 'laravel-mix-svelte' );
+const mix = require('laravel-mix');
+const autoPreprocess = require('svelte-preprocess');
 
-mix.setPublicPath( './public_html' );
+require('laravel-mix-svelte');
 
-let fs = require( 'fs-extra' );
+mix.setPublicPath('./public_html');
 
-let modules = fs.readdirSync( './main/app/Modules' ); // Make sure the path of your modules are correct
+let fs = require('fs-extra');
 
-if ( modules && modules.length > 0 ) {
-    modules.forEach( ( module ) => {
-        let path = `./main/app/Modules/${module}/webpack.mix.js`;
-        if ( fs.existsSync( path ) ) {
-            require( path );
-        }
-    } );
+let modules = fs.readdirSync('./main/app/Modules'); // Make sure the path of your modules are correct
+
+if (modules && modules.length > 0) {
+	modules.forEach((module) => {
+		let path = `./main/app/Modules/${module}/webpack.mix.js`;
+		if (fs.existsSync(path)) {
+			require(path);
+		}
+	});
 }
 
-mix.babelConfig( {
-    plugins: [ '@babel/plugin-syntax-dynamic-import' ],
-} );
+mix.webpackConfig({
+	output: {
+		chunkFilename: '[name].js?id=[chunkhash]',
+	},
+	resolve: {
+		alias: {
+			ziggy: path.resolve('./main/vendor/tightenco/ziggy/dist/js/route.js'),
+		},
+	},
+});
+
+mix.babelConfig({
+	plugins: ['@babel/plugin-syntax-dynamic-import'],
+});
 
 mix
-    .options( {
-        output: {
-            // chunkFilename: 'js/[name].js?id=[chunkhash]',
-            chunkFilename: 'js/[name].[chunkhash].js',
+	.options({
+		fileLoaderDirs: {
+			images: 'img'
+		},
+	})
+	.svelte({
+		dev: !mix.inProduction(),
+		css: true,
+		preprocess: autoPreprocess(),
+		onwarn: (warning, handler) => {
+			const {
+				code,
+				frame
+			} = warning;
 
-        },
-        fileLoaderDirs: {
-            images: 'img'
-        },
-    } )
-    .svelte( {
-        dev: !mix.inProduction(),
-        css: true
-    } )
-    .extract()
-    .mergeManifest()
-    .version()
+			if (code == "anchor-is-valid" || code == "a11y-invalid-attribute") {
+				return
+			}
+			if (code == "css-unused-selector") {
+				return
+			}
+			if (code == 'css-unused-selector' && frame.includes('sweetalert')) {
+				return
+			}
 
-if ( !mix.inProduction() ) {
-    mix.sourceMaps()
+			console.log(
+				'\x1b[41m%s\x1b[0m',
+				code
+			)
+
+			handler(warning);
+		}
+	})
+	.extract()
+	.mergeManifest();
+
+if (mix.inProduction()) {
+	mix.version()
+		.then(() => {
+			const convertToFileHash = require("laravel-mix-make-file-hash");
+			convertToFileHash({
+				publicPath: "./public_html",
+				manifestFilePath: "./public_html/mix-manifest.json",
+				blacklist: ["user-*", "public*", "super-*"],
+				keepBlacklistedEntries: true,
+				// debug: true
+			});
+		});
+}
+
+if (!mix.inProduction()) {
+	mix.sourceMaps()
 }
