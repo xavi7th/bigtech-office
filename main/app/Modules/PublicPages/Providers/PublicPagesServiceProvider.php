@@ -3,6 +3,7 @@
 namespace App\Modules\PublicPages\Providers;
 
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
@@ -44,6 +45,10 @@ class PublicPagesServiceProvider extends ServiceProvider
   {
     $this->app->register(RouteServiceProvider::class);
     $this->registerInertia();
+
+    Request::macro('isApi', function () {
+      return ($this->ajax() || $this->expectsJson()) && !$this->header('X-Inertia');
+    });
   }
 
 
