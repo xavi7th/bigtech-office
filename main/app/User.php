@@ -115,27 +115,19 @@ class User extends Authenticatable //implements JWTSubject
     return $this instanceof SuperAdmin;
   }
 
+  public function get_navigation_routes(): object
+  {
+    return $this->isAdmin() ? get_related_routes('admin.', ['GET']) : $this->isAppUser() ? get_related_routes('appuser.', ['GET']) : get_related_routes('app.', ['GET']);
+  }
 
-
-  /**
-   * Returns the dashboard route of the authenticated user
-   *
-   * @return void
-   */
   public function dashboardRoute(): string
   {
     if ($this->isAppUser()) {
       return  'appuser.dashboard';
-    } else if ($this->isAdmin()) {
+    } elseif ($this->isAdmin()) {
       return 'admin.dashboard';
-    } else if ($this->isSuperAdmin()) {
+    } elseif ($this->isSuperAdmin()) {
       return 'superadmin.dashboard';
-    } else {
-      return 'app.login';
-    }
-
-    if (Auth::admin()) {
-      return 'admin.dashboard';
     } else if (Auth::normalAdmin()) {
       return 'normaladmin.dashboard';
     } else if (Auth::accountant()) {
@@ -144,8 +136,6 @@ class User extends Authenticatable //implements JWTSubject
       return 'accountofficer.dashboard';
     } else if (Auth::salesRep()) {
       return 'salesrep.dashboard';
-    } else if (Auth::appUser()) {
-      return 'appuser.dashboard';
     } else if (Auth::customerSupport()) {
       return 'customersupport.dashboard';
     } else {

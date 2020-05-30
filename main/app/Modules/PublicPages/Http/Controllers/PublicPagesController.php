@@ -30,7 +30,6 @@ class PublicPagesController extends Controller
 
   public function index(Request $request)
   {
-    Auth::logout();
     return Inertia::render('Home', [
       'event' => 'bar'
     ]);

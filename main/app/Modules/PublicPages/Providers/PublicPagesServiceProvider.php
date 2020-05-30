@@ -66,7 +66,10 @@ class PublicPagesServiceProvider extends ServiceProvider
         'phone' => config('app.phone'),
         'email' => config('app.email'),
       ],
-      'isInertiaRequest' => request()->header('X-Inertia'),
+      'routes' => function (Request $request) {
+        return optional($request->user())->get_navigation_routes() ?? get_related_routes('app.', ['GET']);
+      },
+      'isInertiaRequest' => !!request()->header('X-Inertia'),
       'auth' => function () {
         return [
           'user' => Auth::user() ? Auth::user() : (object)[],

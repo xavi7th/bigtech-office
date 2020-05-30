@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i">
 	<link href="{{ mix('/css/app.css') }}" rel="stylesheet" />
 
-	<title>Stroyka</title>
+	<title>{{config('app.name')}}</title>
 
 </head>
 
