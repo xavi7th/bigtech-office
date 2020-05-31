@@ -143,6 +143,27 @@ class User extends Authenticatable //implements JWTSubject
     }
   }
 
+  public function getType(): string
+  {
+    if ($this->isAppUser()) {
+      return  'Normal User';
+    } elseif ($this->isAdmin()) {
+      return 'Admin';
+    } elseif ($this->isSuperAdmin()) {
+      return 'Super Admin';
+    } else if (Auth::accountant()) {
+      return 'Accountant';
+    } else if (Auth::accountOfficer()) {
+      return 'Account Officer';
+    } else if (Auth::salesRep()) {
+      return 'Sales Rep';
+    } else if (Auth::customerSupport()) {
+      return 'Customer Support';
+    } else {
+      return 'Invalid user';
+    }
+  }
+
 
 
 

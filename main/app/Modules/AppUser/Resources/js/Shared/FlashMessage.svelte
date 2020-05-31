@@ -6,6 +6,14 @@
     isFormError = false;
 </script>
 
+<style>
+  .alert-danger {
+    color: #7c2a34;
+    background-color: #fcdce0;
+    padding: 0.75rem 1.25rem;
+  }
+</style>
+
 {#if isFormError}
   {#if msg}
     <div class="invalid-feedback">{msg}</div>

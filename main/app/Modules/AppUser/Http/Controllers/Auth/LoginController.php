@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Arr;
+use App\Modules\SuperAdmin\Events\NotificationEvents;
+use App\Modules\SuperAdmin\Events\NotificationEvent;
 
 class LoginController extends Controller
 {
@@ -86,9 +88,7 @@ class LoginController extends Controller
     }
 
     if ($this->attemptLogin($request)) {
-
-      // ActivityLog::notifyAdmins($this->guard()->user()->email  . ' logged into the admin dashboard');
-
+      event(NotificationEvents::LOGGED_IN, new NotificationEvent($this->authenticatedGuard()->user()));
       return $this->sendLoginResponse($request);
     }
 

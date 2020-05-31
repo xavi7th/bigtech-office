@@ -70,7 +70,9 @@
         <h1 class="display-4 mb-10 text-center">Sign In</h1>
       </div>
 
-      <FlashMessage />
+      <div class="col-12">
+        <FlashMessage />
+      </div>
 
       <div class="col-12">
         <input
