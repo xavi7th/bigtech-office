@@ -9,7 +9,7 @@
   import PageTitle from "@superadmin-shared/Partials/PageTitle";
   import Footer from "@superadmin-shared/Partials/Footer";
 
-  $: ({ app } = $page);
+  $: ({ app, routes } = $page);
 
   console.log($page);
 
@@ -25,7 +25,7 @@
   <title>{title}</title>
 </svelte:head>
 
-<Sidebar />
+<Sidebar {routes} />
 <Header />
 <MobileHeader />
 

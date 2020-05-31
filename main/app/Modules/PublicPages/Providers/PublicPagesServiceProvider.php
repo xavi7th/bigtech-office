@@ -3,6 +3,7 @@
 namespace App\Modules\PublicPages\Providers;
 
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -67,7 +68,7 @@ class PublicPagesServiceProvider extends ServiceProvider
         'email' => config('app.email'),
       ],
       'routes' => function (Request $request) {
-        return optional($request->user())->get_navigation_routes() ?? get_related_routes('app.', ['GET']);
+        return optional($request->user())->get_navigation_routes() ?? get_related_routes('superadmin.', ['GET'], true);
       },
       'isInertiaRequest' => !!request()->header('X-Inertia'),
       'auth' => function () {

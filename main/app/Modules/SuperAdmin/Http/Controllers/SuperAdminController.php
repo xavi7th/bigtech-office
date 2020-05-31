@@ -20,7 +20,9 @@ class SuperAdminController extends Controller
   {
     Route::group(['middleware' => ['web', 'auth:super_admin'], 'namespace' => '\App\Modules\SuperAdmin\Http\Controllers'], function () {
       Route::prefix(SuperAdmin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', 'SuperAdminController@index')->name('superadmin.dashboard');
+        Route::get('/', 'SuperAdminController@index')->name('superadmin.dashboard')->defaults('extras', ['nav_skip' => false, 'icon' => 'home']);
+        Route::get('/trtfuyj', 'SuperAdminController@index')->name('superadmin.stock.view_stock')->defaults('extras', ['nav_skip' => false, 'icon' => 'archive']);
+        Route::get('/jhkbn', 'SuperAdminController@index')->name('superadmin.stock.create_stock')->defaults('extras', ['nav_skip' => false, 'icon' => 'archive']);
       });
     });
   }
@@ -31,6 +33,7 @@ class SuperAdminController extends Controller
    */
   public function index(Request $request)
   {
+    // auth()->logout();
     return Inertia::render('SuperAdminDashboard');
   }
 }

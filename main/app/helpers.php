@@ -463,25 +463,39 @@ if (!function_exists('get_related_routes')) {
    *
    * @param  string $namespace
    * @param  array $methods
-   * @return \Illuminate\Support\Collection
+   * @param  bool $isHeirarchical Determines whether to return an array that can be used for drop down mwnus
+   * @return array
    *
    * Route::get('/', 'AppUserController@loadUserApp')->name('appuser.dashboard')->defaults('extras', ['nav_skip' => false, 'icon' => 'fa fas']);
    */
-  function get_related_routes(string $namespace, array $methods)
+  function get_related_routes(string $namespace, array $methods, bool $isHeirarchical = false)
   {
-    return collect(\Illuminate\Support\Facades\Route::getRoutes())->map(function (\Illuminate\Routing\Route $route) use ($namespace) {
+    function getHeirachicalRoutes(&$routes)
+    {
+      $tmp = $routes;
+      $routes = [];
+      collect($tmp)->map(function ($route, $key) use (&$routes) {
+        return $routes[Str::of($key)->after('.')->before('.')->title()->__toString()][] = $route;
+      });
+      return $routes;
+    }
+
+    $routes = collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName())->filter(function ($value, $key) use ($methods, $namespace) {
+      return \Str::startsWith($key, $namespace) && \Str::of(implode('|', $value->methods()))->contains($methods);
+    })->map(function (\Illuminate\Routing\Route $route) use ($namespace) {
       return (object)[
-        'uri' => $route->uri(),
+        // 'uri' => $route->uri(),
         'name' => $route->getName(),
         'nav_skip' => $route->defaults['extras']['nav_skip'] ?? false,
         'icon' => $route->defaults['extras']['icon'] ?? null,
-        'method' => \Str::of(implode('|', $route->methods())),
-        'menu_name' => \Str::of($route->getName())->replaceMatches('/[^A-Za-z0-9]++/', ' ')->trim($namespace)->title()->trim()->__toString()
+        'menu_name' => \Str::of($route->getName())->afterLast('.')->replaceMatches('/[^A-Za-z0-9]++/', ' ')->after($namespace)->title()->trim()->__toString()
       ];
-    })->filter(function ($value, $key) use ($methods, $namespace) {
-      return \Str::startsWith($value->name, $namespace) && $value->method->contains($methods);
+    })->reject(function ($val) {
+      return $val->nav_skip;
     })->transform(function ($v) {
-      return collect($v)->merge(['method' => $v->method->__toString()]);
-    });
+      return collect($v)->forget('nav_skip');
+    })->toArray();
+
+    return $isHeirarchical ? getHeirachicalRoutes($routes) : $routes;
   }
 }

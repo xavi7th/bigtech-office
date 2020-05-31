@@ -115,9 +115,15 @@ class User extends Authenticatable //implements JWTSubject
     return $this instanceof SuperAdmin;
   }
 
-  public function get_navigation_routes(): object
+  public function get_navigation_routes(): array
   {
-    return $this->isAdmin() ? get_related_routes('admin.', ['GET']) : $this->isAppUser() ? get_related_routes('appuser.', ['GET']) : get_related_routes('app.', ['GET']);
+    if ($this->isSuperAdmin()) {
+      return get_related_routes('superadmin.', ['GET'], $isHeirarchical = true);
+    } elseif ($this->isAppUser()) {
+      return get_related_routes('appuser.', ['GET'], $isHeirarchical = true);
+    } else {
+      return null;
+    }
   }
 
   public function dashboardRoute(): string
@@ -145,6 +151,7 @@ class User extends Authenticatable //implements JWTSubject
 
   public function getType(): string
   {
+    return class_basename(get_class($this));
     if ($this->isAppUser()) {
       return  'Normal User';
     } elseif ($this->isAdmin()) {
