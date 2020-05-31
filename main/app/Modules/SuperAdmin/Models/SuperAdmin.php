@@ -36,6 +36,11 @@ use App\User;
  */
 class SuperAdmin extends User
 {
-	protected $fillable = [];
-	const DASHBOARD_ROUTE_PREFIX = 'super-panel';
+  protected $fillable = [];
+  const DASHBOARD_ROUTE_PREFIX = 'super-panel';
+
+  public function is_verified()
+  {
+    return true;
+  }
 }

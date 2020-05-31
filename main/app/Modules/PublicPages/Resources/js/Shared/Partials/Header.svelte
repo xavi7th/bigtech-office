@@ -225,7 +225,10 @@
     <div class="site-header__middle container">
       <div class="site-header__logo">
         <a href="/">
-          <img src="/img/the-elects-logo.png" class="img-fluid" />
+          <img
+            src="/img/the-elects-logo.png"
+            class="img-fluid"
+            alt="the elects logo" />
         </a>
       </div>
       <div class="site-header__search">

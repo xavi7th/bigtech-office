@@ -15,7 +15,7 @@ if (modules && modules.length > 0) {
 	});
 }
 
-console.log(process.env);
+// console.log(process.env);
 
 mix.webpackConfig({
 	output: {
@@ -37,14 +37,13 @@ mix.options({
 		},
 		postCss: [
       require('postcss-fixes')(),
+      // require('cssnano')({
+			// 	discardComments: {
+			// 		removeAll: true
+			// 	},
+			// 	calc: false,
+			// 	cssDeclarationSorter: true
+			// })
     ],
-		cssNano: {
-			discardComments: {
-				removeAll: true
-			},
-			normalizeWhitespace: mix.inProduction(),
-			calc: false,
-			cssDeclarationSorter: true
-		}
 	})
 	.mergeManifest()

@@ -572,7 +572,7 @@
         </li>
         <li class="mobile-links__item" data-collapse-item>
           <div class="mobile-links__item-title">
-            <a data-collapse-trigger class="mobile-links__item-link">
+            <a href data-collapse-trigger class="mobile-links__item-link">
               Currency
             </a>
             <button
@@ -588,14 +588,12 @@
             <ul class="mobile-links mobile-links--level--1">
               <li class="mobile-links__item" data-collapse-item>
                 <div class="mobile-links__item-title">
-                  <a href="" class="mobile-links__item-link">€ Euro</a>
+                  <a href class="mobile-links__item-link">€ Euro</a>
                 </div>
               </li>
               <li class="mobile-links__item" data-collapse-item>
                 <div class="mobile-links__item-title">
-                  <a href="" class="mobile-links__item-link">
-                    £ Pound Sterling
-                  </a>
+                  <a href class="mobile-links__item-link">£ Pound Sterling</a>
                 </div>
               </li>
               <li class="mobile-links__item" data-collapse-item>
@@ -613,7 +611,7 @@
         </li>
         <li class="mobile-links__item" data-collapse-item>
           <div class="mobile-links__item-title">
-            <a data-collapse-trigger class="mobile-links__item-link">
+            <a href="#" data-collapse-trigger class="mobile-links__item-link">
               Language
             </a>
             <button

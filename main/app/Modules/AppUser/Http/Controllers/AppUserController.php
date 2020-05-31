@@ -8,39 +8,36 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
+use App\Modules\AppUser\Http\Controllers\Auth\LoginController;
+use App\Modules\AppUser\Http\Controllers\Auth\RegisterController;
 
 class AppUserController extends Controller
 {
-	public function __construct()
-	{
-		Inertia::setRootView('appuser::app');
-	}
+  public function __construct()
+  {
+    Inertia::setRootView('appuser::app');
+  }
 
 
-	static function routes()
-	{
-		Route::group(['middleware' => ['web', 'auth'], 'namespace' => '\App\Modules\AppUser\Http\Controllers'], function () {
-			Route::prefix(AppUser::DASHBOARD_ROUTE_PREFIX)->group(function () {
-				Route::get('/', 'AppUserController@index')->name('appuser.dashboard');
-			});
-		});
-	}
+  static function routes()
+  {
+    LoginController::routes();
+    RegisterController::routes();
+    // ResetPasswordController::routes();
+    // ForgotPasswordController::routes();
+    // ConfirmPasswordController::routes();
+    // VerificationController::routes();
 
+    Route::group(['middleware' => ['web', 'auth'], 'namespace' => '\App\Modules\AppUser\Http\Controllers'], function () {
+      Route::prefix(AppUser::DASHBOARD_ROUTE_PREFIX)->group(function () {
+        Route::get('/', 'AppUserController@index')->name('appuser.dashboard');
+      });
+    });
+  }
 
-	/**
-	 * Display a listing of the resource.
-	 * @return Response
-	 */
-	public function index(Request $request)
-	{
-		// Auth::logout();
-		return Inertia::render('App', [
-			'event' => $request->only(
-				'id',
-				'title',
-				'start_date',
-				'description'
-			),
-		]);
-	}
+  public function index(Request $request)
+  {
+    // Auth::logout();
+    return Inertia::render('Welcome');
+  }
 }

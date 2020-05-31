@@ -53,10 +53,6 @@ return [
     ],
     'app_user_api' => [
       'driver' => 'jwt',
-      'provider' => 'users',
-    ],
-    'app_api_user' => [
-      'driver' => 'jwt',
       'provider' => 'app_users',
     ],
     'admin' => [
@@ -91,11 +87,6 @@ return [
       'driver' => 'session',
       'provider' => 'sales_reps',
     ],
-    // 'api' => [
-    //   'driver' => 'token',
-    //   'provider' => 'users',
-    //   'hash' => false,
-    // ],
     'api' => [
       'driver' => 'jwt',
       'provider' => 'users',

@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
   {
     $response = parent::render($request, $exception);
 
-    if ($request->expectsJson()) {
+    if ($request->isApi()) {
       if ($exception instanceof NotFoundHttpException) {
         return response()->json(['message' => 'No such endpoint'], 404);
       } elseif ($exception instanceof ModelNotFoundException) {
@@ -81,6 +81,10 @@ class Handler extends ExceptionHandler
       return Inertia::render('DisplayError', ['status' => $response->status()])
         ->toResponse($request)
         ->setStatusCode($response->status());
+    }
+
+    if (getenv('APP_ENV') === 'local' && in_array($response->status(), [419])) {
+      return back()->withError('Expired token');
     }
 
     return $response;

@@ -736,7 +736,7 @@
                             <router-link
                               :to="childItem.path"
                               class="menu__item-link">
-                              {childItem.meta.menuName}
+                              {'childItem.meta.menuName'}
                               <svg
                                 class="menu__item-arrow"
                                 width="6px"
@@ -764,7 +764,7 @@
                                       <router-link
                                         :to="grandChildItem.path"
                                         class="menu__item-link">
-                                        {grandChildItem.meta.menuName}
+                                        {'grandChildItem.meta.menuName'}
                                       </router-link>
                                     </li>
                                   </template>

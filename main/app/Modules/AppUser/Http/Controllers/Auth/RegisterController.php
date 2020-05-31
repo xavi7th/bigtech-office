@@ -1,17 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Modules\AppUser\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\User;
+use Inertia\Inertia;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Auth\Events\Registered;
+use App\Modules\AppUser\Models\AppUser;
+use App\Modules\Admin\Models\ActivityLog;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use App\Modules\AppUser\Transformers\AppUserTransformer;
+use App\Modules\AppUser\Http\Requests\RegistrationValidation;
+use App\Modules\AppUser\Notifications\CoreSavingsInitialised;
 
 class RegisterController extends Controller
 {
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Register Controller
     |--------------------------------------------------------------------------
@@ -22,52 +30,151 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+  use RegistersUsers;
+
+  private $apiToken;
+
+  /**
+   * Where to redirect users after registration.
+   *
+   * @var string
+   */
+  // protected $redirectTo = route('appuser.dashboard');
+  protected function redirectTo()
+  {
+    return route('appuser.dashboard');
+  }
+
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    Inertia::setRootView('appuser::app');
+    $this->middleware('guest');
+  }
+
+  /**
+   * The routes for registration
+   *
+   * @return void
+   */
+  static function routes()
+  {
+    Route::group(['middleware' => 'guest'], function () {
+      Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('app.register.show')->defaults('nav_skip', true);
+      Route::post('register', 'RegisterController@register')->name('appuser.register');
+    });
+  }
+
+  public function showRegistrationForm()
+  {
+    return Inertia::render('auth/Register');
+  }
+
+  /**
+   * Handle a registration request for the application.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function register(RegistrationValidation $request)
+  {
+    DB::beginTransaction();
+    event(new Registered($user = $this->create($request)));
+
+    // dd($user);
+    $this->guard()->login($user);
+
+    $this->apiToken = $this->apiGuard()->login($user);
+
+    return $this->registered($request, $user)
+      ?: redirect($this->redirectPath());
+  }
+
+  /**
+   * Create a new user instance after a valid registration.
+   *
+   * @param  array  $data
+   * @return \App\User
+   */
+  protected function create(Request $request): AppUser
+  {
+
+    // $url = request()->file('id_card')->store('public/id_cards');
+    // Storage::setVisibility($url, 'public');
+
+    /** Replace the public part of the url with storage to make it accessible on the frontend */
+    // $url = Str::replaceFirst('public', '/storage', $url);
+
+    //Create an entry into the documents database
 
     /**
-     * Where to redirect users after registration.
-     *
-     * @var string
+     * @todo Create a referral record if any
+     * ! If there is a referral ID create a referral entry for the agent
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+
+    return AppUser::create($request->validated());
+  }
+
+  /**
+   * The user has been registered.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  mixed  $user
+   * @return mixed
+   */
+  protected function registered(Request $request, $user)
+  {
+    //
+    ActivityLog::notifyAdmins($user->email   . ' registered an account on the site.');
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * Create an empty Savings profile for him with 100% savings distribution
      */
-    public function __construct()
-    {
-        $this->middleware('guest');
-    }
+    $user->savings_list()->create([
+      'savings_distribution' => 100,
+    ]);
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * Notify the user that a core savings account prifile was initialised for him. He can start saving right away
      */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-    }
+
+    $user->notify(new CoreSavingsInitialised($user));
 
     /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\User
+     * TODO Notify the referrer if any
+     * @todo Notify the referrer if any
      */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-    }
+
+    DB::commit();
+    return redirect()->route('app.login')->withSuccess('Account Created');
+    return $this->respondWithToken();
+  }
+
+
+  /**
+   * Get the token array structure.
+   *
+   * @param  string $token
+   *
+   * @return \Illuminate\Http\JsonResponse
+   */
+  protected function respondWithToken()
+  {
+    return response()->json([
+      'access_token' => $this->apiToken,
+      'token_type' => 'bearer',
+      'expires_in' => $this->apiGuard()->factory()->getTTL() * 60,
+      'user' => (new AppUserTransformer)->basic($user = auth()->user()),
+    ], 201);
+  }
+
+
+  protected function apiGuard()
+  {
+    return Auth::guard('api_user');
+  }
 }
