@@ -6,7 +6,6 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 
@@ -17,7 +16,6 @@ class SuperAdminController extends Controller
     Inertia::setRootView('superadmin::app');
   }
 
-
   static function routes()
   {
     Route::group(['middleware' => ['web', 'auth:super_admin'], 'namespace' => '\App\Modules\SuperAdmin\Http\Controllers'], function () {
@@ -27,14 +25,12 @@ class SuperAdminController extends Controller
     });
   }
 
-
   /**
    * Display a listing of the resource.
    * @return Response
    */
   public function index(Request $request)
   {
-    Auth::logout();
     return Inertia::render('SuperAdminDashboard');
   }
 }

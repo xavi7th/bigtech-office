@@ -1,33 +1,13 @@
 <script>
-  import { onMount } from "svelte";
-  let name = false;
+  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { Inertia } from "@inertiajs/inertia";
+  import Layout from "@superadmin-shared/SuperAdminLayout";
+  import FlashMessage from "@user-shared/FlashMessage";
+  import route from "ziggy";
 
-  // setInterval(function() {
-  //   console.log("fired");
-
-  //   name = !name;
-  // }, 5000);
-
-  onMount(() => {
-    console.log("the component has mounted");
-  });
+  $: ({ app } = $page);
 </script>
 
-<main>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">{name} Super Admin App Component</div>
-          <div class="card-body">I'm an from an example module.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</main>
-
-{#if name}
-  <script src="/js/hello.js">
-
-  </script>
-{/if}
+<Layout title="Super Admin Dashboard">
+  <div class="mt-20">Don't you have an account?</div>
+</Layout>

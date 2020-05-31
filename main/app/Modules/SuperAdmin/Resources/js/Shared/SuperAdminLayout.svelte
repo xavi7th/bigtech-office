@@ -13,8 +13,7 @@
 
   console.log($page);
 
-  export let isAuth = true,
-    title = app.name;
+  export let title = app.name;
   let isLoaded = false;
 
   afterUpdate(() => {
@@ -26,37 +25,19 @@
   <title>{title}</title>
 </svelte:head>
 
-{#if isAuth}
-  <div class="rui-main">
-    <div class="rui-sign align-items-center justify-content-center">
-      <div class="bg-image">
-        <div class="bg-grey-2" />
-      </div>
-      <div class="logo d-flex justify-content-center mb-30">
-        <InertiaLink href={route('app.home')}>
-          <img
-            src="/img/the-elects-logo.png"
-            alt={$page.app.name}
-            class="logo-img"
-            width="200" />
-        </InertiaLink>
-      </div>
+<Sidebar />
+<Header />
+<MobileHeader />
+
+<div class="rui-page content-wrap">
+  <PageTitle />
+  <div class="rui-page-content">
+    <div class="container-fluid">
       <slot />
     </div>
   </div>
-{:else}
-  <Sidebar />
-  <Header />
-  <MobileHeader />
-
-  <div class="rui-page content-wrap">
-    <PageTitle />
-    <div class="rui-page-content">
-      <div class="container-fluid" />
-    </div>
-    <Footer />
-  </div>
-{/if}
+  <Footer />
+</div>
 
 {#if isLoaded}
   <script src="/js/user-dashboard-init.js">
