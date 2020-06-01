@@ -17,7 +17,7 @@
   $: ({ errors, app } = $page);
 </script>
 
-<Layout title={app.name} metaAuthor="" metaDescription="" metaKeywords="">
+<Layout>
 
   <Slider />
   <InfoBoxes />

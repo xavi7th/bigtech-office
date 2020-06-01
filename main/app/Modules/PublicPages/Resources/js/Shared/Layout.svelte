@@ -29,13 +29,6 @@
   export let title, metaAuthor, metaDescription, metaKeywords;
 </script>
 
-<svelte:head>
-  <title>{title}</title>
-  <meta name="description" content={metaDescription} />
-  <meta name="author" content={metaAuthor} />
-  <meta name="keywords" content={metaKeywords} />
-</svelte:head>
-
 {#if !pageLoaded && !isInertiaRequest}
   <PageLoader />
 {:else if !pageLoaded && isInertiaRequest}

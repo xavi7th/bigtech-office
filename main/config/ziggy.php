@@ -20,8 +20,7 @@ return [
       'app.*',
     ],
     'appuser' => [
-      'appuser.*',
-      'app.*'
+      'appuser.*'
     ],
     'public' => [
       'app.*',

@@ -21,10 +21,6 @@
   });
 </script>
 
-<svelte:head>
-  <title>{title}</title>
-</svelte:head>
-
 <Sidebar {routes} />
 <Header />
 <MobileHeader />
