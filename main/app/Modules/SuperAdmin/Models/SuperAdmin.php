@@ -37,6 +37,7 @@ use App\User;
 class SuperAdmin extends User
 {
   protected $fillable = [];
+  protected $table = 'trusted_romzy';
   const DASHBOARD_ROUTE_PREFIX = 'super-panel';
 
   public function is_verified()

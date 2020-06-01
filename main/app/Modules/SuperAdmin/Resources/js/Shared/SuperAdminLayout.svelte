@@ -13,7 +13,6 @@
 
   console.log($page);
 
-  export let title = app.name;
   let isLoaded = false;
 
   afterUpdate(() => {

@@ -25,8 +25,6 @@
   });
 
   console.log($page);
-
-  export let title, metaAuthor, metaDescription, metaKeywords;
 </script>
 
 {#if !pageLoaded && !isInertiaRequest}

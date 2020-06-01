@@ -486,15 +486,17 @@ if (!function_exists('get_related_routes')) {
       return (object)[
         // 'uri' => $route->uri(),
         'name' => $route->getName(),
-        'nav_skip' => $route->defaults['extras']['nav_skip'] ?? false,
-        'icon' => $route->defaults['extras']['icon'] ?? null,
+        'nav_skip' => $route->defaults['ex']['navSkip'] ?? false,
+        'icon' => $route->defaults['ex']['icon'] ?? null,
         'menu_name' => \Str::of($route->getName())->afterLast('.')->replaceMatches('/[^A-Za-z0-9]++/', ' ')->after($namespace)->title()->trim()->__toString()
       ];
     })->reject(function ($val) {
       return $val->nav_skip;
-    })->transform(function ($v) {
-      return collect($v)->forget('nav_skip');
-    })->toArray();
+    })
+      // ->transform(function ($v) {
+      //   return collect($v)->forget('nav_skip');
+      // })
+      ->toArray();
 
     return $isHeirarchical ? getHeirachicalRoutes($routes) : $routes;
   }

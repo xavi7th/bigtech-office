@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\AppUser\Http\Controllers\Auth\LoginController;
@@ -37,7 +38,7 @@ class AppUserController extends Controller
 
   public function index(Request $request)
   {
-    // Auth::logout();
+    Auth::logout();
     return Inertia::render('Welcome');
   }
 }

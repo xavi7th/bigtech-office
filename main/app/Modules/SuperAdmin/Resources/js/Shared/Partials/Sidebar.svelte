@@ -13,7 +13,7 @@
         <li class="yay-label">Menu Items</li>
         {#each Object.entries(routes) as [route_name, route_cont]}
           {#if route_cont.length == 1}
-            <li class:yay-item-active={route().current(route_cont.name)}>
+            <li class:yay-item-active={route().current(route_cont[0].name)}>
               <InertiaLink
                 href={route(route_cont[0].name)}
                 class="yay-sub-toggle">
