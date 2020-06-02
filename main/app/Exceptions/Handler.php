@@ -74,7 +74,7 @@ class Handler extends ExceptionHandler
 
     if (
       (App::environment('production'))
-      && $request->header('X-Inertia')
+      // && $request->header('X-Inertia')
       && in_array($response->status(), [500, 503, 404, 403])
     ) {
       Inertia::setRootView('publicpages::app');
@@ -83,8 +83,8 @@ class Handler extends ExceptionHandler
         ->setStatusCode($response->status());
     }
 
-    if (getenv('APP_ENV') === 'local' && in_array($response->status(), [419])) {
-      return back()->withError('Expired token');
+    if (in_array($response->status(), [419])) {
+      return back()->withError('Expired token! Try again');
     }
 
     return $response;

@@ -14,7 +14,14 @@ class Authenticate extends Middleware
    */
   protected function redirectTo($request)
   {
-    if (!$request->isApi()) {
+    foreach (collect(config('auth.guards'))->except(['api']) as $key => $value) {
+      try {
+        auth($key)->logout();
+      } catch (\Throwable $e) { }
+    }
+    if ($request->isApi()) {
+      return response()->json(['message' => 'Unauthenticated'], 401);
+    } else {
       return route('app.login');
     }
   }

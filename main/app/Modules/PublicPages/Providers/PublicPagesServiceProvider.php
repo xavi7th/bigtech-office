@@ -3,7 +3,6 @@
 namespace App\Modules\PublicPages\Providers;
 
 use Inertia\Inertia;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -30,8 +29,8 @@ class PublicPagesServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    $this->registerTranslations();
-    $this->registerConfig();
+    // $this->registerTranslations();
+    // $this->registerConfig();
     $this->registerViews();
     $this->registerFactories();
     $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));

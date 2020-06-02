@@ -2,7 +2,7 @@
   import Header from "@public-shared/Partials/Header";
   import Footer from "@public-shared/Partials/Footer";
   import PageLoader from "@public-shared/PageLoader";
-  import QuickView from "@public-shared/QuickView";
+  import QuickView from "@public-shared/Partials/QuickView";
   import MobileNav from "@public-shared/Partials/MobileNav";
   import MobileHeader from "@public-shared/Partials/MobileHeader";
   import SectionLoader from "@public-shared/PageLoader";

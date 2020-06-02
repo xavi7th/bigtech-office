@@ -13,8 +13,13 @@
   import { Inertia } from "@inertiajs/inertia";
   import { page } from "@inertiajs/inertia-svelte";
   import route from "ziggy";
+  import { afterUpdate } from "svelte";
 
   $: ({ errors, app } = $page);
+
+  afterUpdate(() => {
+    svg4everybody();
+  });
 </script>
 
 <Layout>

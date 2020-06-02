@@ -15,10 +15,9 @@ class NoApi
    */
   public function handle($request, Closure $next)
   {
-    if (($request->isJson() || $request->ajax() || $request->expectsJson()) && !$request->header('X-Inertia')) {
+    if ($request->isApi()) {
       return response()->json('Welcome to ' . config('app.name') . ' API service', 200);
     } else {
-
       return $next($request);
     }
   }
