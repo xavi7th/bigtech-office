@@ -61,12 +61,6 @@ class User extends Authenticatable implements JWTSubject
     $this->attributes['password'] = bcrypt($value);
   }
 
-  /**
-   * Check if the currently authenticated user's status
-   *
-   * @return bool
-   */
-
   public function isAppUser(): bool
   {
     return $this instanceof AppUser;

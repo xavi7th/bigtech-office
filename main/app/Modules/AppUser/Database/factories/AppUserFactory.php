@@ -20,10 +20,18 @@ use App\Modules\AppUser\Models\AppUser;
 
 
 $factory->define(AppUser::class, function (Faker $faker) {
-	return [
-		'full_name' => $faker->name('female'),
-		'email' => $faker->unique()->safeEmail,
-		'password' => 'password',
-		'remember_token' => Str::random(10),
-	];
+  return [
+    'first_name' => $faker->firstName,
+    'last_name' => $faker->lastName,
+    'email' => $faker->unique()->safeEmail,
+    'address' => $faker->address,
+    'city' => $faker->city,
+    'ig_handle' => '@' . $faker->unique()->userName,
+    // 'app_user_category_id' => 1,
+    // 'otp_verified_at' => now(),
+    'password' => 'pass',
+    'phone' => $faker->unique()->phoneNumber,
+    // 'user_passport' => '/storage/id_cards/' . $faker->file(public_path('img/'), public_path('storage/app_users/'), false),
+    'remember_token' => Str::random(10),
+  ];
 });
