@@ -122,12 +122,12 @@ class ProductPrice extends Model
   static function routes()
   {
     Route::group(['prefix' => 'product-prices'], function () {
-      $gen = function ($namespace, $name = null) {
-        return 'superadmin.product_' . $namespace . $name;
+      $p = function ($name) {
+        return 'superadmin.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductPrices'])->name($gen('prices', null))->defaults('ex', __e('dollar-sign', false));
-      Route::post('create', [self::class, 'createProductPrice'])->name($gen('prices', 'create_price'))->defaults('ex', __e('dollar-sign', true));
-      Route::put('{price}/edit', [self::class, 'editProductPrice'])->name($gen('prices', 'edit_price'))->defaults('ex', __e('dollar-sign', true));
+      Route::get('', [self::class, 'getProductPrices'])->name($p('view_prices', null))->defaults('ex', __e('dollar-sign', false));
+      Route::post('create', [self::class, 'createProductPrice'])->name($p('create_price'))->defaults('ex', __e('dollar-sign', true));
+      Route::put('{price}/edit', [self::class, 'editProductPrice'])->name($p('edit_price'))->defaults('ex', __e('dollar-sign', true));
     });
   }
 

@@ -57,13 +57,15 @@ class SuperAdminController extends Controller
 
       Product::routes();
 
+      ProductPrice::routes();
+
+      ProductModel::routes();
+
       ProductColor::routes();
 
       ProductCategory::routes();
 
       ProductBrand::routes();
-
-      ProductModel::routes();
 
       ProductQATestResult::routes();
 
@@ -81,7 +83,6 @@ class SuperAdminController extends Controller
 
       ProductBatch::routes();
 
-      ProductPrice::routes();
 
       ProductHistory::routes();
 

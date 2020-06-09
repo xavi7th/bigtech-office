@@ -25,8 +25,8 @@ mix.webpackConfig({
 	},
 	plugins: [
     new CleanWebpackPlugin({
-			dry: false,
-			cleanOnceBeforeBuildPatterns: ['css/*', '/img/*', 'fonts/*'] //, './mix-manifest.json']
+			dry: true,
+			cleanOnceBeforeBuildPatterns: ['css/*', 'fonts/*'] //, '/img/*', './mix-manifest.json']
 
 		}),
   ]
@@ -48,31 +48,31 @@ mix.options({
 		],
 	})
 	.mergeManifest()
-	.imagemin(
+// .imagemin(
 
-		[
-			{
-				from: '**/img/**/**.*',
-				to: 'img/[folder]/[name].[ext]',
-				toType: 'template',
-     },
-			{
-				from: '**/img/**.*',
-				to: 'img/[name].[ext]',
-				toType: 'template',
-     }
-    ], {
-			context: './main/app/Modules',
-		}, {
-			optipng: {
-				optimizationLevel: 7
-			},
-			jpegtran: null,
-			plugins: [
-                require('imagemin-mozjpeg')({
-					quality: 75,
-					progressive: true,
-				}),
-            ],
-		}
-	);
+// 	[
+// 		{
+// 			from: '**/img/**/**.*',
+// 			to: 'img/[folder]/[name].[ext]',
+// 			toType: 'template',
+//    },
+// 		{
+// 			from: '**/img/**.*',
+// 			to: 'img/[name].[ext]',
+// 			toType: 'template',
+//    }
+//   ], {
+// 		context: './main/app/Modules',
+// 	}, {
+// 		optipng: {
+// 			optimizationLevel: 7
+// 		},
+// 		jpegtran: null,
+// 		plugins: [
+//               require('imagemin-mozjpeg')({
+// 				quality: 75,
+// 				progressive: true,
+// 			}),
+//           ],
+// 	}
+// );

@@ -35,7 +35,7 @@ mix.webpackConfig({
   */
   new MomentLocalesPlugin(),
     new CleanWebpackPlugin({
-			dry: false,
+			dry: true,
 			cleanOnceBeforeBuildPatterns: ['js/*', './*.js', 'robots.txt']
 
 		}),

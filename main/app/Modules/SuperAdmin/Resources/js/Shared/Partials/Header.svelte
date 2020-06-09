@@ -65,6 +65,111 @@
             </li>
           </ul>
         </li>
+        <li
+          class="dropdown dropdown-hover dropdown-triangle dropdown-keep-open">
+          <a
+            class="dropdown-item mnr-5"
+            href="#"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            data-offset="0,12">
+            <span class="btn btn-custom-round">
+              <span
+                data-feather="more-vertical"
+                class="rui-icon rui-icon-stroke-1_5" />
+            </span>
+          </a>
+          <ul class="nav dropdown-menu">
+            <li>
+              <div class="custom-control custom-switch dropdown-item-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input rui-nightmode-toggle"
+                  id="toggleNightMode" />
+                <label
+                  class="dropdown-item custom-control-label"
+                  for="toggleNightMode">
+                  <span
+                    data-feather="moon"
+                    class="rui-icon rui-icon-stroke-1_5" />
+                  <span>Night Mode</span>
+                  <span class="rui-dropdown-circle" />
+                </label>
+              </div>
+            </li>
+            <li>
+              <div class="custom-control custom-switch dropdown-item-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input rui-spotlightmode-toggle"
+                  id="toggleSpotlightMode" />
+                <label
+                  class="dropdown-item custom-control-label"
+                  for="toggleSpotlightMode">
+                  <span
+                    data-feather="square"
+                    class="rui-icon rui-icon-stroke-1_5" />
+                  <span>Spotlight Mode</span>
+                  <span class="rui-dropdown-circle" />
+                </label>
+              </div>
+            </li>
+            <li>
+              <div class="custom-control custom-switch dropdown-item-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input rui-sectionLines-toggle"
+                  id="toggleSectionLines" />
+                <label
+                  class="dropdown-item custom-control-label"
+                  for="toggleSectionLines">
+                  <span
+                    data-feather="layout"
+                    class="rui-icon rui-icon-stroke-1_5" />
+                  <span>Show section lines</span>
+                  <span class="rui-dropdown-circle" />
+                </label>
+              </div>
+            </li>
+            <li class="dropdown-menu-label">Sidebar</li>
+            <li>
+              <div class="custom-control custom-switch dropdown-item-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input rui-darkSidebar-toggle"
+                  id="toggleDarkSidebar" />
+                <label
+                  class="dropdown-item custom-control-label"
+                  for="toggleDarkSidebar">
+                  <span
+                    data-feather="sidebar"
+                    class="rui-icon rui-icon-stroke-1_5" />
+                  <span>Dark</span>
+                  <span class="rui-dropdown-circle" />
+                </label>
+              </div>
+            </li>
+            <li class="dropdown-menu-label">Navbar</li>
+            <li>
+              <div class="custom-control custom-switch dropdown-item-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input rui-darkNavbar-toggle"
+                  id="toggleDarkNavbar" />
+                <label
+                  class="dropdown-item custom-control-label"
+                  for="toggleDarkNavbar">
+                  <span
+                    data-feather="menu"
+                    class="rui-icon rui-icon-stroke-1_5" />
+                  <span>Dark</span>
+                  <span class="rui-dropdown-circle" />
+                </label>
+              </div>
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
