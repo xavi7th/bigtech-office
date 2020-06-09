@@ -5,6 +5,7 @@ namespace App\Modules\PublicPages\Providers;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
@@ -67,7 +68,9 @@ class PublicPagesServiceProvider extends ServiceProvider
         'email' => config('app.email'),
       ],
       'routes' => function (Request $request) {
-        return optional($request->user())->get_navigation_routes() ?? get_related_routes('superadmin.', ['GET'], true);
+        return Cache::remember('routes', config('cache.routes_cache_duration'), function () use ($request) {
+          return optional($request->user())->get_navigation_routes() ?? get_related_routes('superadmin.', ['GET'], true);
+        });
       },
       'isInertiaRequest' => !!request()->header('X-Inertia'),
       'auth' => function () {
