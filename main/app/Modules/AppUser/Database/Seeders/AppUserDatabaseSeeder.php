@@ -3,8 +3,9 @@
 namespace App\Modules\AppUser\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\AppUser\Models\AppUser;
+use Illuminate\Database\Eloquent\Model;
+use App\Modules\SuperAdmin\Database\Seeders\OfficeBranchesTableSeeder;
 
 class AppUserDatabaseSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class AppUserDatabaseSeeder extends Seeder
   {
     Model::unguard();
 
-    factory(AppUser::class, 1)->create()->each(function ($user) {
+    factory(AppUser::class, 31)->create()->each(function ($user) {
       // $user->transactions()->saveMany(factory(Transaction::class, 31)->make());
       // $user->transactions()->save(factory(Transaction::class)->make());
     });

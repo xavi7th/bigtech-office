@@ -4,15 +4,43 @@ namespace App;
 
 use App\Modules\Admin\Models\Admin;
 use Illuminate\Support\Facades\Auth;
+use App\Modules\AppUser\Models\AppUser;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use App\Modules\SuperAdmin\Models\Expense;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ActivityLog;
+use App\Modules\SuperAdmin\Models\UserComment;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Modules\SuperAdmin\Models\ProductHistory;
+use App\Modules\SuperAdmin\Models\ResellerHistory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Modules\AppUser\Models\AppUser;
 
+/**
+ * App\User
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ActivityLog[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Expense[] $expenses
+ * @property-read int|null $expenses_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductHistory[] $product_histories
+ * @property-read int|null $product_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
+ * @property-read int|null $reseller_histories_count
+ * @property-write mixed $password
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\User onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User query()
+ * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable implements JWTSubject
 {
   use Notifiable, SoftDeletes;
@@ -50,10 +78,24 @@ class User extends Authenticatable implements JWTSubject
     return $this->morphMany(Expense::class, 'recorder')->latest();
   }
 
-
   public function activities()
   {
     return $this->morphMany(ActivityLog::class, 'user')->latest();
+  }
+
+  public function comments()
+  {
+    return $this->morphMany(UserComment::class, 'user')->latest();
+  }
+
+  public function product_histories()
+  {
+    return $this->morphMany(ProductHistory::class, 'user')->latest();
+  }
+
+  public function reseller_histories()
+  {
+    return $this->morphMany(ResellerHistory::class, 'user', 'handler_type', 'handled_by')->latest();
   }
 
   public function setPasswordAttribute($value)
@@ -95,16 +137,6 @@ class User extends Authenticatable implements JWTSubject
       return 'admin.dashboard';
     } elseif ($this->isSuperAdmin()) {
       return 'superadmin.dashboard';
-    } else if (Auth::normalAdmin()) {
-      return 'normaladmin.dashboard';
-    } else if (Auth::accountant()) {
-      return 'accountant.dashboard';
-    } else if (Auth::accountOfficer()) {
-      return 'accountofficer.dashboard';
-    } else if (Auth::salesRep()) {
-      return 'salesrep.dashboard';
-    } else if (Auth::customerSupport()) {
-      return 'customersupport.dashboard';
     } else {
       abort(403, 'Invalid user');
     }
@@ -131,10 +163,6 @@ class User extends Authenticatable implements JWTSubject
       return 'Invalid user';
     }
   }
-
-
-
-
 
   public function toFlare(): array
   {

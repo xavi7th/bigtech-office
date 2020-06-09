@@ -2,5 +2,6 @@
     "PublicPages": true,
     "AppUser": true,
     "SuperAdmin": true,
-    "Admin": true
+    "Admin": true,
+    "SalesRep": true
 }

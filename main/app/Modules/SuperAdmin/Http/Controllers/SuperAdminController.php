@@ -195,6 +195,173 @@ class SuperAdminController extends Controller
   }
 
   /**
+   * The admin routes
+   * @return Response
+   */
+  public static function apiRoutes()
+  {
+    Route::group(['middleware' => ['api', 'throttle:20,1'], 'prefix' =>  Admin::DASHBOARD_ROUTE_PREFIX . '/api/',  'namespace' => '\App\Modules\Admin\Http\Controllers'], function () {
+
+      LoginController::routes();
+
+      Product::apiRoutes();
+
+      ProductColor::apiRoutes();
+
+      ProductCategory::apiRoutes();
+
+      ProductBrand::apiRoutes();
+
+      ProductModel::apiRoutes();
+
+      ProductQATestResult::apiRoutes();
+
+      ProcessorSpeed::apiRoutes();
+
+      ProductGrade::apiRoutes();
+
+      StorageSize::apiRoutes();
+
+      StorageType::apiRoutes();
+
+      ProductSupplier::apiRoutes();
+
+      ProductStatus::apiRoutes();
+
+      ProductBatch::apiRoutes();
+
+      ProductPrice::apiRoutes();
+
+      ProductHistory::apiRoutes();
+
+      ProductExpense::apiRoutes();
+
+      ProductSaleRecord::apiRoutes();
+
+      ProductDescriptionSummary::apiRoutes();
+
+      UserComment::apiRoutes();
+
+      Reseller::apiRoutes();
+
+      QATest::apiRoutes();
+
+      SalesChannel::apiRoutes();
+
+      SwapDeal::apiRoutes();
+
+      CompanyBankAccount::apiRoutes();
+
+      OfficeBranch::apiRoutes();
+
+      Expense::apiRoutes();
+
+      ErrLog::apiRoutes();
+    });
+  }
+
+  public static function oldRoutes()
+  {
+
+    Route::group(['middleware' => 'web', 'prefix' => Admin::DASHBOARD_ROUTE_PREFIX,  'namespace' => '\App\Modules\Admin\Http\Controllers'], function () {
+
+      /**
+       * ? Route to get the type of user.
+       * ! This is used to populate the $user object prototyped in the app.js file
+       */
+      Route::get('/user-instance', 'AdminController@getLoggedInUserInstance')->middleware('web');
+
+      Route::get('/site/setup/{key?}',  'AdminController@setupApplication');
+
+      LoginController::routes();
+
+      Route::group(['prefix' => 'api'], function () {
+
+        Route::post('test-route-permission', 'AdminController@testRoutePermission')->middleware('auth:admin');
+
+        Route::get('statistics', 'AdminController@getDashboardStatistics')->middleware('auth:admin');
+
+        AppUser::adminRoutes();
+
+        Admin::adminRoutes();
+
+        NormalAdmin::adminRoutes();
+
+        Accountant::adminRoutes();
+
+        AccountOfficer::adminRoutes();
+
+        CardAdmin::adminRoutes();
+
+        CustomerSupport::adminRoutes();
+
+        SalesRep::adminRoutes();
+
+        StockRequest::adminRoutes();
+
+        StockRequest::salesRepRoutes();
+
+        Merchant::adminRoutes();
+
+        Voucher::adminRoutes();
+
+        MerchantCategory::adminRoutes();
+
+        ActivityLog::adminRoutes();
+
+        SupportTicket::adminRoutes();
+      });
+
+      Route::group(['middleware' => ['auth:admin', 'admins']], function () {
+        Route::get('/{subcat?}', 'AdminController@loadAdminApp')->name('admin.dashboard')->where('subcat', '^((?!(api)).)*');
+      });
+    });
+  }
+
+  public function getDashboardStatistics()
+  {
+    // return ProductSaleRecord::with('product.product_price')->today()->get();
+
+    $sales_record_today = ProductSaleRecord::with('product.product_price')->today()->get();
+    $stock_sales_records = $sales_record_today->where('product.product_batch_id', '<>', ProductBatch::local_supplied_id());
+    $local_supplier_sales_records = $sales_record_today->where('product.product_batch_id', ProductBatch::local_supplied_id());
+
+    $payments_breakdown = CompanyBankAccount::with(['sales_records' => function ($query) {
+      $query->today();
+    }])->get()->groupBy('bank')->map(function ($value, $key) {
+      return $value[0]->sales_records->sum('payment_record.amount');
+    });
+
+    $total_cost_price = $sales_record_today->sum('product.product_price.cost_price');
+    $total_cash_payments = $payments_breakdown->only('Cash')->sum();
+    $total_bank_payments = $payments_breakdown->except('Cash')->sum();
+    $total_local_supplier_sales = $local_supplier_sales_records->sum('selling_price');
+    $total_stock_sales = $stock_sales_records->sum('selling_price');
+
+    return [
+      'total_daily_sale_count' => $sales_record_today->count(),
+      'total_daily_confirmed_sale_count' => $sales_record_today->where('sale_confirmed_by', '<>', null)->count(),
+      'total_daily_unconfirmed_sale_count' => $sales_record_today->where('sale_confirmed_by', null)->count(),
+      'total_daily_sales_selling_price' => $sales_record_today->sum('selling_price'),
+      'total_daily_confirmed_sale_amount' => $sales_record_today->where('sale_confirmed_by', '<>', null)->sum('selling_price'),
+      'total_daily_unconfirmed_sale_amount' => $sales_record_today->where('sale_confirmed_by', null)->sum('selling_price'),
+      'total_bank_payments' => $total_bank_payments,
+      'total_cash_payments' => $total_cash_payments,
+      'total_daily_sales_cost_price' => $total_cost_price,
+      'total_daily_sales_stock' => $total_stock_sales,
+      'total_daily_sales_local_suppliers' => $total_local_supplier_sales,
+      'total_daily_profit' => '',
+      'total_daily_expenses' => '',
+      'total_daily_repairs_cost' => '',
+      'total_swap_deals_value' => '',
+      'total_direct_swap_cost' => 'swap deals without a swapped_with',
+      'total_local_purchases' => 'products without local batch id',
+      'balance_after_deductions' => 'bank cash minus expenses, swap deals value, direct swap cost, local_purchases',
+      'payments_breakdown' => collect($payments_breakdown)->merge(['total' => $payments_breakdown->sum()]),
+    ];
+  }
+
+  /**
    * Display a listing of the resource.
    * @return Response
    */

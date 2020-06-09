@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 7.11.0 on 2020-05-30 17:44:04.
+ * Generated for Laravel 7.11.0 on 2020-06-09 14:10:14.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -2312,16 +2312,6 @@ namespace Illuminate\Support\Facades {
         public static function admin()
         {
                         return \Illuminate\Auth\SessionGuard::admin();
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function appUser()
-        {
-                        return \Illuminate\Auth\SessionGuard::appUser();
         }
          
     }

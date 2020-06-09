@@ -174,13 +174,13 @@ class LoginController extends Controller
   protected function authenticated(Request $request, User $user)
   {
     if ($user->isAppUser()) {
-      redirect()->intended(route($this->authenticatedGuard()->user()->dashboardRoute()));
+      redirect()->intended(route($user->dashboardRoute()));
     } else {
       if ($user->is_verified()) {
         if ($request->isApi()) {
           return response()->json($this->respondWithToken(), 202);
         }
-        return redirect()->intended(route($this->authenticatedGuard()->user()->dashboardRoute()));
+        return redirect()->intended(route($user->dashboardRoute()));
       } else {
         $this->logout($request);
         if ($request->isApi()) {
@@ -225,6 +225,8 @@ class LoginController extends Controller
       return Auth::guard('admin');
     } elseif (Auth('super_admin')->check()) {
       return Auth::guard('super_admin');
+    } else {
+      return null;
     }
   }
 

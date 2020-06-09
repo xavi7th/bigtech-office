@@ -3,6 +3,18 @@
 namespace App\Modules\AppUser\Models;
 
 use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Modules\PublicPages\Models\OTP;
+use App\Modules\SuperAdmin\Models\Product;
+use App\Modules\SuperAdmin\Models\Voucher;
+use App\Modules\PublicPages\Notifications\SendOTP;
+use App\Modules\AppUser\Notifications\ProfileEdited;
+use App\Modules\AppUser\Transformers\AppUserTransformer;
+use App\Modules\PublicPages\Notifications\AccountCreated;
+use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
+use App\Modules\AppUser\Http\Validations\AppUserUpdateProfileValidation;
+use App\Modules\PublicPages\Notifications\SendPasswordResetNotification;
 
 class AppUser extends User
 {
@@ -220,14 +232,14 @@ class AppUser extends User
 
   public function getAllAppUsers()
   {
-    return (new AdminUserTransformer)->collectionTransformer(AppUser::withTrashed()->get(), 'transformForAdminViewAppUsers');
+    return (new AdminUserTransformer)->collectionTransformer(self::withTrashed()->get(), 'transformForAdminViewAppUsers');
   }
 
   public function createAppUser()
   {
     try {
       DB::beginTransaction();
-      $admin = AppUser::create(Arr::collapse([
+      $admin = self::create(Arr::collapse([
         request()->all(),
         [
           'password' => bcrypt('itsefintech@admin'),
@@ -246,28 +258,6 @@ class AppUser extends User
     }
   }
 
-  public function getPermittedRoutes(AppUser $app_user)
-  {
-    $permitted_routes = $app_user->api_routes()->get(['api_routes.id'])->map(function ($item, $key) {
-      return $item->id;
-    });
-
-    $all_routes = ApiRoute::get(['id', 'description'])->map(function ($item, $key) {
-      return ['id' => $item->id, 'description' => $item->description];
-    });
-
-    return ['permitted_routes' => $permitted_routes, 'all_routes' => $all_routes];
-  }
-
-  public function setAppUserPermittedRoutes(AppUser $app_user)
-  {
-    $app_user->api_routes()->sync(request('permitted_routes'));
-
-    ActivityLog::logAdminActivity('Card User permitted routes updated. Card user details: ' . $app_user->email);
-
-    return response()->json(['rsp' => true], 204);
-  }
-
   public function suspendAppUser(AppUser $app_user)
   {
     $app_user->delete();
@@ -279,7 +269,7 @@ class AppUser extends User
 
   public function unsuspendAppUser($id)
   {
-    $app_user = AppUser::withTrashed()->find($id);
+    $app_user = self::withTrashed()->find($id);
     $app_user->restore();
 
     ActivityLog::logAdminActivity('Card User account restored. Card user details: ' . $app_user->email);

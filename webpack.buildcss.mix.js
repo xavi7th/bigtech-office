@@ -3,6 +3,7 @@ let modules = fs.readdirSync('./main/app/Modules');
 const mix = require('laravel-mix');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+require('laravel-mix-imagemin');
 require('laravel-mix-svelte');
 mix.setPublicPath('./public_html');
 
@@ -36,14 +37,42 @@ mix.options({
 			images: 'img'
 		},
 		postCss: [
-      require('postcss-fixes')(),
-      // require('cssnano')({
+		  require('postcss-fixes')(),
+		  // require('cssnano')({
 			// 	discardComments: {
 			// 		removeAll: true
 			// 	},
 			// 	calc: false,
 			// 	cssDeclarationSorter: true
 			// })
-    ],
+		],
 	})
 	.mergeManifest()
+	.imagemin(
+
+		[
+			{
+				from: '**/img/**/**.*',
+				to: 'img/[folder]/[name].[ext]',
+				toType: 'template',
+     },
+			{
+				from: '**/img/**.*',
+				to: 'img/[name].[ext]',
+				toType: 'template',
+     }
+    ], {
+			context: './main/app/Modules',
+		}, {
+			optipng: {
+				optimizationLevel: 7
+			},
+			jpegtran: null,
+			plugins: [
+                require('imagemin-mozjpeg')({
+					quality: 75,
+					progressive: true,
+				}),
+            ],
+		}
+	);
