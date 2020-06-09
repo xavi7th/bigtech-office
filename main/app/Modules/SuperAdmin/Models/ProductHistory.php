@@ -59,12 +59,15 @@ class ProductHistory extends Model
     return $this->belongsTo(ProductStatus::class);
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
     Route::group(['prefix' => 'product-histories', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductHistory@getProductHistories')->middleware('auth:admin_api');
-      Route::get('detailed', 'ProductHistory@getDetailedProductHistories')->middleware('auth:admin_api');
-      Route::get('{product}', 'ProductHistory@getSingleProductHistory')->middleware('auth:admin_api');
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductHistories'])->name($gen('histories', null))->defaults('ex', __e('rewind', false));
+      Route::get('detailed', [self::class, 'getDetailedProductHistories'])->name($gen('histories', '.detailed_product_histories'))->defaults('ex', __e('rewind', false));
+      Route::get('{product}', [self::class, 'getSingleProductHistory'])->name($gen('histories', '.view_product_history'))->defaults('ex', __e('rewind', true));
     });
   }
 

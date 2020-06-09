@@ -45,11 +45,15 @@ class ProductCategory extends Model
     return $this->hasMany(ProductModel::class);
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-categories', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductCategory@getProductCategories')->middleware('auth:admin_api');
-      Route::post('create', 'ProductCategory@createProductCategory')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-categories'], function () {
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductCategories'])->name($gen('categories'))->defaults('ex', __e('edit-3', false));
+      Route::post('create', [self::class, 'createProductCategory'])->name($gen('categories', '.create_product_category'))->defaults('ex', __e('edit-3', true));
+      Route::put('{category}/edit', [self::class, 'editProductCategory'])->name($gen('categories', '.edit_product_category'))->defaults('ex', __e('edit-3', true));
     });
   }
 

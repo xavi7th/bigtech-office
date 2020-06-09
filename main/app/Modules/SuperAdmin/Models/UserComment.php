@@ -58,12 +58,15 @@ class UserComment extends Model
     return $this->morphTo();
   }
 
-  static function apiRoutes()
+  static function routes()
   {
     Route::group(['prefix' => 'user-comments', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'UserComment@getUserComments')->middleware('auth:admin_api');
-      Route::get('product_batch/{product_batch}', 'UserComment@getProductBatchComments')->middleware('auth:admin_api');
-      Route::get('product/{product}', 'UserComment@getProductComments')->middleware('auth:admin_api');
+      $others = function ($name) {
+        return 'superadmin.' . $name;
+      };
+      Route::get('', [self::class, 'getUserComments'])->name($others('user_comments'))->defaults('ex', __e('message-circle', false));
+      Route::get('product-batch/{batch}', [self::class, 'getProductBatchComments'])->name($others('user_comments.batch'))->defaults('ex', __e('message-circle', true));
+      Route::get('product/{product}', [self::class, 'getProductComments'])->name($others('user_comments.product'))->defaults('ex', __e('message-circle', true));
     });
   }
 

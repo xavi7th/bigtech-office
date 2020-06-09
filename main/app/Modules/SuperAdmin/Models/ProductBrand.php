@@ -46,12 +46,15 @@ class ProductBrand extends Model
     return $this->hasMany(ProductModel::class);
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-brands', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductBrand@getProductBrands')->middleware('auth:admin_api');
-      Route::post('create', 'ProductBrand@createProductBrand')->middleware('auth:admin_api');
-      Route::put('{brand}/edit', 'ProductBrand@editProductBrand')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-brands'], function () {
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductBrands'])->name($gen('brands'))->defaults('ex', __e('feather', false));
+      Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('feather', true));
+      Route::put('{brand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('feather', true));
     });
   }
 

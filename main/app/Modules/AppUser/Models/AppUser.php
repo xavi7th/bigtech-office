@@ -3,11 +3,16 @@
 namespace App\Modules\AppUser\Models;
 
 use App\User;
+use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use App\Modules\AppUser\Models\AppUser;
 use App\Modules\PublicPages\Models\OTP;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Voucher;
+use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\PublicPages\Notifications\SendOTP;
 use App\Modules\AppUser\Notifications\ProfileEdited;
 use App\Modules\AppUser\Transformers\AppUserTransformer;
@@ -104,57 +109,35 @@ class AppUser extends User
   }
 
 
-  static function adminRoutes()
+  static function routes()
   {
-    Route::group(['namespace' => '\App\Modules\AppUser\Models'], function () {
-      Route::get('card-users', 'AppUser@getAllAppUsers')->middleware('auth:admin,normal_admin,account_officer');
+    Route::group([], function () {
+      Route::get('app-users', [self::class, 'getAllAppUsers'])->middleware('auth:admin,normal_admin,account_officer');
 
-      Route::post('card-user/create', 'AppUser@createAppUser')->middleware('auth:admin');
+      Route::put('app-user/{app_user}/suspend', [self::class, 'suspendAppUser'])->middleware('auth:account_officer');
 
-      Route::get('card-user/{app_user}/bvn', 'AppUser@getFullBvnNumber')->middleware('auth:admin');
+      Route::put('app-user/{id}/restore', [self::class, 'unsuspendAppUser'])->middleware('auth:account_officer');
 
-      Route::put('card-user/{app_user}/credit-limit', 'AppUser@setUserCreditLimit')->middleware('auth:account_officer');
-
-      Route::put('card-user/{app_user}/merchant-limit', 'AppUser@setUserMerchantLimit')->middleware('auth:account_officer');
-
-      Route::get('card-user/{app_user}/permissions', 'AppUser@getPermittedRoutes')->middleware('auth:admin');
-
-      Route::put('card-user/{app_user}/permissions', 'AppUser@setAppUserPermittedRoutes')->middleware('auth:admin');
-
-      Route::put('card-user/{app_user}/suspend', 'AppUser@suspendAppUser')->middleware('auth:account_officer');
-
-      Route::put('card-user/{id}/restore', 'AppUser@unsuspendAppUser')->middleware('auth:account_officer');
-
-      Route::delete('card-user/{app_user}/delete', 'AppUser@deleteAppUserAccount')->middleware('auth:admin');
+      Route::delete('app-user/{app_user}/delete', [self::class, 'deleteAppUserAccount'])->middleware('auth:admin');
     });
   }
 
   static function appUserRoutes()
   {
-    Route::group(['namespace' =>  '\App\Modules\AppUser\Models'], function () {
-      Route::get('card-users/profile-details', 'AppUser@getAppUserProfileDetails');
-      Route::get('card-users/categories', 'AppUser@getAppUserCategories');
-    });
-
-    Route::group(['prefix' => 'auth', 'middleware' => ['auth:app_api_user', 'app_users'], 'namespace' =>  '\App\Modules\AppUser\Models'], function () {
+    Route::group(['prefix' => 'auth', 'middleware' => ['auth:app_api_user', 'app_users']], function () {
 
       Route::group(['middleware' => ['unverified_app_users']], function () {
-        Route::get('/user/request-otp', 'AppUser@requestOTP');
-        Route::put('/user/verify-otp', 'AppUser@verifyOTP');
+        Route::get('/user/request-otp', [self::class, 'requestOTP']);
+        Route::put('/user/verify-otp', [self::class, 'verifyOTP']);
       });
 
-      // Route::group(['middleware' => ['verified_app_users']], function () {
-      Route::get('/user', 'AppUser@user');
-      Route::put('/user', 'AppUser@updateUserProfile');
-      // });
+      Route::group(['middleware' => ['verified_app_users']], function () {
+        Route::get('app-users/profile-details', [self::class, 'getAppUserProfileDetails']);
+        Route::get('/user', [self::class, 'user']);
+        Route::put('/user', [self::class, 'updateUserProfile']);
+      });
     });
   }
-
-
-  /**
-   * ! Card User Route methods
-   */
-
 
   public function requestOTP(Request $request)
   {
@@ -198,7 +181,6 @@ class AppUser extends User
     return response()->json(['message' => 'Account verified'], 205);
   }
 
-
   public function user(Request $request)
   {
     return response()->json((new AppUserTransformer)->transformBasic($request->user()));
@@ -213,22 +195,10 @@ class AppUser extends User
     return response()->json(['updated' => true], 204);
   }
 
-
-
-  public function getAppUserCategories()
-  {
-    return AppUserCategory::get(['category_name', 'id']);
-  }
-
   public function getAppUserProfileDetails()
   {
     return self::$editableProperties;
   }
-
-
-  /**
-   * ! Admin route methods
-   */
 
   public function getAllAppUsers()
   {

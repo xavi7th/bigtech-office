@@ -137,12 +137,15 @@ class SwapDeal extends Model
     }
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
     Route::group(['prefix' => 'swap-deals', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'SwapDeal@getSwapDeals')->middleware('auth:admin_api');
-      Route::post('create', 'SwapDeal@createSwapDeal')->middleware('auth:admin_api');
-      Route::put('{swap_deal}/edit', 'SwapDeal@editSwapDeal')->middleware('auth:admin_api');
+      $p = function ($name) {
+        return 'superadmin.products.' . $name;
+      };
+      Route::get('', [self::class, 'getSwapDeals'])->name($p('swap_deals'))->defaults('ex', __e('refresh-cw', false));
+      Route::post('create', [self::class, 'createSwapDeal'])->name($p('create_swap_deal'))->defaults('ex', __e('refresh-cw', true));
+      Route::put('{size}/edit', [self::class, 'editSwapDeal'])->name($p('edit_swap_deal'))->defaults('ex', __e('refresh-cw', true));
     });
   }
 

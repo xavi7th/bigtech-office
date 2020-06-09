@@ -248,28 +248,33 @@ class Product extends Model
     return is_numeric($this->product_price->proposed_selling_price) ? to_naira($this->product_price->proposed_selling_price) : $this->product_price->proposed_selling_price;
   }
 
-  static function apiRoutes()
+  static function routes()
   {
-    Route::group(['prefix' => 'products', 'namespace' => '\App\Modules\SuperAdmin\Models'], function () {
-      Route::get('', 'Product@getProducts')->middleware('auth:admin_api');
-      Route::get('detailed', 'Product@getDetailedProducts')->middleware('auth:admin_api');
-      Route::get('resellers', 'Product@getProductsWithResellers')->middleware('auth:admin_api');
-      Route::post('create', 'Product@createProduct')->middleware('auth:admin_api');
-      Route::post('local-supplier/create', 'Product@createLocalSupplierProduct')->middleware('auth:admin_api');
-      Route::post('{product}/sold', 'Product@markProductAsSold')->middleware('auth:admin_api');
-      // Route::put('{product}/confirm-sale', 'Product@confirmProductSale')->middleware('auth:admin_api');
-      Route::put('{product}/edit', 'Product@editProduct')->middleware('auth:admin_api');
-      Route::put('{product}/location', 'Product@updateProductLocation')->middleware('auth:admin_api');
-      Route::put('{product}/status', 'Product@updateProductStatus')->middleware('auth:admin_api');
-      Route::post('{product}/comment', 'Product@commentOnProduct')->middleware('auth:admin_api');
-      Route::get('{product}/qa-tests', 'Product@getApplicableProductQATests')->middleware('auth:admin_api');
-      Route::get('{product}/qa-tests/comments', 'Product@getCommentsOnProductQATestResults')->middleware('auth:admin_api');
-      Route::post('{product}/qa-tests/comment', 'Product@commentOnProductQATestResults')->middleware('auth:admin_api');
-      Route::get('{product}/qa-test-results', 'Product@getProductQATestResults')->middleware('auth:admin_api');
-      Route::put('{product}/qa-test-results', 'Product@updateProductQATestResults')->middleware('auth:admin_api');
-      Route::get('{product}/expenses', 'Product@getProductExpenses')->middleware('auth:admin_api');
-      Route::post('{product}/expense/create', 'Product@createProductExpense')->middleware('auth:admin_api');
-      Route::get('search', 'Product@findProduct')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'products'], function () {
+
+      $p = function ($name) {
+        return 'superadmin.products.' . $name;
+      };
+
+      Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('archive'));
+      Route::get('detailed', [self::class, 'getDetailedProducts'])->name($p('view_detailed_products'))->defaults('ex', __e('archive'));
+      Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('archive'));
+      Route::get('create', [self::class, 'createProduct'])->name($p('create_product'))->defaults('ex', __e('archive'));
+      Route::get('local-supplier/create', [self::class, 'createLocalSupplierProduct'])->name($p('create_local_product'))->defaults('ex', __e('archive'));
+      Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e(null, true));
+      Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e(null, true));
+      Route::post('{product}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e(null, true));
+      Route::put('{product}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e(null, true));
+      Route::put('{product}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e(null, true));
+      Route::post('{product}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e(null, true));
+      Route::get('{product}/qa-tests', [self::class, 'getApplicableProductQATests'])->name($p('applicable_qa_tests'))->defaults('ex', __e(null, true));
+      Route::get('{product}/qa-tests/comments', [self::class, 'getCommentsOnProductQATestResults'])->name($p('qa_test_comments'))->defaults('ex', __e(null, true));
+      Route::post('{product}/qa-tests/comment', [self::class, 'commentOnProductQATestResults'])->name($p('comment_on_qa_test'))->defaults('ex', __e(null, true));
+      Route::get('{product}/qa-test-results', [self::class, 'getProductQATestResults'])->name($p('qa_test_results'))->defaults('ex', __e(null, true));
+      Route::put('{product}/qa-test-results', [self::class, 'updateProductQATestResults'])->name($p('update_qa_result'))->defaults('ex', __e(null, true));
+      Route::get('{product}/expenses', [self::class, 'getProductExpenses'])->name($p('view_product_expenses'))->defaults('ex', __e(null, true));
+      Route::post('{product}/expense/create', [self::class, 'createProductExpense'])->name($p('create_product_expense'))->defaults('ex', __e(null, true));
+      Route::get('search', [self::class, 'findProduct'])->name($p('find_product'))->defaults('ex', __e('archive'));
     });
   }
 

@@ -119,12 +119,15 @@ class ProductPrice extends Model
     );
   }
 
-  static function apiRoutes()
+  static function routes()
   {
-    Route::group(['prefix' => 'product-prices', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductPrice@getProductPrices')->middleware('auth:admin_api');
-      Route::post('create', 'ProductPrice@createProductPrice')->middleware('auth:admin_api');
-      Route::put('{product_price}/edit', 'ProductPrice@editProductPrice')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-prices'], function () {
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductPrices'])->name($gen('prices', null))->defaults('ex', __e('dollar-sign', false));
+      Route::post('create', [self::class, 'createProductPrice'])->name($gen('prices', 'create_price'))->defaults('ex', __e('dollar-sign', true));
+      Route::put('{price}/edit', [self::class, 'editProductPrice'])->name($gen('prices', 'edit_price'))->defaults('ex', __e('dollar-sign', true));
     });
   }
 

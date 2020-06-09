@@ -82,16 +82,19 @@ class Reseller extends Model
     return $this->hasMany(ResellerHistory::class);
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'resellers', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'Reseller@getResellers')->middleware('auth:admin_api');
-      Route::get('products', 'Reseller@getResellersWithProducts')->middleware('auth:admin_api');
-      Route::post('create', 'Reseller@createReseller')->middleware('auth:admin_api');
-      Route::put('{reseller}/edit', 'Reseller@editReseller')->middleware('auth:admin_api');
-      Route::post('{reseller}/give-product', 'Reseller@giveProductToReseller')->middleware('auth:admin_api');
-      Route::post('{reseller}/return-product', 'Reseller@resellerReturnProduct')->middleware('auth:admin_api');
-      Route::post('{reseller}/pay-for-product', 'Reseller@payForProduct')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'resellers'], function () {
+      $others = function ($name) {
+        return 'superadmin.' . $name;
+      };
+      Route::get('', [self::class, 'getResellers'])->name($others('resellers'))->defaults('ex', __e('at-sign', false));
+      Route::get('products', [self::class, 'getResellersWithProducts'])->name($others('resellers.resellers_with_products', null))->defaults('ex', __e('at-sign', false));
+      Route::post('create', [self::class, 'createReseller'])->name($others('resellers.create_reseller'))->defaults('ex', __e('at-sign', true));
+      Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('at-sign', true));
+      Route::post('{reseller}/give-product', [self::class, 'giveProductToReseller'])->name($others('resellers.give_product'))->defaults('ex', __e('at-sign', true));
+      Route::post('{reseller}/return-product', [self::class, 'resellerReturnProduct'])->name($others('resellers.return_product'))->defaults('ex', __e('at-sign', true));
+      Route::post('{reseller}/pay-for-product', [self::class, 'payForProduct'])->name($others('resellers.pay_for_product'))->defaults('ex', __e('at-sign', true));
     });
   }
 

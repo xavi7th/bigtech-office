@@ -67,18 +67,21 @@ class ProductModel extends Model
     return $this->belongsTo(ProductBrand::class);
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-models', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductModel@getProductModels')->middleware('auth:admin_api');
-      Route::get('/detailed', 'ProductModel@getProductFullModels')->middleware('auth:admin_api');
-      Route::post('create', 'ProductModel@createProductModel')->middleware('auth:admin_api');
-      Route::put('{model}/edit', 'ProductModel@editProductModel')->middleware('auth:admin_api');
-      Route::get('{model}/qa-tests', 'ProductModel@getProductModelQATests')->middleware('auth:admin_api');
-      Route::put('{model}/qa-tests', 'ProductModel@updateProductModelQATests')->middleware('auth:admin_api');
-      Route::get('{model}/images', 'ProductModel@getProductModelImages')->middleware('auth:admin_api');
-      Route::post('{model}/images/create', 'ProductModel@createProductModelImage')->middleware('auth:admin_api');
-      Route::delete('images/{model_image}/delete', 'ProductModel@deleteProductModelImage')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-models'], function () {
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductModels'])->name($gen('models'))->defaults('ex', __e('git-branch', false));
+      Route::get('detailed', [self::class, 'getProductFullModels'])->name($gen('models', '.view_detailed_models'))->defaults('ex', __e('git-branch', false));
+      Route::post('create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('git-branch', true));
+      Route::put('{model}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('git-branch', true));
+      Route::get('{model}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('git-branch', true));
+      Route::put('{model}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('git-branch', true));
+      Route::get('{model}/images', [self::class, 'getProductModelImages'])->name($gen('models', '.model_images'))->defaults('ex', __e('git-branch', true));
+      Route::post('{model}/images/create', [self::class, 'createProductModelImage'])->name($gen('models', '.create_model_image'))->defaults('ex', __e('git-branch', true));
+      Route::delete('images/{image}/delete', [self::class, 'deleteProductModelImage'])->name($gen('models', '.delete_model_image'))->defaults('ex', __e('git-branch', true));
     });
   }
 

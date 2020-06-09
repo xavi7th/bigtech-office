@@ -57,12 +57,16 @@ class StorageSize extends Model
     return $value;
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
     Route::group(['prefix' => 'storage-sizes', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'StorageSize@getStorageSizes')->middleware('auth:admin_api');
-      Route::post('create', 'StorageSize@createStorageSize')->middleware('auth:admin_api');
-      Route::put('{storage_size}/edit', 'StorageSize@editStorageSize')->middleware('auth:admin_api');
+      $misc = function ($name) {
+        return 'superadmin.miscellaneous.' . $name;
+      };
+
+      Route::get('', [self::class, 'getStorageSizes'])->name($misc('view_storage_sizes'))->defaults('ex', __e('hard-drive', false));
+      Route::post('create', [self::class, 'createStorageSize'])->name($misc('create_storage_size'))->defaults('ex', __e('hard-drive', true));
+      Route::put('{size}/edit', [self::class, 'editStorageSize'])->name($misc('edit_storage_size'))->defaults('ex', __e('hard-drive', true));
     });
   }
 

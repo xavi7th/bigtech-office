@@ -61,12 +61,15 @@ class ProductBatch extends Model
     return self::where('batch_number', 'LOCAL-SUPPLIER')->first()->id;
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-batches', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductBatch@getProductBatches')->middleware('auth:admin_api');
-      Route::post('create', 'ProductBatch@createProductBatch')->middleware('auth:admin_api');
-      Route::post('{product_batch}/comment', 'ProductBatch@commentOnProductBatch')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-batches'], function () {
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductBatches'])->name($gen('batches', null))->defaults('ex', __e('package', false));
+      Route::post('create', [self::class, 'createProductBatch'])->name($gen('batches', 'create_batch'))->defaults('ex', __e('package', true));
+      Route::post('{batch}/comment', [self::class, 'commentOnProductBatch'])->name($gen('batches', 'create_comment'))->defaults('ex', __e('package', true));
     });
   }
 

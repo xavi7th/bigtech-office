@@ -36,12 +36,16 @@ class StorageType extends Model
 
   protected $fillable = ['type'];
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'storage-types', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'StorageType@getStorageTypes')->middleware('auth:admin_api');
-      Route::post('create', 'StorageType@createStorageType')->middleware('auth:admin_api');
-      Route::put('{storage_type}/edit', 'StorageType@editStorageType')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'storage-types'], function () {
+
+      $misc = function ($name) {
+        return 'superadmin.miscellaneous.' . $name;
+      };
+      Route::get('', [self::class, 'getStorageTypes'])->name($misc('view_storage_types'))->defaults('ex', __e('hard-drive', false));
+      Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->defaults('ex', __e('hard-drive', true));
+      Route::put('{type}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('hard-drive', true));
     });
   }
 

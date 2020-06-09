@@ -36,11 +36,14 @@ class ProcessorSpeed extends Model
 
   protected $fillable = ['speed'];
 
-  public static function apiRoutes()
+  public static function routes()
   {
     Route::group(['prefix' => 'processor-speeds', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProcessorSpeed@getProcessorSpeeds')->middleware('auth:admin_api');
-      Route::post('create', 'ProcessorSpeed@createProcessorSpeed')->middleware('auth:admin_api');
+      $misc = function ($name) {
+        return 'superadmin.miscellaneous.' . $name;
+      };
+      Route::get('', [self::class, 'getProcessorSpeeds'])->name($misc('processor_speeds'))->defaults('ex', __e('cpu', false));
+      Route::post('create', [self::class, 'createProcessorSpeed'])->name($misc('create_processor_speed'))->defaults('ex', __e('cpu', true));
     });
   }
 

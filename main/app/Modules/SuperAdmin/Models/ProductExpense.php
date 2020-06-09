@@ -40,10 +40,13 @@ class ProductExpense extends Model
     return $this->belongsTo(Product::class);
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-expenses', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductExpense@getProductExpenses')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-expenses'], function () {
+      $p = function ($name) {
+        return 'superadmin.products.' . $name;
+      };
+      Route::get('', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('credit-card', false));
     });
   }
 

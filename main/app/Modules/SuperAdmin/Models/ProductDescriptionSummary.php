@@ -48,12 +48,15 @@ class ProductDescriptionSummary extends Model
     return $this->belongsTo(ProductModel::class);
   }
 
-  static function apiRoutes()
+  static function routes()
   {
     Route::group(['prefix' => 'product-description-summary', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductDescriptionSummary@getProductDescriptionSummaries')->middleware('auth:admin_api');
-      Route::post('create', 'ProductDescriptionSummary@createProductDescriptionSummary')->middleware('auth:admin_api');
-      Route::put('{product_desc_summary}/edit', 'ProductDescriptionSummary@editProductDescriptionSummary')->middleware('auth:admin_api');
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductDescriptionSummaries'])->name($gen('descriptions'))->defaults('ex', __e('edit', false));
+      Route::post('create', [self::class, 'createProductDescriptionSummary'])->name($gen('descriptions', 'create_desc'))->defaults('ex', __e('edit', true));
+      Route::put('{desc}/edit', [self::class, 'editProductDescriptionSummary'])->name($gen('descriptions', 'edit_desc'))->defaults('ex', __e('edit', true));
     });
   }
 

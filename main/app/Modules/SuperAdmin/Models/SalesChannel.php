@@ -49,12 +49,15 @@ class SalesChannel extends Model
     return self::where('channel_name', 'Reseller')->first()->id;
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
     Route::group(['prefix' => 'sales-channels', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'SalesChannel@getSalesChannels')->middleware('auth:admin_api');
-      Route::post('create', 'SalesChannel@createSalesChannel')->middleware('auth:admin_api');
-      Route::put('{sales_channel}/edit', 'SalesChannel@editSalesChannel')->middleware('auth:admin_api');
+      $misc = function ($name) {
+        return 'superadmin.miscellaneous.' . $name;
+      };
+      Route::get('', [self::class, 'getSalesChannels'])->name($misc('view_sales_channels'))->defaults('ex', __e('airplay', false));
+      Route::post('create', [self::class, 'createSalesChannel'])->name($misc('create_sales_channel'))->defaults('ex', __e('airplay', true));
+      Route::put('{size}/edit', [self::class, 'editSalesChannel'])->name($misc('edit_sales_channel'))->defaults('ex', __e('airplay', true));
     });
   }
 

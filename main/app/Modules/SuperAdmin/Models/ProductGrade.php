@@ -36,12 +36,15 @@ class ProductGrade extends Model
 
   protected $fillable = ['grade'];
 
-  public static function apiRoutes()
+  public static function routes()
   {
     Route::group(['prefix' => 'product-grades', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductGrade@getProductGrades')->middleware('auth:admin_api');
-      Route::post('create', 'ProductGrade@createProductGrade')->middleware('auth:admin_api');
-      Route::put('{product_grade}/edit', 'ProductGrade@editProductGrade')->middleware('auth:admin_api');
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductGrades'])->name($gen('grade'))->defaults('ex', __e('check-square', false));
+      Route::post('create', [self::class, 'createProductGrade'])->name($gen('grade', '.create_product_grade'))->defaults('ex', __e('check-square', true));
+      Route::put('{grade}/edit', [self::class, 'editProductGrade'])->name($gen('grade', '.edit_product_grade'))->defaults('ex', __e('check-square', true));
     });
   }
 

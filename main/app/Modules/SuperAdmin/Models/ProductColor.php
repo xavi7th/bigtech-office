@@ -40,12 +40,12 @@ class ProductColor extends Model
    * The admin routes
    * @return Response
    */
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-colors', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductColor@getProductColors')->middleware('auth:admin_api');
-      Route::post('create', 'ProductColor@createProductColor')->middleware('auth:admin_api');
-      Route::put('{color}/edit', 'ProductColor@editProductColor')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-colors'], function () {
+      Route::get('', [self::class, 'getProductColors'])->name('superadmin.miscellaneous.colors')->defaults('ex', __e('pen-tool', false));
+      Route::post('create', [self::class, 'createProductColor'])->name('superadmin.miscellaneous.create_product_color')->defaults('ex', __e('pen-tool', true));
+      Route::put('{color}/edit', [self::class, 'editProductColor'])->name('superadmin.miscellaneous.edit_product_color')->defaults('ex', __e('pen-tool', true));
     });
   }
 

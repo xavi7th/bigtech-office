@@ -135,13 +135,16 @@ class ProductSaleRecord extends Model
     return $this->total_bank_payments_amount === $this->selling_price;
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-sales-records', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductSaleRecord@getProductSaleRecords')->middleware('auth:admin_api');
-      Route::get('{sales_record}/transactions', 'ProductSaleRecord@getSaleRecordTransactions')->middleware('auth:admin_api');
-      Route::post('{sales_record}/confirm', 'ProductSaleRecord@confirmSaleRecord')->middleware('auth:admin_api');
-      Route::get('{sales_record}/swap-deal', 'ProductSaleRecord@getSaleRecordSwapDeal')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-sales-records'], function () {
+      $p = function ($name) {
+        return 'superadmin.products.' . $name;
+      };
+      Route::get('', [self::class, 'getProductSaleRecords'])->name($p('view_sales_records'))->defaults('ex', __e(null, false));
+      Route::get('{product}/transactions', [self::class, 'getSaleRecordTransactions'])->name($p('view_sales_record_transactions'))->defaults('ex', __e(null, true));
+      Route::post('{product}/confirm', [self::class, 'confirmSaleRecord'])->name($p('confirm_sales_record'))->defaults('ex', __e(null, true));
+      Route::get('{product}/swap-deal', [self::class, 'getSaleRecordSwapDeal'])->name($p('view_sales_record_swap_deal'))->defaults('ex', __e(null, true));
     });
   }
 

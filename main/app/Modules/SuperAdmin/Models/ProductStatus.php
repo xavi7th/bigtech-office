@@ -94,12 +94,15 @@ class ProductStatus extends Model
     return self::where('status', 'With reseller')->first()->id;
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-statuses', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductStatus@getProductStatuses')->middleware('auth:admin_api');
-      Route::post('create', 'ProductStatus@createProductStatus')->middleware('auth:admin_api');
-      Route::put('{product_status}/edit', 'ProductStatus@editProductStatus')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-statuses'], function () {
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductStatuses'])->name($gen('statuses', null))->defaults('ex', __e('aperture', false));
+      Route::post('create', [self::class, 'createProductStatus'])->name($gen('statuses', 'create_status'))->defaults('ex', __e('aperture', true));
+      Route::put('{statuse}/edit', [self::class, 'editProductStatus'])->name($gen('statuses', 'edit_status'))->defaults('ex', __e('aperture', true));
     });
   }
 

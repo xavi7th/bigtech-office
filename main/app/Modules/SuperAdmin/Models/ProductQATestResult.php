@@ -48,10 +48,13 @@ class ProductQATestResult extends Model
     return $this->belongsTo(QATest::class);
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-qa-test-results', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductQATestResult@getProductQATestResults')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-qa-test-results'], function () {
+      $p = function ($name) {
+        return 'superadmin.products.' . $name;
+      };
+      Route::get('', [self::class, 'getProductQATestResults'])->name($p('qa_test_results'))->defaults('ex', __e('file-text', false));
     });
   }
 

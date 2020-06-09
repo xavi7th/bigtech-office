@@ -36,12 +36,15 @@ class ProductSupplier extends Model
 
   protected $fillable = ['name'];
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'product-suppliers', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'ProductSupplier@getProductSuppliers')->middleware('auth:admin_api');
-      Route::post('create', 'ProductSupplier@createProductSupplier')->middleware('auth:admin_api');
-      Route::put('{product_supplier}/edit', 'ProductSupplier@editProductSupplier')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'product-suppliers'], function () {
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getProductSuppliers'])->name($gen('suppliers', null))->defaults('ex', __e('user-plus', false));
+      Route::post('create', [self::class, 'createProductSupplier'])->name($gen('suppliers', 'create_supplier'))->defaults('ex', __e('user-plus', true));
+      Route::put('{supplier}/edit', [self::class, 'editProductSupplier'])->name($gen('suppliers', 'edit_supplier'))->defaults('ex', __e('user-plus', true));
     });
   }
 

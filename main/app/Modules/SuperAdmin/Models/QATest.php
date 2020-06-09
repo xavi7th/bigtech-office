@@ -59,12 +59,15 @@ class QATest extends Model
       ->as('test_result')->withPivot('is_qa_certified')->withTimestamps();
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'qa-tests', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'QATest@getQATests')->middleware('auth:admin_api');
-      Route::post('create', 'QATest@createQATest')->middleware('auth:admin_api');
-      Route::put('{qa_test}/edit', 'QATest@editQATest')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'qa-tests'], function () {
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+      Route::get('', [self::class, 'getQATests'])->name($gen('qa-tests'))->defaults('ex', __e('award', false));
+      Route::post('create', [self::class, 'createQATest'])->name($gen('qa-tests', '.create_qa_test'))->defaults('ex', __e('award', true));
+      Route::put('{size}/edit', [self::class, 'editQATest'])->name($gen('qa-tests', '.edit_qa_test'))->defaults('ex', __e('award', true));
     });
   }
 

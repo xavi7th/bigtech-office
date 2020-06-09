@@ -60,10 +60,11 @@ class ErrLog extends Model
     Log::error($message, ['userId' => $user->id, 'userType' => get_class($user), 'exception' => $exception]);
   }
 
-  static function apiRoutes()
+  static function routes()
   {
-    Route::group(['namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('err-logs', [self::class, 'getErrorLogs'])->middleware('auth:admin_api');
+    Route::group([], function () {
+
+      Route::get('error-logs', [self::class, 'getErrorLogs'])->name('superadmin.logs.error_logs')->defaults('ex', __e('activity', false));
     });
   }
 

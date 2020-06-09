@@ -501,3 +501,16 @@ if (!function_exists('get_related_routes')) {
     return $isHeirarchical ? getHeirachicalRoutes($routes) : $routes;
   }
 }
+
+/**
+ * Return the data for the extras defaults
+ *
+ * @param bool $navSkip
+ * @param string $icon
+ *
+ * @return array
+ */
+function __e($icon = null, $navSkip = false)
+{
+  return compact(['icon', 'navSkip']);
+}

@@ -47,12 +47,16 @@ class Expense extends Model
     return $this->morphTo();
   }
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'expenses', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'Expense@getExpenses')->middleware('auth:admin_api');
-      Route::post('create', 'Expense@createExpense')->middleware('auth:admin_api');
-      // Route::put('{expense}/edit', 'Expense@editExpense')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'expenses'], function () {
+      $gen = function ($namespace, $name = null) {
+        return 'superadmin.product_' . $namespace . $name;
+      };
+
+      Route::get('', [self::class, 'getExpenses'])->name($gen('office_expenses'))->defaults('ex', __e('clipboard', false));
+      Route::post('create', [self::class, 'createExpense'])->name($gen('office_expenses', '.create_expense'))->defaults('ex', __e('clipboard', true));
+      Route::put('{size}/edit', [self::class, 'editExpense'])->name($gen('office_expenses', '.edit_expense'))->defaults('ex', __e('clipboard', true));
     });
   }
 

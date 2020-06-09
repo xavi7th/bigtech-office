@@ -72,12 +72,15 @@ class CompanyBankAccount extends Model
   }
 
 
-  public static function apiRoutes()
+  public static function routes()
   {
-    Route::group(['prefix' => 'company-bank-accounts', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('', 'CompanyBankAccount@getCompanyBankAccounts')->middleware('auth:admin_api');
-      Route::post('create', 'CompanyBankAccount@createCompanyBankAccount')->middleware('auth:admin_api');
-      Route::put('{company_bank_account}/edit', 'CompanyBankAccount@editCompanyBankAccount')->middleware('auth:admin_api');
+    Route::group(['prefix' => 'company-bank-accounts'], function () {
+      $misc = function ($name) {
+        return 'superadmin.miscellaneous.' . $name;
+      };
+      Route::get('', [self::class, 'getCompanyBankAccounts'])->name($misc('view_bank_accounts'))->defaults('ex', __e('refresh-cw', false));
+      Route::post('create', [self::class, 'createCompanyBankAccount'])->name($misc('create_account'))->defaults('ex', __e('refresh-cw', true));
+      Route::put('{company_bank_account}/edit', [self::class, 'editCompanyBankAccount'])->name($misc('edit_account'))->defaults('ex', __e('refresh-cw', true));
     });
   }
 
