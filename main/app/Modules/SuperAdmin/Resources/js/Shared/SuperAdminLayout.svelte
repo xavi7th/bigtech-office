@@ -1,7 +1,8 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import { afterUpdate } from "svelte";
+  import { afterUpdate, onMount } from "svelte";
+  import { fly } from "svelte/transition";
   import route from "ziggy";
   import Sidebar from "@superadmin-shared/Partials/Sidebar";
   import Header from "@superadmin-shared/Partials/Header";
@@ -13,26 +14,43 @@
 
   console.log($page);
 
-  let isLoaded = false;
+  let isLoaded = false,
+    isMounted = false;
+  export let title;
+
+  onMount(() => {
+    isMounted = true;
+  });
 
   afterUpdate(() => {
     isLoaded = true;
   });
 </script>
 
+<style>
+  .rui-page {
+    position: relative;
+  }
+</style>
+
 <Sidebar {routes} />
 <Header />
 <MobileHeader />
 
-<div class="rui-page content-wrap">
-  <PageTitle />
-  <div class="rui-page-content">
-    <div class="container-fluid">
-      <slot />
+{#if isMounted}
+  <div
+    class="rui-page content-wrap"
+    in:fly={{ x: -300, duration: 700, delay: 400 }}
+    out:fly={{ y: 30, duration: 400 }}>
+    <PageTitle {title} appName={app.name} />
+    <div class="rui-page-content">
+      <div class="container-fluid">
+        <slot />
+      </div>
     </div>
+    <Footer />
   </div>
-  <Footer />
-</div>
+{/if}
 
 {#if isLoaded}
   <script src="/js/user-dashboard-init.js">

@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Awobaz\Compoships\Compoships;
@@ -58,6 +59,11 @@ class Product extends Model
   protected $casts = [
     'product_status_id' => 'int'
   ];
+
+  public function __construct()
+  {
+    Inertia::setRootView('superadmin::app');
+  }
 
   public function app_user()
   {
@@ -264,7 +270,7 @@ class Product extends Model
       Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true));
       Route::post('{product}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true));
-      Route::put('{product}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
+      Route::put('{prodauct}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss', null, true));
       Route::post('{product}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss', null, true));
       Route::get('{product}/qa-tests', [self::class, 'getApplicableProductQATests'])->name($p('applicable_qa_tests'))->defaults('ex', __e('ss', null, true));
@@ -286,11 +292,15 @@ class Product extends Model
     return response()->json((new ProductTransformer)->detailed(self::where($request->search_key, $request->search_string)->first()), 200);
   }
 
-  public function getProducts()
+  public function getProducts(Request $request)
   {
     // $price = ProductPrice::find(1);
     // dd($price->products->toArray());
-    return response()->json((new ProductTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    if ($request->isApi()) {
+      return  response()->json((new ProductTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    } else {
+      return Inertia::render('Products/ListProducts');
+    }
   }
 
   public function getDetailedProducts()
