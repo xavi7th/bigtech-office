@@ -100,9 +100,9 @@ class ProductStatus extends Model
       $gen = function ($namespace, $name = null) {
         return 'superadmin.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductStatuses'])->name($gen('statuses', null))->defaults('ex', __e('aperture', false));
-      Route::post('create', [self::class, 'createProductStatus'])->name($gen('statuses', 'create_status'))->defaults('ex', __e('aperture', true));
-      Route::put('{statuse}/edit', [self::class, 'editProductStatus'])->name($gen('statuses', 'edit_status'))->defaults('ex', __e('aperture', true));
+      Route::get('', [self::class, 'getProductStatuses'])->name($gen('statuses', null))->defaults('ex', __e('ss', 'aperture', false));
+      Route::post('create', [self::class, 'createProductStatus'])->name($gen('statuses', 'create_status'))->defaults('ex', __e('ss', 'aperture', true));
+      Route::put('{statuse}/edit', [self::class, 'editProductStatus'])->name($gen('statuses', 'edit_status'))->defaults('ex', __e('ss', 'aperture', true));
     });
   }
 

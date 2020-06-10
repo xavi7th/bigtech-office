@@ -46,7 +46,7 @@ class ProductExpense extends Model
       $p = function ($name) {
         return 'superadmin.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('credit-card', false));
+      Route::get('', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss', 'credit-card', false));
     });
   }
 

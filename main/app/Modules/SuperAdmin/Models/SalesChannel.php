@@ -55,9 +55,9 @@ class SalesChannel extends Model
       $misc = function ($name) {
         return 'superadmin.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getSalesChannels'])->name($misc('view_sales_channels'))->defaults('ex', __e('airplay', false));
-      Route::post('create', [self::class, 'createSalesChannel'])->name($misc('create_sales_channel'))->defaults('ex', __e('airplay', true));
-      Route::put('{size}/edit', [self::class, 'editSalesChannel'])->name($misc('edit_sales_channel'))->defaults('ex', __e('airplay', true));
+      Route::get('', [self::class, 'getSalesChannels'])->name($misc('view_sales_channels'))->defaults('ex', __e('ss', 'airplay', false));
+      Route::post('create', [self::class, 'createSalesChannel'])->name($misc('create_sales_channel'))->defaults('ex', __e('ss', 'airplay', true));
+      Route::put('{size}/edit', [self::class, 'editSalesChannel'])->name($misc('edit_sales_channel'))->defaults('ex', __e('ss', 'airplay', true));
     });
   }
 

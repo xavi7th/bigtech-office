@@ -67,9 +67,9 @@ class ProductBatch extends Model
       $gen = function ($namespace, $name = null) {
         return 'superadmin.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductBatches'])->name($gen('batches', null))->defaults('ex', __e('package', false));
-      Route::post('create', [self::class, 'createProductBatch'])->name($gen('batches', 'create_batch'))->defaults('ex', __e('package', true));
-      Route::post('{batch}/comment', [self::class, 'commentOnProductBatch'])->name($gen('batches', 'create_comment'))->defaults('ex', __e('package', true));
+      Route::get('', [self::class, 'getProductBatches'])->name($gen('batches', null))->defaults('ex', __e('ss', 'package', false));
+      Route::post('create', [self::class, 'createProductBatch'])->name($gen('batches', 'create_batch'))->defaults('ex', __e('ss', 'package', true));
+      Route::post('{batch}/comment', [self::class, 'commentOnProductBatch'])->name($gen('batches', 'create_comment'))->defaults('ex', __e('ss', 'package', true));
     });
   }
 

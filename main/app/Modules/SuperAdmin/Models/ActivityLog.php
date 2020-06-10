@@ -62,9 +62,9 @@ class ActivityLog extends Model
   static function adminRoutes()
   {
     Route::group(['middleware' => 'auth:admin,accountant,card_admin,account_officer,normal_admin,customer_support,sales_rep'], function () {
-      Route::get('activity-logs', [self::class, 'getActivityLogs'])->name('superadmin.logs.activity_logs')->defaults('ex', __e('activity', false));
-      Route::get('activity-logs/sales-reps', [self::class, 'index'])->name('superadmin.logs.sales_reps_logs')->defaults('ex', __e('activity', false));
-      Route::get('activity-logs/accountant', [self::class, 'index'])->name('superadmin.logs.accountant_logs')->defaults('ex', __e('activity', false));
+      Route::get('activity-logs', [self::class, 'getActivityLogs'])->name('superadmin.logs.activity_logs')->defaults('ex', __e('ss', 'activity', false));
+      Route::get('activity-logs/sales-reps', [self::class, 'index'])->name('superadmin.logs.sales_reps_logs')->defaults('ex', __e('ss', 'activity', false));
+      Route::get('activity-logs/accountant', [self::class, 'index'])->name('superadmin.logs.accountant_logs')->defaults('ex', __e('ss', 'activity', false));
     });
   }
 

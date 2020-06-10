@@ -141,10 +141,10 @@ class ProductSaleRecord extends Model
       $p = function ($name) {
         return 'superadmin.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductSaleRecords'])->name($p('view_sales_records'))->defaults('ex', __e(null, false));
-      Route::get('{product}/transactions', [self::class, 'getSaleRecordTransactions'])->name($p('view_sales_record_transactions'))->defaults('ex', __e(null, true));
-      Route::post('{product}/confirm', [self::class, 'confirmSaleRecord'])->name($p('confirm_sales_record'))->defaults('ex', __e(null, true));
-      Route::get('{product}/swap-deal', [self::class, 'getSaleRecordSwapDeal'])->name($p('view_sales_record_swap_deal'))->defaults('ex', __e(null, true));
+      Route::get('', [self::class, 'getProductSaleRecords'])->name($p('view_sales_records'))->defaults('ex', __e('ss', null, false));
+      Route::get('{product}/transactions', [self::class, 'getSaleRecordTransactions'])->name($p('view_sales_record_transactions'))->defaults('ex', __e('ss', null, true));
+      Route::post('{product}/confirm', [self::class, 'confirmSaleRecord'])->name($p('confirm_sales_record'))->defaults('ex', __e('ss', null, true));
+      Route::get('{product}/swap-deal', [self::class, 'getSaleRecordSwapDeal'])->name($p('view_sales_record_swap_deal'))->defaults('ex', __e('ss', null, true));
     });
   }
 

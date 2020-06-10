@@ -125,9 +125,9 @@ class ProductPrice extends Model
       $p = function ($name) {
         return 'superadmin.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductPrices'])->name($p('view_prices', null))->defaults('ex', __e('dollar-sign', false));
-      Route::post('create', [self::class, 'createProductPrice'])->name($p('create_price'))->defaults('ex', __e('dollar-sign', true));
-      Route::put('{price}/edit', [self::class, 'editProductPrice'])->name($p('edit_price'))->defaults('ex', __e('dollar-sign', true));
+      Route::get('', [self::class, 'getProductPrices'])->name($p('view_prices', null))->defaults('ex', __e('ss', 'dollar-sign', false));
+      Route::post('create', [self::class, 'createProductPrice'])->name($p('create_price'))->defaults('ex', __e('ss', 'dollar-sign', true));
+      Route::put('{price}/edit', [self::class, 'editProductPrice'])->name($p('edit_price'))->defaults('ex', __e('ss', 'dollar-sign', true));
     });
   }
 

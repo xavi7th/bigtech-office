@@ -43,9 +43,9 @@ class StorageType extends Model
       $misc = function ($name) {
         return 'superadmin.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getStorageTypes'])->name($misc('view_storage_types'))->defaults('ex', __e('hard-drive', false));
-      Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->defaults('ex', __e('hard-drive', true));
-      Route::put('{type}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('hard-drive', true));
+      Route::get('', [self::class, 'getStorageTypes'])->name($misc('view_storage_types'))->defaults('ex', __e('ss', 'hard-drive', false));
+      Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->defaults('ex', __e('ss', 'hard-drive', true));
+      Route::put('{type}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('ss', 'hard-drive', true));
     });
   }
 

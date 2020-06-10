@@ -64,9 +64,9 @@ class StorageSize extends Model
         return 'superadmin.miscellaneous.' . $name;
       };
 
-      Route::get('', [self::class, 'getStorageSizes'])->name($misc('view_storage_sizes'))->defaults('ex', __e('hard-drive', false));
-      Route::post('create', [self::class, 'createStorageSize'])->name($misc('create_storage_size'))->defaults('ex', __e('hard-drive', true));
-      Route::put('{size}/edit', [self::class, 'editStorageSize'])->name($misc('edit_storage_size'))->defaults('ex', __e('hard-drive', true));
+      Route::get('', [self::class, 'getStorageSizes'])->name($misc('view_storage_sizes'))->defaults('ex', __e('ss', 'hard-drive', false));
+      Route::post('create', [self::class, 'createStorageSize'])->name($misc('create_storage_size'))->defaults('ex', __e('ss', 'hard-drive', true));
+      Route::put('{size}/edit', [self::class, 'editStorageSize'])->name($misc('edit_storage_size'))->defaults('ex', __e('ss', 'hard-drive', true));
     });
   }
 

@@ -65,9 +65,9 @@ class ProductHistory extends Model
       $gen = function ($namespace, $name = null) {
         return 'superadmin.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductHistories'])->name($gen('histories', null))->defaults('ex', __e('rewind', false));
-      Route::get('detailed', [self::class, 'getDetailedProductHistories'])->name($gen('histories', '.detailed_product_histories'))->defaults('ex', __e('rewind', false));
-      Route::get('{product}', [self::class, 'getSingleProductHistory'])->name($gen('histories', '.view_product_history'))->defaults('ex', __e('rewind', true));
+      Route::get('', [self::class, 'getProductHistories'])->name($gen('histories', null))->defaults('ex', __e('ss', 'rewind', false));
+      Route::get('detailed', [self::class, 'getDetailedProductHistories'])->name($gen('histories', '.detailed_product_histories'))->defaults('ex', __e('ss', 'rewind', false));
+      Route::get('{product}', [self::class, 'getSingleProductHistory'])->name($gen('histories', '.view_product_history'))->defaults('ex', __e('ss', 'rewind', true));
     });
   }
 

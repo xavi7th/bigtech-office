@@ -88,13 +88,13 @@ class Reseller extends Model
       $others = function ($name) {
         return 'superadmin.' . $name;
       };
-      Route::get('', [self::class, 'getResellers'])->name($others('resellers'))->defaults('ex', __e('at-sign', false));
-      Route::get('products', [self::class, 'getResellersWithProducts'])->name($others('resellers.resellers_with_products', null))->defaults('ex', __e('at-sign', false));
-      Route::post('create', [self::class, 'createReseller'])->name($others('resellers.create_reseller'))->defaults('ex', __e('at-sign', true));
-      Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('at-sign', true));
-      Route::post('{reseller}/give-product', [self::class, 'giveProductToReseller'])->name($others('resellers.give_product'))->defaults('ex', __e('at-sign', true));
-      Route::post('{reseller}/return-product', [self::class, 'resellerReturnProduct'])->name($others('resellers.return_product'))->defaults('ex', __e('at-sign', true));
-      Route::post('{reseller}/pay-for-product', [self::class, 'payForProduct'])->name($others('resellers.pay_for_product'))->defaults('ex', __e('at-sign', true));
+      Route::get('', [self::class, 'getResellers'])->name($others('resellers'))->defaults('ex', __e('ss', 'at-sign', false));
+      Route::get('products', [self::class, 'getResellersWithProducts'])->name($others('resellers.resellers_with_products', null))->defaults('ex', __e('ss', 'at-sign', false));
+      Route::post('create', [self::class, 'createReseller'])->name($others('resellers.create_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
+      Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
+      Route::post('{reseller}/give-product', [self::class, 'giveProductToReseller'])->name($others('resellers.give_product'))->defaults('ex', __e('ss', 'at-sign', true));
+      Route::post('{reseller}/return-product', [self::class, 'resellerReturnProduct'])->name($others('resellers.return_product'))->defaults('ex', __e('ss', 'at-sign', true));
+      Route::post('{reseller}/pay-for-product', [self::class, 'payForProduct'])->name($others('resellers.pay_for_product'))->defaults('ex', __e('ss', 'at-sign', true));
     });
   }
 

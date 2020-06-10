@@ -137,18 +137,18 @@ class OfficeBranch extends Model
         return 'superadmin.' . $name;
       };
 
-      Route::get('', [self::class, 'getOfficeBranches'])->name($others('office_branches'))->defaults('ex', __e('trello', false));
-      Route::post('create', [self::class, 'createOfficeBranch'])->name($others('office_branches.create_office_branch'))->defaults('ex', __e('trello', true));
-      Route::put('{branch}/edit', [self::class, 'editOfficeBranch'])->name($others('office_branches.edit_office_branch'))->defaults('ex', __e('trello', true));
-      Route::get('{branch}/products', [self::class, 'getProductsInBranch'])->name($others('office_branches.view_products'))->defaults('ex', __e('trello', true));
-      Route::get('{branch}/product-expenses', [self::class, 'getBranchProductExpenses'])->name($others('office_branches.prod_expenses'))->defaults('ex', __e('trello', true));
-      Route::get('{branch}/product-histories', [self::class, 'getBranchProductHistories'])->name($others('office_branches.prod_histories'))->defaults('ex', __e('trello', true));
-      Route::get('{branch}/reseller-histories', [self::class, 'getBranchResellerHistories'])->name($others('office_branches.res_histories'))->defaults('ex', __e('trello', true));
-      Route::get('{branch}/products-with-resellers', [self::class, 'getBranchProductWithResellers'])->name($others('office_branches.res_prod'))->defaults('ex', __e('trello', true));
-      Route::get('{branch}/sales-records', [self::class, 'getBranchSalesRecords'])->name($others('office_branches.sales_records'))->defaults('ex', __e('trello', true));
-      Route::get('{branch}/staff', [self::class, 'getStaffFromBranch'])->name($others('office_branches.view_staff'))->defaults('ex', __e('trello', true));
-      Route::get('{branch}/staff/departments', [self::class, 'getStaffFromBranchByDept'])->name($others('office_branches.staff_by_depts'))->defaults('ex', __e('trello', true));
-      Route::get('{branch}/staff/activities', [self::class, 'getStaffActivitiesFromBranch'])->name($others('office_branches.staff_acts'))->defaults('ex', __e('trello', true));
+      Route::get('', [self::class, 'getOfficeBranches'])->name($others('office_branches'))->defaults('ex', __e('ss', 'trello', false));
+      Route::post('create', [self::class, 'createOfficeBranch'])->name($others('office_branches.create_office_branch'))->defaults('ex', __e('ss', 'trello', true));
+      Route::put('{branch}/edit', [self::class, 'editOfficeBranch'])->name($others('office_branches.edit_office_branch'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{branch}/products', [self::class, 'getProductsInBranch'])->name($others('office_branches.view_products'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{branch}/product-expenses', [self::class, 'getBranchProductExpenses'])->name($others('office_branches.prod_expenses'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{branch}/product-histories', [self::class, 'getBranchProductHistories'])->name($others('office_branches.prod_histories'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{branch}/reseller-histories', [self::class, 'getBranchResellerHistories'])->name($others('office_branches.res_histories'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{branch}/products-with-resellers', [self::class, 'getBranchProductWithResellers'])->name($others('office_branches.res_prod'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{branch}/sales-records', [self::class, 'getBranchSalesRecords'])->name($others('office_branches.sales_records'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{branch}/staff', [self::class, 'getStaffFromBranch'])->name($others('office_branches.view_staff'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{branch}/staff/departments', [self::class, 'getStaffFromBranchByDept'])->name($others('office_branches.staff_by_depts'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{branch}/staff/activities', [self::class, 'getStaffActivitiesFromBranch'])->name($others('office_branches.staff_acts'))->defaults('ex', __e('ss', 'trello', true));
     });
   }
 

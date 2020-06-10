@@ -64,9 +64,9 @@ class UserComment extends Model
       $others = function ($name) {
         return 'superadmin.' . $name;
       };
-      Route::get('', [self::class, 'getUserComments'])->name($others('user_comments'))->defaults('ex', __e('message-circle', false));
-      Route::get('product-batch/{batch}', [self::class, 'getProductBatchComments'])->name($others('user_comments.batch'))->defaults('ex', __e('message-circle', true));
-      Route::get('product/{product}', [self::class, 'getProductComments'])->name($others('user_comments.product'))->defaults('ex', __e('message-circle', true));
+      Route::get('', [self::class, 'getUserComments'])->name($others('user_comments'))->defaults('ex', __e('ss', 'message-circle', false));
+      Route::get('product-batch/{batch}', [self::class, 'getProductBatchComments'])->name($others('user_comments.batch'))->defaults('ex', __e('ss', 'message-circle', true));
+      Route::get('product/{product}', [self::class, 'getProductComments'])->name($others('user_comments.product'))->defaults('ex', __e('ss', 'message-circle', true));
     });
   }
 

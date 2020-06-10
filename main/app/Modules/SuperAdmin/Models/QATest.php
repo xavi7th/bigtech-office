@@ -65,9 +65,9 @@ class QATest extends Model
       $gen = function ($namespace, $name = null) {
         return 'superadmin.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getQATests'])->name($gen('qa-tests'))->defaults('ex', __e('award', false));
-      Route::post('create', [self::class, 'createQATest'])->name($gen('qa-tests', '.create_qa_test'))->defaults('ex', __e('award', true));
-      Route::put('{size}/edit', [self::class, 'editQATest'])->name($gen('qa-tests', '.edit_qa_test'))->defaults('ex', __e('award', true));
+      Route::get('', [self::class, 'getQATests'])->name($gen('qa-tests'))->defaults('ex', __e('ss', 'award', false));
+      Route::post('create', [self::class, 'createQATest'])->name($gen('qa-tests', '.create_qa_test'))->defaults('ex', __e('ss', 'award', true));
+      Route::put('{size}/edit', [self::class, 'editQATest'])->name($gen('qa-tests', '.edit_qa_test'))->defaults('ex', __e('ss', 'award', true));
     });
   }
 

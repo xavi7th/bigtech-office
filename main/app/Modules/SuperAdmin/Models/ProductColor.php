@@ -43,9 +43,9 @@ class ProductColor extends Model
   public static function routes()
   {
     Route::group(['prefix' => 'product-colors'], function () {
-      Route::get('', [self::class, 'getProductColors'])->name('superadmin.miscellaneous.colors')->defaults('ex', __e('pen-tool', false));
-      Route::post('create', [self::class, 'createProductColor'])->name('superadmin.miscellaneous.create_product_color')->defaults('ex', __e('pen-tool', true));
-      Route::put('{color}/edit', [self::class, 'editProductColor'])->name('superadmin.miscellaneous.edit_product_color')->defaults('ex', __e('pen-tool', true));
+      Route::get('', [self::class, 'getProductColors'])->name('superadmin.miscellaneous.colors')->defaults('ex', __e('ss', 'pen-tool', false));
+      Route::post('create', [self::class, 'createProductColor'])->name('superadmin.miscellaneous.create_product_color')->defaults('ex', __e('ss', 'pen-tool', true));
+      Route::put('{color}/edit', [self::class, 'editProductColor'])->name('superadmin.miscellaneous.edit_product_color')->defaults('ex', __e('ss', 'pen-tool', true));
     });
   }
 

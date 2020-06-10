@@ -42,8 +42,8 @@ class ProcessorSpeed extends Model
       $misc = function ($name) {
         return 'superadmin.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProcessorSpeeds'])->name($misc('processor_speeds'))->defaults('ex', __e('cpu', false));
-      Route::post('create', [self::class, 'createProcessorSpeed'])->name($misc('create_processor_speed'))->defaults('ex', __e('cpu', true));
+      Route::get('', [self::class, 'getProcessorSpeeds'])->name($misc('processor_speeds'))->defaults('ex', __e('ss', 'cpu', false));
+      Route::post('create', [self::class, 'createProcessorSpeed'])->name($misc('create_processor_speed'))->defaults('ex', __e('ss', 'cpu', true));
     });
   }
 

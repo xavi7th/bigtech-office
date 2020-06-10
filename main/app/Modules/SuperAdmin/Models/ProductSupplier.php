@@ -42,9 +42,9 @@ class ProductSupplier extends Model
       $gen = function ($namespace, $name = null) {
         return 'superadmin.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductSuppliers'])->name($gen('suppliers', null))->defaults('ex', __e('user-plus', false));
-      Route::post('create', [self::class, 'createProductSupplier'])->name($gen('suppliers', 'create_supplier'))->defaults('ex', __e('user-plus', true));
-      Route::put('{supplier}/edit', [self::class, 'editProductSupplier'])->name($gen('suppliers', 'edit_supplier'))->defaults('ex', __e('user-plus', true));
+      Route::get('', [self::class, 'getProductSuppliers'])->name($gen('suppliers', null))->defaults('ex', __e('ss', 'user-plus', false));
+      Route::post('create', [self::class, 'createProductSupplier'])->name($gen('suppliers', 'create_supplier'))->defaults('ex', __e('ss', 'user-plus', true));
+      Route::put('{supplier}/edit', [self::class, 'editProductSupplier'])->name($gen('suppliers', 'edit_supplier'))->defaults('ex', __e('ss', 'user-plus', true));
     });
   }
 

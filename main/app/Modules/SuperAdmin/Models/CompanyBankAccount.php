@@ -78,9 +78,9 @@ class CompanyBankAccount extends Model
       $misc = function ($name) {
         return 'superadmin.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getCompanyBankAccounts'])->name($misc('view_bank_accounts'))->defaults('ex', __e('refresh-cw', false));
-      Route::post('create', [self::class, 'createCompanyBankAccount'])->name($misc('create_account'))->defaults('ex', __e('refresh-cw', true));
-      Route::put('{company_bank_account}/edit', [self::class, 'editCompanyBankAccount'])->name($misc('edit_account'))->defaults('ex', __e('refresh-cw', true));
+      Route::get('', [self::class, 'getCompanyBankAccounts'])->name($misc('view_bank_accounts'))->defaults('ex', __e('ss', 'refresh-cw', false));
+      Route::post('create', [self::class, 'createCompanyBankAccount'])->name($misc('create_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::put('{company_bank_account}/edit', [self::class, 'editCompanyBankAccount'])->name($misc('edit_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
     });
   }
 

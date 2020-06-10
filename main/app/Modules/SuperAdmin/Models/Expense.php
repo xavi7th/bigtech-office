@@ -54,9 +54,9 @@ class Expense extends Model
         return 'superadmin.product_' . $namespace . $name;
       };
 
-      Route::get('', [self::class, 'getExpenses'])->name($gen('office_expenses'))->defaults('ex', __e('clipboard', false));
-      Route::post('create', [self::class, 'createExpense'])->name($gen('office_expenses', '.create_expense'))->defaults('ex', __e('clipboard', true));
-      Route::put('{size}/edit', [self::class, 'editExpense'])->name($gen('office_expenses', '.edit_expense'))->defaults('ex', __e('clipboard', true));
+      Route::get('', [self::class, 'getExpenses'])->name($gen('office_expenses'))->defaults('ex', __e('ss', 'clipboard', false));
+      Route::post('create', [self::class, 'createExpense'])->name($gen('office_expenses', '.create_expense'))->defaults('ex', __e('ss', 'clipboard', true));
+      Route::put('{size}/edit', [self::class, 'editExpense'])->name($gen('office_expenses', '.edit_expense'))->defaults('ex', __e('ss', 'clipboard', true));
     });
   }
 

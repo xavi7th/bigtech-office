@@ -64,7 +64,7 @@ class ErrLog extends Model
   {
     Route::group([], function () {
 
-      Route::get('error-logs', [self::class, 'getErrorLogs'])->name('superadmin.logs.error_logs')->defaults('ex', __e('activity', false));
+      Route::get('error-logs', [self::class, 'getErrorLogs'])->name('superadmin.logs.error_logs')->defaults('ex', __e('ss', 'activity', false));
     });
   }
 

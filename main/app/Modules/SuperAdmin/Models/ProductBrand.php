@@ -52,9 +52,9 @@ class ProductBrand extends Model
       $gen = function ($namespace, $name = null) {
         return 'superadmin.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductBrands'])->name($gen('brands'))->defaults('ex', __e('feather', false));
-      Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('feather', true));
-      Route::put('{brand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('feather', true));
+      Route::get('', [self::class, 'getProductBrands'])->name($gen('brands'))->defaults('ex', __e('ss', 'feather', false));
+      Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('ss', 'feather', true));
+      Route::put('{brand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('ss', 'feather', true));
     });
   }
 
