@@ -488,16 +488,29 @@ if (!function_exists('get_related_routes')) {
         'name' => $route->getName(),
         'nav_skip' => $route->defaults['ex']['navSkip'] ?? false,
         'icon' => $route->defaults['ex']['icon'] ?? null,
+        'permitted_users' => $route->defaults['ex']['permittedUsers'] ?? null,
         'menu_name' => \Str::of($route->getName())->afterLast('.')->replaceMatches('/[^A-Za-z0-9]++/', ' ')->after($namespace)->title()->trim()->__toString()
       ];
     })->reject(function ($val) {
-      return $val->nav_skip;
+      $allUserTypes = [
+        'a' => 'Admin',
+        'ss' => 'SuperAdmin',
+        'ap' => 'AppUser',
+      ];
+      $permittedUser = false;
+      Str::of($val->permitted_users)->explode(',')->each(function ($v) use ($allUserTypes, &$permittedUser) {
+        $permittedType = $allUserTypes[$v] ?? null;
+        if (request()->user()->getType() === $permittedType) {
+          $permittedUser = true;
+          return false;
+        }
+      });
+      return $val->nav_skip || !$permittedUser;
     })
       // ->transform(function ($v) {
       //   return collect($v)->forget('nav_skip');
       // })
       ->toArray();
-
     return $isHeirarchical ? getHeirachicalRoutes($routes) : $routes;
   }
 }
@@ -510,7 +523,7 @@ if (!function_exists('get_related_routes')) {
  *
  * @return array
  */
-function __e($icon = null, $navSkip = false)
+function __e($permittedUsers = null, $icon = null, $navSkip = false)
 {
-  return compact(['icon', 'navSkip']);
+  return compact(['icon', 'navSkip', 'permittedUsers']);
 }

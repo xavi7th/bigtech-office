@@ -69,7 +69,7 @@ class PublicPagesServiceProvider extends ServiceProvider
       ],
       'routes' => function (Request $request) {
         return Cache::remember('routes', config('cache.routes_cache_duration'), function () use ($request) {
-          return optional($request->user())->get_navigation_routes() ?? get_related_routes('superadmin.', ['GET'], true);
+          return optional($request->user())->get_navigation_routes() ?? get_related_routes('app.', ['GET'], true);
         });
       },
       'isInertiaRequest' => !!request()->header('X-Inertia'),
