@@ -8,7 +8,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use App\Modules\AppUser\Models\AppUser;
 use App\Modules\PublicPages\Models\OTP;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Voucher;
@@ -171,10 +170,7 @@ class AppUser extends User
     /** Send welcome message */
     ActivityLog::logUserActivity($request->user()->email . ' OTP successfully verified.');
 
-    /**
-     * ! Disabled per app owner's request
-     */
-    // $request->user()->notify(new AccountCreated);
+    $request->user()->notify(new AccountCreated);
 
     DB::commit();
 
@@ -228,7 +224,7 @@ class AppUser extends User
     }
   }
 
-  public function suspendAppUser(AppUser $app_user)
+  public function suspendAppUser(self $app_user)
   {
     $app_user->delete();
 
@@ -247,7 +243,7 @@ class AppUser extends User
     return response()->json(['rsp' => true], 204);
   }
 
-  public function deleteAppUserAccount(AppUser $app_user)
+  public function deleteAppUserAccount(self $app_user)
   {
     $app_user->forceDelete();
 

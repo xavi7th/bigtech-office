@@ -3,10 +3,12 @@
 namespace App\Modules\SuperAdmin\Models;
 
 use Carbon\Carbon;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
+use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\UserComment;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
@@ -45,10 +47,19 @@ class ProductBatch extends Model
 
   protected $dates = ['order_date'];
 
+  public function __construct()
+  {
+    Inertia::setRootView('superadmin::app');
+  }
 
   public function comments()
   {
     return $this->morphMany(UserComment::class, 'subject')->latest();
+  }
+
+  public function products()
+  {
+    return $this->hasMany(Product::class);
   }
 
   public function primary_identifier(): string
@@ -70,12 +81,32 @@ class ProductBatch extends Model
       Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss', 'package', false));
       Route::post('create', [self::class, 'createProductBatch'])->name($p('create_batch'))->defaults('ex', __e('ss', 'package', true));
       Route::post('{batch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss', 'package', true));
+      Route::get('{productBatch}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss', 'package', true));
     });
   }
 
-  public function getProductBatches()
+  public function getProductBatches(Request $request)
   {
-    return response()->json((new ProductBatchTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $productBatches = (new ProductBatchTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi()) {
+      return response()->json($productBatches, 200);
+    } else {
+      return Inertia::render('Products/ManageBatches', [
+        'batches' => $productBatches
+      ]);
+    }
+  }
+
+  public function getBatchProducts(Request $request, self $productBatch)
+  {
+    $batchProducts = $productBatch->products;
+    if ($request->isApi()) {
+      return response()->json($batchProducts, 200);
+    } else {
+      return Inertia::render('Products/BatchProducts', [
+        'products' => $batchProducts
+      ]);
+    }
   }
 
   public function createProductBatch(Request $request)

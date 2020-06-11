@@ -54,7 +54,7 @@ class ProductQATestResult extends Model
       $p = function ($name) {
         return 'superadmin.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductQATestResults'])->name($p('qa_test_results'))->defaults('ex', __e('ss', 'file-text', false));
+      Route::get('', [self::class, 'getProductQATestResults'])->name($p('all_qa_test_results'))->defaults('ex', __e('ss', 'file-text', false));
     });
   }
 

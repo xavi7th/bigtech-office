@@ -265,8 +265,10 @@ class Product extends Model
       Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss', 'archive'));
       Route::get('detailed', [self::class, 'getDetailedProducts'])->name($p('view_detailed_products'))->defaults('ex', __e('ss', 'archive'));
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('ss', 'archive'));
-      Route::get('create', [self::class, 'createProduct'])->name($p('create_product'))->defaults('ex', __e('ss', 'archive'));
+      Route::get('create', [self::class, 'showCreateProductForm'])->name($p('create_product'))->defaults('ex', __e('ss', 'archive'));
+      Route::post('create', [self::class, 'createProduct'])->name($p('create'))->defaults('ex', __e('ss', 'archive'));
       Route::get('local-supplier/create', [self::class, 'createLocalSupplierProduct'])->name($p('create_local_product'))->defaults('ex', __e('ss', 'archive'));
+      Route::get('/{product}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss', 'archive', true));
       Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true));
       Route::post('{product}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true));
@@ -303,6 +305,32 @@ class Product extends Model
     }
   }
 
+  public function getProductDetails(Request $request, Product $product)
+  {
+    $productDetails = $product->load(
+      'product_color',
+      'product_grade',
+      'product_model',
+      'storage_size',
+      'product_supplier',
+      'product_batch',
+      'processor_speed',
+      'ram_size',
+      'storage_type',
+      'product_status',
+      'product_price',
+      'app_user',
+      'location'
+    );
+    if ($request->isApi()) {
+      return  response()->json((new ProductTransformer)->detailed($productDetails), 200);
+    } else {
+      return Inertia::render('Products/ViewProductDetails', [
+        'details' => productDetails
+      ]);
+    }
+  }
+
   public function getDetailedProducts()
   {
     return response()->json((new ProductTransformer)->collectionTransformer(self::with(
@@ -327,6 +355,11 @@ class Product extends Model
     return response()->json((new ProductTransformer)->collectionTransformer(self::has('with_resellers')->with('with_resellers')->get(), 'transformWithResellerDetails'), 200);
   }
 
+  public function showCreateProductForm()
+  {
+    return Inertia::render('Products/CreateProduct');
+  }
+
   public function createProduct(CreateProductValidation $request)
   {
     try {
@@ -336,7 +369,11 @@ class Product extends Model
         'office_branch_id' => OfficeBranch::head_office_id()
       ])->all());
 
-      return response()->json($product, 201);
+      if ($request->isApi()) {
+        return response()->json($product, 201);
+      } else {
+        return back()->withSuccess('Product created');
+      }
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product not created');
       return response()->json(['err' => 'Product not created'], 500);
@@ -619,7 +656,14 @@ class Product extends Model
 
   public function getProductQATestResults(Request $request, self $product)
   {
-    return response()->json((new ProductTransformer)->transformWithTestResults($product->load('qa_tests', 'product_model.qa_tests')), 200);
+    $productQATestResults = (new ProductTransformer)->transformWithTestResults($product->load('qa_tests', 'product_model.qa_tests'));
+
+    if ($request->isApi()) {
+      return response()->json($productQATestResults, 200);
+    }
+    return Inertia::render('Products/QATestResults', [
+      'details' => $productQATestResults
+    ]);
   }
 
   public function updateProductQATestResults(Request $request, self $product)

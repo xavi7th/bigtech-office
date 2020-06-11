@@ -23,7 +23,7 @@ class AppUserController extends Controller
   static function routes()
   {
     LoginController::routes();
-    RegisterController::routes();
+    // RegisterController::routes();
     // ResetPasswordController::routes();
     // ForgotPasswordController::routes();
     // ConfirmPasswordController::routes();

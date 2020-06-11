@@ -10,16 +10,17 @@
 	<link rel="icon" type="image/png" href="./assets/images/favicon.png">
 	<link href="{{ mix('/css/dashboard-app.css') }}" rel="stylesheet" />
 	<link href="{{ mix('/css/superadmin.css') }}" rel="stylesheet" />
-	<script src="{{ mix('js/dashboard-app-vendor.js') }}" async defer></script>
-	<script src="{{ mix('/js/manifest.js') }}" defer></script>
-	<script src="{{ mix('/js/vendor.js') }}" defer></script>
-	<script src="{{ mix('js/superadmin.js') }}" defer></script>
 
 </head>
 
 <body data-spy="scroll" data-target=".rui-page-sidebar" data-offset="140"
 	class="rui-no-transition rui-navbar-autohide rui-section-lines">
 	@inertia
+
+	<script src="{{ mix('js/dashboard-app-vendor.js') }}" async defer></script>
+	<script src="{{ mix('/js/manifest.js') }}" defer></script>
+	<script src="{{ mix('/js/vendor.js') }}" defer></script>
+	<script src="{{ mix('js/superadmin.js') }}" defer></script>
 
 </body>
 
