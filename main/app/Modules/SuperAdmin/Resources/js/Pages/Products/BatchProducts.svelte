@@ -68,8 +68,14 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.qa_test_results', 13)}
-                  class="btn btn-dark">
+                  class="btn btn-dark btn-sm">
                   Test/Result
+                </InertiaLink>
+                <InertiaLink
+                  type="button"
+                  href={route('superadmin.products.expenses', 27)}
+                  class="btn btn-warning btn-sm">
+                  Record Expense
                 </InertiaLink>
                 &nbsp;
               </td>

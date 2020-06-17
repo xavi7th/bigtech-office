@@ -2,10 +2,10 @@
 
 namespace App\Modules\SuperAdmin\Transformers;
 
-use App\Modules\SuperAdmin\Models\Expense;
+use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
 
-class ExpenseTransformer
+class OtherExpenseTransformer
 {
   public function collectionTransformer($collection, $transformerMethod)
   {
@@ -15,7 +15,7 @@ class ExpenseTransformer
       });
   }
 
-  public function basic(Expense $reseller): array
+  public function basic(OtherExpense $reseller): array
   {
     return [
       'id' => (int)$reseller->id,
@@ -25,7 +25,7 @@ class ExpenseTransformer
     ];
   }
 
-  public function transformWithComment(Expense $reseller)
+  public function transformWithComment(OtherExpense $reseller)
   {
     return [
       'id' => (int)$reseller->id,

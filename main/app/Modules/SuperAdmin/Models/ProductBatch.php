@@ -105,7 +105,7 @@ class ProductBatch extends Model
     }
   }
 
-  public function getBatchProducts(Request $request, self $productBatch)
+  public function getBatchProducts(Request $request, ProductBatch $productBatch)
   {
     $batchProducts = $productBatch->products;
     if ($request->isApi()) {
@@ -146,15 +146,15 @@ class ProductBatch extends Model
     }
   }
 
-  public function commentOnProductBatch(Request $request, self $product_batch)
+  public function commentOnProductBatch(Request $request, ProductBatch $productBatch)
   {
     if (!$request->comment) {
       return generate_422_error('Make a comment');
     }
 
     $comment =  auth()->user()->comments()->create([
-      'subject_id' => $product_batch->id,
-      'subject_type' => get_class($product_batch),
+      'subject_id' => $productBatch->id,
+      'subject_type' => get_class($productBatch),
       'comment' => $request->comment
     ]);
 

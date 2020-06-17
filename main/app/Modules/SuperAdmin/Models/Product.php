@@ -280,8 +280,6 @@ class Product extends Model
       Route::post('{product}/qa-tests/comment', [self::class, 'commentOnProductQATestResults'])->name($p('comment_on_qa_test'))->defaults('ex', __e('ss', null, true));
       Route::get('{product}/qa-test-results', [self::class, 'getProductQATestResults'])->name($p('qa_test_results'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/qa-test-results', [self::class, 'updateProductQATestResults'])->name($p('update_qa_result'))->defaults('ex', __e('ss', null, true));
-      Route::get('{product}/expenses', [self::class, 'getProductExpenses'])->name($p('view_product_expenses'))->defaults('ex', __e('ss', null, true));
-      Route::post('{product}/expense/create', [self::class, 'createProductExpense'])->name($p('create_product_expense'))->defaults('ex', __e('ss', null, true));
       Route::get('search', [self::class, 'findProduct'])->name($p('find_product'))->defaults('ex', __e('archive'));
     });
   }
@@ -693,31 +691,6 @@ class Product extends Model
     ]);
 
     return response()->json((new UserCommentTransformer)->detailed($comment), 201);
-  }
-
-  public function getProductExpenses(self $product)
-  {
-    return response()->json((new ProductExpenseTransformer)->collectionTransformer($product->product_expenses, 'basic'), 200);
-  }
-
-  public function createProductExpense(Request $request, self $product)
-  {
-    if (!$request->amount || !$request->reason) {
-      return generate_422_error('Amount and expense reason required');
-    }
-
-    if (!is_numeric($request->amount)) {
-      return generate_422_error('Amount must be numeric');
-    }
-
-    try {
-      $product_expense = $product->product_expenses()->create($request->only(['amount', 'reason']));
-
-      return response()->json((new ProductExpenseTransformer)->basic($product_expense), 201);
-    } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'ProductExpense not created');
-      return response()->json(['err' => 'ProductExpense not created'], 500);
-    }
   }
 
   protected static function boot()

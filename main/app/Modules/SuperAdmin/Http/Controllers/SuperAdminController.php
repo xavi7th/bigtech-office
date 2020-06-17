@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
-use App\Modules\SuperAdmin\Models\Expense;
+use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
@@ -105,7 +105,7 @@ class SuperAdminController extends Controller
 
       OfficeBranch::routes();
 
-      Expense::routes();
+      OtherExpense::routes();
 
       ErrLog::routes();
     });
