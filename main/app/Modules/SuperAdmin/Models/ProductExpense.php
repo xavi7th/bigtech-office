@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,7 +54,8 @@ class ProductExpense extends Model
       $p = function ($name) {
         return 'superadmin.products.' . $name;
       };
-      Route::get('', [self::class, 'getAllProductExpenses'])->name($p('create_expense'))->defaults('ex', __e('ss', 'credit-card', true));
+      // Route::get('', [self::class, 'getAllProductExpenses'])->name($p('create_expense'))->defaults('ex', __e('ss', 'credit-card', true));
+      Route::get('{date}', [self::class, 'getDailyProductExpenses'])->name($p('daily_expenses'))->defaults('ex', __e('ss', 'credit-card', true));
       Route::get('{product}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss', null, true));
       Route::post('{product}/create', [self::class, 'createProductExpense'])->name($p('create_product_expense'))->defaults('ex', __e('ss', null, true));
     });
@@ -62,6 +64,17 @@ class ProductExpense extends Model
   public function getAllProductExpenses()
   {
     return response()->json((new ProductExpenseTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+  }
+
+  public function getDailyProductExpenses(Request $request, $date)
+  {
+    $expenses = (new ProductExpenseTransformer)->collectionTransformer(self::whereDate('created_at', Carbon::parse($date))->get(), 'basic');
+
+    if ($request->isApi()) {
+      return response()->json($expenses, 200);
+    }
+
+    return Inertia::render('Products/DailyProductExpenses', compact('date', 'expenses'));
   }
 
 

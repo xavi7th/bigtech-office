@@ -27,6 +27,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => 1,
         'sale_confirmer_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'is_swap_deal' => 0,
+        'created_at' => '2020-06-17 00:00:00',
+        'updated_at' => '2020-06-14 00:00:00',
+        'deleted_at' => NULL,
       ),
       1 =>
       array(
@@ -37,6 +41,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-06-12 00:00:00',
+        'updated_at' => '2020-06-10 00:00:00',
+        'deleted_at' => NULL,
       ),
       2 =>
       array(
@@ -47,6 +55,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-06-07 00:00:00',
+        'updated_at' => '2020-06-05 00:00:00',
+        'deleted_at' => NULL,
       ),
       3 =>
       array(
@@ -57,6 +69,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-06-03 00:00:00',
+        'updated_at' => '2020-05-31 00:00:00',
+        'deleted_at' => NULL,
       ),
       4 =>
       array(
@@ -67,6 +83,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-05-29 00:00:00',
+        'updated_at' => '2020-05-27 00:00:00',
+        'deleted_at' => NULL,
       ),
       5 =>
       array(
@@ -77,6 +97,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-05-24 00:00:00',
+        'updated_at' => '2020-05-22 00:00:00',
+        'deleted_at' => NULL,
       ),
       6 =>
       array(
@@ -87,6 +111,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-05-20 00:00:00',
+        'updated_at' => '2020-05-17 00:00:00',
+        'deleted_at' => NULL,
       ),
       7 =>
       array(
@@ -97,6 +125,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-05-15 00:00:00',
+        'updated_at' => '2020-05-13 00:00:00',
+        'deleted_at' => NULL,
       ),
       8 =>
       array(
@@ -107,6 +139,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-05-10 00:00:00',
+        'updated_at' => '2020-05-08 00:00:00',
+        'deleted_at' => NULL,
       ),
       9 =>
       array(
@@ -117,6 +153,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-05-06 00:00:00',
+        'updated_at' => '2020-05-03 00:00:00',
+        'deleted_at' => NULL,
       ),
       10 =>
       array(
@@ -127,6 +167,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-05-01 00:00:00',
+        'updated_at' => '2020-04-29 00:00:00',
+        'deleted_at' => NULL,
       ),
       11 =>
       array(
@@ -137,6 +181,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-04-26 00:00:00',
+        'updated_at' => '2020-04-24 00:00:00',
+        'deleted_at' => NULL,
       ),
       12 =>
       array(
@@ -147,6 +195,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-04-22 00:00:00',
+        'updated_at' => '2020-04-19 00:00:00',
+        'deleted_at' => NULL,
       ),
       13 =>
       array(
@@ -157,6 +209,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-04-17 00:00:00',
+        'updated_at' => '2020-04-15 00:00:00',
+        'deleted_at' => NULL,
       ),
       14 =>
       array(
@@ -167,6 +223,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-04-13 00:00:00',
+        'updated_at' => '2020-04-10 00:00:00',
+        'deleted_at' => NULL,
       ),
       15 =>
       array(
@@ -177,6 +237,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-04-08 00:00:00',
+        'updated_at' => '2020-04-06 00:00:00',
+        'deleted_at' => NULL,
       ),
       16 =>
       array(
@@ -187,6 +251,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-04-03 00:00:00',
+        'updated_at' => '2020-04-01 00:00:00',
+        'deleted_at' => NULL,
       ),
       17 =>
       array(
@@ -197,6 +265,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-03-30 00:00:00',
+        'updated_at' => '2020-03-27 00:00:00',
+        'deleted_at' => NULL,
       ),
       18 =>
       array(
@@ -207,6 +279,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-03-25 00:00:00',
+        'updated_at' => '2020-03-23 00:00:00',
+        'deleted_at' => NULL,
       ),
       19 =>
       array(
@@ -217,6 +293,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-03-20 00:00:00',
+        'updated_at' => '2020-03-18 00:00:00',
+        'deleted_at' => NULL,
       ),
       20 =>
       array(
@@ -227,6 +307,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-03-16 00:00:00',
+        'updated_at' => '2020-03-13 00:00:00',
+        'deleted_at' => NULL,
       ),
       21 =>
       array(
@@ -237,6 +321,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-03-11 00:00:00',
+        'updated_at' => '2020-03-09 00:00:00',
+        'deleted_at' => NULL,
       ),
       22 =>
       array(
@@ -247,6 +335,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-03-06 00:00:00',
+        'updated_at' => '2020-03-04 00:00:00',
+        'deleted_at' => NULL,
       ),
       23 =>
       array(
@@ -257,6 +349,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-03-02 00:00:00',
+        'updated_at' => '2020-02-28 00:00:00',
+        'deleted_at' => NULL,
       ),
       24 =>
       array(
@@ -267,6 +363,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-02-26 00:00:00',
+        'updated_at' => '2020-02-24 00:00:00',
+        'deleted_at' => NULL,
       ),
       25 =>
       array(
@@ -277,6 +377,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-02-21 00:00:00',
+        'updated_at' => '2020-02-19 00:00:00',
+        'deleted_at' => NULL,
       ),
       26 =>
       array(
@@ -287,6 +391,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-02-17 00:00:00',
+        'updated_at' => '2020-02-14 00:00:00',
+        'deleted_at' => NULL,
       ),
       27 =>
       array(
@@ -297,6 +405,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-02-12 00:00:00',
+        'updated_at' => '2020-02-10 00:00:00',
+        'deleted_at' => NULL,
       ),
       28 =>
       array(
@@ -307,6 +419,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-02-08 00:00:00',
+        'updated_at' => '2020-02-05 00:00:00',
+        'deleted_at' => NULL,
       ),
       29 =>
       array(
@@ -317,6 +433,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-02-03 00:00:00',
+        'updated_at' => '2020-02-01 00:00:00',
+        'deleted_at' => NULL,
       ),
       30 =>
       array(
@@ -327,6 +447,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-01-29 00:00:00',
+        'updated_at' => '2020-01-27 00:00:00',
+        'deleted_at' => NULL,
       ),
       31 =>
       array(
@@ -337,6 +461,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-01-25 00:00:00',
+        'updated_at' => '2020-01-22 00:00:00',
+        'deleted_at' => NULL,
       ),
       32 =>
       array(
@@ -347,6 +475,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-01-20 00:00:00',
+        'updated_at' => '2020-01-18 00:00:00',
+        'deleted_at' => NULL,
       ),
       33 =>
       array(
@@ -357,6 +489,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-01-15 00:00:00',
+        'updated_at' => '2020-01-13 00:00:00',
+        'deleted_at' => NULL,
       ),
       34 =>
       array(
@@ -367,6 +503,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-01-11 00:00:00',
+        'updated_at' => '2020-01-08 00:00:00',
+        'deleted_at' => NULL,
       ),
       35 =>
       array(
@@ -377,6 +517,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-01-06 00:00:00',
+        'updated_at' => '2020-01-04 00:00:00',
+        'deleted_at' => NULL,
       ),
       36 =>
       array(
@@ -387,6 +531,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2020-01-01 00:00:00',
+        'updated_at' => '2019-12-30 00:00:00',
+        'deleted_at' => NULL,
       ),
       37 =>
       array(
@@ -397,6 +545,10 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => 1,
         'sale_confirmed_by' => NULL,
         'sale_confirmer_type' => NULL,
+        'is_swap_deal' => 0,
+        'created_at' => '2019-12-28 00:00:00',
+        'updated_at' => '2019-12-25 00:00:00',
+        'deleted_at' => NULL,
       ),
     ));
   }

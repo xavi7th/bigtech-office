@@ -264,10 +264,12 @@ class Product extends Model
 
       Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss', 'archive'));
       Route::get('detailed', [self::class, 'getDetailedProducts'])->name($p('view_detailed_products'))->defaults('ex', __e('ss', 'archive'));
+      Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name($p('daily_records'))->defaults('ex', __e('ss', 'archive'));
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('ss', 'archive'));
       Route::get('create', [self::class, 'showCreateProductForm'])->name($p('create_product'))->defaults('ex', __e('ss', 'archive'));
       Route::post('create', [self::class, 'createProduct'])->name($p('create'))->defaults('ex', __e('ss', 'archive'));
-      Route::get('local-supplier/create', [self::class, 'createLocalSupplierProduct'])->name($p('create_local_product'))->defaults('ex', __e('ss', 'archive'));
+      Route::get('local-supplier/create', [self::class, 'showCreateLocalProductForm'])->name($p('create_local_product'))->defaults('ex', __e('ss', 'archive'));
+      Route::post('local-supplier/create', [self::class, 'createLocalSupplierProduct'])->name($p('create_local'))->defaults('ex', __e('ss', 'archive'));
       Route::get('/{product}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss', 'archive', true));
       Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true));
@@ -349,6 +351,14 @@ class Product extends Model
     )->get(), 'detailed'), 200);
   }
 
+  public function showDailyRecordsPage()
+  {
+    $aggregatedSalesRecords = ProductSaleRecord::addSelect(DB::raw('COUNT(created_at) as num_of_sales,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
+    $aggregatedProductExpenseRecords = ProductExpense::addSelect(DB::raw('COUNT(created_at) as num_of_product_expenses,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
+    $aggregatedOtherExpenseRecords = OtherExpense::addSelect(DB::raw('COUNT(created_at) as num_of_other_expenses,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
+    return Inertia::render('Products/DailyRecords', compact('aggregatedSalesRecords', 'aggregatedProductExpenseRecords', 'aggregatedOtherExpenseRecords'));
+  }
+
   public function getProductsWithResellers()
   {
     return response()->json((new ProductTransformer)->collectionTransformer(self::has('with_resellers')->with('with_resellers')->get(), 'transformWithResellerDetails'), 200);
@@ -377,6 +387,11 @@ class Product extends Model
       ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product not created');
       return response()->json(['err' => 'Product not created'], 500);
     }
+  }
+
+  public function showCreateLocalProductForm()
+  {
+    return Inertia::render('Products/CreateLocalProduct');
   }
 
   public function createLocalSupplierProduct(CreateLocalSupplierProductValidation $request)
@@ -653,7 +668,7 @@ class Product extends Model
     return response()->json((new QATestTransformer)->collectionTransformer($product->product_model->qa_tests, 'basic'), 200);
   }
 
-  public function getProductQATestResults(Request $request, self $product)
+  public function getProductQATestResults(Request $request, Product $product)
   {
     $productQATestResults = (new ProductTransformer)->transformWithTestResults($product->load('qa_tests', 'product_model.qa_tests'));
 

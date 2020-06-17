@@ -6,7 +6,7 @@
   import route from "ziggy";
 
   let details = {};
-  export let expenses;
+  // export let expenses;
 
   $: ({ app } = $page);
 </script>

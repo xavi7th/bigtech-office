@@ -41,6 +41,8 @@ use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereUpdatedAt($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
  * @property-read int|null $products_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductPrice[] $productPrices
+ * @property-read int|null $product_prices_count
  */
 class ProductBatch extends Model
 {

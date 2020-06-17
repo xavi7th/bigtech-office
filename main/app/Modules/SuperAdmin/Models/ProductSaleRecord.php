@@ -3,6 +3,7 @@
 namespace App\Modules\SuperAdmin\Models;
 
 use Carbon\Carbon;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
@@ -84,6 +85,11 @@ class ProductSaleRecord extends Model
 
   protected $appends = ['total_bank_payments_amount', 'is_payment_complete'];
 
+  public function __construct()
+  {
+    Inertia::setRootView('superadmin::app');
+  }
+
   public function product()
   {
     return $this->belongsTo(Product::class);
@@ -139,9 +145,10 @@ class ProductSaleRecord extends Model
   {
     Route::group(['prefix' => 'product-sales-records'], function () {
       $p = function ($name) {
-        return 'superadmin.products.' . $name;
+        return 'superadmin.product_sales_records.' . $name;
       };
-      Route::get('', [self::class, 'getProductSaleRecords'])->name($p('view_sales_records'))->defaults('ex', __e('ss', null, false));
+      // Route::get('', [self::class, 'getProductSaleRecords'])->name($p('view_sales_records'))->defaults('ex', __e('ss', null, true));
+      Route::get('/{date}', [self::class, 'getDailyProductSaleRecords'])->name($p('daily'))->defaults('ex', __e('ss', null, true));
       Route::get('{product}/transactions', [self::class, 'getSaleRecordTransactions'])->name($p('view_sales_record_transactions'))->defaults('ex', __e('ss', null, true));
       Route::post('{product}/confirm', [self::class, 'confirmSaleRecord'])->name($p('confirm_sales_record'))->defaults('ex', __e('ss', null, true));
       Route::get('{product}/swap-deal', [self::class, 'getSaleRecordSwapDeal'])->name($p('view_sales_record_swap_deal'))->defaults('ex', __e('ss', null, true));
@@ -162,6 +169,28 @@ class ProductSaleRecord extends Model
       'bank_account_payments'
     )->get();
     return response()->json((new ProductSaleRecordTransformer)->collectionTransformer($sales_records, 'basic'), 200);
+  }
+
+  public function getDailyProductSaleRecords(Request $request, $date)
+  {
+    $salesRecords =  self::with(
+      'product',
+      'product.product_price',
+      'product.product_model:id,name',
+      'sales_rep:id,full_name,email',
+      'online_rep:id,full_name,email',
+      'sale_confirmer:id,full_name,email',
+      'sales_channel:id,channel_name',
+      'bank_account_payments'
+    )->whereDate('created_at', Carbon::parse($date))->get();
+    if ($request->isApi()) {
+      return response()->json((new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic'), 200);
+    } else {
+      return Inertia::render('Products/SalesRecords', [
+        'salesRecords' => (new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic'),
+        'date' => $date
+      ]);
+    }
   }
 
   public function confirmSaleRecord(Request $request, self $sales_record)
