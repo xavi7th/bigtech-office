@@ -8,9 +8,9 @@
     </button>
     <a class="rui-navbar-logo mr-auto" href="dashboard.html">
       <img
-        src="./assets/images/logo.svg"
-        data-src-night="./assets/images/logo-white.svg"
-        data-src-day="./assets/images/logo.svg"
+        src="/img/logo.png"
+        data-src-night="/img/logo-white.png"
+        data-src-day="/img/logo.png"
         alt=""
         width="45" />
     </a>

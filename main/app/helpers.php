@@ -500,7 +500,7 @@ if (!function_exists('get_related_routes')) {
       $permittedUser = false;
       Str::of($val->permitted_users)->explode(',')->each(function ($v) use ($allUserTypes, &$permittedUser) {
         $permittedType = $allUserTypes[$v] ?? null;
-        if (request()->user()->getType() === $permittedType) {
+        if ((request()->user() && request()->user()->getType() === $permittedType)) {
           $permittedUser = true;
           return false;
         }

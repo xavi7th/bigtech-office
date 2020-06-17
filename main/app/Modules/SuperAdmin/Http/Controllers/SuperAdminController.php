@@ -83,7 +83,6 @@ class SuperAdminController extends Controller
 
       ProductBatch::routes();
 
-
       ProductHistory::routes();
 
       ProductExpense::routes();
@@ -112,19 +111,13 @@ class SuperAdminController extends Controller
     });
   }
 
-  /**
-   * Display a listing of the resource.
-   * @return Response
-   */
   public function index(Request $request)
   {
-    // auth()->logout();
     return Inertia::render('SuperAdminDashboard', $this->getDashboardStatistics())->withViewData([
       'title' => 'Hello theEects',
       'metaDesc' => ' This page is ...'
     ]);
   }
-
 
   protected function getDashboardStatistics()
   {

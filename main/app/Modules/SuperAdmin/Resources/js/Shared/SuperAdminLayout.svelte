@@ -23,6 +23,10 @@
   });
 
   afterUpdate(() => {
+    // console.log(window.isLoaded);
+    // setInterval(() => {
+    //   console.log(window.isLoaded);
+    // }, 1000);
     isLoaded = true;
   });
 </script>

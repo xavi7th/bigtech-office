@@ -322,11 +322,12 @@ class Product extends Model
       'app_user',
       'location'
     );
+
     if ($request->isApi()) {
       return  response()->json((new ProductTransformer)->detailed($productDetails), 200);
     } else {
       return Inertia::render('Products/ViewProductDetails', [
-        'details' => productDetails
+        'details' => $productDetails
       ]);
     }
   }

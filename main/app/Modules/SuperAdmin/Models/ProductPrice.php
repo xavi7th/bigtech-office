@@ -2,6 +2,8 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -80,6 +82,11 @@ class ProductPrice extends Model
     'proposed_selling_price'
   ];
 
+  public function __construct()
+  {
+    Inertia::setRootView('superadmin::app');
+  }
+
   public function product_batch()
   {
     return $this->belongsTo(ProductBatch::class);
@@ -123,11 +130,13 @@ class ProductPrice extends Model
   {
     Route::group(['prefix' => 'product-prices'], function () {
       $p = function ($name) {
-        return 'superadmin.products.' . $name;
+        return 'superadmin.prices.' . $name;
       };
-      Route::get('', [self::class, 'getProductPrices'])->name($p('view_prices', null))->defaults('ex', __e('ss', 'dollar-sign', false));
-      Route::post('create', [self::class, 'createProductPrice'])->name($p('create_price'))->defaults('ex', __e('ss', 'dollar-sign', true));
-      Route::put('{price}/edit', [self::class, 'editProductPrice'])->name($p('edit_price'))->defaults('ex', __e('ss', 'dollar-sign', true));
+      // Route::get('', [self::class, 'getProductPrices'])->name($p('view_prices', null))->defaults('ex', __e('ss', 'dollar-sign', false));
+      Route::get('/{productBatch:batch_number}', [self::class, 'getProductPricesByBatch'])->name($p('by_batch', null))->defaults('ex', __e('ss', 'dollar-sign', true));
+      Route::get('{productBatch:batch_number}/create', [self::class, 'createProductPricePage'])->name($p('create_page'))->defaults('ex', __e('ss', 'dollar-sign', true));
+      Route::post('create', [self::class, 'createProductPrice'])->name($p('create'))->defaults('ex', __e('ss', 'dollar-sign', true));
+      Route::put('{price}/edit', [self::class, 'editProductPrice'])->name($p('edit'))->defaults('ex', __e('ss', 'dollar-sign', true));
     });
   }
 
@@ -137,6 +146,25 @@ class ProductPrice extends Model
       self::with('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')->get(),
       'basic'
     ), 200);
+  }
+
+  public function getProductPricesByBatch(Request $request, ProductBatch $productBatch)
+  {
+    if ($request->isApi()) {
+      return response()->json((new ProductPriceTransformer)->collectionTransformer(
+        $productBatch->productPrices->load('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')->get(),
+        'basic'
+      ), 200);
+    } else {
+      return Inertia::render('Products/Prices');
+    }
+  }
+
+  public function createProductPricePage(Request $request, ProductBatch $productBatch)
+  {
+    return Inertia::render('Products/CreatePrice', [
+      'batch' => $productBatch
+    ]);
   }
 
   public function createProductPrice(CreateProductPriceValidation $request)

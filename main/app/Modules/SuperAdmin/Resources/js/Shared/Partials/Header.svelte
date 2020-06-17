@@ -2,9 +2,9 @@
   <div class="rui-navbar-brand">
     <a href="dashboard.html" class="rui-navbar-logo">
       <img
-        src="/img/logo.svg"
-        data-src-night="/img/logo-white.svg"
-        data-src-day="/img/logo.svg"
+        src="/img/logo.png"
+        data-src-night="/img/logo-white.png"
+        data-src-day="/img/logo.png"
         alt=""
         width="45" />
     </a>

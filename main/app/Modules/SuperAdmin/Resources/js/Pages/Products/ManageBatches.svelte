@@ -1,11 +1,7 @@
 <script>
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import { Inertia } from "@inertiajs/inertia";
+  import { InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import FlashMessage from "@user-shared/FlashMessage";
   import route from "ziggy";
-
-  $: ({ app } = $page);
 </script>
 
 <Layout title="Manage Product Batches">
@@ -32,7 +28,7 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.by_batch', 1)}
-                  class="btn btn-dark">
+                  class="btn btn-brand btn-sm">
                   View Devices
                 </InertiaLink>
                 &nbsp;
@@ -47,7 +43,7 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.by_batch', 1)}
-                  class="btn btn-dark">
+                  class="btn btn-brand btn-sm">
                   View Devices
                 </InertiaLink>
                 &nbsp;
@@ -62,7 +58,7 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.by_batch', 1)}
-                  class="btn btn-dark">
+                  class="btn btn-brand btn-sm">
                   View Devices
                 </InertiaLink>
                 &nbsp;
@@ -77,7 +73,27 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.by_batch', 1)}
-                  class="btn btn-dark">
+                  class="btn btn-brand btn-sm">
+                  View Devices
+                </InertiaLink>
+                <InertiaLink
+                  href={route('superadmin.prices.by_batch', 'LOCAL-SUPPLIER')}
+                  class="btn btn-dark btn-sm">
+                  View Prices
+                </InertiaLink>
+                &nbsp;
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">1</th>
+              <td>AB34</td>
+              <td>650</td>
+              <td>{new Date().toDateString()}</td>
+              <td>
+                <InertiaLink
+                  type="button"
+                  href={route('superadmin.products.by_batch', 1)}
+                  class="btn btn-brand btn-sm">
                   View Devices
                 </InertiaLink>
                 &nbsp;
@@ -92,22 +108,7 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.by_batch', 1)}
-                  class="btn btn-dark">
-                  View Devices
-                </InertiaLink>
-                &nbsp;
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">1</th>
-              <td>AB34</td>
-              <td>650</td>
-              <td>{new Date().toDateString()}</td>
-              <td>
-                <InertiaLink
-                  type="button"
-                  href={route('superadmin.products.by_batch', 1)}
-                  class="btn btn-dark">
+                  class="btn btn-brand btn-sm">
                   View Devices
                 </InertiaLink>
                 &nbsp;

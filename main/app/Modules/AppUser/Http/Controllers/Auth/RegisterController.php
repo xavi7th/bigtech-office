@@ -64,8 +64,8 @@ class RegisterController extends Controller
   static function routes()
   {
     Route::group(['middleware' => 'guest'], function () {
-      Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('app.register.show')->defaults('nav_skip', true);
-      Route::post('register', 'RegisterController@register')->name('appuser.register');
+      Route::get('register', [self::class, 'showRegistrationForm'])->name('app.register.show')->defaults('nav_skip', true);
+      Route::post('register', [self::class, 'register'])->name('appuser.register');
     });
   }
 
@@ -100,7 +100,7 @@ class RegisterController extends Controller
    * @param  array  $data
    * @return \App\User
    */
-  protected function create(Request $request): AppUser
+  protected function create(RegistrationValidation $request): AppUser
   {
 
     // $url = request()->file('id_card')->store('public/id_cards');
@@ -126,7 +126,7 @@ class RegisterController extends Controller
    * @param  mixed  $user
    * @return mixed
    */
-  protected function registered(Request $request, $user)
+  protected function registered(RegistrationValidation $request, $user)
   {
     //
     ActivityLog::notifyAdmins($user->email   . ' registered an account on the site.');

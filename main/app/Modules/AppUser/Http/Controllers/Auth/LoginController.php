@@ -214,7 +214,7 @@ class LoginController extends Controller
 
   protected function apiGuard()
   {
-    return Auth::guard('jwt_api');
+    return Auth::guard('api');
   }
 
   protected function authenticatedGuard()

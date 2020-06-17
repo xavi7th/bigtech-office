@@ -11,6 +11,7 @@ use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\UserComment;
+use App\Modules\SuperAdmin\Models\ProductPrice;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
 
@@ -38,6 +39,8 @@ use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereOrderDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
+ * @property-read int|null $products_count
  */
 class ProductBatch extends Model
 {
@@ -60,6 +63,11 @@ class ProductBatch extends Model
   public function products()
   {
     return $this->hasMany(Product::class);
+  }
+
+  public function productPrices()
+  {
+    return $this->hasMany(ProductPrice::class);
   }
 
   public function primary_identifier(): string
