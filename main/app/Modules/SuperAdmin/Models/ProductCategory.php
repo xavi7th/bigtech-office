@@ -48,12 +48,12 @@ class ProductCategory extends Model
   public static function routes()
   {
     Route::group(['prefix' => 'product-categories'], function () {
-      $gen = function ($namespace, $name = null) {
-        return 'superadmin.product_' . $namespace . $name;
+      $gen = function ($name = null) {
+        return 'superadmin.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProductCategories'])->name($gen('categories'))->defaults('ex', __e('ss', 'edit-3', false));
-      Route::post('create', [self::class, 'createProductCategory'])->name($gen('categories', '.create_product_category'))->defaults('ex', __e('ss', 'edit-3', true));
-      Route::put('{category}/edit', [self::class, 'editProductCategory'])->name($gen('categories', '.edit_product_category'))->defaults('ex', __e('ss', 'edit-3', true));
+      Route::get('', [self::class, 'getProductCategories'])->name($gen('product_categories'))->defaults('ex', __e('ss', 'edit-3', false));
+      Route::post('create', [self::class, 'createProductCategory'])->name($gen('create_product_category'))->defaults('ex', __e('ss', 'edit-3', true));
+      Route::put('{category}/edit', [self::class, 'editProductCategory'])->name($gen('edit_product_category'))->defaults('ex', __e('ss', 'edit-3', true));
     });
   }
 

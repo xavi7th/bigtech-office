@@ -51,12 +51,12 @@ class ProductDescriptionSummary extends Model
   static function routes()
   {
     Route::group(['prefix' => 'product-description-summary', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      $gen = function ($namespace, $name = null) {
-        return 'superadmin.product_' . $namespace . $name;
+      $gen = function ($name) {
+        return 'superadmin.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProductDescriptionSummaries'])->name($gen('descriptions'))->defaults('ex', __e('ss', 'edit', false));
-      Route::post('create', [self::class, 'createProductDescriptionSummary'])->name($gen('descriptions', 'create_desc'))->defaults('ex', __e('ss', 'edit', true));
-      Route::put('{desc}/edit', [self::class, 'editProductDescriptionSummary'])->name($gen('descriptions', 'edit_desc'))->defaults('ex', __e('ss', 'edit', true));
+      Route::get('', [self::class, 'getProductDescriptionSummaries'])->name($gen('product_descriptions'))->defaults('ex', __e('ss', 'edit', false));
+      Route::post('create', [self::class, 'createProductDescriptionSummary'])->name($gen('create_product_desc'))->defaults('ex', __e('ss', 'edit', true));
+      Route::put('{desc}/edit', [self::class, 'editProductDescriptionSummary'])->name($gen('edit_product_desc'))->defaults('ex', __e('ss', 'edit', true));
     });
   }
 

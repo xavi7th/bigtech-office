@@ -24,14 +24,14 @@ return [
     | Duration to cache user routes in seconds
     |--------------------------------------------------------------------------
     */
-  'routes_cache_duration' => env('ROUTES_CACHE_DURATION'),
+  'user_routes_cache_duration' => env('USER_ROUTES_CACHE_DURATION'),
 
   /*
       |--------------------------------------------------------------------------
       | Duration to cache the models in seconds
       |--------------------------------------------------------------------------
       */
-  'models_cache_duration' => env('MODELS_CACHE_DURATION'),
+  'product_models_cache_duration' => env('PRODUCT_MODELS_CACHE_DURATION'),
 
   /*
     |--------------------------------------------------------------------------

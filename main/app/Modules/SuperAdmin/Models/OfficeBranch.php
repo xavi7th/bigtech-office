@@ -134,7 +134,7 @@ class OfficeBranch extends Model
     Route::group(['prefix' => 'office-branches', 'namespace' => '\App\Modules\Admin\Models'], function () {
 
       $others = function ($name) {
-        return 'superadmin.' . $name;
+        return 'superadmin.miscellaneous.' . $name;
       };
 
       Route::get('', [self::class, 'getOfficeBranches'])->name($others('office_branches'))->defaults('ex', __e('ss', 'trello', false));

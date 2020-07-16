@@ -106,7 +106,7 @@ class ProductModel extends Model
 
   public function getProductFullModels(Request $request)
   {
-    $productModels =  cache()->remember('models', config('cache.models_cache_duration'), function () {
+    $productModels =  cache()->remember('models', config('cache.product_models_cache_duration'), function () {
       return (new ProductModelTransformer)->collectionTransformer(self::withCount('products')->with('product_category', 'product_brand')->get(), 'transformWithCategoryAndBrand');
     });
 
