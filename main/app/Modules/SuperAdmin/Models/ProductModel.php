@@ -2,11 +2,13 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
+use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\ProductBrand;
 use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductModelImage;
@@ -40,12 +42,19 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereProductBrandId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereProductCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
+ * @property-read int|null $products_count
  */
 class ProductModel extends Model
 {
   protected $fillable = [
     'name', 'product_brand_id', 'product_category_id', 'img_url'
   ];
+
+  public function __construct()
+  {
+    Inertia::setRootView('superadmin::app');
+  }
 
   public function qa_tests()
   {
@@ -67,20 +76,25 @@ class ProductModel extends Model
     return $this->belongsTo(ProductBrand::class);
   }
 
+  public function products()
+  {
+    return $this->hasMany(Product::class);
+  }
+
   public static function routes()
   {
     Route::group(['prefix' => 'product-models'], function () {
       $gen = function ($namespace, $name = null) {
         return 'superadmin.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductModels'])->name($gen('models'))->defaults('ex', __e('ss', 'git-branch', false));
-      Route::get('detailed', [self::class, 'getProductFullModels'])->name($gen('models', '.view_detailed_models'))->defaults('ex', __e('ss', 'git-branch', false));
+      Route::get('', [self::class, 'getProductFullModels'])->name($gen('models'))->defaults('ex', __e('ss', 'git-branch', false));
+      Route::get('{productModel}', [self::class, 'getProductModelDetails'])->name($gen('models', '.details'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::post('create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
-      Route::put('{model}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
-      Route::get('{model}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
-      Route::put('{model}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
-      Route::get('{model}/images', [self::class, 'getProductModelImages'])->name($gen('models', '.model_images'))->defaults('ex', __e('ss', 'git-branch', true));
-      Route::post('{model}/images/create', [self::class, 'createProductModelImage'])->name($gen('models', '.create_model_image'))->defaults('ex', __e('ss', 'git-branch', true));
+      Route::put('{productModel}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
+      Route::get('{productModel}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
+      Route::put('{productModel}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
+      Route::get('{productModel}/images', [self::class, 'getProductModelImages'])->name($gen('models', '.model_images'))->defaults('ex', __e('ss', 'git-branch', true));
+      Route::post('{productModel}/images/create', [self::class, 'createProductModelImage'])->name($gen('models', '.create_model_image'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::delete('images/{image}/delete', [self::class, 'deleteProductModelImage'])->name($gen('models', '.delete_model_image'))->defaults('ex', __e('ss', 'git-branch', true));
     });
   }
@@ -90,9 +104,28 @@ class ProductModel extends Model
     return response()->json((new ProductModelTransformer)->collectionTransformer(self::all(), 'basic'), 200);
   }
 
-  public function getProductFullModels()
+  public function getProductFullModels(Request $request)
   {
-    return response()->json((new ProductModelTransformer)->collectionTransformer(self::with('product_category', 'product_brand')->get(), 'transformWithCategoryAndBrand'), 200);
+    $productModels =  cache()->remember('models', config('cache.models_cache_duration'), function () {
+      return (new ProductModelTransformer)->collectionTransformer(self::withCount('products')->with('product_category', 'product_brand')->get(), 'transformWithCategoryAndBrand');
+    });
+
+    if ($request->isApi()) {
+      return response()->json($productModels, 200);
+    }
+    return Inertia::render('ProductModels/List', [
+      'productModels' => $productModels
+    ]);
+  }
+
+  public function getProductModelDetails(ProductModel $productModel)
+  {
+    return Inertia::render('ProductModels/Details', [
+      'details' => [
+        'images' => (new ProductModelTransformer)->collectionTransformer($productModel->product_model_images, 'transformImage'),
+        'qa_tests' => (new ProductModelTransformer)->collectionTransformer($productModel->qa_tests, 'transformQATest'),
+      ]
+    ]);
   }
 
   public function createProductModel(CreateProductModelValidation $request)
@@ -115,15 +148,15 @@ class ProductModel extends Model
   }
 
 
-  public function editProductModel(CreateProductModelValidation $request, self $model)
+  public function editProductModel(CreateProductModelValidation $request, self $productModel)
   {
 
     try {
       foreach ($request->validated() as $key => $value) {
-        $model->$key = $value;
+        $productModel->$key = $value;
       }
 
-      $model->save();
+      $productModel->save();
 
       return response()->json([], 204);
     } catch (\Throwable $th) {
@@ -132,34 +165,34 @@ class ProductModel extends Model
     }
   }
 
-  public function getProductModelQATests(Request $request, self $model)
+  public function getProductModelQATests(Request $request, self $productModel)
   {
-    return response()->json((new ProductModelTransformer)->collectionTransformer($model->qa_tests, 'transformQATest'), 200);
+    return response()->json((new ProductModelTransformer)->collectionTransformer($productModel->qa_tests, 'transformQATest'), 200);
   }
 
-  public function updateProductModelQATests(Request $request, self $model)
+  public function updateProductModelQATests(Request $request, self $productModel)
   {
     if (!$request->qa_tests) {
       return generate_422_error('Specify valid QA tests');
     }
 
-    $tests = $model->qa_tests()->sync($request->qa_tests);
+    $tests = $productModel->qa_tests()->sync($request->qa_tests);
 
     return response()->json($tests, 201);
   }
 
-  public function getProductModelImages(Request $request, self $model)
+  public function getProductModelImages(Request $request, self $productModel)
   {
-    return response()->json((new ProductModelTransformer)->collectionTransformer($model->product_model_images, 'transformImage'), 200);
+    return response()->json((new ProductModelTransformer)->collectionTransformer($productModel->product_model_images, 'transformImage'), 200);
   }
 
-  public function createProductModelImage(Request $request, self $model)
+  public function createProductModelImage(Request $request, self $productModel)
   {
     if (!$request->img) {
       return generate_422_error('Specify valid image');
     }
 
-    $image = $model->product_model_images()->create([
+    $image = $productModel->product_model_images()->create([
       'img_url' => $request->img
     ]);
 

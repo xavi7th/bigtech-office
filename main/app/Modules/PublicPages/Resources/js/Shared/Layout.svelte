@@ -7,7 +7,7 @@
   import MobileHeader from "@public-shared/Partials/MobileHeader";
   import SectionLoader from "@public-shared/PageLoader";
   import { fade } from "svelte/transition";
-  import { afterUpdate, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
 
   $: ({ errors, auth, isInertiaRequest, isMobile, isDesktop } = $page);
@@ -18,14 +18,13 @@
     isLoaded = true;
   });
 
-  afterUpdate(() => {
-    setTimeout(() => {
-      pageLoaded = true;
-    }, 1500);
-  });
-
   console.log($page);
 </script>
+
+<svelte:window
+  on:load={() => {
+    pageLoaded = true;
+  }} />
 
 {#if !pageLoaded && !isInertiaRequest}
   <PageLoader />

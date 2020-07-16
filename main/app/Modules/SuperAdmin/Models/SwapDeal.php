@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,10 @@ class SwapDeal extends Model
     'swap_value', 'swapped_with', 'product_status_id', 'app_user_id'
   ];
 
+  public function __construct()
+  {
+    Inertia::setRootView('superadmin::app');
+  }
 
   public function primary_identifier(): string
   {
@@ -144,14 +149,37 @@ class SwapDeal extends Model
         return 'superadmin.products.' . $name;
       };
       Route::get('', [self::class, 'getSwapDeals'])->name($p('swap_deals'))->defaults('ex', __e('ss', 'refresh-cw', false));
-      Route::post('create', [self::class, 'createSwapDeal'])->name($p('create_swap_deal'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::put('{size}/edit', [self::class, 'editSwapDeal'])->name($p('edit_swap_deal'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name($p('swap_deal_details'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::get('create', [self::class, 'showCreateSwapDealForm'])->name($p('create_swap_deal'))->defaults('ex', __e('ss', 'refresh-cw', false));
+      Route::post('create', [self::class, 'createSwapDeal'])->name($p('swap_deal.create'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::put('{swapDeal:product_uuid}/edit', [self::class, 'editSwapDeal'])->name($p('edit_swap_deal'))->defaults('ex', __e('ss', 'refresh-cw', true));
     });
   }
 
-  public function getSwapDeals()
+  public function getSwapDeals(Request $request)
   {
-    return response()->json((new SwapDealTransformer)->collectionTransformer(self::with('swapped_with', 'product_status', 'app_user')->get(), 'detailed'), 200);
+    /**
+     *! Sales rep will see the ones that are not sold
+     *! Accountant will see the ones that are sold
+     *! Qa will see the ones that are untested
+     */
+    $swapDeals = (new SwapDealTransformer)->collectionTransformer(self::with('swapped_with', 'product_status', 'app_user')->get(), 'detailed');
+    if ($request->isApi()) {
+      return response()->json($swapDeals, 200);
+    }
+    return Inertia::render('Products/SwapDeals', compact('swapDeals'));
+  }
+
+  public function getSwapDealDetails(Request $request, SwapDeal $swapDeal)
+  {
+    $swapDeal = (new SwapDealTransformer)->detailed($swapDeal->load('swapped_with', 'product_status', 'app_user'));
+
+    return Inertia::render('Products/SwapDealDetails', compact('swapDeal'));
+  }
+
+  public function showCreateSwapDealForm()
+  {
+    return Inertia::render('Products/CreateDirectSwapDeal');
   }
 
   public function createSwapDeal(CreateSwapDealValidation $request)
@@ -194,6 +222,7 @@ class SwapDeal extends Model
       /**
        * add an entry for the product trail that it's status changed
        */
+      dd('fire an event to report this change');
       auth()->user()->product_histories()->create([
         'product_id' => $product->id,
         'product_status_id' => $product->product_status_id,

@@ -35,7 +35,7 @@ mix.webpackConfig({
   */
   new MomentLocalesPlugin(),
     new CleanWebpackPlugin({
-			dry: true,
+			dry: false,
 			cleanOnceBeforeBuildPatterns: ['js/*', './*.js', 'robots.txt']
 
 		}),
@@ -83,7 +83,14 @@ mix
 	.extract()
 	.mergeManifest()
 	.then(() => {
-		const _ = require('lodash')
+		const _ = require('lodash');
+		var crypto = require("crypto");
+		const saltCssId = crypto.randomBytes(20)
+			.toString('hex');
+		console.log(
+			'\x1b[41m%s\x1b[0m',
+			saltCssId
+		)
 		// let manifestData = require( './public_html/mix-manifest' )
 		let oldManifestData = JSON.parse(fs.readFileSync('./public_html/mix-manifest.json', 'utf-8'))
 		let newManifestData = {};
@@ -91,7 +98,7 @@ mix
 		_.map(oldManifestData, (actualFilename, mixKeyName) => {
 			if (_.startsWith(mixKeyName, '/css')) {
 				/** Exclude CSS files from renaming for now till we start cache busting them */
-				newManifestData[mixKeyName] = actualFilename;
+				newManifestData[mixKeyName] = actualFilename + '?' + saltCssId;
 			} else {
 				let newMixKeyName = _.split(mixKeyName, '.')
 					.tap(o => {

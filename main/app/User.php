@@ -120,12 +120,14 @@ class User extends Authenticatable implements JWTSubject
 
   public function get_navigation_routes(): array
   {
-    if ($this->isSuperAdmin()) {
-      return get_related_routes('superadmin.', ['GET'], $isHeirarchical = true);
-    } elseif ($this->isAppUser()) {
+    if ($this->isAppUser()) {
       return get_related_routes('appuser.', ['GET'], $isHeirarchical = true);
+    } elseif ($this->isAdmin()) {
+      return get_related_routes('admin.', ['GET'], $isHeirarchical = true);
+    } elseif ($this->isSuperAdmin()) {
+      return get_related_routes('superadmin.', ['GET'], $isHeirarchical = true);
     } else {
-      return null;
+      return [];
     }
   }
 

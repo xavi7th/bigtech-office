@@ -2,7 +2,7 @@
 	"private": true,
 	"scripts": {
 		"dev-all": "concurrently -m 1 \"npm --section=buildcss run dev\" \"npm --section=buildjs run dev\"  --kill-others-on-fail",
-		"watch-all": "concurrently \"npm --section=buildjs run watch\" \"npm --section=buildcss run watch\"  --kill-others-on-fail",
+		"watch-all": "concurrently \"npm --section=buildcss run watch\" \"npm --section=buildjs run watch\"  --kill-others-on-fail",
 		"prod-all": "concurrently -m 1 \"npm --section=buildcss run prod\" \"npm --section=buildjs run prod\"  --kill-others-on-fail",
 		"dev": "npm run development",
 		"development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",

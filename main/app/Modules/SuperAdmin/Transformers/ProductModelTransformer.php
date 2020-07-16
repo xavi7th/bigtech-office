@@ -35,6 +35,7 @@ class ProductModelTransformer
       'img_url' => (string)$product_model->img_url,
       'product_category' => $product_model->product_category->name,
       'product_brand' => $product_model->product_brand->name,
+      'product_count' => $product_model->products_count,
     ];
   }
 

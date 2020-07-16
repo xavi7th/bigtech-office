@@ -23,10 +23,7 @@
   });
 
   afterUpdate(() => {
-    // console.log(window.isLoaded);
-    // setInterval(() => {
-    //   console.log(window.isLoaded);
-    // }, 1000);
+    document.querySelector("#app").removeAttribute("data-page");
     isLoaded = true;
   });
 </script>
@@ -40,7 +37,6 @@
 <Sidebar {routes} />
 <Header />
 <MobileHeader />
-
 {#if isMounted}
   <div
     class="rui-page content-wrap"

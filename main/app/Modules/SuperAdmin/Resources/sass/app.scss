@@ -17,3 +17,12 @@
 .table td .surties {
 	font-size: 12px;
 }
+
+.table-sm thead th {
+	padding: 10px 15px;
+	white-space: nowrap;
+}
+
+.nowrap {
+	white-space: nowrap !important;
+}

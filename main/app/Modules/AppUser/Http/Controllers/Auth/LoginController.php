@@ -105,7 +105,7 @@ class LoginController extends Controller
    */
   public function logout(Request $request)
   {
-    $this->guard()->logout();
+    $this->authenticatedGuard()->logout();
     $request->session()->invalidate();
 
     try {
@@ -173,6 +173,7 @@ class LoginController extends Controller
    */
   protected function authenticated(Request $request, User $user)
   {
+    // dd($user);
     if ($user->isAppUser()) {
       redirect()->intended(route($user->dashboardRoute()));
     } else {
@@ -186,7 +187,7 @@ class LoginController extends Controller
         if ($request->isApi()) {
           return response()->json(['unverified' => 'Unverified user'], 401);
         }
-        return back()->withError(['unverified' => 'Unverified user']);
+        return back()->withError('Unverified user');
       }
     }
     return redirect()->route(Admin::dashboardRoute());

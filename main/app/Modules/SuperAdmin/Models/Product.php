@@ -263,7 +263,6 @@ class Product extends Model
       };
 
       Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss', 'archive'));
-      Route::get('detailed', [self::class, 'getDetailedProducts'])->name($p('view_detailed_products'))->defaults('ex', __e('ss', 'archive'));
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name($p('daily_records'))->defaults('ex', __e('ss', 'archive'));
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('ss', 'archive'));
       Route::get('create', [self::class, 'showCreateProductForm'])->name($p('create_product'))->defaults('ex', __e('ss', 'archive'));
@@ -327,28 +326,9 @@ class Product extends Model
       return  response()->json((new ProductTransformer)->detailed($productDetails), 200);
     } else {
       return Inertia::render('Products/ViewProductDetails', [
-        'details' => $productDetails
+        'details' => (new ProductTransformer)->detailed($productDetails)
       ]);
     }
-  }
-
-  public function getDetailedProducts()
-  {
-    return response()->json((new ProductTransformer)->collectionTransformer(self::with(
-      'product_color',
-      'product_grade',
-      'product_model',
-      'storage_size',
-      'product_supplier',
-      'product_batch',
-      'processor_speed',
-      'ram_size',
-      'storage_type',
-      'product_status',
-      'product_price',
-      'app_user',
-      'location'
-    )->get(), 'detailed'), 200);
   }
 
   public function showDailyRecordsPage()
@@ -359,9 +339,13 @@ class Product extends Model
     return Inertia::render('Products/DailyRecords', compact('aggregatedSalesRecords', 'aggregatedProductExpenseRecords', 'aggregatedOtherExpenseRecords'));
   }
 
-  public function getProductsWithResellers()
+  public function getProductsWithResellers(Request $request)
   {
-    return response()->json((new ProductTransformer)->collectionTransformer(self::has('with_resellers')->with('with_resellers')->get(), 'transformWithResellerDetails'), 200);
+    $productsWithResellers = (new ProductTransformer)->collectionTransformer(self::has('with_resellers')->with('with_resellers')->get(), 'transformWithResellerDetails');
+    if ($request->isApi()) {
+      return response()->json($productsWithResellers, 200);
+    }
+    return Inertia::render('Products/ProductsWithResellers', compact('productsWithResellers'));
   }
 
   public function showCreateProductForm()
