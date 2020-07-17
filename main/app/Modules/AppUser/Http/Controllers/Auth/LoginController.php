@@ -44,16 +44,16 @@ class LoginController extends Controller
    */
   public function __construct()
   {
-    $this->middleware('guest')->except('logout');
+    $this->middleware('guest:' . collect(config('auth.guards'))->keys()->implode(','))->except('logout');
     Inertia::setRootView('appuser::app');
   }
 
   static function routes()
   {
     Route::group(['middleware' => 'web', 'namespace' => '\App\Modules\AppUser\Http\Controllers\Auth'], function () {
-      Route::get('/login', [LoginController::class, 'showLoginForm'])->middleware('guest')->name('app.login.show');
+      Route::get('/login', [LoginController::class, 'showLoginForm'])->name('app.login.show');
       Route::post('login', [LoginController::class, 'login'])->name('app.login');
-      Route::post('logout', [LoginController::class, 'logout'])->name('app.logout')->middleware('auth');
+      Route::post('logout', [LoginController::class, 'logout'])->name('app.logout');
     });
   }
 
@@ -105,16 +105,18 @@ class LoginController extends Controller
    */
   public function logout(Request $request)
   {
-    $this->authenticatedGuard()->logout();
+    collect(config('auth.guards'))->each(function ($details, $guard) {
+      try {
+        auth($guard)->logout();
+      } catch (\Throwable $th) { }
+    });
+    // $this->authenticatedGuard()->logout();
     $request->session()->invalidate();
 
-    try {
-      $this->apiGuard()->logout();
-    } catch (\Throwable $e) { }
-
     if ($request->isApi()) {
-      return response()->json(['rsp' => true], 200);
+      return response()->json(['LOGGED_OUT' => true], 200);
     }
+
     return redirect()->route('app.login.show');
   }
 
@@ -138,7 +140,7 @@ class LoginController extends Controller
   {
     if (Auth::guard($guard)->attempt($this->credentials(request()), request()->filled('remember'))) {
       if (Arr::has(config('auth.guards'), $guard . '_api')) {
-        $this->apiToken = Auth::guard($guard . '_api')->attempt($this->credentials(request()), request()->filled('remember'));
+        $this->apiToken = Auth::guard($guard . '_api')->attempt($this->credentials(request()));
       }
       return true;
     }
