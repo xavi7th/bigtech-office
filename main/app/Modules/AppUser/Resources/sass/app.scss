@@ -38,3 +38,15 @@ html.rui-nightmode {
 dl.phpdebugbar-widgets-kvlist dt {
 	width: auto !important;
 }
+
+.btn-xs {
+	font-size: .8125rem;
+	height: calc(1.5rem + 2px);
+	line-height: 1.25;
+	padding: .25rem .5625rem;
+	font-weight: 500
+}
+
+.btn-xs.btn-svg-icon {
+	width: calc(1.5rem + 2px)
+}
