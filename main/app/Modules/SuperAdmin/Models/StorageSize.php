@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +38,16 @@ class StorageSize extends Model
   protected $fillable = ['size'];
   protected $casts = ['size' => 'double'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public function getSizeAttribute($value): string
   {
     switch ($value) {
@@ -70,9 +81,12 @@ class StorageSize extends Model
     });
   }
 
-  public function getStorageSizes()
+  public function getStorageSizes(Request $request)
   {
-    return response()->json((new StorageSizeTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $storageSizes = (new StorageSizeTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($storageSizes, 200);
+    return Inertia::render('Miscellaneous/ManageStorageSizes', compact('storageSizes'));
   }
 
   public function createStorageSize(Request $request)

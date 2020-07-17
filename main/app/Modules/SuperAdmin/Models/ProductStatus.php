@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,15 @@ class ProductStatus extends Model
 
   protected $fillable = ['status'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
 
   public function products()
   {
@@ -106,9 +116,12 @@ class ProductStatus extends Model
     });
   }
 
-  public function getProductStatuses()
+  public function getProductStatuses(Request $request)
   {
-    return response()->json((new ProductStatusTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $productStatus = (new ProductStatusTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($productStatus, 200);
+    return Inertia::render('Miscellaneous/ManageProductStatus', compact('productStatus'));
   }
 
   public function createProductStatus(Request $request)

@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Modules\Admin\Models\Admin;
@@ -63,6 +64,16 @@ class OfficeBranch extends Model
    */
   protected $rememberFor = 5;
   protected $fillable = ['city', 'country'];
+
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
 
 
   public function admins()
@@ -152,9 +163,12 @@ class OfficeBranch extends Model
     });
   }
 
-  public function getOfficeBranches()
+  public function getOfficeBranches(Request $request)
   {
-    return response()->json((new OfficeBranchTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $officeBranches = (new OfficeBranchTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($officeBranches, 200);
+    return Inertia::render('Miscellaneous/ManageOfficeBranches', compact('officeBranches'));
   }
 
   public function getProductsInBranch(self $office_branch)

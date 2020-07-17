@@ -2,8 +2,11 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
+  import Modal from "@superadmin-shared/Partials/Modal";
   import FlashMessage from "@user-shared/FlashMessage";
   import route from "ziggy";
+
+  export let description;
 
   $: ({ app } = $page);
 </script>
@@ -70,16 +73,25 @@
         <div class="card-body">
           <div class="d-flex align-items-center">
             <h2 class="card-title mnb-6 mr-auto">Description Summary</h2>
-            <button class="btn btn-custom-round mr-20" type="button">
-              <span
-                data-feather="link-2"
-                class="rui-icon rui-icon-stroke-1_5" />
-            </button>
-            <button
-              class="btn btn-brand btn-uniform btn-round btn-sm mnt-8 mnb-8"
-              type="button">
-              <span data-feather="plus" class="rui-icon rui-icon-stroke-1_5" />
-            </button>
+            {#if description}
+              <button
+                class="btn btn-custom-round mr-20"
+                data-toggle="modal"
+                data-target="#createDescription">
+                <span
+                  data-feather="link-2"
+                  class="rui-icon rui-icon-stroke-1_5" />
+              </button>
+            {:else}
+              <button
+                class="btn btn-brand btn-uniform btn-round btn-sm mnt-8 mnb-8"
+                data-toggle="modal"
+                data-target="#createDescription">
+                <span
+                  data-feather="plus"
+                  class="rui-icon rui-icon-stroke-1_5" />
+              </button>
+            {/if}
           </div>
           <ul class="list-group list-group-flush rui-profile-task-list">
             <li class="list-group-item">
@@ -90,7 +102,7 @@
                     class="rui-icon rui-icon-stroke-1_5" />
                 </div>
                 <div class="rui-task-content">
-                  <a class="rui-task-title" href="task.html">
+                  <a class="rui-task-title" href="#home">
                     A new dual‑camera system captures more of what you see and
                     love. The fastest chip ever in a smartphone and all‑day
                     battery life let you do more and charge less. And the
@@ -469,5 +481,21 @@
         </div>
       </div>
     </div>
+  </div>
+  <div slot="modals">
+    <Modal
+      modalId="createDescription"
+      modalTitle="Add Description to Product Model">
+      <textarea
+        name="createDescription"
+        cols="30"
+        rows="10"
+        class="form-control"
+        bind:value={description} />
+
+      <button slot="footer-buttons" class="btn btn-brand">
+        Add Description
+      </button>
+    </Modal>
   </div>
 </Layout>

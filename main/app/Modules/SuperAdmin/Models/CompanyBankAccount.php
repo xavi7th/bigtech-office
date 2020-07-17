@@ -2,6 +2,8 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -54,6 +56,16 @@ class CompanyBankAccount extends Model
     'account_name', 'account_number', 'bank', 'account_description', 'account_type', 'img_url'
   ];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
 
   public function sales_records()
   {
@@ -85,9 +97,12 @@ class CompanyBankAccount extends Model
   }
 
 
-  public function getCompanyBankAccounts()
+  public function getCompanyBankAccounts(Request $request)
   {
-    return response()->json((new CompanyBankAccountTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $bankAccounts = (new CompanyBankAccountTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($bankAccounts, 200);
+    return Inertia::render('Miscellaneous/ManageBankAccounts', compact('bankAccounts'));
   }
 
   public function createCompanyBankAccount(CreateBankAccountValidation $request)

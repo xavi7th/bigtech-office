@@ -515,6 +515,21 @@ if (!function_exists('get_related_routes')) {
   }
 }
 
+if (!function_exists('routeHasRootNamespace')) {
+  /**
+   * Check if the current route has the provided namespace
+   *
+   * @param string $namespace
+   *
+   * @return bool
+   */
+
+  function routeHasRootNamespace($namespace = 'app.'): bool
+  {
+    return Str::startsWith(\Route::currentRouteName(), $namespace);
+  }
+}
+
 /**
  * Return the data for the extras defaults
  *

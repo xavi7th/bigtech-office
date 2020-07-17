@@ -5,6 +5,10 @@ namespace App\Exceptions;
 use Throwable;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
+use App\Modules\SuperAdmin\Models\ErrLog;
+use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -54,6 +58,7 @@ class Handler extends ExceptionHandler
   {
     $response = parent::render($request, $exception);
 
+
     if ($request->isApi()) {
       if ($exception instanceof NotFoundHttpException) {
         return response()->json(['message' => 'No such endpoint'], 404);
@@ -70,23 +75,64 @@ class Handler extends ExceptionHandler
         }
         return response()->json(['message' => 'Error while trying to handle request'], 500);
       }
-    }
-
-    if (
-      (App::environment('production'))
-      // && $request->header('X-Inertia')
-      && in_array($response->status(), [500, 503, 404, 403])
+    } elseif (
+      // (App::environment('production')) &&
+      // $request->header('X-Inertia') &&
+      in_array($response->status(), [500, 503, 404, 403, 405])
     ) {
-      Inertia::setRootView('publicpages::app');
-      return Inertia::render('DisplayError', ['status' => $response->status()])
-        ->toResponse($request)
-        ->setStatusCode($response->status());
-    }
 
-    if (in_array($response->status(), [419])) {
-      return back()->withError('Expired token! Try again');
+      if ($this->is404($exception)) {
+        $this->log404($request);
+      }
+      try {
+        Inertia::setRootView('publicpages::app');
+        return Inertia::render('DisplayError', ['status' => $response->status()])
+          ->toResponse($request)
+          ->setStatusCode($response->status());
+      } catch (\Throwable $th) { }
+    } elseif (in_array($response->status(), [419])) {
+      return back()->withError('Your session has expired. Please try again');
     }
 
     return $response;
+  }
+
+
+  /**
+   * Get the default context variables for logging.
+   *
+   * @return array
+   */
+  protected function context()
+  {
+    try {
+      $context = array_filter([
+        'url' => Request::fullUrl(),
+        'input' => Request::except(['password', 'password_confirmation'])
+      ]);
+    } catch (Throwable $e) {
+      $context = [];
+    }
+
+    return array_merge($context, parent::context());
+  }
+
+  private function is404($exception)
+  {
+    return $exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException
+      || $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+  }
+
+  private function log404($request)
+  {
+    $error = [
+      'url'    => Request::fullUrl(),
+      'method' => $request->method(),
+      'data'   => Request::except(['password', 'password_confirmation']),
+    ];
+
+    $message = '404: ' . $error['url'] . "\n" . json_encode($error, JSON_PRETTY_PRINT);
+
+    Log::debug($message);
   }
 }

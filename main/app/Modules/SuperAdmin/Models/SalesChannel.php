@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,16 @@ class SalesChannel extends Model
 
   protected $fillable = ['channel_name'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public function sales_records()
   {
     return $this->hasMany(ProductSaleRecord::class);
@@ -61,9 +72,12 @@ class SalesChannel extends Model
     });
   }
 
-  public function getSalesChannels()
+  public function getSalesChannels(Request $request)
   {
-    return response()->json((new SalesChannelTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $salesChannels = (new SalesChannelTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($salesChannels, 200);
+    return Inertia::render('Miscellaneous/ManageSalesChannels', compact('salesChannels'));
   }
 
   public function createSalesChannel(Request $request)

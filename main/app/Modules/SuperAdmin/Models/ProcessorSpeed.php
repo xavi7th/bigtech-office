@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,16 @@ class ProcessorSpeed extends Model
 
   protected $fillable = ['speed'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public static function routes()
   {
     Route::group(['prefix' => 'processor-speeds', 'namespace' => '\App\Modules\Admin\Models'], function () {
@@ -47,9 +58,12 @@ class ProcessorSpeed extends Model
     });
   }
 
-  public function getProcessorSpeeds()
+  public function getProcessorSpeeds(Request $request)
   {
-    return response()->json((new ProcessorSpeedTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $processorSpeeds = (new ProcessorSpeedTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($processorSpeeds, 200);
+    return Inertia::render('Miscellaneous/ManageProcessorSpeed', compact('processorSpeeds'));
   }
 
   public function createProcessorSpeed(Request $request)

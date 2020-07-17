@@ -50,6 +50,9 @@
     </div>
     <Footer />
   </div>
+
+	<slot name="modals"></slot>
+
 {/if}
 
 {#if isLoaded}

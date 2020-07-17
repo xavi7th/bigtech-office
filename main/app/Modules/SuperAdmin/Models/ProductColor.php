@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,16 @@ class ProductColor extends Model
 
   protected $fillable = ['name'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   /**
    * The admin routes
    * @return Response
@@ -49,9 +60,12 @@ class ProductColor extends Model
     });
   }
 
-  public function getProductColors()
+  public function getProductColors(Request $request)
   {
-    return response()->json((new ProductColorTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $colors = (new ProductColorTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($colors, 200);
+    return Inertia::render('Miscellaneous/ManageColors', compact('colors'));
   }
 
   public function createProductColor(Request $request)

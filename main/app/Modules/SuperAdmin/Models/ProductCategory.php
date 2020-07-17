@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +41,16 @@ class ProductCategory extends Model
 
   protected $fillable = ['name', 'img_url'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public function product_model()
   {
     return $this->hasMany(ProductModel::class);
@@ -57,9 +68,14 @@ class ProductCategory extends Model
     });
   }
 
-  public function getProductCategories()
+  public function getProductCategories(Request $request)
   {
-    return response()->json((new ProductCategoryTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $categories = (new ProductCategoryTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi()) {
+      return response()->json($categories, 200);
+    }
+
+    return Inertia::render('Miscellaneous/ManageProductCategories', compact('categories'));
   }
 
   public function createProductCategory(Request $request)

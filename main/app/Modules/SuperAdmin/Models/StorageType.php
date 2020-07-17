@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,16 @@ class StorageType extends Model
 
   protected $fillable = ['type'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public static function routes()
   {
     Route::group(['prefix' => 'storage-types'], function () {
@@ -49,9 +60,12 @@ class StorageType extends Model
     });
   }
 
-  public function getStorageTypes()
+  public function getStorageTypes(Request $request)
   {
-    return response()->json((new StorageTypeTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $storageTypes = (new StorageTypeTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($storageTypes, 200);
+    return Inertia::render('Miscellaneous/ManageStorageTypes', compact('storageTypes'));
   }
 
   public function createStorageType(Request $request)
