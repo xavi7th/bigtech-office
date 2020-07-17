@@ -61,11 +61,13 @@ class SuperAdminController extends Controller
 
       ProductModel::routes();
 
+      ProductBrand::routes();
+
+      ProductSupplier::routes();
+
       ProductColor::routes();
 
       ProductCategory::routes();
-
-      ProductBrand::routes();
 
       ProductQATestResult::routes();
 
@@ -76,8 +78,6 @@ class SuperAdminController extends Controller
       StorageSize::routes();
 
       StorageType::routes();
-
-      ProductSupplier::routes();
 
       ProductStatus::routes();
 

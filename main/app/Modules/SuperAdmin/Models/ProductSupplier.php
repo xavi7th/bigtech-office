@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,16 @@ class ProductSupplier extends Model
 
   protected $fillable = ['name'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public static function routes()
   {
     Route::group(['prefix' => 'product-suppliers'], function () {
@@ -48,9 +59,12 @@ class ProductSupplier extends Model
     });
   }
 
-  public function getProductSuppliers()
+  public function getProductSuppliers(Request $request)
   {
-    return response()->json((new ProductSupplierTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $productSuppliers = (new ProductSupplierTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($productSuppliers, 200);
+    return Inertia::render('Miscellaneous/ManageProductSuppliers', compact('productSuppliers'));
   }
 
   public function createProductSupplier(Request $request)

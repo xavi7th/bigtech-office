@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -36,21 +37,34 @@ class ProductGrade extends Model
 
   protected $fillable = ['grade'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public static function routes()
   {
     Route::group(['prefix' => 'product-grades', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      $gen = function ($namespace, $name = null) {
-        return 'superadmin.product_' . $namespace . $name;
+      $gen = function ($name) {
+        return 'superadmin.miscellaneous.product_grades' . $name;
       };
-      Route::get('', [self::class, 'getProductGrades'])->name($gen('grade'))->defaults('ex', __e('ss', 'check-square', false));
-      Route::post('create', [self::class, 'createProductGrade'])->name($gen('grade', '.create_product_grade'))->defaults('ex', __e('ss', 'check-square', true));
-      Route::put('{grade}/edit', [self::class, 'editProductGrade'])->name($gen('grade', '.edit_product_grade'))->defaults('ex', __e('ss', 'check-square', true));
+      Route::get('', [self::class, 'getProductGrades'])->name($gen(''))->defaults('ex', __e('ss', 'check-square', false));
+      Route::post('create', [self::class, 'createProductGrade'])->name($gen('.create'))->defaults('ex', __e('ss', 'check-square', true));
+      Route::put('{grade}/edit', [self::class, 'editProductGrade'])->name($gen('.edit'))->defaults('ex', __e('ss', 'check-square', true));
     });
   }
 
-  public function getProductGrades()
+  public function getProductGrades(Request $request)
   {
-    return response()->json((new ProductGradeTransformer)->collectionTransformer(self::all(), 'basic'), 201);
+    $productGrades = (new ProductGradeTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($productGrades, 201);
+    return Inertia::render('Miscellaneous/ManageProductGrades', compact('productGrades'));
   }
 
   public function createProductGrade(Request $request)

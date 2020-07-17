@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,16 @@ class ProductBrand extends Model
 
   protected $fillable = ['name', 'logo_url'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public function product_model()
   {
     return $this->hasMany(ProductModel::class);
@@ -58,9 +69,13 @@ class ProductBrand extends Model
     });
   }
 
-  public function getProductBrands()
+  public function getProductBrands(Request $request)
   {
-    return response()->json((new ProductBrandTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $productBrands = (new ProductBrandTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($productBrands, 200);
+
+    return Inertia::render('Miscellaneous/ManageProductBrands', compact('productBrands'));
   }
 
   public function createProductBrand(Request $request)
