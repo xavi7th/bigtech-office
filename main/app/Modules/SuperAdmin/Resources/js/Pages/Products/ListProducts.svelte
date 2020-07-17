@@ -43,7 +43,7 @@
           </thead>
           <tbody>
             <tr>
-              <th scope="row">16</th>
+              <th scope="row">1600</th>
               <td>XsMax</td>
               <td>imei: 65879G95ldJMbs5X10VnUL1</td>
               <td>N206,418.20</td>
@@ -52,20 +52,26 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-primary btn-sm">
+                  class="btn btn-primary btn-xs btn-sm">
                   Details
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-success btn-sm">
+                  class="btn btn-success btn-xs btn-sm">
                   Mark Sold
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-brand btn-sm">
+                  class="btn btn-brand btn-xs btn-sm">
                   Mark Paid
+                </InertiaLink>
+                <InertiaLink
+                  type="button"
+                  href={route('superadmin.product_histories.view_product_history', 1)}
+                  class="btn btn-info btn-xs btn-sm">
+                  History
                 </InertiaLink>
               </td>
             </tr>
@@ -79,13 +85,13 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-primary btn-sm">
+                  class="btn btn-primary btn-xs btn-sm">
                   Details
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-success btn-sm">
+                  class="btn btn-success btn-xs btn-sm">
                   Mark Sold
                 </InertiaLink>
               </td>
@@ -100,13 +106,13 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-primary btn-sm">
+                  class="btn btn-primary btn-xs btn-sm">
                   Details
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-success btn-sm">
+                  class="btn btn-success btn-xs btn-sm">
                   Mark Sold
                 </InertiaLink>
               </td>
@@ -121,13 +127,13 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-primary btn-sm">
+                  class="btn btn-primary btn-xs btn-sm">
                   Details
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-success btn-sm">
+                  class="btn btn-success btn-xs btn-sm">
                   Mark Sold
                 </InertiaLink>
               </td>
@@ -142,13 +148,13 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-primary btn-sm">
+                  class="btn btn-primary btn-xs btn-sm">
                   Details
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-success btn-sm">
+                  class="btn btn-success btn-xs btn-sm">
                   Mark Sold
                 </InertiaLink>
               </td>
@@ -163,13 +169,13 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-primary btn-sm">
+                  class="btn btn-primary btn-xs btn-sm">
                   Details
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-success btn-sm">
+                  class="btn btn-success btn-xs btn-sm">
                   Mark Sold
                 </InertiaLink>
               </td>
@@ -184,13 +190,13 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-primary btn-sm">
+                  class="btn btn-primary btn-xs btn-sm">
                   Details
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-success btn-sm">
+                  class="btn btn-success btn-xs btn-sm">
                   Mark Sold
                 </InertiaLink>
               </td>
@@ -205,13 +211,13 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-primary btn-sm">
+                  class="btn btn-primary btn-xs btn-sm">
                   Details
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-success btn-sm">
+                  class="btn btn-success btn-xs btn-sm">
                   Mark Sold
                 </InertiaLink>
               </td>
@@ -226,13 +232,13 @@
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-primary btn-sm">
+                  class="btn btn-primary btn-xs btn-sm">
                   Details
                 </InertiaLink>
                 <InertiaLink
                   type="button"
                   href={route('superadmin.products.view_product_details', 1)}
-                  class="btn btn-success btn-sm">
+                  class="btn btn-success btn-xs btn-sm">
                   Mark Sold
                 </InertiaLink>
               </td>

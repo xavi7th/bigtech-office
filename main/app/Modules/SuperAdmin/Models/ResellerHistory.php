@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\ActivityLog;
+use Illuminate\Http\Request;
 
 /**
  * App\Modules\SuperAdmin\Models\ResellerHistory
@@ -61,14 +62,16 @@ class ResellerHistory extends Model
   protected static function boot()
   {
     parent::boot();
-    static::creating(function (ResellerHistory $reseller_history) {
+
+    static::creating(function (self $reseller_history) {
       $reseller_history->load('product', 'reseller');
       if (is_null($reseller_history->product_status)) {
-        ActivityLog::notifyAdmins(auth(auth()->getDefaultDriver())->user()->email . ' gave product with UUID: ' . $reseller_history->product->product_uuid . ' to reseller:  "' . $reseller_history->reseller->business_name . '"');
+        ActivityLog::notifySuperAdmins(request()->user()->email . ' gave product with UUID: ' . $reseller_history->product->product_uuid . ' to reseller:  "' . $reseller_history->reseller->business_name . '"');
       } else {
-        ActivityLog::notifyAdmins($reseller_history->reseller->business_name . ' has ' . $reseller_history->product_status . ' product with UUID: ' . $reseller_history->product->product_uuid . '. Handler: ' . auth(auth()->getDefaultDriver())->user()->email);
+        ActivityLog::notifySuperAdmins($reseller_history->reseller->business_name . ' has ' . $reseller_history->product_status . ' product with UUID: ' . $reseller_history->product->product_uuid . '. Handler: ' . auth(auth()->getDefaultDriver())->user()->email);
       }
     });
+
     static::retrieved(function (ResellerHistory $reseller_history) {
       $reseller_history->load('handler', 'reseller', 'product');
     });

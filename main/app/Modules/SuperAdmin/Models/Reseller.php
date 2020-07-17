@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,7 @@ use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
 use App\Modules\SuperAdmin\Http\Validations\GiveResellerProcuctValidation;
+use Illuminate\Http\Request;
 
 /**
  * App\Modules\SuperAdmin\Models\Reseller
@@ -68,6 +70,16 @@ class Reseller extends Model
 
   protected $touches = ['products'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public function products()
   {
     return $this->belongsToMany(Product::class, $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
@@ -90,6 +102,7 @@ class Reseller extends Model
       };
       Route::get('', [self::class, 'getResellers'])->name($others('resellers'))->defaults('ex', __e('ss', 'at-sign', false));
       Route::get('products', [self::class, 'getResellersWithProducts'])->name($others('resellers.resellers_with_products', null))->defaults('ex', __e('ss', 'at-sign', false));
+      Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name($others('resellers.products', null))->defaults('ex', __e('ss', 'at-sign', true));
       Route::post('create', [self::class, 'createReseller'])->name($others('resellers.create_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::post('{reseller}/give-product', [self::class, 'giveProductToReseller'])->name($others('resellers.give_product'))->defaults('ex', __e('ss', 'at-sign', true));
@@ -98,18 +111,30 @@ class Reseller extends Model
     });
   }
 
-  public function getResellers()
+  public function getResellers(Request $request)
   {
-    return response()->json((new ResellerTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $resellers = (new ResellerTransformer)->collectionTransformer(self::all(), 'basic');
+    if ($request->isApi())
+      return response()->json($resellers, 200);
+    return Inertia::render('Resellers/ManageResellers', compact('resellers'));
   }
 
-  public function getResellersWithProducts()
+  public function getProductsWithReseller(Request $request, self $reseller)
+  {
+    $resellerProducts = (new ResellerTransformer)->transformWithTenuredProducts($reseller->load('products_in_possession'));
+    if ($request->isApi())
+      return response()->json($resellerProducts, 200);
+    return Inertia::render('Resellers/ViewProductsWithReseller', compact('resellerProducts'));
+  }
+
+  public function getResellersWithProducts(Request $request)
   {
     // return self::has('products_in_possession')->with('products_in_possession')->get();
-    return response()->json((new ResellerTransformer)->collectionTransformer(
-      self::has('products_in_possession')->with('products_in_possession')->get(),
-      'transformWithTenuredProducts'
-    ), 200);
+    $records = (new ResellerTransformer)->collectionTransformer(self::has('products_in_possession')->with('products_in_possession')->get(), 'transformWithTenuredProducts');
+
+    if ($request->isApi())
+      return response()->json($records, 200);
+    return Inertia::render('Resellers/ViewResellersWithProducts', compact('records'));
   }
 
   public function createReseller(CreateResellerValidation $request)
@@ -151,12 +176,23 @@ class Reseller extends Model
      * create a reseller history for picking up this device
      * ? Default status is tenured
      */
+
+    /**
+     * Check if this product is marked as with reseller already
+     */
+    if ($product->with_reseller()) {
+      ActivityLog::notifySuperAdmins(
+        $request->user()->email . ' tried to give a product: ' . $product->primary_identifier() . ' with a reseller to another reseller without signing out from previous reseller'
+      );
+      return generate_422_error('This product is already with a reseller');
+    }
+
     try {
 
       $reseller->reseller_histories()->create([
         'product_id' => $product->id,
-        'handled_by' => auth(auth()->getDefaultDriver())->id(),
-        'handler_type' => get_class(auth(auth()->getDefaultDriver())->user()),
+        'handled_by' => $request->user()->id,
+        'handler_type' => get_class($request->user()),
       ]);
       /**
        * Create an entry in the product reseller table

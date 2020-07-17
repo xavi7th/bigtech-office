@@ -2,6 +2,8 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\Product;
@@ -44,6 +46,16 @@ class ProductHistory extends Model
     'user_id',
   ];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public function user()
   {
     return $this->morphTo();
@@ -76,13 +88,19 @@ class ProductHistory extends Model
     return response()->json((new ProductHistoryTransformer)->collectionTransformer(self::all(), 'basic'), 200);
   }
 
-  public function getDetailedProductHistories()
+  public function getDetailedProductHistories(Request $request)
   {
-    return response()->json((new ProductHistoryTransformer)->collectionTransformer(self::all(), 'detailed'), 200);
+    $productHistories = (new ProductHistoryTransformer)->collectionTransformer(self::all(), 'detailed');
+    if ($request->isApi())
+      return response()->json($productHistories, 200);
+    return Inertia::render('Histories/ViewProductHistories', compact('productHistories'));
   }
 
-  public function getSingleProductHistory(Product $product)
+  public function getSingleProductHistory(Request $request, Product $product)
   {
-    return response()->json((new ProductTransformer)->transformWithStatusHistory($product->load('product_histories.user', 'product_histories.product_status')), 200);
+    $productHistory = (new ProductTransformer)->transformWithStatusHistory($product->load('product_histories.user', 'product_histories.product_status'));
+    if ($request->isApi())
+      return response()->json($productHistory, 200);
+    return Inertia::render('Histories/ViewProductHistory', compact('productHistory'));
   }
 }
