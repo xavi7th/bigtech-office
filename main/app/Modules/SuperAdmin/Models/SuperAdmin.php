@@ -105,7 +105,7 @@ class SuperAdmin extends User
         ]
       ]));
 
-      ActivityLog::notifyAdmins(auth()->user()->email . ' created a new admin account for ' . $admin->email);
+      ActivityLog::notifySuperAdmins(auth()->user()->email . ' created a new admin account for ' . $admin->email);
 
       DB::commit();
       return response()->json(['rsp' => $admin], 201);
@@ -123,7 +123,7 @@ class SuperAdmin extends User
       return response()->json(['rsp' => false], 403);
     }
     $admin->delete();
-    ActivityLog::notifyAdmins(auth()->user()->email . ' suspended the account of ' . $admin->email);
+    ActivityLog::notifySuperAdmins(auth()->user()->email . ' suspended the account of ' . $admin->email);
     return response()->json(['rsp' => true], 204);
   }
 
@@ -132,7 +132,7 @@ class SuperAdmin extends User
     $admin = Admin::withTrashed()->find($id);
     $admin->restore();
 
-    ActivityLog::notifyAdmins(auth()->user()->email . ' restored the account of ' . $admin->email);
+    ActivityLog::notifySuperAdmins(auth()->user()->email . ' restored the account of ' . $admin->email);
 
     return response()->json(['rsp' => true], 204);
   }
@@ -143,7 +143,7 @@ class SuperAdmin extends User
       return response()->json(['rsp' => false], 403);
     }
     /** log the activity before deleting */
-    ActivityLog::notifyAdmins(auth()->user()->email . ' permanently deleted the account of ' . $admin->email);
+    ActivityLog::notifySuperAdmins(auth()->user()->email . ' permanently deleted the account of ' . $admin->email);
 
     $admin->forceDelete();
 

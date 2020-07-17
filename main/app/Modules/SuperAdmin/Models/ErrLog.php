@@ -57,7 +57,7 @@ class ErrLog extends Model
     if (DB::transactionLevel() > 0) {
       DB::rollBack();
     }
-    Log::error($message, ['userId' => $user->id, 'userType' => get_class($user), 'exception' => $exception]);
+    Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class($user), 'exception' => $exception]);
   }
 
   static function routes()

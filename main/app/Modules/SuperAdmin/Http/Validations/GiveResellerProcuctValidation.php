@@ -19,7 +19,7 @@ class GiveResellerProcuctValidation extends FormRequest
   {
 
     return [
-      'product_code' => 'required|unique:resellers,business_name',
+      'product_code' => 'required',
       'code_type' => 'required|in:imei,serial_no,model_no'
     ];
   }

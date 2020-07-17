@@ -368,7 +368,7 @@ class Product extends Model
         return back()->withSuccess('Product created');
       }
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product not created');
+      ErrLog::notifyAdmin($request->user(), $th, 'Product not created');
       return response()->json(['err' => 'Product not created'], 500);
     }
   }
@@ -406,7 +406,7 @@ class Product extends Model
 
       return response()->json($product, 201);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail(auth(auth()->getDefaultDriver())->user(), $th, 'Product not created');
+      ErrLog::notifyAdminAndFail($request->user(), $th, 'Product not created');
       return response()->json(['err' => 'Product not created'], 500);
     }
   }
@@ -422,7 +422,7 @@ class Product extends Model
 
       return response()->json([], 204);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product not updated');
+      ErrLog::notifyAdmin($request->user(), $th, 'Product not updated');
       return response()->json(['err' => 'Product not updated'], 500);
     }
   }
@@ -441,7 +441,7 @@ class Product extends Model
 
       return response()->json([], 204);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product not updated');
+      ErrLog::notifyAdmin($request->user(), $th, 'Product not updated');
       return response()->json(['err' => 'Product not updated'], 500);
     }
   }
@@ -455,7 +455,7 @@ class Product extends Model
       return generate_422_error('Invalid product status selected');
     }
     //notify admin that someone updated a product status
-    ActivityLog::notifyAdmins(auth(auth()->getDefaultDriver())->user()->email . ' changed product with ' . $product->primary_identifier() . ' to status:  "' . $product_status->status . '"');
+    ActivityLog::notifySuperAdmins($request->user()->email . ' changed product with ' . $product->primary_identifier() . ' to status:  "' . $product_status->status . '"');
 
     /**
      * Update the status
@@ -490,7 +490,7 @@ class Product extends Model
       $product->product_sales_record()->create([
         'selling_price' => $request->selling_price,
         'online_rep_id' => $request->online_rep_id,
-        'sales_rep_id' => auth(auth()->getDefaultDriver())->id(),
+        'sales_rep_id' => auth()->id(),
         'sales_channel_id' => $request->sales_channel_id,
         'is_swap_deal' => filter_var($request->is_swap_deal, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
       ]);
@@ -542,12 +542,12 @@ class Product extends Model
     /**
      * Notify Admin that a product was sold
      */
-    ActivityLog::notifyAdmins(auth(auth()->getDefaultDriver())->user()->email . ' marked product with UUID no: ' . $product->product_uuid . ' as sold.');
+    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with UUID no: ' . $product->product_uuid . ' as sold.');
 
     /**
      * Notify Accountant that a product was marked as sold
      */
-    ActivityLog::notifyAccountants(auth(auth()->getDefaultDriver())->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
+    ActivityLog::notifyAccountants($request->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
 
     DB::commit();
     return response()->json([], 204);
@@ -625,12 +625,12 @@ class Product extends Model
     /**
      * Notify Admin that a product was sold
      */
-    ActivityLog::notifyAdmins(auth(auth()->getDefaultDriver())->user()->email . ' marked product with imei/model num/serial no: ' . ($product->imei ?? $product->serial_no ?? $product->model_no) . ' as confirmed sold.');
+    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with imei/model num/serial no: ' . ($product->imei ?? $product->serial_no ?? $product->model_no) . ' as confirmed sold.');
 
     /**
      * Notify Accountant that a product was marked as sold
      */
-    ActivityLog::notifyAccountants(auth(auth()->getDefaultDriver())->user()->email . ' marked product with imei/model num/serial no: ' . ($product->imei ?? $product->serial_no ?? $product->model_no) . ' as confirmed sold.');
+    ActivityLog::notifyAccountants($request->user()->email . ' marked product with imei/model num/serial no: ' . ($product->imei ?? $product->serial_no ?? $product->model_no) . ' as confirmed sold.');
 
     DB::commit();
     return response()->json([], 204);

@@ -249,7 +249,7 @@ class ProductSaleRecord extends Model
     /**
      * Notify Admin that a product was sold
      */
-    ActivityLog::notifyAdmins(auth()->user()->email . ' confirmed the sale of product with ' . $product->primary_identifier() . '.');
+    ActivityLog::notifySuperAdmins(auth()->user()->email . ' confirmed the sale of product with ' . $product->primary_identifier() . '.');
 
     /**
      * Notify Accountant that a product was marked as sold

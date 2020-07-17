@@ -186,7 +186,7 @@ class Reseller extends Model
     try {
       $reseller->notify(new ProductUpdate($product));
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Reseller notification failed');
+      ErrLog::notifyAdmin($request->user(), $th, 'Reseller notification failed');
     }
 
     DB::commit();
@@ -203,7 +203,7 @@ class Reseller extends Model
      * Check if this product is marked as with reseller
      */
     if (!$product->with_reseller()) {
-      ActivityLog::notifyAdmins(
+      ActivityLog::notifySuperAdmins(
         auth(auth()->getDefaultDriver())->user()->email . ' tried to return a product with ' . $product->primary_identifier() . ' from a reseller that wasn\'t signed out to any reseller'
       );
       return generate_422_error('This product is not supposed to be with a reseller');
@@ -263,14 +263,14 @@ class Reseller extends Model
     $product = Product::where($request->code_type, $request->product_code)->firstOrFail();
 
     if ($product->is_sold()) {
-      ActivityLog::notifyAdmins(
+      ActivityLog::notifySuperAdmins(
         auth(auth()->getDefaultDriver())->user()->email . ' tried to mark a product with ' . $product->primary_identifier() . ' as sold when it has been previously marked as sold'
       );
       return generate_422_error('This product is sold already');
     }
 
     if (!$product->with_reseller()) {
-      ActivityLog::notifyAdmins(
+      ActivityLog::notifySuperAdmins(
         auth(auth()->getDefaultDriver())->user()->email . ' tried to mark a product with ' . $product->primary_identifier() . ' from a reseller that wasn\'t signed out to any reseller as returned'
       );
       return generate_422_error('This product is not supposed to be with a reseller');
@@ -318,7 +318,7 @@ class Reseller extends Model
       'sales_channel_id' => SalesChannel::reseller_id(),
     ]);
 
-    ActivityLog::notifyAdmins(auth(auth()->getDefaultDriver())->user()->email . ' marked product with UUID no: ' . $product->product_uuid . ' as sold.');
+    ActivityLog::notifySuperAdmins(auth(auth()->getDefaultDriver())->user()->email . ' marked product with UUID no: ' . $product->product_uuid . ' as sold.');
     ActivityLog::notifyAccountants(auth(auth()->getDefaultDriver())->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
 
     /**
