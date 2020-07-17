@@ -60,6 +60,9 @@ class Handler extends ExceptionHandler
 
 
     if ($request->isApi()) {
+
+      ErrLog::notifyAdminAndFail($request->user(), $exception, 'Handler Error');
+
       if ($exception instanceof NotFoundHttpException) {
         return response()->json(['message' => 'No such endpoint'], 404);
       } elseif ($exception instanceof ModelNotFoundException) {
@@ -74,6 +77,11 @@ class Handler extends ExceptionHandler
           return response()->json(['Error' => $exception->getMessage()], 500);
         }
         return response()->json(['message' => 'Error while trying to handle request'], 500);
+      } else {
+        if (getenv('APP_ENV') === 'local') {
+          return response()->json(['Error' => $exception->getMessage()], 500);
+        }
+        return response()->json(['message' => 'An error occured'], 500);
       }
     } elseif (
       // (App::environment('production')) &&
