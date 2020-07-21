@@ -18,7 +18,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property string $email
  * @property string $password
  * @property string|null $phone
- * @property string|null $user_passport
+ * @property string|null $avatar
  * @property string|null $gender
  * @property string|null $address
  * @property int $office_branch_id

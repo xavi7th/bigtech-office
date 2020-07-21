@@ -31,7 +31,7 @@ $factory->define(AppUser::class, function (Faker $faker) {
     // 'otp_verified_at' => now(),
     'password' => 'pass',
     'phone' => $faker->unique()->phoneNumber,
-    // 'user_passport' => '/storage/id_cards/' . $faker->file(public_path('img/'), public_path('storage/app_users/'), false),
+    // 'avatar' => '/storage/id_cards/' . $faker->file(public_path('img/'), public_path('storage/app_users/'), false),
     'remember_token' => Str::random(10),
   ];
 });

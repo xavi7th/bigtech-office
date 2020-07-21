@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -79,6 +80,8 @@ class Handler extends ExceptionHandler
           return response()->json(['Error' => $exception->getMessage()], 500);
         }
         return response()->json(['message' => 'Error while trying to handle request'], 500);
+      } elseif ($exception instanceof ValidationException) {
+        return $response;
       } else {
         if (getenv('APP_ENV') === 'local') {
           return response()->json(['Handler Error' => $exception->getMessage()], 500);

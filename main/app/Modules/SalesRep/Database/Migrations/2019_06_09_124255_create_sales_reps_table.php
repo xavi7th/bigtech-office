@@ -19,7 +19,7 @@ class CreateSalesRepsTable extends Migration
       $table->string('email')->unique();
       $table->string('password');
       $table->string('phone')->unique()->nullable();
-      $table->string('user_passport')->nullable();
+      $table->string('avatar')->nullable();
       $table->string('gender')->enum(['male', 'female'])->nullable();
       $table->string('address')->nullable();
       $table->foreignId('office_branch_id')->default(1)->constrained()->onDelete('cascade');

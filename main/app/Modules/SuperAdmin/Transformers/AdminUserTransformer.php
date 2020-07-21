@@ -74,7 +74,7 @@ class AdminUserTransformer
       'full_name' => (string)$user->full_name,
       'email' => (string)$user->email,
       'phone' => (string)$user->phone,
-      'user_passport' => (string)$user->user_passport,
+      'avatar' => (string)$user->avatar,
       'gender' => (string)$user->gender,
       'acc_type' => (string)$user->acc_type,
       'acc_num' => (string)$user->acc_num,

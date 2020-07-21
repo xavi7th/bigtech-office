@@ -19,7 +19,6 @@ if (['buildcss'].includes(process.env.npm_config_section)) {
 } else {
 
 	mix.scripts([
-        __dirname + '/Resources/js/vendor/jquery-3.2.1.min.js',
         __dirname + '/Resources/js/vendor/jquery.min.js',
         __dirname + '/Resources/js/vendor/popper.min.js',
         __dirname + '/Resources/js/vendor/bootstrap.min.js',

@@ -25,6 +25,24 @@ class UserCommentTransformer
       });
   }
 
+  public function adminViewAllComments($collection, $transformerMethod)
+  {
+    return
+      $collection->map(function ($v) use ($transformerMethod) {
+        return $this->$transformerMethod($v);
+      })->groupBy('user')->transform(function ($v) {
+        return $v->groupBy('human_date')->merge(
+          [
+            'meta' => [
+              'avatar' => $v[0]['avatar'],
+              'full_name' => $v[0]['full_name'],
+              'department' => $v[0]['department'],
+            ]
+          ]
+        );
+      });
+  }
+
   public function basic(UserComment $comment)
   {
     return [
@@ -40,7 +58,12 @@ class UserCommentTransformer
       'comment' => (string)$comment->comment,
       'subject' => (string)substr(strrchr(get_class($comment->subject), '\\'), 1) . ' - ' . $comment->subject->primary_identifier(),
       'user' => (string)$comment->user->email,
-      'date' => (string)$comment->created_at
+      'avatar' => (string)$comment->user->avatar,
+      'full_name' => (string)$comment->user->full_name,
+      'department' => (string)$comment->user->getType(),
+      'date' => (string)$comment->created_at,
+      'time' => (string)$comment->created_at->format('H:i'),
+      'human_date' => (string)$comment->created_at->diffForHumans(),
     ];
   }
 

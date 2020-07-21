@@ -18,7 +18,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property string $email
  * @property string $password
  * @property string|null $phone
- * @property string|null $user_passport
+ * @property string|null $avatar
  * @property string|null $gender
  * @property string|null $address
  * @property int $office_branch_id
@@ -62,7 +62,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 class SalesRep extends User
 {
   protected $fillable = [
-    'role_id', 'full_name', 'email', 'password', 'phone', 'user_passport', 'gender', 'address',
+    'role_id', 'full_name', 'email', 'password', 'phone', 'avatar', 'gender', 'address',
   ];
   protected $dates = ['dob'];
   const DASHBOARD_ROUTE_PREFIX = 'sales-reps';
