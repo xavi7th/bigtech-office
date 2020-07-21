@@ -65,7 +65,7 @@ class StorageType extends Model
     $storageTypes = (new StorageTypeTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($storageTypes, 200);
-    return Inertia::render('Miscellaneous/ManageStorageTypes', compact('storageTypes'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageStorageTypes', compact('storageTypes'));
   }
 
   public function createStorageType(Request $request)

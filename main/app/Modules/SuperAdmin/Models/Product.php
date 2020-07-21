@@ -300,7 +300,7 @@ class Product extends Model
     if ($request->isApi()) {
       return  response()->json((new ProductTransformer)->collectionTransformer(self::all(), 'basic'), 200);
     } else {
-      return Inertia::render('Products/ListProducts');
+      return Inertia::render('SuperAdmin,Products/ListProducts');
     }
   }
 
@@ -325,7 +325,7 @@ class Product extends Model
     if ($request->isApi()) {
       return  response()->json((new ProductTransformer)->detailed($productDetails), 200);
     } else {
-      return Inertia::render('Products/ViewProductDetails', [
+      return Inertia::render('SuperAdmin,Products/ViewProductDetails', [
         'details' => (new ProductTransformer)->detailed($productDetails)
       ]);
     }
@@ -336,7 +336,7 @@ class Product extends Model
     $aggregatedSalesRecords = ProductSaleRecord::addSelect(DB::raw('COUNT(created_at) as num_of_sales,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
     $aggregatedProductExpenseRecords = ProductExpense::addSelect(DB::raw('COUNT(created_at) as num_of_product_expenses,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
     $aggregatedOtherExpenseRecords = OtherExpense::addSelect(DB::raw('COUNT(created_at) as num_of_other_expenses,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
-    return Inertia::render('Products/DailyRecords', compact('aggregatedSalesRecords', 'aggregatedProductExpenseRecords', 'aggregatedOtherExpenseRecords'));
+    return Inertia::render('SuperAdmin,Products/DailyRecords', compact('aggregatedSalesRecords', 'aggregatedProductExpenseRecords', 'aggregatedOtherExpenseRecords'));
   }
 
   public function getProductsWithResellers(Request $request)
@@ -345,12 +345,12 @@ class Product extends Model
     if ($request->isApi()) {
       return response()->json($productsWithResellers, 200);
     }
-    return Inertia::render('Products/ProductsWithResellers', compact('productsWithResellers'));
+    return Inertia::render('SuperAdmin,Products/ProductsWithResellers', compact('productsWithResellers'));
   }
 
   public function showCreateProductForm()
   {
-    return Inertia::render('Products/CreateProduct');
+    return Inertia::render('SuperAdmin,Products/CreateProduct');
   }
 
   public function createProduct(CreateProductValidation $request)
@@ -375,7 +375,7 @@ class Product extends Model
 
   public function showCreateLocalProductForm()
   {
-    return Inertia::render('Products/CreateLocalProduct');
+    return Inertia::render('SuperAdmin,Products/CreateLocalProduct');
   }
 
   public function createLocalSupplierProduct(CreateLocalSupplierProductValidation $request)
@@ -659,7 +659,7 @@ class Product extends Model
     if ($request->isApi()) {
       return response()->json($productQATestResults, 200);
     }
-    return Inertia::render('Products/QATestResults', [
+    return Inertia::render('SuperAdmin,Products/QATestResults', [
       'details' => $productQATestResults
     ]);
   }

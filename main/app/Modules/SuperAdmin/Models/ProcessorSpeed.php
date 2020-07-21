@@ -63,7 +63,7 @@ class ProcessorSpeed extends Model
     $processorSpeeds = (new ProcessorSpeedTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($processorSpeeds, 200);
-    return Inertia::render('Miscellaneous/ManageProcessorSpeed', compact('processorSpeeds'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageProcessorSpeed', compact('processorSpeeds'));
   }
 
   public function createProcessorSpeed(Request $request)

@@ -168,7 +168,7 @@ class OfficeBranch extends Model
     $officeBranches = (new OfficeBranchTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($officeBranches, 200);
-    return Inertia::render('Miscellaneous/ManageOfficeBranches', compact('officeBranches'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranches', compact('officeBranches'));
   }
 
   public function getProductsInBranch(self $office_branch)

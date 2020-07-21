@@ -1,3 +1,4 @@
+import "@user-assets/sass/app.scss";
 import '@public-assets/js/bootstrap'
 
 import {
@@ -10,7 +11,10 @@ new InertiaApp({
 	target: app,
 	props: {
 		initialPage: JSON.parse(app.dataset.page),
-		resolveComponent: name => import( /* webpackChunkName: "js/user-" */ `./Pages/${name}.svelte`)
+		resolveComponent: name => import(
+				/* webpackChunkName: "js/[request]" */
+				/* webpackPrefetch: true */
+				`./Pages/${name}.svelte`)
 			.then(module => module.default),
 	},
 })

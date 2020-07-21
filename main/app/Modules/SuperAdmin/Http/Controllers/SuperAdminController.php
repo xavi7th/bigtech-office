@@ -37,7 +37,6 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Models\ProductQATestResult;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
-use App\Modules\AppUser\Http\Controllers\Auth\LoginController;
 
 class SuperAdminController extends Controller
 {
@@ -65,6 +64,12 @@ class SuperAdminController extends Controller
 
       ProductSupplier::routes();
 
+      UserComment::routes();
+
+      Reseller::routes();
+
+      ProductBatch::routes();
+
       ProductColor::routes();
 
       ProductCategory::routes();
@@ -81,8 +86,6 @@ class SuperAdminController extends Controller
 
       ProductStatus::routes();
 
-      ProductBatch::routes();
-
       ProductHistory::routes();
 
       ProductExpense::routes();
@@ -90,10 +93,6 @@ class SuperAdminController extends Controller
       ProductSaleRecord::routes();
 
       ProductDescriptionSummary::routes();
-
-      UserComment::routes();
-
-      Reseller::routes();
 
       QATest::routes();
 
@@ -113,7 +112,7 @@ class SuperAdminController extends Controller
 
   public function index(Request $request)
   {
-    return Inertia::render('SuperAdminDashboard', $this->getDashboardStatistics())->withViewData([
+    return Inertia::render('SuperAdmin,SuperAdminDashboard', $this->getDashboardStatistics())->withViewData([
       'title' => 'Hello theEects',
       'metaDesc' => ' This page is ...'
     ]);

@@ -22,7 +22,6 @@
 
   @routes('public')
 
-  <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
   <link rel="canonical" href="{{ $cononical ?? route('app.home')}}" />
   <link rel="icon" type="image/png" href="{{ asset('/img/favicon.png') }}">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i">

@@ -16,7 +16,7 @@ if (['buildcss'].includes(process.env.npm_config_section)) {
 	// mix.copyDirectory(__dirname + '/Resources/img', 'public_html/img');
 	mix.copyDirectory(__dirname + '/Resources/fonts', 'public_html/fonts');
 
-	mix.sass(__dirname + '/Resources/sass/app.scss', 'css/app.css')
+	// mix.sass(__dirname + '/Resources/sass/app.scss', 'css/app.css')
 } else {
 
 	mix.scripts([

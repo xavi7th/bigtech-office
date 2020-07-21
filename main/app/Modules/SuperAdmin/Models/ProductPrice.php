@@ -156,13 +156,13 @@ class ProductPrice extends Model
         'basic'
       ), 200);
     } else {
-      return Inertia::render('Products/Prices');
+      return Inertia::render('SuperAdmin,Products/Prices');
     }
   }
 
   public function createProductPricePage(Request $request, ProductBatch $productBatch)
   {
-    return Inertia::render('Products/CreatePrice', [
+    return Inertia::render('SuperAdmin,Products/CreatePrice', [
       'batch' => $productBatch
     ]);
   }

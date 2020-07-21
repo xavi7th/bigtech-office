@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +44,16 @@ class QATest extends Model
    */
   protected $touches = ['products'];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
+
   public function product_models()
   {
     return $this->belongsToMany(self::class, 'qa_test_qa_test', 'qa_test_id', 'qa_test_id');
@@ -62,18 +73,22 @@ class QATest extends Model
   public static function routes()
   {
     Route::group(['prefix' => 'qa-tests'], function () {
-      $gen = function ($namespace, $name = null) {
-        return 'superadmin.product_' . $namespace . $name;
+      $gen = function ($name) {
+        return 'superadmin.miscellaneous.qa-tests'  . $name;
       };
-      Route::get('', [self::class, 'getQATests'])->name($gen('qa-tests'))->defaults('ex', __e('ss', 'award', false));
-      Route::post('create', [self::class, 'createQATest'])->name($gen('qa-tests', '.create_qa_test'))->defaults('ex', __e('ss', 'award', true));
-      Route::put('{size}/edit', [self::class, 'editQATest'])->name($gen('qa-tests', '.edit_qa_test'))->defaults('ex', __e('ss', 'award', true));
+      Route::get('', [self::class, 'getQATests'])->name($gen(''))->defaults('ex', __e('ss', 'award', false));
+      Route::post('create', [self::class, 'createQATest'])->name($gen('.create_qa_test'))->defaults('ex', __e('ss', 'award', true));
+      Route::put('{size}/edit', [self::class, 'editQATest'])->name($gen('.edit_qa_test'))->defaults('ex', __e('ss', 'award', true));
     });
   }
 
-  public function getQATests()
+  public function getQATests(Request $request)
   {
-    return response()->json((new QATestTransformer)->collectionTransformer(self::all(), 'basic'), 200);
+    $qaTests = (new QATestTransformer)->collectionTransformer(self::all(), 'basic');
+
+    if ($request->isApi())
+      return response()->json($qaTests, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageQATests', compact('qaTests'));
   }
 
   public function createQATest(Request $request)

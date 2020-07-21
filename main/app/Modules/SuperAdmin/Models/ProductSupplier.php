@@ -64,7 +64,7 @@ class ProductSupplier extends Model
     $productSuppliers = (new ProductSupplierTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($productSuppliers, 200);
-    return Inertia::render('Miscellaneous/ManageProductSuppliers', compact('productSuppliers'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageProductSuppliers', compact('productSuppliers'));
   }
 
   public function createProductSupplier(Request $request)

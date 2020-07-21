@@ -121,7 +121,7 @@ class ProductStatus extends Model
     $productStatus = (new ProductStatusTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($productStatus, 200);
-    return Inertia::render('Miscellaneous/ManageProductStatus', compact('productStatus'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageProductStatus', compact('productStatus'));
   }
 
   public function createProductStatus(Request $request)

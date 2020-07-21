@@ -86,7 +86,7 @@ class StorageSize extends Model
     $storageSizes = (new StorageSizeTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($storageSizes, 200);
-    return Inertia::render('Miscellaneous/ManageStorageSizes', compact('storageSizes'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageStorageSizes', compact('storageSizes'));
   }
 
   public function createStorageSize(Request $request)

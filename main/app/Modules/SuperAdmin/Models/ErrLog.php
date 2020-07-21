@@ -44,20 +44,22 @@ class ErrLog extends Model
 {
   protected $fillable = [];
 
-  static function notifyAdmin(User $user, Throwable $exception, string $message = null)
+  static function notifyAdmin(?User $user, Throwable $exception, string $message = null)
   {
     if ($exception instanceof TypeError) {
-      Log::error($message, ['userId' => $user->id, 'userType' => get_class($user), 'exception' => $exception->getMessage()]);
+      Log::error($message, ['userId' => optional($user)->id, 'userType' => rescue(get_class($user)), 'exception' => $exception->getMessage()]);
     }
-    Log::error($message, ['userId' => $user->id, 'userType' => get_class($user), 'exception' => $exception]);
+    Log::error($message, ['userId' => optional($user)->id, 'userType' => rescue(get_class($user)), 'exception' => $exception]);
   }
 
-  static function notifyAdminAndFail(User $user, Throwable $exception, string $message = null)
+  static function notifyAdminAndFail(?User $user, Throwable $exception, string $message = null)
   {
     if (DB::transactionLevel() > 0) {
       DB::rollBack();
     }
-    Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class($user), 'exception' => $exception]);
+    Log::error($message, ['userId' => optional($user)->id, 'userType' => rescue(function () use ($user) {
+      return get_class($user);
+    }, false), 'exception' => $exception]);
   }
 
   static function routes()

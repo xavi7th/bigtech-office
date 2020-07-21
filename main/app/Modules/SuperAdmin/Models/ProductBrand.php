@@ -75,7 +75,7 @@ class ProductBrand extends Model
     if ($request->isApi())
       return response()->json($productBrands, 200);
 
-    return Inertia::render('Miscellaneous/ManageProductBrands', compact('productBrands'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageProductBrands', compact('productBrands'));
   }
 
   public function createProductBrand(Request $request)

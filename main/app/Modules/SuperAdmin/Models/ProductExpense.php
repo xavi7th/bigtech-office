@@ -74,7 +74,7 @@ class ProductExpense extends Model
       return response()->json($expenses, 200);
     }
 
-    return Inertia::render('Products/DailyProductExpenses', compact('date', 'expenses'));
+    return Inertia::render('SuperAdmin,Products/DailyProductExpenses', compact('date', 'expenses'));
   }
 
 
@@ -83,7 +83,7 @@ class ProductExpense extends Model
     if ($request->isApi()) {
       return response()->json((new ProductExpenseTransformer)->collectionTransformer($product->product_expenses, 'basic'), 200);
     } else {
-      return Inertia::render('Products/Expenses', [
+      return Inertia::render('SuperAdmin,Products/Expenses', [
         'expenses' => (new ProductExpenseTransformer)->collectionTransformer($product->product_expenses, 'basic')
       ]);
     }

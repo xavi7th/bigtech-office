@@ -64,7 +64,7 @@ class ProductGrade extends Model
     $productGrades = (new ProductGradeTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($productGrades, 201);
-    return Inertia::render('Miscellaneous/ManageProductGrades', compact('productGrades'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageProductGrades', compact('productGrades'));
   }
 
   public function createProductGrade(Request $request)

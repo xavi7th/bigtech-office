@@ -6,7 +6,6 @@
   import route from "ziggy";
 
   $: ({ errors, auth } = $page);
-  let createResellers = () => {};
 </script>
 
 <Layout title="Manage Resellers">

@@ -101,7 +101,7 @@ class ProductBatch extends Model
     if ($request->isApi()) {
       return response()->json($productBatches, 200);
     } else {
-      return Inertia::render('Products/ManageBatches', [
+      return Inertia::render('SuperAdmin,Products/ManageBatches', [
         'batches' => $productBatches
       ]);
     }
@@ -113,7 +113,7 @@ class ProductBatch extends Model
     if ($request->isApi()) {
       return response()->json($batchProducts, 200);
     } else {
-      return Inertia::render('Products/BatchProducts', [
+      return Inertia::render('SuperAdmin,Products/BatchProducts', [
         'products' => $batchProducts
       ]);
     }

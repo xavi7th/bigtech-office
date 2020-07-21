@@ -113,14 +113,14 @@ class ProductModel extends Model
     if ($request->isApi()) {
       return response()->json($productModels, 200);
     }
-    return Inertia::render('ProductModels/List', [
+    return Inertia::render('SuperAdmin,ProductModels/List', [
       'productModels' => $productModels
     ]);
   }
 
   public function getProductModelDetails(ProductModel $productModel)
   {
-    return Inertia::render('ProductModels/Details', [
+    return Inertia::render('SuperAdmin,ProductModels/Details', [
       'details' => [
         'images' => (new ProductModelTransformer)->collectionTransformer($productModel->product_model_images, 'transformImage'),
         'qa_tests' => (new ProductModelTransformer)->collectionTransformer($productModel->qa_tests, 'transformQATest'),

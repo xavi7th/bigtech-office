@@ -83,12 +83,12 @@ class OtherExpense extends Model
       return response()->json($expenses, 200);
     }
 
-    return Inertia::render('Miscellaneous/DailyOtherExpenses', compact('date', 'expenses'));
+    return Inertia::render('SuperAdmin,Miscellaneous/DailyOtherExpenses', compact('date', 'expenses'));
   }
 
   public function showCreateExpenseForm()
   {
-    return Inertia::render('Miscellaneous/CreateExpense');
+    return Inertia::render('SuperAdmin,Miscellaneous/CreateExpense');
   }
 
   public function createExpense(Request $request)

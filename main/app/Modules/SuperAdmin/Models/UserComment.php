@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\Product;
@@ -70,9 +71,13 @@ class UserComment extends Model
     });
   }
 
-  public function getUserComments()
+  public function getUserComments(Request $request)
   {
-    return response()->json((new UserCommentTransformer)->collectionTransformer(self::with('user', 'subject')->get(), 'detailed'), 200);
+    $userComments = (new UserCommentTransformer)->collectionTransformer(self::with('user', 'subject')->get(), 'detailed');
+    if ($request->isApi())
+      return response()->json($userComments, 200);
+
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageColors', compact('userComments'));
   }
 
   public function getProductBatchComments(ProductBatch $product_batch)

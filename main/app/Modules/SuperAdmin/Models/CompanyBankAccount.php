@@ -102,7 +102,7 @@ class CompanyBankAccount extends Model
     $bankAccounts = (new CompanyBankAccountTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($bankAccounts, 200);
-    return Inertia::render('Miscellaneous/ManageBankAccounts', compact('bankAccounts'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageBankAccounts', compact('bankAccounts'));
   }
 
   public function createCompanyBankAccount(CreateBankAccountValidation $request)

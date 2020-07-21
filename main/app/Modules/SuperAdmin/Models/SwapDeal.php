@@ -167,19 +167,19 @@ class SwapDeal extends Model
     if ($request->isApi()) {
       return response()->json($swapDeals, 200);
     }
-    return Inertia::render('Products/SwapDeals', compact('swapDeals'));
+    return Inertia::render('SuperAdmin,Products/SwapDeals', compact('swapDeals'));
   }
 
   public function getSwapDealDetails(Request $request, SwapDeal $swapDeal)
   {
     $swapDeal = (new SwapDealTransformer)->detailed($swapDeal->load('swapped_with', 'product_status', 'app_user'));
 
-    return Inertia::render('Products/SwapDealDetails', compact('swapDeal'));
+    return Inertia::render('SuperAdmin,Products/SwapDealDetails', compact('swapDeal'));
   }
 
   public function showCreateSwapDealForm()
   {
-    return Inertia::render('Products/CreateDirectSwapDeal');
+    return Inertia::render('SuperAdmin,Products/CreateDirectSwapDeal');
   }
 
   public function createSwapDeal(CreateSwapDealValidation $request)

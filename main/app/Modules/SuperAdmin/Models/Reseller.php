@@ -116,7 +116,7 @@ class Reseller extends Model
     $resellers = (new ResellerTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($resellers, 200);
-    return Inertia::render('Resellers/ManageResellers', compact('resellers'));
+    return Inertia::render('SuperAdmin,Resellers/ManageResellers', compact('resellers'));
   }
 
   public function getProductsWithReseller(Request $request, self $reseller)
@@ -124,7 +124,7 @@ class Reseller extends Model
     $resellerProducts = (new ResellerTransformer)->transformWithTenuredProducts($reseller->load('products_in_possession'));
     if ($request->isApi())
       return response()->json($resellerProducts, 200);
-    return Inertia::render('Resellers/ViewProductsWithReseller', compact('resellerProducts'));
+    return Inertia::render('SuperAdmin,Resellers/ViewProductsWithReseller', compact('resellerProducts'));
   }
 
   public function getResellersWithProducts(Request $request)
@@ -134,7 +134,7 @@ class Reseller extends Model
 
     if ($request->isApi())
       return response()->json($records, 200);
-    return Inertia::render('Resellers/ViewResellersWithProducts', compact('records'));
+    return Inertia::render('SuperAdmin,Resellers/ViewResellersWithProducts', compact('records'));
   }
 
   public function createReseller(CreateResellerValidation $request)

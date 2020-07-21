@@ -4,12 +4,15 @@ namespace App\Exceptions;
 
 use Throwable;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Request;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -58,10 +61,9 @@ class Handler extends ExceptionHandler
   {
     $response = parent::render($request, $exception);
 
-
     if ($request->isApi()) {
 
-      ErrLog::notifyAdminAndFail($request->user(), $exception, 'Handler Error');
+      ErrLog::notifyAdminAndFail(SuperAdmin::first(), $exception, 'Handler Error');
 
       if ($exception instanceof NotFoundHttpException) {
         return response()->json(['message' => 'No such endpoint'], 404);
@@ -79,7 +81,7 @@ class Handler extends ExceptionHandler
         return response()->json(['message' => 'Error while trying to handle request'], 500);
       } else {
         if (getenv('APP_ENV') === 'local') {
-          return response()->json(['Error' => $exception->getMessage()], 500);
+          return response()->json(['Handler Error' => $exception->getMessage()], 500);
         }
         return response()->json(['message' => 'An error occured'], 500);
       }
@@ -94,7 +96,7 @@ class Handler extends ExceptionHandler
       }
       try {
         Inertia::setRootView('publicpages::app');
-        return Inertia::render('DisplayError', ['status' => $response->status()])
+        return Inertia::render('PublicPages,DisplayError', ['status' => $response->status()])
           ->toResponse($request)
           ->setStatusCode($response->status());
       } catch (\Throwable $th) { }

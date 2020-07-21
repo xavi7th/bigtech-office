@@ -65,7 +65,7 @@ class ProductColor extends Model
     $colors = (new ProductColorTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($colors, 200);
-    return Inertia::render('Miscellaneous/ManageColors', compact('colors'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageColors', compact('colors'));
   }
 
   public function createProductColor(Request $request)

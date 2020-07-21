@@ -73,6 +73,6 @@ class AppUserController extends Controller
   public function index(Request $request)
   {
     Auth::logout();
-    return Inertia::render('Welcome');
+    return Inertia::render('AppUser,Welcome');
   }
 }

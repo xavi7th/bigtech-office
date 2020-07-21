@@ -62,7 +62,7 @@ class LoginController extends Controller
     if ($request->isApi()) {
       return 'Welcome to ' . config('app.name') . ' API';
     } else {
-      return Inertia::render('Auth/Login');
+      return Inertia::render('AppUser,Auth/Login');
     }
   }
 

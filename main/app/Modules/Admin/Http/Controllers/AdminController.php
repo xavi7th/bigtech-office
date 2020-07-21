@@ -12,34 +12,34 @@ use Illuminate\Support\Facades\Route;
 class AdminController extends Controller
 {
 
-	public function __construct()
-	{
-		Inertia::setRootView('admin::app');
-	}
+  public function __construct()
+  {
+    Inertia::setRootView('admin::app');
+  }
 
-	static function routes()
-	{
-		Route::group(['middleware' => ['web', 'auth:admin'], 'namespace' => '\App\Modules\Admin\Http\Controllers'], function () {
-			Route::prefix(Admin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-				Route::get('/', 'AdminController@index')->name('admin.dashboard');
-			});
-		});
-	}
+  static function routes()
+  {
+    Route::group(['middleware' => ['web', 'auth:admin'], 'namespace' => '\App\Modules\Admin\Http\Controllers'], function () {
+      Route::prefix(Admin::DASHBOARD_ROUTE_PREFIX)->group(function () {
+        Route::get('/', 'AdminController@index')->name('admin.dashboard');
+      });
+    });
+  }
 
 
-	/**
-	 * Display a listing of the resource.
-	 * @return Response
-	 */
-	public function index(Request $request)
-	{
-		return Inertia::render('App', [
-			'event' => $request->only(
-				'id',
-				'title',
-				'start_date',
-				'description'
-			),
-		]);
-	}
+  /**
+   * Display a listing of the resource.
+   * @return Response
+   */
+  public function index(Request $request)
+  {
+    return Inertia::render('Admin,App', [
+      'event' => $request->only(
+        'id',
+        'title',
+        'start_date',
+        'description'
+      ),
+    ]);
+  }
 }

@@ -186,7 +186,7 @@ class ProductSaleRecord extends Model
     if ($request->isApi()) {
       return response()->json((new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic'), 200);
     } else {
-      return Inertia::render('Products/SalesRecords', [
+      return Inertia::render('SuperAdmin,Products/SalesRecords', [
         'salesRecords' => (new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic'),
         'date' => $date
       ]);

@@ -1,11 +1,5 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Svelte and other libraries. It is a great starting point when
- * building robust, powerful web applications using Svelte and Laravel.
- */
-
+import "@public-assets/sass/app.scss";
 import '@public-assets/js/bootstrap'
-
 import {
 	InertiaApp
 } from '@inertiajs/inertia-svelte'
@@ -35,8 +29,15 @@ new InertiaApp({
 	target: app,
 	props: {
 		initialPage: JSON.parse(app.dataset.page),
-		resolveComponent: name => import( /* webpackChunkName: "js/public-" */ `./Pages/${name}.svelte`)
-			.then(module => module.default),
+		resolveComponent: str => {
+			let [section, module] = _.split(str, ',');
+
+			return import(
+					/* webpackChunkName: "js/[request]" */
+					/* webpackPrefetch: true */
+					`../../../${section}/Resources/js/Pages/${module}.svelte`)
+				.then(module => module.default)
+		},
 		transformProps: props => {
 			return {
 				...props,

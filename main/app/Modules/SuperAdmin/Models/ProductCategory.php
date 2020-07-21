@@ -75,7 +75,7 @@ class ProductCategory extends Model
       return response()->json($categories, 200);
     }
 
-    return Inertia::render('Miscellaneous/ManageProductCategories', compact('categories'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageProductCategories', compact('categories'));
   }
 
   public function createProductCategory(Request $request)

@@ -77,7 +77,7 @@ class SalesChannel extends Model
     $salesChannels = (new SalesChannelTransformer)->collectionTransformer(self::all(), 'basic');
     if ($request->isApi())
       return response()->json($salesChannels, 200);
-    return Inertia::render('Miscellaneous/ManageSalesChannels', compact('salesChannels'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageSalesChannels', compact('salesChannels'));
   }
 
   public function createSalesChannel(Request $request)

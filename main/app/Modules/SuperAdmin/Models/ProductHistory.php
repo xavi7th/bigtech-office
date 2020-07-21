@@ -93,7 +93,7 @@ class ProductHistory extends Model
     $productHistories = (new ProductHistoryTransformer)->collectionTransformer(self::all(), 'detailed');
     if ($request->isApi())
       return response()->json($productHistories, 200);
-    return Inertia::render('Histories/ViewProductHistories', compact('productHistories'));
+    return Inertia::render('SuperAdmin,Histories/ViewProductHistories', compact('productHistories'));
   }
 
   public function getSingleProductHistory(Request $request, Product $product)
@@ -101,6 +101,6 @@ class ProductHistory extends Model
     $productHistory = (new ProductTransformer)->transformWithStatusHistory($product->load('product_histories.user', 'product_histories.product_status'));
     if ($request->isApi())
       return response()->json($productHistory, 200);
-    return Inertia::render('Histories/ViewProductHistory', compact('productHistory'));
+    return Inertia::render('SuperAdmin,Histories/ViewProductHistory', compact('productHistory'));
   }
 }
