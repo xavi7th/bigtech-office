@@ -4,10 +4,12 @@ namespace App\Modules\SuperAdmin\Models;
 
 use App\User;
 use Throwable;
+use App\BaseModel;
+use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Transformers\ErrLogTransformer;
 
 /**
@@ -40,7 +42,7 @@ use App\Modules\SuperAdmin\Transformers\ErrLogTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class ErrLog extends Model
+class ErrLog extends BaseModel
 {
   protected $fillable = [];
 
@@ -70,10 +72,10 @@ class ErrLog extends Model
     });
   }
 
-  public function getErrorLogs()
+  public function getErrorLogs(Request $request)
   {
-    if (auth('admin_api')->check()) {
+    if ($request->isApi())
       return (new ErrLogTransformer)->collectionTransformer(self::latest()->get(), 'basicTransform');
-    }
+    return Inertia::render('SuperAdmin,Notifications/ErrorLogs');
   }
 }

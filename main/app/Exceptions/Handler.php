@@ -64,9 +64,9 @@ class Handler extends ExceptionHandler
 
     if ($request->isApi()) {
 
-      ErrLog::notifyAdminAndFail(SuperAdmin::first(), $exception, 'Handler Error');
 
       if ($exception instanceof NotFoundHttpException) {
+        $this->log404($request);
         return response()->json(['message' => 'No such endpoint'], 404);
       } elseif ($exception instanceof ModelNotFoundException) {
         if (getenv('APP_ENV') === 'local') {
@@ -83,6 +83,12 @@ class Handler extends ExceptionHandler
       } elseif ($exception instanceof ValidationException) {
         return $response;
       } else {
+
+        /**
+         * ! Report it if no other reporter
+         */
+        ErrLog::notifyAdminAndFail(SuperAdmin::first(), $exception, $exception->getMessage());
+
         if (getenv('APP_ENV') === 'local') {
           return response()->json(['Handler Error' => $exception->getMessage()], 500);
         }
@@ -144,8 +150,8 @@ class Handler extends ExceptionHandler
       'data'   => Request::except(['password', 'password_confirmation']),
     ];
 
-    $message = '404: ' . $error['url'] . "\n" . json_encode($error, JSON_PRETTY_PRINT);
+    $message = '404: ' . $error['url'];
 
-    Log::debug($message);
+    Log::debug($message, $error);
   }
 }

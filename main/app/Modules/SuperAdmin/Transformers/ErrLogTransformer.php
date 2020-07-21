@@ -2,7 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Transformers;
 
-use App\Modules\Admin\Models\ErrLog;
+use App\Modules\SuperAdmin\Models\ErrLog;
 
 class ErrLogTransformer
 {

@@ -1,3 +1,8 @@
+<script>
+  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import route from "ziggy";
+</script>
+
 <nav class="rui-navbar rui-navbar-top rui-navbar-sticky">
   <div class="rui-navbar-brand">
     <a href="dashboard.html" class="rui-navbar-logo">
@@ -24,10 +29,10 @@
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false">
-            <img src="/img/avatar-1.png" alt="" />
+            <img src={$page.auth.user.avatar || '/img/avatar-1.png'} alt="" />
           </a>
           <ul class="nav dropdown-menu">
-            <li>
+            <!-- <li>
               <a href="profile.html" class="nav-link">
                 <span
                   data-feather="plus-circle"
@@ -53,15 +58,18 @@
                 <span>Check Updates</span>
                 <span class="rui-nav-circle" />
               </a>
-            </li>
+            </li> -->
             <li>
-              <a href="profile.html" class="nav-link">
+              <InertiaLink
+                method="post"
+                href={route('app.logout')}
+                class="nav-link">
                 <span
                   data-feather="log-out"
                   class="rui-icon rui-icon-stroke-1_5" />
-                <span>Exit</span>
+                <span>Logout</span>
                 <span class="rui-nav-circle" />
-              </a>
+              </InertiaLink>
             </li>
           </ul>
         </li>
