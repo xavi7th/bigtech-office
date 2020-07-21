@@ -2,10 +2,10 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
@@ -14,41 +14,31 @@ use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 /**
  * App\Modules\SuperAdmin\Models\SalesChannel
  *
+ * @property int $id
+ * @property string $channel_name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductSaleRecord[] $sales_records
  * @property-read int|null $sales_records_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesChannel onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesChannel withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesChannel withoutTrashed()
- * @mixin \Eloquent
- * @property int $id
- * @property string $channel_name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereChannelName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesChannel withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesChannel withoutTrashed()
+ * @mixin \Eloquent
  */
-class SalesChannel extends Model
+class SalesChannel extends BaseModel
 {
   use SoftDeletes;
 
   protected $fillable = ['channel_name'];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
 
   public function sales_records()
   {

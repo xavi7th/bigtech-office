@@ -2,10 +2,10 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\ProductQATestResult;
@@ -14,6 +14,10 @@ use App\Modules\SuperAdmin\Transformers\QATestTransformer;
 /**
  * App\Modules\SuperAdmin\Models\QATest
  *
+ * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\QATest[] $product_models
  * @property-read int|null $product_models_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductQATestResult[] $product_qa_test_results
@@ -23,17 +27,13 @@ use App\Modules\SuperAdmin\Transformers\QATestTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest query()
- * @mixin \Eloquent
- * @property int $id
- * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
-class QATest extends Model
+class QATest extends BaseModel
 {
   protected $fillable = ['name'];
   protected $table = 'qa_tests';
@@ -43,16 +43,6 @@ class QATest extends Model
    * @var array
    */
   protected $touches = ['products'];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
 
   public function product_models()
   {

@@ -2,10 +2,10 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,41 +14,31 @@ use App\Modules\SuperAdmin\Transformers\ProductStatusTransformer;
 /**
  * App\Modules\SuperAdmin\Models\ProductStatus
  *
+ * @property int $id
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
  * @property-read int|null $products_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductStatus onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductStatus withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductStatus withoutTrashed()
- * @mixin \Eloquent
- * @property int $id
- * @property string $status
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductStatus withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductStatus withoutTrashed()
+ * @mixin \Eloquent
  */
-class ProductStatus extends Model
+class ProductStatus extends BaseModel
 {
   use SoftDeletes;
 
   protected $fillable = ['status'];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
 
   public function products()
   {

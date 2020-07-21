@@ -2,12 +2,12 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Awobaz\Compoships\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
@@ -16,16 +16,6 @@ use App\Modules\SuperAdmin\Http\Validations\CreateBankAccountValidation;
 /**
  * App\Modules\SuperAdmin\Models\CompanyBankAccount
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductSaleRecord[] $sales_records
- * @property-read int|null $sales_records_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount cashTransactions()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount withoutTrashed()
- * @mixin \Eloquent
  * @property int $id
  * @property string $bank
  * @property string $account_name
@@ -36,6 +26,13 @@ use App\Modules\SuperAdmin\Http\Validations\CreateBankAccountValidation;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductSaleRecord[] $sales_records
+ * @property-read int|null $sales_records_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount cashTransactions()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereAccountDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereAccountName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereAccountNumber($value)
@@ -46,8 +43,11 @@ use App\Modules\SuperAdmin\Http\Validations\CreateBankAccountValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereImgUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount withoutTrashed()
+ * @mixin \Eloquent
  */
-class CompanyBankAccount extends Model
+class CompanyBankAccount extends BaseModel
 {
 
   use SoftDeletes;
@@ -55,17 +55,6 @@ class CompanyBankAccount extends Model
   protected $fillable = [
     'account_name', 'account_number', 'bank', 'account_description', 'account_type', 'img_url'
   ];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
-
 
   public function sales_records()
   {

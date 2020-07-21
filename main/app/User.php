@@ -2,17 +2,18 @@
 
 namespace App;
 
+use Inertia\Inertia;
 use App\Modules\Admin\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\AppUser\Models\AppUser;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
-use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\UserComment;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -72,6 +73,15 @@ class User extends Authenticatable implements JWTSubject
     'email_verified_at' => 'datetime',
   ];
 
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superadmin.')) {
+      Inertia::setRootView('superadmin::app');
+    }
+  }
 
   public function expenses()
   {

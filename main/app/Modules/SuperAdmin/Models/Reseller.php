@@ -2,10 +2,11 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
@@ -19,11 +20,19 @@ use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
 use App\Modules\SuperAdmin\Http\Validations\GiveResellerProcuctValidation;
-use Illuminate\Http\Request;
 
 /**
  * App\Modules\SuperAdmin\Models\Reseller
  *
+ * @property int $id
+ * @property string $business_name
+ * @property string $ceo_name
+ * @property string $address
+ * @property string $phone
+ * @property string $img_url
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
@@ -34,18 +43,6 @@ use Illuminate\Http\Request;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Reseller onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Reseller withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Reseller withoutTrashed()
- * @mixin \Eloquent
- * @property int $id
- * @property string $business_name
- * @property string $ceo_name
- * @property string $address
- * @property string $phone
- * @property string $img_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereBusinessName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereCeoName($value)
@@ -55,8 +52,11 @@ use Illuminate\Http\Request;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereImgUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Reseller withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Reseller withoutTrashed()
+ * @mixin \Eloquent
  */
-class Reseller extends Model
+class Reseller extends BaseModel
 {
   use SoftDeletes, Notifiable;
 
@@ -69,16 +69,6 @@ class Reseller extends Model
   ];
 
   protected $touches = ['products'];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
 
   public function products()
   {

@@ -2,10 +2,10 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
@@ -13,39 +13,29 @@ use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
 /**
  * App\Modules\SuperAdmin\Models\ProductColor
  *
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductColor onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductColor withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductColor withoutTrashed()
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductColor onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductColor withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductColor withoutTrashed()
+ * @mixin \Eloquent
  */
-class ProductColor extends Model
+class ProductColor extends BaseModel
 {
   use SoftDeletes;
 
   protected $fillable = ['name'];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
 
   /**
    * The admin routes

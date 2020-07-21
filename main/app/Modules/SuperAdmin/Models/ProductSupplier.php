@@ -2,10 +2,10 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
@@ -13,39 +13,29 @@ use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
 /**
  * App\Modules\SuperAdmin\Models\ProductSupplier
  *
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier withoutTrashed()
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier withoutTrashed()
+ * @mixin \Eloquent
  */
-class ProductSupplier extends Model
+class ProductSupplier extends BaseModel
 {
   use SoftDeletes;
 
   protected $fillable = ['name'];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
 
   public static function routes()
   {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\SuperSuperAdmin\Notifications;
+namespace App\Modules\SuperAdmin\Notifications;
 
 use Illuminate\Bus\Queueable;
 use App\Modules\SuperAdmin\Models\SuperAdmin;

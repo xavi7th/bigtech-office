@@ -2,10 +2,10 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
@@ -13,40 +13,30 @@ use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
 /**
  * App\Modules\SuperAdmin\Models\StorageSize
  *
- * @property-read string $size
+ * @property int $id
+ * @property string $size
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageSize onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageSize withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageSize withoutTrashed()
- * @mixin \Eloquent
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereSize($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageSize withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageSize withoutTrashed()
+ * @mixin \Eloquent
  */
-class StorageSize extends Model
+class StorageSize extends BaseModel
 {
   use SoftDeletes;
 
   protected $fillable = ['size'];
   protected $casts = ['size' => 'double'];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
 
   public function getSizeAttribute($value): string
   {

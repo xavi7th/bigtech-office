@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\SuperAdmin\Http\Requests;
+namespace App\Modules\SuperAdmin\Http\Validations;
 
 use LVR\CreditCard\CardCvc;
 use LVR\CreditCard\CardNumber;

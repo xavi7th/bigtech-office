@@ -2,12 +2,12 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Modules\Admin\Models\Admin;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,6 +21,12 @@ use App\Modules\SuperAdmin\Transformers\OfficeBranchTransformer;
 /**
  * App\Modules\SuperAdmin\Models\OfficeBranch
  *
+ * @property int $id
+ * @property string $city
+ * @property string $country
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Admin\Models\Admin[] $admins
  * @property-read int|null $admins_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductExpense[] $product_expenses
@@ -37,23 +43,17 @@ use App\Modules\SuperAdmin\Transformers\OfficeBranchTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch withoutTrashed()
- * @mixin \Eloquent
- * @property int $id
- * @property string $city
- * @property string $country
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereCountry($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch withoutTrashed()
+ * @mixin \Eloquent
  */
-class OfficeBranch extends Model
+class OfficeBranch extends BaseModel
 {
   use SoftDeletes;
 
@@ -64,17 +64,6 @@ class OfficeBranch extends Model
    */
   protected $rememberFor = 5;
   protected $fillable = ['city', 'country'];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
-
 
   public function admins()
   {

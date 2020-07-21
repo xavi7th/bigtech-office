@@ -15,5 +15,5 @@
 			"@superadmin-assets/*": ["main/app/Modules/SuperAdmin/Resources/*"],
 		}
 	},
-	"exclude": ["node_modules/*", "main/vendor/*", "main/storage/*"]
+	"include": ["main/app", "main/config/", "main/database/", "main/resources/", "main/routes/"]
 }

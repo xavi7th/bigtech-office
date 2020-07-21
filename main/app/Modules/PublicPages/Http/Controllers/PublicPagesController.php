@@ -4,7 +4,7 @@ namespace App\Modules\PublicPages\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 class PublicPagesController extends Controller

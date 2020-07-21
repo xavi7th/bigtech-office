@@ -2,10 +2,10 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
@@ -14,13 +14,6 @@ use App\Modules\SuperAdmin\Transformers\ProductHistoryTransformer;
 /**
  * App\Modules\SuperAdmin\Models\ProductHistory
  *
- * @property-read \App\Modules\SuperAdmin\Models\Product $product
- * @property-read \App\Modules\SuperAdmin\Models\ProductStatus $product_status
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory query()
- * @mixin \Eloquent
  * @property int $id
  * @property int $product_id
  * @property int $product_status_id
@@ -29,6 +22,12 @@ use App\Modules\SuperAdmin\Transformers\ProductHistoryTransformer;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
+ * @property-read \App\Modules\SuperAdmin\Models\Product $product
+ * @property-read \App\Modules\SuperAdmin\Models\ProductStatus $product_status
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereId($value)
@@ -37,24 +36,15 @@ use App\Modules\SuperAdmin\Transformers\ProductHistoryTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereUserType($value)
+ * @mixin \Eloquent
  */
-class ProductHistory extends Model
+class ProductHistory extends BaseModel
 {
   protected $fillable = [
     'product_id',
     'product_status_id',
     'user_id',
   ];
-
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
 
   public function user()
   {
