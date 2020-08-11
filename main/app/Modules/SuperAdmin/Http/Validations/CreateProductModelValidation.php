@@ -26,11 +26,9 @@ class CreateProductModelValidation extends FormRequest
         'img' => 'required|file|mimes:jpeg,bmp,png,gif',
       ];
     } else if ($this->isMethod('PUT')) {
-      dd($this->all());
-
       return [
         'product_brand_id' =>   'exists:product_brands,id',
-        'name' => ['filled',  Rule::unique('product_models')->ignore($this->route('model')->name)],
+        'name' => ['filled',  Rule::unique('product_models')->ignore($this->route('productModel')->name, 'name')],
         'product_category_id' =>  'exists:product_categories,id',
         'img' => 'bail|nullable|file|mimes:jpeg,bmp,png', 'gif',
       ];

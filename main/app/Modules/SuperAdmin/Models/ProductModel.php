@@ -114,7 +114,10 @@ class ProductModel extends Model
       return response()->json($productModels, 200);
     }
     return Inertia::render('SuperAdmin,ProductModels/List', [
-      'productModels' => $productModels
+      'productModels' => $productModels,
+      'productBrands' => ProductBrand::get(['id', 'name']),
+      'productCategories' => ProductCategory::get(['id', 'name']),
+
     ]);
   }
 
@@ -164,14 +167,25 @@ class ProductModel extends Model
   public function editProductModel(CreateProductModelValidation $request, self $productModel)
   {
 
+    // dd($request->validated());
+
     try {
-      foreach ($request->validated() as $key => $value) {
+      foreach (collect($request->validated())->except('img') as $key => $value) {
         $productModel->$key = $value;
+      }
+
+      if ($request->img) {
+        $productModel->img_url = compress_image_upload('img', 'product_models_images/', null, 800)['img_url'];
       }
 
       $productModel->save();
 
-      return response()->json([], 204);
+      cache()->flush();
+
+      if ($request->isApi()) {
+        return response()->json([], 204);
+      }
+      return back()->withSuccess('Updated');
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Model not updated');
       return response()->json(['err' => 'Model not updated'], 500);
