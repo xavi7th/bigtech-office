@@ -57,6 +57,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SuperAdmin whereUserPassport($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SuperAdmin whereVerifiedAt($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SuperAdmin whereAvatar($value)
  */
 class SuperAdmin extends User
 {

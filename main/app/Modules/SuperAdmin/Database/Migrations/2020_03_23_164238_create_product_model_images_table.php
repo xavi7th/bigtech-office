@@ -6,30 +6,30 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateProductModelImagesTable extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('product_model_images', function (Blueprint $table) {
-			$table->bigIncrements('id');
-			$table->unsignedBigInteger('product_model_id');
-			$table->foreign('product_model_id')->references('id')->on('product_models')->onDelete('cascade');
-			$table->string('img_url');
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('product_model_images', function (Blueprint $table) {
+      $table->bigIncrements('id');
+      $table->foreignId('product_model_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+      $table->string('img_url');
+      $table->string('thumb_img_url')->nullable();
 
-			$table->timestamps();
-		});
-	}
+      $table->timestamps();
+    });
+  }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::dropIfExists('product_model_images');
-	}
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('product_model_images');
+  }
 }

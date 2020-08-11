@@ -8,9 +8,36 @@ window.Toast = swal.mixin({
 	timer: 2000,
 	icon: "success"
 });
+let timerInterval;
+
+window.ToastLarge = swal.mixin({
+	icon: "success",
+	title: 'To be implemented!',
+	html: 'I will close in <b></b> milliseconds.',
+	timer: 3000,
+	timerProgressBar: true,
+	onBeforeOpen: () => {
+		swal.showLoading()
+		// timerInterval = setInterval( () => {
+		//     const content = swal.getContent()
+		//     if ( content ) {
+		//         const b = content.querySelector( 'b' )
+		//         if ( b ) {
+		//             b.textContent = Swal.getTimerLeft()
+		//         }
+		//     }
+		// }, 100 )
+	},
+	// onClose: () => {
+	//     clearInterval( timerInterval )
+	// }
+})
 
 window.BlockToast = swal.mixin({
-	showConfirmButton: false,
+	showConfirmButton: true,
+	onBeforeOpen: () => {
+		swal.showLoading()
+	},
 	showCloseButton: false,
 	allowOutsideClick: false,
 	allowEscapeKey: false

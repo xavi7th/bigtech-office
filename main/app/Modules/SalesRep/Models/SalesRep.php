@@ -58,6 +58,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereUserPassport($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereVerifiedAt($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereAvatar($value)
  */
 class SalesRep extends User
 {

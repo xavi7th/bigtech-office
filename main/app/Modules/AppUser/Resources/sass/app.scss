@@ -50,3 +50,7 @@ dl.phpdebugbar-widgets-kvlist dt {
 .btn-xs.btn-svg-icon {
 	width: calc(1.5rem + 2px)
 }
+
+.swal2-actions.swal2-loading .swal2-styled.swal2-confirm {
+	min-width: 37px;
+}

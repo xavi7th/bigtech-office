@@ -4,9 +4,9 @@ mix.webpackConfig({
 	resolve: {
 		extensions: ['.js', '.svelte', '.json'],
 		alias: {
-			'@user-pages': __dirname + '/Resources/js/Pages',
-			'@user-shared': __dirname + '/Resources/js/Shared',
-			'@user-assets': __dirname + '/Resources'
+			'@userpages': __dirname + '/Resources/js/Pages',
+			'@usershared': __dirname + '/Resources/js/Shared',
+			'@userassets': __dirname + '/Resources'
 		},
 	},
 })

@@ -50,10 +50,15 @@ class ProductModel extends Model
   protected $fillable = [
     'name', 'product_brand_id', 'product_category_id', 'img_url'
   ];
-
-  public function __construct()
+  public function __construct(array $attributes = [])
   {
-    Inertia::setRootView('superadmin::app');
+    parent::__construct($attributes);
+    //Helper function
+    if (routeHasRootNamespace('appuser.')) {
+      Inertia::setRootView('appuser::app');
+    } elseif (routeHasRootNamespace('superuser.')) {
+      Inertia::setRootView('superuser::app');
+    }
   }
 
   public function qa_tests()
@@ -87,9 +92,9 @@ class ProductModel extends Model
       $gen = function ($namespace, $name = null) {
         return 'superadmin.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductFullModels'])->name($gen('models'))->defaults('ex', __e('ss', 'git-branch', false));
+      Route::get('', [self::class, 'getProductModels'])->name($gen('models'))->defaults('ex', __e('ss', 'git-branch', false));
+      Route::match(['post', 'get'], 'create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::get('{productModel}', [self::class, 'getProductModelDetails'])->name($gen('models', '.details'))->defaults('ex', __e('ss', 'git-branch', true));
-      Route::post('create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::put('{productModel}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::get('{productModel}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::put('{productModel}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
@@ -99,12 +104,7 @@ class ProductModel extends Model
     });
   }
 
-  public function getProductModels()
-  {
-    return response()->json((new ProductModelTransformer)->collectionTransformer(self::all(), 'basic'), 200);
-  }
-
-  public function getProductFullModels(Request $request)
+  public function getProductModels(Request $request)
   {
     $productModels =  cache()->remember('models', config('cache.product_models_cache_duration'), function () {
       return (new ProductModelTransformer)->collectionTransformer(self::withCount('products')->with('product_category', 'product_brand')->get(), 'transformWithCategoryAndBrand');
@@ -130,20 +130,32 @@ class ProductModel extends Model
 
   public function createProductModel(CreateProductModelValidation $request)
   {
-
-    try {
-      $product_model = self::create([
-        'name' => $request->name,
-        'product_brand_id' => $request->product_brand_id,
-        'product_category_id' => $request->product_category_id,
-        'img_url' => $request->img_url,
+    if ($request->isMethod('GET')) {
+      if ($request->isApi()) {
+        return abort(404);
+      }
+      return Inertia::render('SuperAdmin,ProductModels/Create', [
+        'productBrands' => ProductBrand::get(['id', 'name']),
+        'productCategories' => ProductCategory::get(['id', 'name']),
       ]);
-
-      return response()->json((new ProductModelTransformer)->basic($product_model), 201);
-    } catch (\Throwable $th) {
-      dd($th);
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product model not created');
-      return response()->json(['err' => 'Product model not created'], 500);
+    } else {
+      // dd(compress_image_upload('img', 'product_models_images/', 'product_models_images/thumbs/', 800));
+      try {
+        $product_model = self::create([
+          'name' => $request->name,
+          'product_brand_id' => $request->product_brand_id,
+          'product_category_id' => $request->product_category_id,
+          'img_url' => compress_image_upload('img', 'product_models_images/', 'product_models_images/thumbs/', 800)['img_url'],
+        ]);
+        if ($request->isApi()) {
+          # code...
+          return response()->json((new ProductModelTransformer)->basic($product_model), 201);
+        } else return back()->withSuccess('New product model created. Add some images to it');
+      } catch (\Throwable $th) {
+        dd($th);
+        ErrLog::notifyAdmin($request->user(), $th, 'Product model not created');
+        return response()->json(['err' => 'Product model not created'], 500);
+      }
     }
   }
 
@@ -160,7 +172,7 @@ class ProductModel extends Model
 
       return response()->json([], 204);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Model not updated');
+      ErrLog::notifyAdmin($request->user(), $th, 'Model not updated');
       return response()->json(['err' => 'Model not updated'], 500);
     }
   }

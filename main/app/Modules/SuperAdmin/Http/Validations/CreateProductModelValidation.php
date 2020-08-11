@@ -6,7 +6,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
-use App\Modules\AppUser\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
+
 
 class CreateProductModelValidation extends FormRequest
 {
@@ -17,12 +18,25 @@ class CreateProductModelValidation extends FormRequest
    */
   public function rules()
   {
-    return [
-      'product_brand_id' => $this->isMethod('PUT') ?  'exists:product_brands,id' : 'required|exists:product_brands,id',
-      'name' => $this->isMethod('PUT') ? ['filled',  Rule::unique('product_models')->ignore($this->route('model')->name)] : 'required|unique:product_models,name',
-      'product_category_id' => $this->isMethod('PUT') ?  'exists:product_categories,id' : 'required|exists:product_categories,id',
-      'img_url' => 'bail|nullable|file|mimes:jpeg,bmp,png',
-    ];
+    if ($this->isMethod('POST')) {
+      return [
+        'product_brand_id' =>  'required|exists:product_brands,id',
+        'name' => 'required|unique:product_models,name',
+        'product_category_id' => 'required|exists:product_categories,id',
+        'img' => 'required|file|mimes:jpeg,bmp,png,gif',
+      ];
+    } else if ($this->isMethod('PUT')) {
+      dd($this->all());
+
+      return [
+        'product_brand_id' =>   'exists:product_brands,id',
+        'name' => ['filled',  Rule::unique('product_models')->ignore($this->route('model')->name)],
+        'product_category_id' =>  'exists:product_categories,id',
+        'img' => 'bail|nullable|file|mimes:jpeg,bmp,png', 'gif',
+      ];
+    } else {
+      return [];
+    }
   }
 
   /**
@@ -59,7 +73,9 @@ class CreateProductModelValidation extends FormRequest
      * * And handle there. That will help for reuse. Handling here for compactness purposes
      * ? Who knows they might ask for a different format for the enxt validation
      */
-    throw new AxiosValidationExceptionBuilder($validator);
+    if (!$this->isMethod('GET')) {
+      throw new AxiosValidationExceptionBuilder($validator);
+    }
   }
 
   protected function failedAuthorization()
