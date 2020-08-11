@@ -146,7 +146,7 @@ class ProductModel extends Model
           'name' => $request->name,
           'product_brand_id' => $request->product_brand_id,
           'product_category_id' => $request->product_category_id,
-          'img_url' => compress_image_upload('img', 'product_models_images/', 'product_models_images/thumbs/', 800)['img_url'],
+          'img_url' => compress_image_upload('img', 'product_models_images/', null, 800)['img_url'],
         ]);
         if ($request->isApi()) {
           # code...

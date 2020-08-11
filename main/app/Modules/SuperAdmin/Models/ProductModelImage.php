@@ -23,6 +23,8 @@ use App\Modules\SuperAdmin\Models\ProductModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModelImage whereImgUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModelImage whereProductModelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModelImage whereUpdatedAt($value)
+ * @property string|null $thumb_img_url
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModelImage whereThumbImgUrl($value)
  */
 class ProductModelImage extends Model
 {

@@ -47,7 +47,7 @@
         };
         ToastLarge.fire({
           title: "Successful!",
-          text: flash.success,
+          html: flash.success,
           timer: 10000
         });
       } else {
@@ -107,7 +107,7 @@
               bind:value={details.name}
               class="form-control"
               id="model-name"
-              placeholder="Enter Imei No." />
+              placeholder="Enter Model Name" />
             {#if errors.name}
               <FlashMessage formError={errors.name[0]} />
             {/if}

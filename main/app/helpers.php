@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException as FileDownloadException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException as FileGetException;
 
@@ -553,45 +554,48 @@ if (!function_exists('compress_image_upload')) {
    *
    * composer require intervention/image
    *
+   * compress_image_upload('img', 'product_models_images/', 'product_models_images/thumbs/', 800)['img_url'],
+   *
    * @return array
    **/
 
   function compress_image_upload(string $key, string $save_path, ?string $thumb_path = null, ?int $size = 1400, ?bool $constrain_aspect_ratio = true)
   {
-    if (!File::isDirectory(public_path($save_path))) {
-      File::makeDirectory(public_path($save_path), 0755);
-    }
+    // dd(public_path(Storage::url($save_path)));
 
-    if ($thumb_path && !File::isDirectory(public_path($thumb_path))) {
-      File::makeDirectory(public_path($thumb_path), 0755);
-    }
+    Storage::makeDirectory('public/' . $save_path, 0777);
+    Storage::makeDirectory('public/' . $thumb_path, 0777);
+
+    // if ($thumb_path && !File::isDirectory(Storage::url($thumb_path))) {
+    //   File::makeDirectory(Storage::url($thumb_path), 0755);
+    // }
 
     $image = Image::make(request()->file($key)->getRealPath());
 
     if ($constrain_aspect_ratio) {
       $image->resize($size, null, function ($constraint) {
         $constraint->aspectRatio();
-      })->save(public_path($save_path) . request()->file($key)->hashName(), 85);
+      })->save(public_path(Storage::url($save_path)) . request()->file($key)->hashName(), 85);
 
-      $url = $save_path . request()->file($key)->hashName();
+      $url = Storage::url($save_path) . request()->file($key)->hashName();
 
       if ($thumb_path) {
         $image->resize(200, null, function ($constraint) {
           $constraint->aspectRatio();
-        })->save(public_path($thumb_path) . request()->file($key)->hashName(), 70);
+        })->save(public_path(Storage::url($thumb_path)) . request()->file($key)->hashName(), 70);
 
-        $thumb_url = $thumb_path . request()->file($key)->hashName();
+        $thumb_url = Storage::url($thumb_path) . request()->file($key)->hashName();
 
         return ['img_url' => $url, 'thumb_url' => $thumb_url];
       }
       return ['img_url' => $url];
     } else {
-      $image->resize($size)->save(public_path($save_path) . request()->file($key)->hashName(), 85);
-      $url = $save_path . request()->file($key)->hashName();
+      $image->resize($size)->save(public_path(Storage::url($save_path)) . request()->file($key)->hashName(), 85);
+      $url = Storage::url($save_path) . request()->file($key)->hashName();
 
       if ($thumb_path) {
-        $image->resize(200)->save(public_path($thumb_path) . request()->file($key)->hashName(), 70);
-        $thumb_url = $thumb_path . request()->file($key)->hashName();
+        $image->resize(200)->save(public_path(Storage::url($thumb_path)) . request()->file($key)->hashName(), 70);
+        $thumb_url = Storage::url($thumb_path) . request()->file($key)->hashName();
 
         return ['img_url' => $url, 'thumb_url' => $thumb_url];
       }
@@ -600,10 +604,6 @@ if (!function_exists('compress_image_upload')) {
     }
   }
 }
-
-
-
-
 
 /**
  * Return the data for the extras defaults

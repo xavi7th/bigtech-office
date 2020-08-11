@@ -11,14 +11,7 @@ mix.webpackConfig({
 	},
 })
 
-if (['buildcss'].includes(process.env.npm_config_section)) {
-	// mix.copyDirectory(__dirname + '/Resources/img', 'public_html/img');
-	// mix.copyDirectory(__dirname + '/Resources/fonts', 'public_html/fonts');
-
-	// mix.sass(__dirname + '/Resources/sass/app.scss', 'css/dashboard-app.css')
-} else {
-
-	mix.scripts([
+mix.scripts([
         __dirname + '/Resources/js/vendor/jquery.min.js',
         __dirname + '/Resources/js/vendor/popper.min.js',
         __dirname + '/Resources/js/vendor/bootstrap.min.js',
@@ -38,10 +31,9 @@ if (['buildcss'].includes(process.env.npm_config_section)) {
         __dirname + '/Resources/js/vendor/v4-shims.js',
     ], 'public_html/js/dashboard-app-vendor.js');
 
-	mix.scripts([
+mix.scripts([
         __dirname + '/Resources/js/vendor/rootui.js',
         __dirname + '/Resources/js/vendor/rootui-init.js',
     ], 'public_html/js/user-dashboard-init.js');
 
-	mix.js(__dirname + '/Resources/js/app.js', 'js/dashboard-app.js')
-}
+mix.js(__dirname + '/Resources/js/app.js', 'js/dashboard-app.js')

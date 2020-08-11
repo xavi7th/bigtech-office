@@ -33,7 +33,10 @@
               <tr class="list-group-item p-0">
                 <td class="media media-success media-filled p-0">
                   <div class="media-link">
-                    <span class="media-img">A</span>
+                    <img
+                      src={model.img_url}
+                      alt="{model.name} poster"
+                      class="media-img" />
                     <span class="media-body">
                       <span class="media-title">{model.name}</span>
                       <small class="media-subtitle">
