@@ -51,11 +51,10 @@
     <Footer />
   </div>
 
-	<slot name="modals"></slot>
-
+  <slot name="modals" />
 {/if}
 
-{#if isLoaded}
+{#if isMounted}
   <script src="/js/user-dashboard-init.js">
 
   </script>

@@ -163,180 +163,181 @@
 			this.options = a.extend({}, this.options, t), this.options.templates = e, this.options.events = n
 		}
 
-		function D() {
-			var t = this,
-				e = a(".rui-page-preloader"),
-				n = null;
-			if (t.setLoadingAnimation = function() {
-					var t = !(arguments.length > 0 && void 0 !== arguments[0]) || arguments[0];
-					clearTimeout(n), t ? (l.addClass("rui-page-loading-state"), e.addClass("rui-page-preloader-active")) : (l
-						.removeClass("rui-page-loading-state"), n = setTimeout((function() {
-							e.removeClass("rui-page-preloader-active")
-						}), 300))
-				}, t.options.ajax && void 0 !== window.history && u(s)) {
-				var i = window.location.href,
-					o = {};
-				s.on("click",
-					'a:not(.no-ajax):not([target="_blank"]):not([href^="#"]):not([href^="mailto"]):not([href^="javascript:"])',
-					(function(e) {
-						var n = e.currentTarget;
-						e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || window.location.protocol === n
-							.protocol && window.location.hostname === n.hostname && (n.href.indexOf("#") > -1 && c(n.href) ===
-								c(i) || "file:" !== window.location.protocol && (e.isDefaultPrevented() || void 0 !== t.options
-									.events.onBeforeAjax && t.options.events.onBeforeAjax(e) || (e.preventDefault(), g(n.href))))
-					})), window.onpopstate = function() {
-					g(window.location.href, !0)
-				}
-			}
+		// function D() {
+		// 	var t = this,
+		// 		e = a(".rui-page-preloader"),
+		// 		n = null;
+		// 	if (t.setLoadingAnimation = function() {
+		// 			var t = !(arguments.length > 0 && void 0 !== arguments[0]) || arguments[0];
+		// 			clearTimeout(n), t ? (l.addClass("rui-page-loading-state"), e.addClass("rui-page-preloader-active")) : (l
+		// 				.removeClass("rui-page-loading-state"), n = setTimeout((function() {
+		// 					e.removeClass("rui-page-preloader-active")
+		// 				}), 300))
+		// 		}, t.options.ajax && void 0 !== window.history && u(s)) {
+		// 		var i = window.location.href,
+		// 			o = {};
+		// 		s.on("click",
+		// 			'a:not(.no-ajax):not([target="_blank"]):not([href^="#"]):not([href^="mailto"]):not([href^="javascript:"])',
+		// 			(function(e) {
+		// 				var n = e.currentTarget;
+		// 				e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || window.location.protocol === n
+		// 					.protocol && window.location.hostname === n.hostname && (n.href.indexOf("#") > -1 && c(n.href) ===
+		// 						c(i) || "file:" !== window.location.protocol && (e.isDefaultPrevented() || void 0 !== t.options
+		// 							.events.onBeforeAjax && t.options.events.onBeforeAjax(e) || (e.preventDefault(), g(n.href))))
+		// 			})), window.onpopstate = function() {
+		// 			g(window.location.href, !0)
+		// 		}
+		// 	}
 
-			function u(t) {
-				return t.find(".yaybar")
-					.length && t.find(".rui-page")
-					.length
-			}
+		// 	function u(t) {
+		// 		return t.find(".yaybar")
+		// 			.length && t.find(".rui-page")
+		// 			.length
+		// 	}
 
-			function c(t) {
-				return t.replace(/#.*/, "")
-			}
+		// 	function c(t) {
+		// 		return t.replace(/#.*/, "")
+		// 	}
 
-			function d() {
-				var t = arguments.length > 0 && void 0 !== arguments[0] && arguments[0];
-				return !(!t || !o[t]) && o[t]
-			}
+		// 	function d() {
+		// 		var t = arguments.length > 0 && void 0 !== arguments[0] && arguments[0];
+		// 		return !(!t || !o[t]) && o[t]
+		// 	}
 
-			function h(t, e) {
-				! function n() {
-					t.length ? function(t, e) {
-						switch (t.type) {
-							case "style":
-								var n = document.createElement("link");
-								n.setAttribute("rel", "stylesheet"), n.setAttribute("href", t.src);
-								var i = !!t.afterCSS && a('link[href="'.concat(t.afterCSS, '"]'));
-								i && i.length ? i.after(n) : a("head")
-									.append(n), e();
-								break;
-							case "script":
-								var o = document.createElement("script");
-								o.onload = o.onreadystatechange = function() {
-									o.onload = o.onreadystatechange = null, e()
-								}, o.setAttribute("src", t.src), document.body.appendChild(o)
-						}
-					}(t.shift(), n) : e && e()
-				}()
-			}
+		// 	function h(t, e) {
+		// 		! function n() {
+		// 			t.length ? function(t, e) {
+		// 				switch (t.type) {
+		// 					case "style":
+		// 						var n = document.createElement("link");
+		// 						n.setAttribute("rel", "stylesheet"), n.setAttribute("href", t.src);
+		// 						var i = !!t.afterCSS && a('link[href="'.concat(t.afterCSS, '"]'));
+		// 						i && i.length ? i.after(n) : a("head")
+		// 							.append(n), e();
+		// 						break;
+		// 					case "script":
+		// 						var o = document.createElement("script");
+		// 						o.onload = o.onreadystatechange = function() {
+		// 							o.onload = o.onreadystatechange = null, e()
+		// 						}, o.setAttribute("src", t.src), document.body.appendChild(o)
+		// 				}
+		// 			}(t.shift(), n) : e && e()
+		// 		}()
+		// 	}
 
-			function p(e, n, o) {
-				if (n) {
-					i = e, n = n.replace("<body", "<div data-ajax-body")
-						.replace("</body>", "</div>");
-					var s = a("<div>")
-						.html(n),
-						l = s.find("title:eq(0)")
-						.text() || document.title;
-					u(s) ? (o ? window.history.replaceState(null, l, e) : window.history.pushState(null, l, e), function() {
-						var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "",
-							n = arguments.length > 1 ? arguments[1] : void 0,
-							i = arguments.length > 2 ? arguments[2] : void 0,
-							o = a(".rui-page"),
-							s = n.find(".rui-page"),
-							l = n.find(".rui-page-additional-js"),
-							u = a(".yaybar-wrap > ul"),
-							c = a(".rui-navbar-top, .rui-navbar-mobile, .rui-navbar-side-icons"),
-							d = [];
-						n.find('link[rel="stylesheet"]')
-							.each((function() {
-								var t = a(this),
-									e = t.attr("href");
-								a('link[href="'.concat(e, '"]'))
-									.length || d.push({
-										src: e,
-										afterCSS: t.prev("link")
-											.attr("href"),
-										type: "style"
-									})
-							})), n.find("script[src]")
-							.each((function() {
-								var t = a(this)
-									.attr("src");
-								a('script[src="'.concat(t, '"]'))
-									.length || d.push({
-										src: t,
-										type: "script"
-									})
-							})), h(d, (function() {
-								var d = n.find("title:eq(0)")
-									.text() || document.title;
-								a("title")
-									.html(d), u.find(".yay-item-active, .yay-submenu-open")
-									.each((function() {
-										var t = a(this),
-											e = "yay-item-active";
-										t.children(".yay-submenu")
-											.length || (e += " yay-submenu-open"), t.removeClass(e)
-									})), u.find("li > a")
-									.each((function() {
-										var t = a(this);
-										this.href && this.href === e && t.add(t.closest(".yay-submenu"))
-											.parent("li")
-											.addClass("yay-item-active yay-submenu-open")
-									})), c.find(".nav-link, .dropdown-item")
-									.each((function() {
-										var t = a(this),
-											e = "active";
-										t.children(".yay-submenu")
-											.length || (e += " yay-submenu-open"), t.removeClass(e)
-									})), c.find(".nav-link, .dropdown-item")
-									.each((function() {
-										var t = a(this);
-										this.href && this.href === e && t.addClass("active")
-									})), o.html(s.html()), a(".rui-page-additional-js-ajax")
-									.remove(), l.each((function() {
-										var t = a(this)
-											.clone();
-										t.addClass("rui-page-additional-js-ajax"), t.appendTo("body")
-									})), void 0 !== t.options.events.onAfterAjax && t.options.events.onAfterAjax(e, n), r
-									.trigger("rui-ajax-loaded", e, n), window.scrollTo({
-										top: 0,
-										behavior: "smooth"
-									}), i()
-							}))
-					}(e, s, (function() {
-						s.remove(), s = null, t.setLoadingAnimation(!1)
-					}))) : window.location = e
-				} else window.location = e
-			}
+		// 	function p(e, n, o) {
+		// 		debugger
+		// 		if (n) {
+		// 			i = e, n = n.replace("<body", "<div data-ajax-body")
+		// 				.replace("</body>", "</div>");
+		// 			var s = a("<div>")
+		// 				.html(n),
+		// 				l = s.find("title:eq(0)")
+		// 				.text() || document.title;
+		// 			u(s) ? (o ? window.history.replaceState(null, l, e) : window.history.pushState(null, l, e), function() {
+		// 				var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "",
+		// 					n = arguments.length > 1 ? arguments[1] : void 0,
+		// 					i = arguments.length > 2 ? arguments[2] : void 0,
+		// 					o = a(".rui-page"),
+		// 					s = n.find(".rui-page"),
+		// 					l = n.find(".rui-page-additional-js"),
+		// 					u = a(".yaybar-wrap > ul"),
+		// 					c = a(".rui-navbar-top, .rui-navbar-mobile, .rui-navbar-side-icons"),
+		// 					d = [];
+		// 				n.find('link[rel="stylesheet"]')
+		// 					.each((function() {
+		// 						var t = a(this),
+		// 							e = t.attr("href");
+		// 						a('link[href="'.concat(e, '"]'))
+		// 							.length || d.push({
+		// 								src: e,
+		// 								afterCSS: t.prev("link")
+		// 									.attr("href"),
+		// 								type: "style"
+		// 							})
+		// 					})), n.find("script[src]")
+		// 					.each((function() {
+		// 						var t = a(this)
+		// 							.attr("src");
+		// 						a('script[src="'.concat(t, '"]'))
+		// 							.length || d.push({
+		// 								src: t,
+		// 								type: "script"
+		// 							})
+		// 					})), h(d, (function() {
+		// 						var d = n.find("title:eq(0)")
+		// 							.text() || document.title;
+		// 						a("title")
+		// 							.html(d), u.find(".yay-item-active, .yay-submenu-open")
+		// 							.each((function() {
+		// 								var t = a(this),
+		// 									e = "yay-item-active";
+		// 								t.children(".yay-submenu")
+		// 									.length || (e += " yay-submenu-open"), t.removeClass(e)
+		// 							})), u.find("li > a")
+		// 							.each((function() {
+		// 								var t = a(this);
+		// 								this.href && this.href === e && t.add(t.closest(".yay-submenu"))
+		// 									.parent("li")
+		// 									.addClass("yay-item-active yay-submenu-open")
+		// 							})), c.find(".nav-link, .dropdown-item")
+		// 							.each((function() {
+		// 								var t = a(this),
+		// 									e = "active";
+		// 								t.children(".yay-submenu")
+		// 									.length || (e += " yay-submenu-open"), t.removeClass(e)
+		// 							})), c.find(".nav-link, .dropdown-item")
+		// 							.each((function() {
+		// 								var t = a(this);
+		// 								this.href && this.href === e && t.addClass("active")
+		// 							})), o.html(s.html()), a(".rui-page-additional-js-ajax")
+		// 							.remove(), l.each((function() {
+		// 								var t = a(this)
+		// 									.clone();
+		// 								t.addClass("rui-page-additional-js-ajax"), t.appendTo("body")
+		// 							})), void 0 !== t.options.events.onAfterAjax && t.options.events.onAfterAjax(e, n), r
+		// 							.trigger("rui-ajax-loaded", e, n), window.scrollTo({
+		// 								top: 0,
+		// 								behavior: "smooth"
+		// 							}), i()
+		// 					}))
+		// 			}(e, s, (function() {
+		// 				s.remove(), s = null, t.setLoadingAnimation(!1)
+		// 			}))) : window.location = e
+		// 		} else window.location = e
+		// 	}
 
-			function f(e, n) {
-				0 !== n.status ? (console.log("error", n), t.setLoadingAnimation(!1)) : window.location = e
-			}
+		// 	function f(e, n) {
+		// 		0 !== n.status ? (console.log("error", n), t.setLoadingAnimation(!1)) : window.location = e
+		// 	}
 
-			function g() {
-				var e = arguments.length > 0 && void 0 !== arguments[0] && arguments[0],
-					n = arguments.length > 1 && void 0 !== arguments[1] && arguments[1];
-				e && c(e) !== c(i) && a.ajax({
-					url: e,
-					beforeSend: function() {
-						var i = d(e);
-						return i ? (i.then((function(t) {
-							p(e, t, n)
-						}), (function(t) {
-							f(e, t)
-						})), !1) : (t.setLoadingAnimation(!0), function() {
-							var t = arguments.length > 0 && void 0 !== arguments[0] && arguments[0],
-								e = arguments.length > 1 && void 0 !== arguments[1] && arguments[1];
-							t && e && !o[t] && (o[t] = e)
-						}(e, a.Deferred()), !0)
-					},
-					success: function(t) {
-						var i = d(e);
-						i && i.resolve(t), p(e, t, n)
-					},
-					error: function(t) {
-						f(e, t)
-					}
-				})
-			}
-		}
+		// 	function g() {
+		// 		var e = arguments.length > 0 && void 0 !== arguments[0] && arguments[0],
+		// 			n = arguments.length > 1 && void 0 !== arguments[1] && arguments[1];
+		// 		e && c(e) !== c(i) && a.ajax({
+		// 			url: e,
+		// 			beforeSend: function() {
+		// 				var i = d(e);
+		// 				return i ? (i.then((function(t) {
+		// 					p(e, t, n)
+		// 				}), (function(t) {
+		// 					f(e, t)
+		// 				})), !1) : (t.setLoadingAnimation(!0), function() {
+		// 					var t = arguments.length > 0 && void 0 !== arguments[0] && arguments[0],
+		// 						e = arguments.length > 1 && void 0 !== arguments[1] && arguments[1];
+		// 					t && e && !o[t] && (o[t] = e)
+		// 				}(e, a.Deferred()), !0)
+		// 			},
+		// 			success: function(t) {
+		// 				var i = d(e);
+		// 				i && i.resolve(t), p(e, t, n)
+		// 			},
+		// 			error: function(t) {
+		// 				f(e, t)
+		// 			}
+		// 		})
+		// 	}
+		// }
 
 		function R() {
 			var t = this,
@@ -643,10 +644,11 @@
 				}))
 		}
 		r.on("scroll load resize orientationchange", (function() {
-			C.length && (m = !0)
-		})), setInterval((function() {
-			m && (m = !1, window.requestAnimationFrame(P))
-		}), 250);
+				C.length && (m = !0)
+			})),
+			setInterval((function() {
+				m && (m = !1, window.requestAnimationFrame(P))
+			}), 250);
 		var H = {
 			dropdown_toggle_transition: 200,
 			sidebar_toggle_transition: 250,
@@ -1175,17 +1177,17 @@
 										.concat(e(t.name), '</span>\n                                <span class="by">')
 										.concat(e(t.username),
 											'</span>\n                            </span>\n                            <span class="description">'
-											)
+										)
 										.concat(e(t.description),
 											'</span>\n                            <ul class="meta">\n                                '
-											)
+										)
 										.concat(t.language ? '<li class="language">'.concat(e(t.language), "</li>") : "",
 											'\n                                <li class="watchers"><span>')
 										.concat(e(t.watchers),
 											'</span> watchers</li>\n                                <li class="forks"><span>')
 										.concat(e(t.forks),
 											"</span> forks</li>\n                            </ul>\n                        </div>"
-											)
+										)
 								}
 							}, o.score = function(t) {
 								var e = this.getScoreFunction(t);
@@ -1300,44 +1302,62 @@
 			}
 		}
 		r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginOverlayScrollbars()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginFeather()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginIonRangeslider()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginTouchSpin()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginDateRangePicker()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginDateTimePicker()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginDataTable()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginJstree()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginPickr()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginPopover()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginHightlight()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginEmojioneArea()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginSortable()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginEasymde()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginSwiper()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginInputmask()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginSelectize()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginQuill()
-		})), r.on("rui-ajax-loaded", (function() {
-			window.RootUI.initPluginDropzone()
-		}));
+				window.RootUI.initPluginOverlayScrollbars()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginFeather()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginIonRangeslider()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginTouchSpin()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginDateRangePicker()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginDateTimePicker()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginDataTable()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginJstree()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginPickr()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginPopover()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginHightlight()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginEmojioneArea()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginSortable()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginEasymde()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginSwiper()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginInputmask()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginSelectize()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginQuill()
+			})),
+			r.on("rui-ajax-loaded", (function() {
+				window.RootUI.initPluginDropzone()
+			}));
 		var dt = function() {
 			function t() {
 				! function(t, e) {
@@ -1388,6 +1408,8 @@
             }, {
 				key: "initAjax",
 				value: function() {
+					console.log('initAjax disabled by dev');
+					return;
 					return D.call(this)
 				}
             }, {
@@ -1403,11 +1425,15 @@
             }, {
 				key: "initMessenger",
 				value: function() {
+					console.log('initMessenger disabled by dev');
+					return;
 					return _.call(this)
 				}
             }, {
 				key: "initMailbox",
 				value: function() {
+					console.log('initMailbox disabled by dev');
+					return;
 					return E.call(this)
 				}
             }, {
@@ -1433,6 +1459,8 @@
             }, {
 				key: "initToasts",
 				value: function() {
+					console.log('initToasts disabled by dev');
+					return;
 					return F.call(this)
 				}
             }, {
@@ -1458,6 +1486,8 @@
             }, {
 				key: "initPluginIonRangeslider",
 				value: function() {
+					console.log('initPluginIonRangeslider disabled by dev');
+					return;
 					return L.call(this)
 				}
             }, {
@@ -1468,11 +1498,15 @@
             }, {
 				key: "initPluginDateRangePicker",
 				value: function() {
+					console.log('initPluginDateRangePicker disabled by dev');
+					return;
 					return K.call(this)
 				}
             }, {
 				key: "initPluginDateTimePicker",
 				value: function() {
+					console.log('initPluginDateTimePicker disabled by dev');
+					return;
 					return G.call(this)
 				}
             }, {
@@ -1483,6 +1517,8 @@
             }, {
 				key: "initPluginJstree",
 				value: function() {
+					console.log('initPluginJstree disabled by dev');
+					return;
 					return V.call(this)
 				}
             }, {
@@ -1503,6 +1539,8 @@
             }, {
 				key: "initPluginEmojioneArea",
 				value: function() {
+					console.log('initPluginEmojioneArea disabled by dev');
+					return;
 					return tt.call(this)
 				}
             }, {
@@ -1518,6 +1556,8 @@
             }, {
 				key: "initPluginSweetalert",
 				value: function() {
+					console.log('initPluginSweetalert disabled by dev');
+					return;
 					return it.call(this)
 				}
             }, {
@@ -1528,26 +1568,36 @@
             }, {
 				key: "initPluginInputmask",
 				value: function() {
+					console.log('initPluginInputmask disabled by dev');
+					return;
 					return ot.call(this)
 				}
             }, {
 				key: "initPluginSelectize",
 				value: function() {
+					console.log('initPluginSelectize disabled by dev');
+					return;
 					return rt.call(this)
 				}
             }, {
 				key: "initPluginQuill",
 				value: function() {
+					console.log('initPluginQuill disabled by dev');
+					return;
 					return st.call(this)
 				}
             }, {
 				key: "initPluginDropzone",
 				value: function() {
+					console.log('initPluginDropzone disabled by dev');
+					return;
 					return lt.call(this)
 				}
             }, {
 				key: "initTransitionFix",
 				value: function() {
+					console.log('initTransitionFix disabled by dev');
+					return;
 					return ut.call(this)
 				}
             }]) && ct(e.prototype, n), a && ct(e, a), t

@@ -140,6 +140,7 @@ class ProductModel extends Model
       ]);
     } else {
       // dd(compress_image_upload('img', 'product_models_images/', 'product_models_images/thumbs/', 800));
+      cache()->flush();
       try {
         $product_model = self::create([
           'name' => $request->name,
