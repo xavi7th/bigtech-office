@@ -11,40 +11,39 @@ use Illuminate\Notifications\Notifiable;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ActivityLog;
-use App\Modules\SuperAdmin\Models\UserComment;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
+use App\Modules\SuperAdmin\Traits\MakesComments;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * App\User
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ActivityLog[] $activities
+ * @property-read \Illuminate\Database\Eloquent\Collection|ActivityLog[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
  * @property-read int|null $comments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\OtherExpense[] $expenses
+ * @property-read \Illuminate\Database\Eloquent\Collection|OtherExpense[] $expenses
  * @property-read int|null $expenses_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductHistory[] $product_histories
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductHistory[] $product_histories
  * @property-read int|null $product_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
+ * @property-read \Illuminate\Database\Eloquent\Collection|ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
  * @property-write mixed $password
- * @method static \Illuminate\Database\Eloquent\Builder|\App\User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\User newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\User onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\User query()
- * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Query\Builder|User onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Query\Builder|User withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements JWTSubject
 {
-  use Notifiable, SoftDeletes;
+  use Notifiable, SoftDeletes, MakesComments;
 
   /**
    * The attributes that are mass assignable.
@@ -91,11 +90,6 @@ class User extends Authenticatable implements JWTSubject
   public function activities()
   {
     return $this->morphMany(ActivityLog::class, 'user')->latest();
-  }
-
-  public function comments()
-  {
-    return $this->morphMany(UserComment::class, 'user')->latest();
   }
 
   public function product_histories()

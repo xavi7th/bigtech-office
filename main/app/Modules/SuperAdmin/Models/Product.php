@@ -44,11 +44,11 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductValidation;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateLocalSupplierProductValidation;
+use App\Modules\SuperAdmin\Traits\Commentable;
 
 class Product extends Model
 {
-  use SoftDeletes;
-  use Compoships;
+  use SoftDeletes, Compoships, Commentable;
 
   protected $fillable = [
     'product_category_id', 'product_model_id', 'product_brand_id', 'product_batch_id', 'product_color_id', 'product_grade_id',
@@ -70,11 +70,6 @@ class Product extends Model
     return $this->belongsTo(AppUser::class)->withDefault([
       'first_name' => 'Not Sold',
     ]);
-  }
-
-  public function comments()
-  {
-    return $this->morphMany(UserComment::class, 'subject')->latest();
   }
 
   public function test_result_comments()
@@ -617,7 +612,8 @@ class Product extends Model
      * Send the user an email containing his receipt
      */
 
-    try { } catch (\Throwable $th) {
+    try {
+    } catch (\Throwable $th) {
       ErrLog::notifyAdmin(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
     }
 
@@ -638,7 +634,7 @@ class Product extends Model
 
   public function commentOnProduct(CreateProductCommentValidation $request, self $product)
   {
-    $comment =  auth()->user()->comments()->create([
+    $comment =  $request->user()->comments()->create([
       'subject_id' => $product->id,
       'subject_type' => get_class($product),
       'comment' => $request->comment
@@ -683,7 +679,7 @@ class Product extends Model
 
   public function commentOnProductQATestResults(CreateProductCommentValidation $request, self $product)
   {
-    $comment =  auth()->user()->comments()->create([
+    $comment =  $request->user()->comments()->create([
       'subject_id' => $product->id,
       'subject_type' => get_class($product),
       'comment' => 'Test Result: ' . $request->comment
@@ -712,7 +708,7 @@ class Product extends Model
       /**
        * add an entry for the product trail that it's status changed
        */
-      auth()->user()->product_histories()->create([
+      request()->user()->product_histories()->create([
         'product_id' => $product->id,
         'product_status_id' => $product->product_status_id,
       ]);

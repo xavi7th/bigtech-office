@@ -40,46 +40,46 @@ use App\Modules\PublicPages\Notifications\SendPasswordResetNotification;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \App\Modules\SuperAdmin\Models\Voucher|null $active_voucher
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ActivityLog[] $activities
+ * @property-read Voucher|null $active_voucher
+ * @property-read \Illuminate\Database\Eloquent\Collection|ActivityLog[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
  * @property-read int|null $comments_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\OtherExpense[] $expenses
  * @property-read int|null $expenses_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Voucher[] $expired_vouchers
+ * @property-read \Illuminate\Database\Eloquent\Collection|Voucher[] $expired_vouchers
  * @property-read int|null $expired_vouchers_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \App\Modules\PublicPages\Models\OTP|null $otp
+ * @property-read OTP|null $otp
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductHistory[] $product_histories
  * @property-read int|null $product_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
  * @property-read int|null $products_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Voucher[] $vouchers
+ * @property-read \Illuminate\Database\Eloquent\Collection|Voucher[] $vouchers
  * @property-read int|null $vouchers_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereAvatar($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereIgHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereOtpVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\AppUser whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser query()
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereIgHandle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereOtpVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class AppUser extends User

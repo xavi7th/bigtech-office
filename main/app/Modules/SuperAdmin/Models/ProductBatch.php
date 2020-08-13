@@ -10,43 +10,43 @@ use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\SuperAdmin\Models\UserComment;
 use App\Modules\SuperAdmin\Models\ProductPrice;
+use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductBatch
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductBatch onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductBatch withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductBatch withoutTrashed()
- * @mixin \Eloquent
  * @property int $id
  * @property string $batch_number
  * @property \Illuminate\Support\Carbon $order_date
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereBatchNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereOrderDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBatch whereUpdatedAt($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
- * @property-read int|null $products_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductPrice[] $productPrices
+ * @property string|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductPrice[] $productPrices
  * @property-read int|null $product_prices_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read int|null $products_count
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductBatch onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereBatchNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereOrderDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductBatch withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductBatch withoutTrashed()
+ * @mixin \Eloquent
  */
 class ProductBatch extends Model
 {
-  use SoftDeletes;
+  use SoftDeletes, Commentable;
 
   protected $fillable = ['order_date', 'batch_number'];
 
@@ -55,11 +55,6 @@ class ProductBatch extends Model
   public function __construct()
   {
     Inertia::setRootView('superadmin::app');
-  }
-
-  public function comments()
-  {
-    return $this->morphMany(UserComment::class, 'subject')->latest();
   }
 
   public function products()

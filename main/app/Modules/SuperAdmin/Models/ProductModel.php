@@ -15,6 +15,7 @@ use App\Modules\SuperAdmin\Models\ProductModelImage;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
 use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
+use App\Modules\SuperAdmin\Traits\Commentable;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductModel
@@ -26,6 +27,8 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
  * @property string|null $img_url
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
+ * @property-read int|null $comments_count
  * @property-read ProductBrand $product_brand
  * @property-read ProductCategory $product_category
  * @property-read ProductDescriptionSummary|null $product_description_summary
@@ -49,6 +52,9 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
  */
 class ProductModel extends Model
 {
+
+  use Commentable;
+
   protected $fillable = [
     'name', 'product_brand_id', 'product_category_id', 'img_url'
   ];
@@ -137,7 +143,8 @@ class ProductModel extends Model
           'product_category',
           'product_model_images',
           'qa_tests',
-          'product_description_summary'
+          'product_description_summary',
+          'comments'
         ));
       },
       'qaTests' => function () {

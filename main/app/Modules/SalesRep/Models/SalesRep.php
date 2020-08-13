@@ -27,7 +27,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ActivityLog[] $activities
+ * @property-read \Illuminate\Database\Eloquent\Collection|ActivityLog[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
  * @property-read int|null $comments_count
@@ -39,26 +39,25 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @property-read \App\Modules\SuperAdmin\Models\StockRequest|null $stock_request
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereOfficeBranchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereUserPassport($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereVerifiedAt($value)
+ * @property-read StockRequest|null $stock_request
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereFullName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereOfficeBranchId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereVerifiedAt($value)
  * @mixin \Eloquent
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SalesRep\Models\SalesRep whereAvatar($value)
  */
 class SalesRep extends User
 {

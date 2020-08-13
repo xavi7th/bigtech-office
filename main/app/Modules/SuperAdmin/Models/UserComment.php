@@ -15,12 +15,6 @@ use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
 /**
  * App\Modules\SuperAdmin\Models\UserComment
  *
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $subject
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment query()
- * @mixin \Eloquent
  * @property int $id
  * @property int $user_id
  * @property string $user_type
@@ -30,15 +24,21 @@ use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment whereComment($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment whereSubjectId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment whereSubjectType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\UserComment whereUserType($value)
+ * @property-read Model|\Eloquent $subject
+ * @property-read Model|\Eloquent $user
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment whereSubjectId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment whereSubjectType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserComment whereUserType($value)
+ * @mixin \Eloquent
  */
 class UserComment extends Model
 {
@@ -48,12 +48,10 @@ class UserComment extends Model
     'comment'
   ];
 
-
   public function user()
   {
     return $this->morphTo();
   }
-
 
   public function subject()
   {

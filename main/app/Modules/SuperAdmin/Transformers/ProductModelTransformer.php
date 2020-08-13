@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Transformers;
 use App\Modules\SuperAdmin\Models\QATest;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Models\ProductModelImage;
+use App\Modules\SuperAdmin\Models\UserComment;
 use App\Modules\SuperAdmin\Transformers\QATestTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductModelImageTransformer;
 
@@ -51,6 +52,7 @@ class ProductModelTransformer
       'descriptionSummaryUpdated' => (string)optional(optional($productModel->product_description_summary)->updated_at)->diffForHumans(),
       'images' => $this->collectionTransformer($productModel->product_model_images, 'transformImage'),
       'qaTests' => $this->collectionTransformer($productModel->qa_tests, 'transformQATest'),
+      'comments' => $productModel->commentWithDetails()
     ];
   }
 
@@ -62,5 +64,10 @@ class ProductModelTransformer
   public function transformImage(ProductModelImage $image)
   {
     return (new ProductModelImageTransformer)->basic($image);
+  }
+
+  public function transformComments(UserComment $userComment)
+  {
+    return (new UserCommentTransformer)->commentDetails($userComment);
   }
 }
