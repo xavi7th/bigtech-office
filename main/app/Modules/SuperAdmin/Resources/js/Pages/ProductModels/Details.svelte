@@ -21,25 +21,26 @@
   $: ({ app, flash, errors } = $page);
 
   export let productModel = {
-    images: [],
-    qaTests: []
-  };
+      images: [],
+      qaTests: []
+    },
+    qaTests;
 
   onMount(() => {
     description = productModel.descriptionSummary;
   });
 
   afterUpdate(() => {
-    console.log(errors);
+    console.log(flash);
     if (flash.success) {
       Toast.fire({
         title: "Successful!",
         text: flash.success
       });
     } else if (flash.error) {
-      Toast.fire({
+      ToastLarge.fire({
         title: "Oops!",
-        text: flash.error,
+        html: flash.error,
         icon: "error"
       });
     } else if (_.size(errors) > 0) {
@@ -54,9 +55,7 @@
           return (_.isString(val) ? val : val.join("<br>")) + "<br>" + n;
         });
       }
-
       console.log(errs);
-
       ToastLarge.fire({
         title: "Oops",
         html: errs,
@@ -141,7 +140,10 @@
           id="settings"
           role="tabpanel"
           aria-labelledby="settings-tab">
-          <QaTests />
+          <QaTests
+            {qaTests}
+            productModelId={productModel.id}
+            productQaTests={productModel.qaTests} />
         </div>
       </div>
     </div>

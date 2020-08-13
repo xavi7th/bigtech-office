@@ -103,7 +103,7 @@ class ProductModel extends Model
       Route::match(['post', 'get'], 'create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::get('{productModel}', [self::class, 'getProductModelDetails'])->name($gen('models', '.details'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::put('{productModel}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
-      // Route::get('{productModel}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
+      Route::get('{productModel}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::put('{productModel}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
       // Route::get('{productModel}/images', [self::class, 'getProductModelImages'])->name($gen('models', '.model_images'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::post('{productModel}/images/create', [self::class, 'createProductModelImage'])->name($gen('models', '.create_model_image'))->defaults('ex', __e('ss', 'git-branch', true));
@@ -139,6 +139,9 @@ class ProductModel extends Model
           'qa_tests',
           'product_description_summary'
         ));
+      },
+      'qaTests' => function () {
+        return QATest::all();
       }
     ]);
   }
@@ -217,7 +220,13 @@ class ProductModel extends Model
 
     $tests = $productModel->qa_tests()->sync($request->qa_tests);
 
-    return response()->json($tests, 201);
+    if ($request->isApi())
+      return response()->json($tests, 201);
+    if (empty($tests['attached']) && empty($tests['detached']) && empty($tests['updated'])) {
+      return back()->withError('Nothing was updated');
+    } else {
+      return back()->withSuccess('Product tests were updated successfully');
+    }
   }
 
   public function getProductModelImages(Request $request, self $productModel)
