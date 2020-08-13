@@ -10,30 +10,6 @@ use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Transformers\ProductDescriptionSummaryTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductDescriptionSummaryValidation;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductDescriptionSummary
- *
- * @property-read \App\Modules\SuperAdmin\Models\ProductModel $product_model
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary withoutTrashed()
- * @mixin \Eloquent
- * @property int $id
- * @property int $product_model_id
- * @property string $description_summary
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary whereDescriptionSummary($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary whereProductModelId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductDescriptionSummary whereUpdatedAt($value)
- */
 class ProductDescriptionSummary extends Model
 {
   use SoftDeletes;
@@ -56,7 +32,7 @@ class ProductDescriptionSummary extends Model
       };
       Route::get('', [self::class, 'getProductDescriptionSummaries'])->name($gen(''))->defaults('ex', __e('ss', 'edit', true));
       Route::post('create', [self::class, 'createProductDescriptionSummary'])->name($gen('.create_product_desc'));
-      Route::put('{productDescriptionSummary}/edit', [self::class, 'editProductDescriptionSummary'])->name($gen('.edit_product_desc'));
+      Route::put('{productModel}/edit', [self::class, 'editProductDescriptionSummary'])->name($gen('.edit_product_desc'));
     });
   }
 
@@ -69,28 +45,35 @@ class ProductDescriptionSummary extends Model
   {
     try {
       $product_desc_summary = self::create($request->validated());
-
-      return response()->json((new ProductDescriptionSummaryTransformer)->basic($product_desc_summary), 201);
+      if ($request->isApi())
+        return response()->json((new ProductDescriptionSummaryTransformer)->basic($product_desc_summary), 201);
+      return back()->withSuccess('Product Model Description has been created');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product description summary not created');
-      return response()->json(['err' => 'Product description summary not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Product description summary not created');
+      if ($request->isApi())
+        return response()->json(['err' => 'Product description summary not created'], 500);
+      return back()->withError('Product description summary not created');
     }
   }
 
-  public function editProductDescriptionSummary(CreateProductDescriptionSummaryValidation $request, self $product_desc_summary)
+  public function editProductDescriptionSummary(CreateProductDescriptionSummaryValidation $request, ProductModel $productModel)
   {
 
     try {
       foreach ($request->validated() as $key => $value) {
-        $product_desc_summary->$key = $value;
+        $productModel->product_description_summary->$key = $value;
       }
 
-      $product_desc_summary->save();
+      $productModel->product_description_summary->save();
 
-      return response()->json([], 204);
+      if ($request->isApi())
+        return response()->json([], 204);
+      return back()->withSuccess('Product Model Description has been updated');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product description summary not updated');
-      return response()->json(['err' => 'Product description summary not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Product description summary not updated');
+      if ($request->isApi())
+        return response()->json(['err' => 'Product description summary not updated'], 500);
+      return back()->withSuccess('Product Model Description not updated');
     }
   }
 }

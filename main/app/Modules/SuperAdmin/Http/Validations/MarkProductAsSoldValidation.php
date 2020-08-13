@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\SuperAdmin\Http\Validations;
 
 use Illuminate\Validation\Rule;
@@ -53,7 +54,7 @@ class MarkProductAsSoldValidation extends FormRequest
     /**
      * Only sales reps can mark products as sold
      */
-    return auth(auth()->getDefaultDriver())->check();
+    return auth()->check();
   }
 
 

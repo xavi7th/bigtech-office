@@ -1,15 +1,52 @@
 <script context="module">
-  export function createDescription(desc) {
-    alert(desc);
+  export function createModelDescription(id, desc) {
+    BlockToast.fire({
+      text: "Adding description to product model ..."
+    });
+
+    Inertia.post(
+      route("superadmin.product_descriptions.create_product_desc"),
+      {
+        description_summary: desc,
+        product_model_id: id
+      },
+      {
+        preserveState: true,
+        preserveScroll: true,
+        only: ["flash", "errors", "productModel"],
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
   }
 
-  export function updateDescription(desc) {
-    alert(desc);
+  export function updateModelDescription(id, desc) {
+    BlockToast.fire({
+      text: "Updating description ..."
+    });
+
+    Inertia.put(
+      route("superadmin.product_descriptions.edit_product_desc", id),
+      {
+        description_summary: desc
+        // product_model_id: id
+      },
+      {
+        preserveState: true,
+        preserveScroll: true,
+        only: ["flash", "errors", "productModel"],
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
   }
 </script>
 
 <script>
   import Modal from "@superadmin-shared/Partials/Modal";
+  import { Inertia } from "@inertiajs/inertia";
 
   export let descriptionSummary, descriptionSummaryUpdated;
 </script>
@@ -55,7 +92,9 @@ It will show up on hover.
               class="rui-icon rui-icon-stroke-1_5" />
           </div>
           <div class="rui-task-content">
-            <a class="rui-task-title" href="#home">{descriptionSummary}</a>
+            <p class="rui-task-title">
+              {@html descriptionSummary}
+            </p>
             <small class="rui-task-subtitle">
               Last updated {descriptionSummaryUpdated}
             </small>

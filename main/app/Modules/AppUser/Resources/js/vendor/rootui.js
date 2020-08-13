@@ -1410,7 +1410,7 @@
 				value: function() {
 					console.log('initAjax disabled by dev');
 					return;
-					return D.call(this)
+					// return D.call(this)
 				}
             }, {
 				key: "initNavbar",
@@ -1427,14 +1427,14 @@
 				value: function() {
 					console.log('initMessenger disabled by dev');
 					return;
-					return _.call(this)
+					// return _.call(this)
 				}
             }, {
 				key: "initMailbox",
 				value: function() {
 					console.log('initMailbox disabled by dev');
 					return;
-					return E.call(this)
+					// return E.call(this)
 				}
             }, {
 				key: "initTabsSliding",
@@ -1461,7 +1461,7 @@
 				value: function() {
 					console.log('initToasts disabled by dev');
 					return;
-					return F.call(this)
+					// return F.call(this)
 				}
             }, {
 				key: "initPluginYaybar",
@@ -1488,7 +1488,7 @@
 				value: function() {
 					console.log('initPluginIonRangeslider disabled by dev');
 					return;
-					return L.call(this)
+					// return L.call(this)
 				}
             }, {
 				key: "initPluginTouchSpin",
@@ -1500,14 +1500,14 @@
 				value: function() {
 					console.log('initPluginDateRangePicker disabled by dev');
 					return;
-					return K.call(this)
+					// return K.call(this)
 				}
             }, {
 				key: "initPluginDateTimePicker",
 				value: function() {
 					console.log('initPluginDateTimePicker disabled by dev');
 					return;
-					return G.call(this)
+					// return G.call(this)
 				}
             }, {
 				key: "initPluginDataTable",
@@ -1519,7 +1519,7 @@
 				value: function() {
 					console.log('initPluginJstree disabled by dev');
 					return;
-					return V.call(this)
+					// return V.call(this)
 				}
             }, {
 				key: "initPluginPickr",
@@ -1541,7 +1541,7 @@
 				value: function() {
 					console.log('initPluginEmojioneArea disabled by dev');
 					return;
-					return tt.call(this)
+					// return tt.call(this)
 				}
             }, {
 				key: "initPluginSortable",
@@ -1558,7 +1558,7 @@
 				value: function() {
 					console.log('initPluginSweetalert disabled by dev');
 					return;
-					return it.call(this)
+					// return it.call(this)
 				}
             }, {
 				key: "initPluginSwiper",
@@ -1570,35 +1570,35 @@
 				value: function() {
 					console.log('initPluginInputmask disabled by dev');
 					return;
-					return ot.call(this)
+					// return ot.call(this)
 				}
             }, {
 				key: "initPluginSelectize",
 				value: function() {
 					console.log('initPluginSelectize disabled by dev');
 					return;
-					return rt.call(this)
+					// return rt.call(this)
 				}
             }, {
 				key: "initPluginQuill",
 				value: function() {
 					console.log('initPluginQuill disabled by dev');
 					return;
-					return st.call(this)
+					// return st.call(this)
 				}
             }, {
 				key: "initPluginDropzone",
 				value: function() {
 					console.log('initPluginDropzone disabled by dev');
 					return;
-					return lt.call(this)
+					// return lt.call(this)
 				}
             }, {
 				key: "initTransitionFix",
 				value: function() {
 					console.log('initTransitionFix disabled by dev');
 					return;
-					return ut.call(this)
+					// return ut.call(this)
 				}
             }]) && ct(e.prototype, n), a && ct(e, a), t
 		}();

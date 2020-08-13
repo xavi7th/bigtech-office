@@ -47,8 +47,8 @@ class ProductModelTransformer
       'img_url' => (string)$productModel->img_url,
       'category' => (string)$productModel->product_category->name,
       'brand' => (string)$productModel->product_brand->name,
-      'descriptionSummary' => (string)$productModel->product_description_summary->description_summary,
-      'descriptionSummaryUpdated' => (string)$productModel->product_description_summary->updated_at->diffForHumans(),
+      'descriptionSummary' => (string)optional($productModel->product_description_summary)->description_summary,
+      'descriptionSummaryUpdated' => (string)optional(optional($productModel->product_description_summary)->updated_at)->diffForHumans(),
       'images' => $this->collectionTransformer($productModel->product_model_images, 'transformImage'),
       'qaTests' => $this->collectionTransformer($productModel->qa_tests, 'transformQATest'),
     ];

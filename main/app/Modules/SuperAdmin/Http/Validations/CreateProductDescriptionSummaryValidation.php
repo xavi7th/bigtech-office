@@ -5,7 +5,7 @@ namespace App\Modules\SuperAdmin\Http\Validations;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
-use App\Modules\AppUser\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
 class CreateProductDescriptionSummaryValidation extends FormRequest
 {
@@ -58,10 +58,5 @@ class CreateProductDescriptionSummaryValidation extends FormRequest
      * ? Who knows they might ask for a different format for the enxt validation
      */
     throw new AxiosValidationExceptionBuilder($validator);
-  }
-
-  protected function failedAuthorization()
-  {
-    throw new AuthorizationException('You are yet to get a credit card. Order one first');
   }
 }

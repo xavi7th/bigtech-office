@@ -4,6 +4,7 @@ namespace App\Modules\SuperAdmin\Models;
 
 use App\User;
 use Throwable;
+use TypeError;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -12,36 +13,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Transformers\ErrLogTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ErrLog
- *
- * @property int $id
- * @property string|null $message
- * @property string|null $channel
- * @property int $level
- * @property string $level_name
- * @property int $unix_time
- * @property string|null $datetime
- * @property string|null $context
- * @property string|null $extra
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereChannel($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereContext($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereDatetime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereExtra($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereLevel($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereLevelName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereMessage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereUnixTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ErrLog whereUpdatedAt($value)
- * @mixin \Eloquent
- */
 class ErrLog extends BaseModel
 {
   protected $fillable = [];
@@ -49,9 +20,9 @@ class ErrLog extends BaseModel
   static function notifyAdmin(?User $user, Throwable $exception, string $message = null)
   {
     if ($exception instanceof TypeError) {
-      Log::error($message, ['userId' => optional($user)->id, 'userType' => rescue(get_class($user)), 'exception' => $exception->getMessage()]);
+      Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class($user), 'exception' => $exception->getMessage()]);
     }
-    Log::error($message, ['userId' => optional($user)->id, 'userType' => rescue(get_class($user)), 'exception' => $exception]);
+    Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class($user), 'exception' => $exception]);
   }
 
   static function notifyAdminAndFail(?User $user, Throwable $exception, string $message = null)
@@ -59,9 +30,7 @@ class ErrLog extends BaseModel
     if (DB::transactionLevel() > 0) {
       DB::rollBack();
     }
-    Log::error($message, ['userId' => optional($user)->id, 'userType' => rescue(function () use ($user) {
-      return get_class($user);
-    }, false), 'exception' => $exception]);
+    Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class($user), 'exception' => $exception]);
   }
 
   static function routes()

@@ -8,8 +8,8 @@
   import Comments from "./partials/Comments";
   import QaTests from "./partials/QATests";
   import DescriptionSummary, {
-    createDescription,
-    updateDescription
+    createModelDescription,
+    updateModelDescription
   } from "./partials/DescriptionSummary";
   import ModelSummary from "./partials/ModelSummary";
   import route from "ziggy";
@@ -25,18 +25,41 @@
     qaTests: []
   };
 
-  afterUpdate(() => {
+  onMount(() => {
     description = productModel.descriptionSummary;
+  });
+
+  afterUpdate(() => {
     console.log(errors);
     if (flash.success) {
       Toast.fire({
         title: "Successful!",
         text: flash.success
       });
+    } else if (flash.error) {
+      Toast.fire({
+        title: "Oops!",
+        text: flash.error,
+        icon: "error"
+      });
     } else if (_.size(errors) > 0) {
+      if (_.isString(errors)) {
+        var errs = errors;
+      } else if (_.size(errors) == 1) {
+        var errs = _.reduce(errors, function(val, n) {
+          return val.join("<br>") + "<br>" + n;
+        })[0];
+      } else {
+        var errs = _.reduce(errors, function(val, n) {
+          return (_.isString(val) ? val : val.join("<br>")) + "<br>" + n;
+        });
+      }
+
+      console.log(errs);
+
       ToastLarge.fire({
         title: "Oops",
-        html: _.join(errors.message, "<br>"),
+        html: errs,
         icon: "error"
       });
     } else {
@@ -50,7 +73,7 @@
     <div class="col-lg-6 col-xl-5">
       <ModelSummary
         name={productModel.name}
-        imgUrl={productModel.imgUrl}
+        imgUrl={productModel.img_url}
         category={productModel.category}
         brand={productModel.brand} />
     </div>
@@ -151,7 +174,7 @@
         class="btn btn-brand"
         slot="footer-buttons"
         on:click={() => {
-          createDescription(description);
+          createModelDescription(productModel.id, description);
         }}>
         Add Description
       </button>
@@ -160,7 +183,7 @@
         class="btn btn-warning"
         slot="footer-buttons"
         on:click={() => {
-          updateDescription(description);
+          updateModelDescription(productModel.id, description);
         }}>
         Update Description
       </button>
