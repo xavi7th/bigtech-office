@@ -19,6 +19,7 @@ class ProductModelImageTransformer
     return [
       'id' => (int)$image->id,
       'img_url' => (string)$image->img_url,
+      'thumb_url' => (string)$image->thumb_url,
     ];
   }
 }

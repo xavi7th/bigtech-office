@@ -55,13 +55,13 @@ mix
 		},
 		postCss: [
 		  require('postcss-fixes')(),
-		  // require('cssnano')({
-			// 	discardComments: {
-			// 		removeAll: true
-			// 	},
-			// 	calc: false,
-			// 	cssDeclarationSorter: true
-			// })
+		  require('cssnano')({
+				discardComments: {
+					removeAll: true
+				},
+				calc: false,
+				cssDeclarationSorter: true
+			})
 		],
 	})
 	.svelte({

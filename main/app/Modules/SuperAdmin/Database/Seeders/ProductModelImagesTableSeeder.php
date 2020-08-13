@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\SuperAdmin\Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -22,6 +23,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480/business',
+        'thumb_url' => 'http://lorempixel.com/150/200/business',
         'created_at' => '2020-03-23 16:57:51',
         'updated_at' => '2020-03-23 16:57:51',
       ),
@@ -29,6 +31,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:58:59',
         'updated_at' => '2020-03-23 16:58:59',
       ),
@@ -36,6 +39,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:02',
         'updated_at' => '2020-03-23 16:59:02',
       ),
@@ -43,6 +47,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:04',
         'updated_at' => '2020-03-23 16:59:04',
       ),
@@ -50,6 +55,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:06',
         'updated_at' => '2020-03-23 16:59:06',
       ),
@@ -57,6 +63,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:08',
         'updated_at' => '2020-03-23 16:59:08',
       ),
@@ -64,6 +71,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:09',
         'updated_at' => '2020-03-23 16:59:09',
       ),
@@ -71,6 +79,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:10',
         'updated_at' => '2020-03-23 16:59:10',
       ),
@@ -78,6 +87,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:11',
         'updated_at' => '2020-03-23 16:59:11',
       ),
@@ -85,6 +95,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:19',
         'updated_at' => '2020-03-23 16:59:19',
       ),
@@ -92,6 +103,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:20',
         'updated_at' => '2020-03-23 16:59:20',
       ),
@@ -99,6 +111,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 1,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:21',
         'updated_at' => '2020-03-23 16:59:21',
       ),
@@ -106,6 +119,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 2,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:28',
         'updated_at' => '2020-03-23 16:59:28',
       ),
@@ -113,6 +127,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 2,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:29',
         'updated_at' => '2020-03-23 16:59:29',
       ),
@@ -120,6 +135,7 @@ class ProductModelImagesTableSeeder extends Seeder
       array(
         'product_model_id' => 5,
         'img_url' => 'http://lorempixel.com/640/480',
+        'thumb_url' => 'http://lorempixel.com/150/200',
         'created_at' => '2020-03-23 16:59:34',
         'updated_at' => '2020-03-23 16:59:34',
       ),

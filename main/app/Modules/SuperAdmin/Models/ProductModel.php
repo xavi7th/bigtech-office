@@ -12,22 +12,13 @@ use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\ProductBrand;
 use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductModelImage;
+use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
 use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductModel
  *
- * @property-read \App\Modules\SuperAdmin\Models\ProductBrand $product_brand
- * @property-read \App\Modules\SuperAdmin\Models\ProductCategory $product_category
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductModelImage[] $product_model_images
- * @property-read int|null $product_model_images_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\QATest[] $qa_tests
- * @property-read int|null $qa_tests_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel query()
- * @mixin \Eloquent
  * @property int $id
  * @property int $product_brand_id
  * @property int $product_category_id
@@ -35,15 +26,26 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
  * @property string|null $img_url
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereProductBrandId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereProductCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductModel whereUpdatedAt($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
+ * @property-read ProductBrand $product_brand
+ * @property-read ProductCategory $product_category
+ * @property-read ProductDescriptionSummary|null $product_description_summary
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductModelImage[] $product_model_images
+ * @property-read int|null $product_model_images_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
  * @property-read int|null $products_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|QATest[] $qa_tests
+ * @property-read int|null $qa_tests_count
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereImgUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereProductBrandId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereProductCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class ProductModel extends Model
 {
@@ -86,6 +88,11 @@ class ProductModel extends Model
     return $this->hasMany(Product::class);
   }
 
+  public function product_description_summary()
+  {
+    return $this->hasOne(ProductDescriptionSummary::class);
+  }
+
   public static function routes()
   {
     Route::group(['prefix' => 'product-models'], function () {
@@ -96,11 +103,11 @@ class ProductModel extends Model
       Route::match(['post', 'get'], 'create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::get('{productModel}', [self::class, 'getProductModelDetails'])->name($gen('models', '.details'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::put('{productModel}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('ss', 'git-branch', true));
-      Route::get('{productModel}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
+      // Route::get('{productModel}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::put('{productModel}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true));
-      Route::get('{productModel}/images', [self::class, 'getProductModelImages'])->name($gen('models', '.model_images'))->defaults('ex', __e('ss', 'git-branch', true));
+      // Route::get('{productModel}/images', [self::class, 'getProductModelImages'])->name($gen('models', '.model_images'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::post('{productModel}/images/create', [self::class, 'createProductModelImage'])->name($gen('models', '.create_model_image'))->defaults('ex', __e('ss', 'git-branch', true));
-      Route::delete('images/{image}/delete', [self::class, 'deleteProductModelImage'])->name($gen('models', '.delete_model_image'))->defaults('ex', __e('ss', 'git-branch', true));
+      Route::delete('images/{id}/delete', [self::class, 'deleteProductModelImage'])->name($gen('models', '.delete_model_image'))->defaults('ex', __e('ss', 'git-branch', true));
     });
   }
 
@@ -124,10 +131,15 @@ class ProductModel extends Model
   public function getProductModelDetails(ProductModel $productModel)
   {
     return Inertia::render('SuperAdmin,ProductModels/Details', [
-      'details' => [
-        'images' => (new ProductModelTransformer)->collectionTransformer($productModel->product_model_images, 'transformImage'),
-        'qa_tests' => (new ProductModelTransformer)->collectionTransformer($productModel->qa_tests, 'transformQATest'),
-      ]
+      'productModel' => function () use ($productModel) {
+        return (new ProductModelTransformer)->transformForDetailsPage($productModel->load(
+          'product_brand',
+          'product_category',
+          'product_model_images',
+          'qa_tests',
+          'product_description_summary'
+        ));
+      }
     ]);
   }
 
@@ -219,16 +231,25 @@ class ProductModel extends Model
       return generate_422_error('Specify valid image');
     }
 
+    $img_urls = compress_image_upload('img', 'product_models_images/', 'product_models_images/thumbs/', 800);
     $image = $productModel->product_model_images()->create([
-      'img_url' => $request->img
+      'img_url' => $img_urls['img_url'],
+      'thumb_url' => $img_urls['thumb_url'],
     ]);
 
-    return response()->json((new ProductModelTransformer)->transformImage($image), 201);
+    if ($request->isApi()) {
+      return response()->json((new ProductModelTransformer)->transformImage($image), 201);
+    }
+
+    return back()->withSuccess('Image created');
   }
 
-  public function deleteProductModelImage(Request $request, ProductModelImage $model_image)
+  public function deleteProductModelImage(Request $request,  $id)
   {
-
-    return response()->json($model_image->delete(), 204);
+    ProductModelImage::destroy($id);
+    if ($request->isApi()) {
+      return response()->json([], 204);
+    }
+    return back()->withSuccess('Deleted');
   }
 }

@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Str;
+use Illuminate\Http\Response;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use League\Flysystem\FileNotFoundException as FileDownloadException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException as FileGetException;
 
@@ -170,10 +172,16 @@ if (!function_exists('generate_422_error')) {
    */
   function generate_422_error($errors)
   {
-    return response()->json([
-      'error' => 'form validation error',
-      'message' => $errors
-    ], 422);
+    if (request()->isApi()) {
+      return response()->json([
+        'error' => 'form validation error',
+        'message' => $errors
+      ], 422);
+    } else {
+      throw ValidationException::withMessages([
+        'message' => $errors,
+      ])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
   }
 }
 

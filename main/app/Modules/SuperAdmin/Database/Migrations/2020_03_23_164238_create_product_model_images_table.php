@@ -17,7 +17,7 @@ class CreateProductModelImagesTable extends Migration
       $table->bigIncrements('id');
       $table->foreignId('product_model_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
       $table->string('img_url');
-      $table->string('thumb_img_url')->nullable();
+      $table->string('thumb_url')->nullable();
 
       $table->timestamps();
     });
