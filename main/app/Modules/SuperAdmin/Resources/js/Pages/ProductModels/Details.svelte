@@ -5,7 +5,7 @@
   import Modal from "@superadmin-shared/Partials/Modal";
   import FlashMessage from "@usershared/FlashMessage";
   import Images, { addImage } from "./partials/Images";
-  import Comments from "./partials/Comments";
+  import Comments, { createModelComment } from "./partials/Comments";
   import QaTests from "./partials/QATests";
   import DescriptionSummary, {
     createModelDescription,
@@ -14,9 +14,8 @@
   import ModelSummary from "./partials/ModelSummary";
   import route from "ziggy";
   import { onMount, afterUpdate } from "svelte";
-  import { __dirname } from "lodash/_freeGlobal";
 
-  export let description, files;
+  export let description, files, comment;
 
   $: ({ app, flash, errors } = $page);
 
@@ -36,12 +35,18 @@
       Toast.fire({
         title: "Successful!",
         text: flash.success
+      }).then(() => {
+        description = null;
+        comment = null;
+        flash.success = null;
       });
     } else if (flash.error) {
       ToastLarge.fire({
         title: "Oops!",
         html: flash.error,
         icon: "error"
+      }).then(() => {
+        flash.error = null;
       });
     } else if (_.size(errors) > 0) {
       if (_.isString(errors)) {
@@ -65,6 +70,12 @@
       swal.close();
     }
   });
+
+  let activeComment;
+
+  let updateComment = evt => {
+    activeComment = evt.detail;
+  };
 </script>
 
 <Layout title="Product Models">
@@ -126,29 +137,63 @@
           id="activity"
           role="tabpanel"
           aria-labelledby="activity-tab">
+
           <Images images={productModel.images} />
+
         </div>
         <div
           class="tab-pane fade"
           id="timeline"
           role="tabpanel"
           aria-labelledby="timeline-tab">
-          <Comments />
+
+          <Comments
+            comments={productModel.comments}
+            on:view-comment={updateComment} />
+
         </div>
         <div
           class="tab-pane fade"
           id="settings"
           role="tabpanel"
           aria-labelledby="settings-tab">
+
           <QaTests
             {qaTests}
             productModelId={productModel.id}
             productQaTests={productModel.qaTests} />
+
         </div>
       </div>
     </div>
   </div>
   <div slot="modals">
+    <Modal modalId="viewComment" modalTitle="">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">{activeComment}</p>
+        </div>
+      </div>
+    </Modal>
+    <Modal
+      modalId="createComment"
+      modalTitle="Add a comment to this Product Model">
+      <textarea
+        name="createComment"
+        cols="30"
+        rows="10"
+        class="form-control"
+        bind:value={comment} />
+
+      <button
+        class="btn btn-brand"
+        slot="footer-buttons"
+        on:click={() => {
+          createModelComment(productModel.id, comment);
+        }}>
+        Add Description
+      </button>
+    </Modal>
     <Modal modalId="addImage" modalTitle="Add Image to Product Model">
       <input type="file" bind:files accept="image/*" />
 

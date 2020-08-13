@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
 use App\Modules\SuperAdmin\Models\Product;
+use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\ProductBrand;
 use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductModelImage;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
+use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
-use App\Modules\SuperAdmin\Traits\Commentable;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductModel
@@ -114,6 +115,7 @@ class ProductModel extends Model
       // Route::get('{productModel}/images', [self::class, 'getProductModelImages'])->name($gen('models', '.model_images'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::post('{productModel}/images/create', [self::class, 'createProductModelImage'])->name($gen('models', '.create_model_image'))->defaults('ex', __e('ss', 'git-branch', true));
       Route::delete('images/{id}/delete', [self::class, 'deleteProductModelImage'])->name($gen('models', '.delete_model_image'))->defaults('ex', __e('ss', 'git-branch', true));
+      Route::post('{productModel}/comment', [self::class, 'commentOnProductModel'])->name($gen('models', '.comment_on_model'))->defaults('ex', __e('ss', null, true));
     });
   }
 
@@ -267,5 +269,21 @@ class ProductModel extends Model
       return response()->json([], 204);
     }
     return back()->withSuccess('Deleted');
+  }
+
+  public function commentOnProductModel(Request $request, self $productModel)
+  {
+    if (!$request->comment) {
+      return generate_422_error('Provide comment');
+    }
+    $comment =  $request->user()->comments()->create([
+      'subject_id' => $productModel->id,
+      'subject_type' => get_class($productModel),
+      'comment' => $request->comment
+    ]);
+
+    if ($request->isApi())
+      return response()->json((new UserCommentTransformer)->detailed($comment), 201);
+    return back()->withSuccess('Created');
   }
 }

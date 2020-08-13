@@ -4,15 +4,16 @@ namespace App\Modules\AppUser\Http\Controllers\Auth;
 
 use App\User;
 use Inertia\Inertia;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Arr;
-use App\Modules\SuperAdmin\Events\NotificationEvents;
 use App\Modules\SuperAdmin\Events\NotificationEvent;
+use App\Modules\SuperAdmin\Events\NotificationEvents;
 
 class LoginController extends Controller
 {
@@ -89,6 +90,7 @@ class LoginController extends Controller
 
     if ($this->attemptLogin($request)) {
       event(NotificationEvents::LOGGED_IN, new NotificationEvent($this->authenticatedGuard()->user()));
+
       return $this->sendLoginResponse($request);
     }
 
@@ -108,7 +110,8 @@ class LoginController extends Controller
     collect(config('auth.guards'))->each(function ($details, $guard) {
       try {
         auth($guard)->logout();
-      } catch (\Throwable $th) { }
+      } catch (\Throwable $th) {
+      }
     });
     // $this->authenticatedGuard()->logout();
     $request->session()->invalidate();
@@ -176,6 +179,7 @@ class LoginController extends Controller
   protected function authenticated(Request $request, User $user)
   {
     // dd($user);
+
     if ($user->isAppUser()) {
       redirect()->intended(route($user->dashboardRoute()));
     } else {

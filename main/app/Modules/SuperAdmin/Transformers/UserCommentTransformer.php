@@ -71,8 +71,8 @@ class UserCommentTransformer
   {
     return [
       'comment' => (string)$comment->comment,
-      'user' => (string)$comment->user->email,
-      'date' => (string)$comment->created_at
+      'user' => (string)$comment->user->full_name,
+      'date' => (string)$comment->created_at->diffForHumans()
     ];
   }
 }
