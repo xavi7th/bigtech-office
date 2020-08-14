@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -51,7 +52,7 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class ProductModel extends Model
+class ProductModel extends BaseModel
 {
 
   use Commentable;
@@ -59,16 +60,6 @@ class ProductModel extends Model
   protected $fillable = [
     'name', 'product_brand_id', 'product_category_id', 'img_url'
   ];
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    //Helper function
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superuser.')) {
-      Inertia::setRootView('superuser::app');
-    }
-  }
 
   public function qa_tests()
   {

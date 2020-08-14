@@ -22,6 +22,8 @@ class BaseModel extends Model
       Inertia::setRootView('appuser::app');
     } elseif (routeHasRootNamespace('admin.')) {
       Inertia::setRootView('admin::app');
+    } elseif (routeHasRootNamespace('superuser.')) {
+      Inertia::setRootView('superuser::app');
     }
   }
 }

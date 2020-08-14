@@ -1,6 +1,5 @@
 <script context="module">
   export function addImage(id, img) {
-    console.log(img);
     BlockToast.fire({
       text: "Uploading image ..."
     });

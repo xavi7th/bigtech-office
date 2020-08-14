@@ -196,7 +196,6 @@
     </Modal>
     <Modal modalId="addImage" modalTitle="Add Image to Product Model">
       <input type="file" bind:files accept="image/*" />
-
       <button
         slot="footer-buttons"
         disabled={!files}

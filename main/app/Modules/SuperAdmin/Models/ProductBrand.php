@@ -7,44 +7,26 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
+use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductBrand
- *
- * @property int $id
- * @property string $name
- * @property string|null $logo_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductModel[] $product_model
- * @property-read int|null $product_model_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBrand newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBrand newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductBrand onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBrand query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBrand whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBrand whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBrand whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBrand whereLogoUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBrand whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductBrand whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductBrand withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductBrand withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductBrand extends BaseModel
 {
-  use SoftDeletes;
+  use SoftDeletes, Commentable;
 
   protected $fillable = ['name', 'logo_url'];
 
   public function product_model()
   {
     return $this->hasMany(ProductModel::class);
+  }
+
+  public function products()
+  {
+    return $this->hasMany(Product::class);
   }
 
   public static function routes()
@@ -55,13 +37,14 @@ class ProductBrand extends BaseModel
       };
       Route::get('', [self::class, 'getProductBrands'])->name($gen('brands'))->defaults('ex', __e('ss', 'feather', false));
       Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('ss', 'feather', true));
-      Route::put('{brand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('ss', 'feather', true));
+      Route::put('{productBrand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('ss', 'feather', true));
+      Route::delete('{productBrand}/delete', [self::class, 'deleteProductBrand'])->name($gen('brands', '.delete_product_brand'))->defaults('ex', __e('ss', 'feather', true));
     });
   }
 
   public function getProductBrands(Request $request)
   {
-    $productBrands = (new ProductBrandTransformer)->collectionTransformer(self::all(), 'basic');
+    $productBrands = (new ProductBrandTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic');
     if ($request->isApi())
       return response()->json($productBrands, 200);
 
@@ -78,21 +61,31 @@ class ProductBrand extends BaseModel
       return generate_422_error('The brand ' . $request->name . ' already exists');
     }
 
+    if ($request->hasFile('img')) {
+      $logo_url = compress_image_upload('img', 'product-brands/logos', null, 200, true)['img_url'];
+    }
+
     try {
       $product_brand = self::create([
         'name' => $request->name,
-        'logo_url' => $request->logo_url,
+        'logo_url' => $logo_url ?? null,
       ]);
 
-      return response()->json((new ProductBrandTransformer)->basic($product_brand), 201);
+      if ($request->isApi())
+        return response()->json((new ProductBrandTransformer)->basic($product_brand), 201);
+
+      return back()->withSuccess('Product brand created. <br/> Products can now be created under this brand');
     } catch (\Throwable $th) {
-      return response()->json(['err' => 'Brand creation failed'], 500);
+      if ($request->isApi())
+        return response()->json(['err' => 'Brand creation failed'], 500);
+      return back()->withError('Brand creation failed');
     }
   }
 
 
-  public function editProductBrand(Request $request, self $brand)
+  public function editProductBrand(Request $request, self $productBrand)
   {
+
     if (!$request->name) {
       return generate_422_error('Specify a new brand to change this to');
     }
@@ -102,14 +95,36 @@ class ProductBrand extends BaseModel
     }
 
     try {
-      $brand->name = $request->name;
-      $brand->logo_url = $request->logo_url;
-      $brand->save();
+      $productBrand->name = $request->name;
+      if ($request->hasFile('img')) {
+        $productBrand->logo_url = compress_image_upload('img', 'product-brands/logos', null, 200, true)['img_url'];
+      }
+      $productBrand->save();
 
-      return response()->json([], 204);
+      if ($request->isApi())
+        return response()->json([], 204);
+
+      return back()->withSuccess('Product brand updated. <br/> All products under this brand will reflect this new name');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Brand not updated');
-      return response()->json(['err' => 'Brand not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Brand not updated');
+      if ($request->isApi())
+
+        return response()->json(['err' => 'Brand not updated'], 500);
+
+      return back()->withError('Brand update failed');
     }
+  }
+
+  public function deleteProductBrand(Request $request, self $productBrand)
+  {
+    if ($productBrand->products()->exists()) {
+      return generate_422_error('This brand has products under it and so cannot be deleted');
+    }
+
+    $productBrand->delete();
+
+    if ($request->isApi())
+      return response()->json([], 204);
+    return back()->withSuccess('Deleted');
   }
 }

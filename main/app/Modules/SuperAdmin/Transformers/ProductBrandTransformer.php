@@ -8,11 +8,9 @@ class ProductBrandTransformer
 {
   public function collectionTransformer($collection, $transformerMethod)
   {
-    return [
-      'product_brands' => $collection->map(function ($v) use ($transformerMethod) {
-        return $this->$transformerMethod($v);
-      })
-    ];
+    return  $collection->map(function ($v) use ($transformerMethod) {
+      return $this->$transformerMethod($v);
+    });
   }
 
   public function basic(ProductBrand $product_brand)
@@ -21,6 +19,7 @@ class ProductBrandTransformer
       'id' => (int)$product_brand->id,
       'name' => (string)$product_brand->name,
       'logo_url' => (string)$product_brand->logo_url,
+      'products_count' => (int)$product_brand->products_count,
     ];
   }
 }
