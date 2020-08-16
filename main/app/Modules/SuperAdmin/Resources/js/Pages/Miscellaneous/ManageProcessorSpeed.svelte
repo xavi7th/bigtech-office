@@ -11,7 +11,7 @@
 
   let processorSpeedName, processorSpeedId;
 
-  let createProcessorSpeeed = () => {
+  let createProcessorSpeed = () => {
     BlockToast.fire({
       text: "Creating processor speed ..."
     });
@@ -45,7 +45,7 @@
     });
   };
 
-  let updateProcessorSpeeed = () => {
+  let updateProcessorSpeed = () => {
     BlockToast.fire({
       text: "Updating processor speed ..."
     });
@@ -145,7 +145,7 @@
   <div class="row vertical-gap">
     <div class="col-lg-4 col-xl-4">
 
-      <form class="#" on:submit|preventDefault={createProcessorSpeeed}>
+      <form class="#" on:submit|preventDefault={createProcessorSpeed}>
         <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
@@ -223,7 +223,7 @@
   </div>
   <div slot="modals">
     <Modal modalId="updateProcessorSpeed" modalTitle="Update Processor Speed">
-      <form class="#" on:submit|preventDefault={updateProcessorSpeeed}>
+      <form class="#" on:submit|preventDefault={updateProcessorSpeed}>
         <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
