@@ -228,7 +228,7 @@
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
-            <label for="name">Chenge Processor Speed</label>
+            <label for="name">Change Processor Speed</label>
             <input
               type="text"
               class="form-control"

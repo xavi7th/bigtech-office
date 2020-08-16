@@ -10,30 +10,8 @@ use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductStatusTransformer;
+use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductStatus
- *
- * @property int $id
- * @property string $status
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductStatus onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductStatus whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductStatus withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductStatus withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductStatus extends BaseModel
 {
   use SoftDeletes;
@@ -101,38 +79,44 @@ class ProductStatus extends BaseModel
         return 'superadmin.miscellaneous.' . $name;
       };
       Route::get('', [self::class, 'getProductStatuses'])->name($gen('product_status', null))->defaults('ex', __e('ss', 'aperture', false));
-      Route::post('create', [self::class, 'createProductStatus'])->name($gen('create_status'))->defaults('ex', __e('ss', 'aperture', true));
-      Route::put('{statuse}/edit', [self::class, 'editProductStatus'])->name($gen('edit_status'))->defaults('ex', __e('ss', 'aperture', true));
+      Route::post('create', [self::class, 'createProductStatus'])->name($gen('create_product_status'))->defaults('ex', __e('ss', 'aperture', true));
+      Route::put('{productStatus}/edit', [self::class, 'editProductStatus'])->name($gen('edit_product_status'))->defaults('ex', __e('ss', 'aperture', true));
     });
   }
 
   public function getProductStatuses(Request $request)
   {
-    $productStatus = (new ProductStatusTransformer)->collectionTransformer(self::all(), 'basic');
-    if ($request->isApi())
-      return response()->json($productStatus, 200);
-    return Inertia::render('SuperAdmin,Miscellaneous/ManageProductStatus', compact('productStatus'));
+    $productStatuses = Cache::rememberForever('productStatuses', function () {
+      return (new ProductStatusTransformer)->collectionTransformer(self::all(), 'basic');
+    });
+
+    if ($request->isApi()) return response()->json($productStatuses, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageProductStatus', compact('productStatuses'));
   }
 
   public function createProductStatus(Request $request)
   {
-    if (!$request->status) {
-      return generate_422_error('Specify a product status');
-    }
+    if (!$request->status) return generate_422_error('Specify a product status');
+    if (self::where('status', $request->status)->exists()) return generate_422_error('This status already exists');
 
     try {
-      $product_status = self::create([
+      $productStatus = self::create([
         'status' => $request->status,
       ]);
 
-      return response()->json((new ProductStatusTransformer)->basic($product_status), 201);
+      Cache::forget('productStatuses');
+
+      if ($request->isApi()) return response()->json((new ProductStatusTransformer)->basic($productStatus), 201);
+      return back()->withSuccess('Product status created. <br/> Products can now be assigned this status');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product status not created');
-      return response()->json(['err' => 'Product status not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Product status not created');
+
+      if ($request->isApi()) return response()->json(['err' => 'Product status not created'], 500);
+      return back()->withError('Status creation failed');
     }
   }
 
-  public function editProductStatus(Request $request, self $product_status)
+  public function editProductStatus(Request $request, self $productStatus)
   {
     if (!$request->status) {
       return generate_422_error('Specify a new product status to change this to');
@@ -143,13 +127,18 @@ class ProductStatus extends BaseModel
     }
 
     try {
-      $product_status->status = $request->status;
-      $product_status->save();
+      $productStatus->status = $request->status;
+      $productStatus->save();
 
-      return response()->json([], 204);
+      Cache::forget('productStatuses');
+
+      if ($request->isApi())       return response()->json([], 204);
+      return back()->withSuccess('Product status updated. <br/> Products can now be assigned this status');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product status not updated');
-      return response()->json(['err' => 'Product status not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Product status not updated');
+
+      if ($request->isApi()) return response()->json(['err' => 'Product status not created'], 500);
+      return back()->withError('Status creation failed');
     }
   }
 }
