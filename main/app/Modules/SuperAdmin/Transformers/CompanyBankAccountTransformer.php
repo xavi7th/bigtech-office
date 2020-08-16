@@ -24,6 +24,7 @@ class CompanyBankAccountTransformer
       'account_description' => (string)$account->account_description,
       'account_type' => (string)$account->account_type,
       'img_url' => (string)$account->img_url,
+      'is_suspended' => (bool)$account->deleted_at
     ];
   }
 

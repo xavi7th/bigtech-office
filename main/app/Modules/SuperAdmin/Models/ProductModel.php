@@ -19,39 +19,6 @@ use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductModel
- *
- * @property int $id
- * @property int $product_brand_id
- * @property int $product_category_id
- * @property string $name
- * @property string|null $img_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read ProductBrand $product_brand
- * @property-read ProductCategory $product_category
- * @property-read ProductDescriptionSummary|null $product_description_summary
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductModelImage[] $product_model_images
- * @property-read int|null $product_model_images_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @property-read \Illuminate\Database\Eloquent\Collection|QATest[] $qa_tests
- * @property-read int|null $qa_tests_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereProductBrandId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereProductCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereUpdatedAt($value)
- * @mixin \Eloquent
- */
 class ProductModel extends BaseModel
 {
 
@@ -189,7 +156,7 @@ class ProductModel extends BaseModel
         $productModel->$key = $value;
       }
 
-      if ($request->img) {
+      if ($request->hasFile('img')) {
         $productModel->img_url = compress_image_upload('img', 'product_models_images/', null, 800)['img_url'];
       }
 

@@ -5,8 +5,7 @@ namespace App\Modules\SuperAdmin\Http\Validations;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
-use Illuminate\Auth\Access\AuthorizationException;
-use App\Modules\AppUser\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
 class CreateBankAccountValidation extends FormRequest
 {
@@ -17,14 +16,25 @@ class CreateBankAccountValidation extends FormRequest
    */
   public function rules()
   {
-    return [
-      'bank' => $this->isMethod('PUT') ?  'string' : 'required|string',
-      'account_name' => $this->isMethod('PUT') ?  'string' : 'required|string',
-      'account_number' => $this->isMethod('PUT') ?  Rule::unique('company_bank_accounts')->ignore($this->route('company_bank_account')->account_number) : 'required|unique:company_bank_accounts,account_number',
-      'account_type' => $this->isMethod('PUT') ? 'string' : 'required|string',
-      'account_description' => 'nullable|string',
-      'img_url' => 'bail|nullable|file|mimes:jpeg,bmp,png',
-    ];
+    if ($this->isMethod('PUT')) {
+      return [
+        'bank' =>   'required|string',
+        'account_name' =>  'required|string',
+        'account_number' =>  ['required', 'numeric', Rule::unique('company_bank_accounts')->ignore($this->route('companyBankAccount')->account_number, 'account_number')],
+        'account_type' => 'string',
+        'account_description' => 'nullable|string',
+        'img' => 'file|mimes:jpeg,bmp,png',
+      ];
+    } elseif ($this->isMethod('POST')) {
+      return [
+        'bank' =>  'required|string',
+        'account_name' =>  'required|string',
+        'account_number' => 'required|numeric|unique:company_bank_accounts,account_number',
+        'account_type' => 'required|string',
+        'account_description' => 'nullable|string',
+        'img' => 'required|file|mimes:jpeg,bmp,png',
+      ];
+    }
   }
 
   /**
@@ -34,7 +44,7 @@ class CreateBankAccountValidation extends FormRequest
    */
   public function authorize()
   {
-    return auth('admin_api')->check();
+    return auth('super_admin')->check();
   }
 
   /**

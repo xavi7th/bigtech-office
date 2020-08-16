@@ -12,41 +12,8 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateBankAccountValidation;
+use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\CompanyBankAccount
- *
- * @property int $id
- * @property string $bank
- * @property string $account_name
- * @property string $account_number
- * @property string $account_type
- * @property string|null $img_url
- * @property string|null $account_description
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductSaleRecord[] $sales_records
- * @property-read int|null $sales_records_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount cashTransactions()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereAccountDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereAccountName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereAccountNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereAccountType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereBank($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\CompanyBankAccount withoutTrashed()
- * @mixin \Eloquent
- */
 class CompanyBankAccount extends BaseModel
 {
 
@@ -80,17 +47,21 @@ class CompanyBankAccount extends BaseModel
         return 'superadmin.miscellaneous.' . $name;
       };
       Route::get('', [self::class, 'getCompanyBankAccounts'])->name($misc('bank_accounts'))->defaults('ex', __e('ss', 'refresh-cw', false));
-      Route::post('create', [self::class, 'createCompanyBankAccount'])->name($misc('create_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::put('{company_bank_account}/edit', [self::class, 'editCompanyBankAccount'])->name($misc('edit_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::post('create', [self::class, 'createCompanyBankAccount'])->name($misc('create_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::put('{companyBankAccount}/edit', [self::class, 'editCompanyBankAccount'])->name($misc('edit_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::delete('{companyBankAccount}/suspend', [self::class, 'suspendCompanyBankAccount'])->name($misc('suspend_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::delete('{id}/restore', [self::class, 'restoreCompanyBankAccount'])->name($misc('restore_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
     });
   }
 
 
   public function getCompanyBankAccounts(Request $request)
   {
-    $bankAccounts = (new CompanyBankAccountTransformer)->collectionTransformer(self::all(), 'basic');
-    if ($request->isApi())
-      return response()->json($bankAccounts, 200);
+    $bankAccounts = Cache::rememberForever('bankAccounts', function () {
+      return (new CompanyBankAccountTransformer)->collectionTransformer(self::withTrashed()->get(), 'basic');
+    });
+
+    if ($request->isApi())  return response()->json($bankAccounts, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageBankAccounts', compact('bankAccounts'));
   }
 
@@ -103,30 +74,71 @@ class CompanyBankAccount extends BaseModel
         'bank' => $request->bank,
         'account_description' => $request->account_description,
         'account_type' => $request->account_type,
-        'img_url' => $request->img_url,
+        'img_url' => compress_image_upload('img', 'bank-logos/', null, 200)['img_url'],
       ]);
 
-      return response()->json((new CompanyBankAccountTransformer)->basic($account), 201);
+      Cache::forget('bankAccounts');
+
+      if ($request->isApi()) return response()->json((new CompanyBankAccountTransformer)->basic($account), 201);
+      return back()->withSuccess('Bank Account created. <br/> Payments can now be created under this bank account');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Company Account not created');
-      return response()->json(['err' => 'Company Account not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Company Account not created');
+
+      if ($request->isApi()) return response()->json(['err' => 'Account details NOT updated'], 500);
+      return back()->withError('Account creation failed');
     }
   }
 
 
-  public function editCompanyBankAccount(CreateBankAccountValidation $request, self $company_bank_account)
+  public function editCompanyBankAccount(CreateBankAccountValidation $request, self $companyBankAccount)
   {
     try {
-      foreach ($request->validated() as $key => $value) {
-        $company_bank_account->$key = $value;
+      foreach (collect($request->validated())->except('img') as $key => $value) {
+        $companyBankAccount->$key = $value;
+      }
+      if ($request->hasFile('img')) {
+        $companyBankAccount->img_url = compress_image_upload('img', 'bank-logos/', null, 200)['img_url'];
       }
 
-      $company_bank_account->save();
+      $companyBankAccount->save();
 
-      return response()->json([], 204);
+      Cache::forget('bankAccounts');
+
+      if ($request->isApi())  return response()->json([], 204);
+      return back()->withSuccess('Bank Account updated. <br/> Payments can now be created under this bank account');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Account details NOT updated');
-      return response()->json(['err' => 'Account details NOT updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Account details NOT updated');
+
+      if ($request->isApi()) return response()->json(['err' => 'Account details NOT updated'], 500);
+      return back()->withError('Account creation failed');
+    }
+  }
+
+  public function suspendCompanyBankAccount(Request $request, self $companyBankAccount)
+  {
+    $companyBankAccount->delete();
+
+    Cache::forget('bankAccounts');
+
+    if ($request->isApi()) {
+      return response()->json([], 204);
+    } else {
+      return back()->withSuccess('Account suspended and will no longer be available to users as a payment option');
+    }
+  }
+
+  public function restoreCompanyBankAccount(Request $request, $id)
+  {
+    self::onlyTrashed()
+      ->where('id', $id)
+      ->restore();
+
+    Cache::forget('bankAccounts');
+
+    if ($request->isApi()) {
+      return response()->json([], 204);
+    } else {
+      return back()->withSuccess('Account restored and has become available to users as a payment option');
     }
   }
 
