@@ -6,36 +6,22 @@ use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\QueryException;
 use App\Modules\SuperAdmin\Models\ErrLog;
+use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductColor
- *
- * @property int $id
- * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductColor onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductColor whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductColor withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductColor withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductColor extends BaseModel
 {
   use SoftDeletes;
 
   protected $fillable = ['name'];
+
+  public function products()
+  {
+    return $this->hasMany(Product::class);
+  }
 
   /**
    * The admin routes
@@ -52,10 +38,10 @@ class ProductColor extends BaseModel
 
   public function getProductColors(Request $request)
   {
-    $colors = (new ProductColorTransformer)->collectionTransformer(self::all(), 'basic');
+    $productColors = (new ProductColorTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic');
     if ($request->isApi())
-      return response()->json($colors, 200);
-    return Inertia::render('SuperAdmin,Miscellaneous/ManageColors', compact('colors'));
+      return response()->json($productColors, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageColors', compact('productColors'));
   }
 
   public function createProductColor(Request $request)
@@ -73,7 +59,9 @@ class ProductColor extends BaseModel
         'name' => $request->name
       ]);
 
-      return response()->json((new ProductColorTransformer)->basic($product_color), 201);
+      if ($request->isApi())
+        return response()->json((new ProductColorTransformer)->basic($product_color), 201);
+      return back()->withSuccess('Product color created. <br/> Products can now be created under this color');
     } catch (\Throwable $th) {
       if ($th instanceof QueryException) {
         if ($th->errorInfo[1] === 1062) {
@@ -81,7 +69,9 @@ class ProductColor extends BaseModel
         }
       }
       ErrLog::notifyAdmin(auth()->user(), $th, 'Color creation failed');
-      return response()->json(['err' => 'Color creation failed'], 500);
+      if ($request->isApi())
+        return response()->json(['err' => 'Color creation failed'], 500);
+      return back()->withError('Color creation failed');
     }
   }
 
@@ -99,10 +89,15 @@ class ProductColor extends BaseModel
       $color->name = $request->name;
       $color->save();
 
-      return response()->json([], 204);
+      if ($request->isApi())
+        return response()->json([], 204);
+      return back()->withSuccess('Product color updated. <br/> Products can now be created under this color');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Color not updated');
-      return response()->json(['err' => 'Color not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Color not updated');
+
+      if ($request->isApi())
+        return response()->json(['err' => 'Color not updated'], 500);
+      return back()->withError('Color update failed');
     }
   }
 }

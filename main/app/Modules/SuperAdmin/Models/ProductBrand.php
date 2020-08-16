@@ -19,7 +19,7 @@ class ProductBrand extends BaseModel
 
   protected $fillable = ['name', 'logo_url'];
 
-  public function product_model()
+  public function product_models()
   {
     return $this->hasMany(ProductModel::class);
   }
@@ -117,8 +117,8 @@ class ProductBrand extends BaseModel
 
   public function deleteProductBrand(Request $request, self $productBrand)
   {
-    if ($productBrand->products()->exists()) {
-      return generate_422_error('This brand has products under it and so cannot be deleted');
+    if ($productBrand->products()->exists() || $productBrand->product_models()->exists()) {
+      return generate_422_error('This brand has products and / or models under it and so cannot be deleted');
     }
 
     $productBrand->delete();

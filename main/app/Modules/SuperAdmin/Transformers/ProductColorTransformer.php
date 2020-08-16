@@ -8,18 +8,17 @@ class ProductColorTransformer
 {
   public function collectionTransformer($collection, $transformerMethod)
   {
-    return [
-      'product_colors' => $collection->map(function ($v) use ($transformerMethod) {
-        return $this->$transformerMethod($v);
-      })
-    ];
+    return $collection->map(function ($v) use ($transformerMethod) {
+      return $this->$transformerMethod($v);
+    });
   }
 
-  public function basic(ProductColor $product_color)
+  public function basic(ProductColor $productColor)
   {
     return [
-      'id' => (int)$product_color->id,
-      'name' => (string)$product_color->name,
+      'id' => (int)$productColor->id,
+      'name' => (string)$productColor->name,
+      'products_count' => (int)$productColor->products_count
     ];
   }
 }
