@@ -10,29 +10,8 @@ use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\ProductQATestResult;
 use App\Modules\SuperAdmin\Transformers\QATestTransformer;
+use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\QATest
- *
- * @property int $id
- * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\QATest[] $product_models
- * @property-read int|null $product_models_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductQATestResult[] $product_qa_test_results
- * @property-read int|null $product_qa_test_results_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\QATest whereUpdatedAt($value)
- * @mixin \Eloquent
- */
 class QATest extends BaseModel
 {
   protected $fillable = ['name'];
@@ -64,64 +43,65 @@ class QATest extends BaseModel
   {
     Route::group(['prefix' => 'qa-tests'], function () {
       $gen = function ($name) {
-        return 'superadmin.miscellaneous.qa-tests'  . $name;
+        return 'superadmin.miscellaneous.'  . $name;
       };
-      Route::get('', [self::class, 'getQATests'])->name($gen(''))->defaults('ex', __e('ss', 'award', false));
-      Route::post('create', [self::class, 'createQATest'])->name($gen('.create_qa_test'))->defaults('ex', __e('ss', 'award', true));
-      Route::put('{size}/edit', [self::class, 'editQATest'])->name($gen('.edit_qa_test'))->defaults('ex', __e('ss', 'award', true));
+      Route::get('', [self::class, 'getQATests'])->name($gen('qa-tests'))->defaults('ex', __e('ss', 'award', false));
+      Route::post('create', [self::class, 'createQATest'])->name($gen('create_qa_test'))->defaults('ex', __e('ss', 'award', true));
+      Route::put('{qaTest}/edit', [self::class, 'editQATest'])->name($gen('edit_qa_test'))->defaults('ex', __e('ss', 'award', true));
     });
   }
 
   public function getQATests(Request $request)
   {
-    $qaTests = (new QATestTransformer)->collectionTransformer(self::all(), 'basic');
+    $qaTests = Cache::rememberForever('qaTests', function () {
+      return (new QATestTransformer)->collectionTransformer(self::all(), 'basic');
+    });
 
-    if ($request->isApi())
-      return response()->json($qaTests, 200);
+    if ($request->isApi()) return response()->json($qaTests, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageQATests', compact('qaTests'));
   }
 
   public function createQATest(Request $request)
   {
-    if (!$request->name) {
-      return generate_422_error('QA test name required');
-    }
-
-    if (self::where('name', $request->name)->exists()) {
-      return generate_422_error('Test already exists');
-    }
+    if (!$request->name) return generate_422_error('QA test name required');
+    if (self::where('name', $request->name)->exists()) return generate_422_error('This test already exists');
 
     try {
-      $qa_test = self::create([
+      $qaTest = self::create([
         'name' => $request->name,
       ]);
 
-      return response()->json((new QATestTransformer)->basic($qa_test), 201);
+      Cache::forget('qaTests');
+
+      if ($request->isApi()) return response()->json((new QATestTransformer)->basic($qaTest), 201);
+      return back()->withSuccess('QA Test created. <br/> Product models can now be assigned this test');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'QA Test not created');
-      return response()->json(['err' => 'QA Test not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'QA Test not created');
+
+      if ($request->isApi()) return response()->json(['err' => 'QA Test not created'], 500);
+      return back()->withError('Test creation failed');
     }
   }
 
 
-  public function editQATest(Request $request, self $qa_test)
+  public function editQATest(Request $request, self $qaTest)
   {
-    if (!$request->name) {
-      return generate_422_error('New QA test name required');
-    }
-
-    if (self::where('name', $request->name)->exists()) {
-      return generate_422_error('Test already exists');
-    }
+    if (!$request->name) return generate_422_error('New QA test name required');
+    if (self::where('name', $request->name)->exists()) return generate_422_error('Test already exists');
 
     try {
-      $qa_test->name = $request->name;
-      $qa_test->save();
+      $qaTest->name = $request->name;
+      $qaTest->save();
 
-      return response()->json([], 204);
+      Cache::forget('qaTests');
+
+      if ($request->isApi()) return response()->json([], 204);
+      return back()->withSuccess('QA Test updated. <br/> Product models can now be assigned this test');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'QA test name not updated');
-      return response()->json(['err' => 'QA test name not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'QA test name not updated');
+
+      if ($request->isApi()) return response()->json(['err' => 'QA test name not updated'], 500);
+      return back()->withError('Test update failed');
     }
   }
 }
