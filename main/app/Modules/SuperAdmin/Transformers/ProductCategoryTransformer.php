@@ -8,19 +8,18 @@ class ProductCategoryTransformer
 {
   public function collectionTransformer($collection, $transformerMethod)
   {
-    return [
-      'product_categories' => $collection->map(function ($v) use ($transformerMethod) {
-        return $this->$transformerMethod($v);
-      })
-    ];
+    return $collection->map(function ($v) use ($transformerMethod) {
+      return $this->$transformerMethod($v);
+    });
   }
 
-  public function basic(ProductCategory $product_category)
+  public function basic(ProductCategory $productCategory)
   {
     return [
-      'id' => (int)$product_category->id,
-      'name' => (string)$product_category->name,
-      'img_url' => (string)$product_category->img_url,
+      'id' => (int)$productCategory->id,
+      'name' => (string)$productCategory->name,
+      'img_url' => (string)$productCategory->img_url,
+      'products_count' => (int)$productCategory->products_count,
     ];
   }
 }

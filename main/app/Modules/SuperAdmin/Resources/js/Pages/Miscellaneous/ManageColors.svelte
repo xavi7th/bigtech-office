@@ -233,7 +233,7 @@
 
   </div>
   <div slot="modals">
-    <Modal modalId="updateColor" modalTitle="Add Image to Product Model">
+    <Modal modalId="updateColor" modalTitle="Update Product Color">
       <form class="#" on:submit|preventDefault={updateProductColor}>
         <FlashMessage />
 

@@ -6,35 +6,12 @@ use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
+use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductCategory
- *
- * @property int $id
- * @property string $name
- * @property string|null $img_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductModel[] $product_model
- * @property-read int|null $product_model_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductCategory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductCategory newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductCategory onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductCategory query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductCategory whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductCategory whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductCategory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductCategory whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductCategory whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductCategory whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductCategory withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductCategory withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductCategory extends BaseModel
 {
   use SoftDeletes;
@@ -44,6 +21,11 @@ class ProductCategory extends BaseModel
   public function product_model()
   {
     return $this->hasMany(ProductModel::class);
+  }
+
+  public function products()
+  {
+    return $this->hasMany(Product::class);
   }
 
   public static function routes()
@@ -60,33 +42,67 @@ class ProductCategory extends BaseModel
 
   public function getProductCategories(Request $request)
   {
-    $categories = (new ProductCategoryTransformer)->collectionTransformer(self::all(), 'basic');
-    if ($request->isApi()) {
-      return response()->json($categories, 200);
-    }
+    $productCategories = Cache::remember('productCategories', config('cache.product_models_cache_duration'), function () {
+      return (new ProductCategoryTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic');
+    });
 
-    return Inertia::render('SuperAdmin,Miscellaneous/ManageProductCategories', compact('categories'));
+    if ($request->isApi()) {
+      return response()->json($productCategories, 200);
+    }
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageProductCategories', compact('productCategories'));
   }
 
   public function createProductCategory(Request $request)
   {
-    if (!$request->name) {
-      return generate_422_error('The category name is required');
-    }
-
-    if (self::where('name', $request->name)->exists()) {
-      return generate_422_error('This category already exists');
-    }
+    if (!$request->name) return generate_422_error('The category name is required');
+    if (!$request->hasFile('img')) return generate_422_error('A sample image is required for this category');
+    if (self::where('name', $request->name)->exists()) return generate_422_error('This category already exists');
 
     try {
       $product_category = self::create([
         'name' => $request->name,
-        'img_url' => $request->img_url,
+        'img_url' => compress_image_upload('img', 'product_models_images/', null, 400)['img_url'],
       ]);
 
-      return response()->json((new ProductCategoryTransformer)->basic($product_category), 201);
+      Cache::forget('productCategories');
+
+      if ($request->isApi())
+        return response()->json((new ProductCategoryTransformer)->basic($product_category), 201);
+      return back()->withSuccess('Product category created. <br/> Products can now be created under this category');
     } catch (\Throwable $th) {
-      return response()->json(['err' => 'Category creation failed'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Product category not created');
+      if ($request->isApi())
+        return response()->json(['err' => 'Category creation failed'], 500);
+      return back()->withError('Category creation failed');
+    }
+  }
+
+  public function editProductModel(Request $request, self $productCategory)
+  {
+
+    if (!$request->name) {
+      return generate_422_error('The category name is required');
+    }
+
+    try {
+
+      $productCategory->name = $request->name;
+      if ($request->hasFile('img')) {
+        $productCategory->img_url = compress_image_upload('img', 'product_models_images/', null, 400)['img_url'];
+      }
+      $productCategory->save();
+
+      Cache::forget('productCategories');
+
+      if ($request->isApi()) {
+        return response()->json([], 204);
+      }
+      return back()->withSuccess('Updated');
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdmin($request->user(), $th, 'Category not updated');
+      if ($request->isApi())
+        return response()->json(['err' => 'Category not updated'], 500);
+      return back()->withError('Category update failed');
     }
   }
 }
