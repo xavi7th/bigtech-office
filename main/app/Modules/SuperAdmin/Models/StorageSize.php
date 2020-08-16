@@ -9,28 +9,8 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
+use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\StorageSize
- *
- * @property int $id
- * @property string $size
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageSize onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereSize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageSize whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageSize withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageSize withoutTrashed()
- * @mixin \Eloquent
- */
 class StorageSize extends BaseModel
 {
   use SoftDeletes;
@@ -40,7 +20,8 @@ class StorageSize extends BaseModel
 
   public function getSizeAttribute($value): string
   {
-    switch ($value) {
+
+    switch (true) {
       case $value <= 1:
         return $value * 1000 . 'MB';
         break;
@@ -55,7 +36,7 @@ class StorageSize extends BaseModel
         return $value;
         break;
     }
-    return $value;
+    return '$value';
   }
 
   public static function routes()
@@ -67,62 +48,63 @@ class StorageSize extends BaseModel
 
       Route::get('', [self::class, 'getStorageSizes'])->name($misc('storage_sizes'))->defaults('ex', __e('ss', 'hard-drive', false));
       Route::post('create', [self::class, 'createStorageSize'])->name($misc('create_storage_size'))->defaults('ex', __e('ss', 'hard-drive', true));
-      Route::put('{size}/edit', [self::class, 'editStorageSize'])->name($misc('edit_storage_size'))->defaults('ex', __e('ss', 'hard-drive', true));
+      Route::put('{storageSize}/edit', [self::class, 'editStorageSize'])->name($misc('edit_storage_size'))->defaults('ex', __e('ss', 'hard-drive', true));
     });
   }
 
   public function getStorageSizes(Request $request)
   {
-    $storageSizes = (new StorageSizeTransformer)->collectionTransformer(self::all(), 'basic');
-    if ($request->isApi())
-      return response()->json($storageSizes, 200);
+    $storageSizes = Cache::rememberForever('storageSizes', function () {
+      return (new StorageSizeTransformer)->collectionTransformer(self::all(), 'basic');
+    });
+
+    if ($request->isApi()) return response()->json($storageSizes, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageStorageSizes', compact('storageSizes'));
   }
 
   public function createStorageSize(Request $request)
   {
-    if (!$request->size) {
-      return generate_422_error('Specify a storage size');
-    }
-
-    if (!is_numeric($request->size)) {
-      return generate_422_error('Storage size must be numeric');
-    }
+    if (!$request->size) return generate_422_error('Specify a storage size');
+    if (!is_numeric($request->size)) return generate_422_error('Storage size must be numeric');
+    if (self::where('size', $request->size)->exists()) return generate_422_error('Storage size already exists');
 
     try {
       $storage_size = self::create([
         'size' => $request->size,
       ]);
 
-      return response()->json((new StorageSizeTransformer)->basic($storage_size), 201);
+      Cache::forget('storageSizes');
+
+      if ($request->isApi()) return response()->json((new StorageSizeTransformer)->basic($storage_size), 201);
+      return back()->withSuccess('Storage Size created. <br/> Products of this storage size can now be created.');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Storage size not created');
-      return response()->json(['err' => 'Storage size not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Storage size not created');
+
+      if ($request->isApi()) return response()->json(['err' => 'Storage size not created'], 500);
+      return back()->withSuccess('Storage size not created');
     }
   }
 
-  public function editStorageSize(Request $request, self $storage_size)
+  public function editStorageSize(Request $request, self $storageSize)
   {
-    if (!$request->size) {
-      return generate_422_error('Specify a new storage size to change this to');
-    }
-
-    if (!is_numeric($request->size)) {
-      return generate_422_error('Storage size must be numeric');
-    }
-
-    if (self::where('size', $request->size)->exists()) {
-      return generate_422_error('This size already exists');
-    }
+    if (!$request->size) return generate_422_error('Specify a new storage size to change this to');
+    if (!is_numeric($request->size)) return generate_422_error('Storage size must be numeric');
+    if (self::where('size', $request->size)->exists()) return generate_422_error('Storage size already exists');
 
     try {
-      $storage_size->size = $request->size;
-      $storage_size->save();
+      $storageSize->size = $request->size;
+      $storageSize->save();
 
-      return response()->json([], 204);
+      Cache::forget('storageSizes');
+
+
+      if ($request->isApi()) return response()->json([], 204);
+      return back()->withSuccess('Storage size updated.');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Storage size not updated');
-      return response()->json(['err' => 'Storage size not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Storage size not updated');
+
+      if ($request->isApi()) return response()->json(['err' => 'Storage size not created'], 500);
+      return back()->withSuccess('Storage size not created');
     }
   }
 }

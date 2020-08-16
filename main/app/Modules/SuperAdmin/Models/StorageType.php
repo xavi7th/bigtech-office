@@ -9,28 +9,8 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\StorageTypeTransformer;
+use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\StorageType
- *
- * @property int $id
- * @property string $type
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageType newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageType newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageType onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageType query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageType whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageType whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageType whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageType whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StorageType whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageType withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\StorageType withoutTrashed()
- * @mixin \Eloquent
- */
 class StorageType extends BaseModel
 {
   use SoftDeletes;
@@ -46,54 +26,60 @@ class StorageType extends BaseModel
       };
       Route::get('', [self::class, 'getStorageTypes'])->name($misc('storage_types'))->defaults('ex', __e('ss', 'hard-drive', false));
       Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->defaults('ex', __e('ss', 'hard-drive', true));
-      Route::put('{type}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('ss', 'hard-drive', true));
+      Route::put('{storageType}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('ss', 'hard-drive', true));
     });
   }
 
   public function getStorageTypes(Request $request)
   {
-    $storageTypes = (new StorageTypeTransformer)->collectionTransformer(self::all(), 'basic');
-    if ($request->isApi())
-      return response()->json($storageTypes, 200);
+    $storageTypes = Cache::rememberForever('storageTypes', function () {
+      return (new StorageTypeTransformer)->collectionTransformer(self::all(), 'basic');
+    });
+
+    if ($request->isApi()) return response()->json($storageTypes, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageStorageTypes', compact('storageTypes'));
   }
 
   public function createStorageType(Request $request)
   {
-    if (!$request->type) {
-      return generate_422_error('Specify a storage type');
-    }
+    if (!$request->type)  return generate_422_error('Specify a storage type');
+    if (self::where('type', $request->type)->exists()) return generate_422_error('Storage type already exists');
 
     try {
-      $storage_type = self::create([
+      $storageType = self::create([
         'type' => $request->type,
       ]);
 
-      return response()->json((new StorageTypeTransformer)->basic($storage_type), 201);
+      Cache::forget('storageTypes');
+
+      if ($request->isApi())       return response()->json((new StorageTypeTransformer)->basic($storageType), 201);
+      return back()->withSuccess('Storage type created. <br/> Products can now be created under this storage type');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Storage type not created');
-      return response()->json(['err' => 'Storage type not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Storage type not created');
+
+      if ($request->isApi()) return response()->json(['err' => 'Storage type not created'], 500);
+      return back()->withError('Type creation failed');
     }
   }
 
-  public function editStorageType(Request $request, self $storage_type)
+  public function editStorageType(Request $request, self $storageType)
   {
-    if (!$request->type) {
-      return generate_422_error('Specify a new storage type to change this to');
-    }
-
-    if (self::where('type', $request->type)->exists()) {
-      return generate_422_error('This type already exists');
-    }
+    if (!$request->type) return generate_422_error('Specify a new storage type to change this to');
+    if (self::where('type', $request->type)->exists()) return generate_422_error('This type already exists');
 
     try {
-      $storage_type->type = $request->type;
-      $storage_type->save();
+      $storageType->type = $request->type;
+      $storageType->save();
 
-      return response()->json([], 204);
+      Cache::forget('storageTypes');
+
+      if ($request->isApi()) return response()->json([], 204);
+      return back()->withSuccess('Storage type created. <br/> Products can now be created under this type');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Storage type not updated');
-      return response()->json(['err' => 'Storage type not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Storage type not updated');
+
+      if ($request->isApi()) return response()->json(['err' => 'Storage type not created'], 500);
+      return back()->withError('Type creation failed');
     }
   }
 }
