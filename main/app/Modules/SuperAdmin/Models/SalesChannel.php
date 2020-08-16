@@ -10,30 +10,8 @@ use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
+use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\SalesChannel
- *
- * @property int $id
- * @property string $channel_name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductSaleRecord[] $sales_records
- * @property-read int|null $sales_records_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesChannel onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereChannelName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesChannel whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesChannel withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesChannel withoutTrashed()
- * @mixin \Eloquent
- */
 class SalesChannel extends BaseModel
 {
   use SoftDeletes;
@@ -58,59 +36,63 @@ class SalesChannel extends BaseModel
       };
       Route::get('', [self::class, 'getSalesChannels'])->name($misc('sales_channels'))->defaults('ex', __e('ss', 'airplay', false));
       Route::post('create', [self::class, 'createSalesChannel'])->name($misc('create_sales_channel'))->defaults('ex', __e('ss', 'airplay', true));
-      Route::put('{size}/edit', [self::class, 'editSalesChannel'])->name($misc('edit_sales_channel'))->defaults('ex', __e('ss', 'airplay', true));
+      Route::put('{salesChannel}/edit', [self::class, 'editSalesChannel'])->name($misc('edit_sales_channel'))->defaults('ex', __e('ss', 'airplay', true));
     });
   }
 
   public function getSalesChannels(Request $request)
   {
-    $salesChannels = (new SalesChannelTransformer)->collectionTransformer(self::all(), 'basic');
-    if ($request->isApi())
-      return response()->json($salesChannels, 200);
+    $salesChannels = Cache::rememberForever('salesChannels', function () {
+      return (new SalesChannelTransformer)->collectionTransformer(self::all(), 'basic');
+    });
+
+    if ($request->isApi())  return response()->json($salesChannels, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageSalesChannels', compact('salesChannels'));
   }
 
   public function createSalesChannel(Request $request)
   {
-    if (!$request->channel_name) {
-      return generate_422_error('Channel name required');
-    }
+    if (!$request->channel_name) return generate_422_error('The name of the sales channel is required');
+    if (self::where('channel_name', $request->channel_name)->exists()) return generate_422_error('Sales channel already exists');
 
-    if (self::where('channel_name', $request->channel_name)->exists()) {
-      return generate_422_error('Channel already exists');
-    }
 
     try {
       $channel_name = self::create([
         'channel_name' => $request->channel_name,
       ]);
 
-      return response()->json((new SalesChannelTransformer)->basic($channel_name), 201);
+      Cache::forget('salesChannels');
+
+      if ($request->isApi()) return response()->json((new SalesChannelTransformer)->basic($channel_name), 201);
+      return back()->withSuccess('Sales Channel created');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Sales Channel not created');
-      return response()->json(['err' => 'Sales Channel not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Sales Channel not created');
+
+      if ($request->isApi()) return response()->json(['err' => 'Sales Channel not created'], 500);
+      return back()->withError('Sales channel creation failed');
     }
   }
 
 
-  public function editSalesChannel(Request $request, self $sales_channel)
+  public function editSalesChannel(Request $request, self $salesChannel)
   {
-    if (!$request->channel_name) {
-      return generate_422_error('New channel name required');
-    }
+    if (!$request->channel_name) return generate_422_error('New channel name required');
+    if (self::where('channel_name', $request->channel_name)->exists())       return generate_422_error('Sales Channel already exists');
 
-    if (self::where('channel_name', $request->channel_name)->exists()) {
-      return generate_422_error('Sales Channel already exists');
-    }
 
     try {
-      $sales_channel->channel_name = $request->channel_name;
-      $sales_channel->save();
+      $salesChannel->channel_name = $request->channel_name;
+      $salesChannel->save();
 
-      return response()->json([], 204);
+      Cache::forget('salesChannels');
+
+      if ($request->isApi())       return response()->json([], 204);
+      return back()->withSuccess('Sales channel updated');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Channel name not updated');
-      return response()->json(['err' => 'Channel name not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Channel name not updated');
+
+      if ($request->isApi()) return response()->json(['err' => 'Sales Channel not created'], 500);
+      return back()->withError('Sales channel creation failed');
     }
   }
 }
