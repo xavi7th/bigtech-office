@@ -26,6 +26,7 @@ class OfficeBranchTransformer
       'id' => (int)$office_branch->id,
       'city' => (string)$office_branch->city,
       'country' => (string)$office_branch->country,
+      'products_count' => (string)$office_branch->products_count,
     ];
   }
 
@@ -34,7 +35,8 @@ class OfficeBranchTransformer
     return [
       'city' => (string)$office_branch->city,
       'country' => (string)$office_branch->country,
-      'products' => (new ProductTransformer)->collectionTransformer($office_branch->products, 'basic')->groupBy('model'),
+      'branchProducts' => (new ProductTransformer)->collectionTransformer($office_branch->products, 'basic'),
+      // 'products' => (array)(new ProductTransformer)->collectionTransformer($office_branch->products, 'basic')->groupBy('model'),
     ];
   }
 

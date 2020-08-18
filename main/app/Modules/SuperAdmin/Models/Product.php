@@ -262,13 +262,13 @@ class Product extends Model
       Route::post('create', [self::class, 'createProduct'])->name($p('create'))->defaults('ex', __e('ss', 'archive'));
       Route::get('local-supplier/create', [self::class, 'showCreateLocalProductForm'])->name($p('create_local_product'))->defaults('ex', __e('ss', 'archive'));
       Route::post('local-supplier/create', [self::class, 'createLocalSupplierProduct'])->name($p('create_local'))->defaults('ex', __e('ss', 'archive'));
-      Route::get('/{product}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss', 'archive', true));
+      Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss', 'archive', true));
       Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true));
       Route::post('{product}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true));
       Route::put('{prodauct}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss', null, true));
-      Route::post('{product}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss', null, true));
+      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss', null, true));
       Route::get('{product}/qa-tests', [self::class, 'getApplicableProductQATests'])->name($p('applicable_qa_tests'))->defaults('ex', __e('ss', null, true));
       Route::get('{product}/qa-tests/comments', [self::class, 'getCommentsOnProductQATestResults'])->name($p('qa_test_comments'))->defaults('ex', __e('ss', null, true));
       Route::post('{product}/qa-tests/comment', [self::class, 'commentOnProductQATestResults'])->name($p('comment_on_qa_test'))->defaults('ex', __e('ss', null, true));
@@ -303,6 +303,8 @@ class Product extends Model
       'product_color',
       'product_grade',
       'product_model',
+      'product_brand',
+      'product_category',
       'storage_size',
       'product_supplier',
       'product_batch',
@@ -312,16 +314,15 @@ class Product extends Model
       'product_status',
       'product_price',
       'app_user',
-      'location'
+      'location',
+      'comments.user'
     );
 
-    if ($request->isApi()) {
-      return  response()->json((new ProductTransformer)->detailed($productDetails), 200);
-    } else {
-      return Inertia::render('SuperAdmin,Products/ViewProductDetails', [
-        'details' => (new ProductTransformer)->detailed($productDetails)
-      ]);
-    }
+    if ($request->isApi()) return  response()->json((new ProductTransformer)->detailed($productDetails), 200);
+    return Inertia::render('SuperAdmin,Products/ViewProductDetails', [
+      'productDetails' => (new ProductTransformer)->detailed($productDetails),
+      'productComments' => (new UserCommentTransformer)->collectionTransformer($product->comments, 'commentDetails')
+    ]);
   }
 
   public function showDailyRecordsPage()
@@ -638,7 +639,8 @@ class Product extends Model
       'comment' => $request->comment
     ]);
 
-    return response()->json($comment, 201);
+    if ($request->isApi()) return response()->json($comment, 201);
+    return back()->withSuccess('Comment created. ');
   }
 
   public function getApplicableProductQATests(Request $request, self $product)

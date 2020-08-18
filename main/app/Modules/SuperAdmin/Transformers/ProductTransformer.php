@@ -12,10 +12,9 @@ class ProductTransformer
 {
   public function collectionTransformer($collection, $transformerMethod)
   {
-    return
-      $collection->map(function ($v) use ($transformerMethod) {
-        return $this->$transformerMethod($v);
-      });
+    return $collection->map(function ($v) use ($transformerMethod) {
+      return $this->$transformerMethod($v);
+    });
   }
 
   public function basic(Product $product)
@@ -36,7 +35,9 @@ class ProductTransformer
       'location' => (string)$product->location->city,
       'color' => (string)$product->product_color->name,
       'grade' => (string)$product->product_grade->grade,
+      'brand' => (string)$product->product_brand->name,
       'model' => (string)$product->product_model->name,
+      'category' => (string)$product->product_category->name,
       'storage_size' => (string)$product->storage_size->size,
       'identifier' => (string)$product->primary_identifier(),
       'supplier' => (string)$product->product_supplier->name,
@@ -49,6 +50,7 @@ class ProductTransformer
       'buyer' => (new AppUserTransformer)->transformBasic($product->app_user),
       'cost_price' => $product->cost_price,
       'selling_price' => $product->proposed_selling_price,
+      'img' => (string)$product->product_model->img_url,
     ];
   }
 

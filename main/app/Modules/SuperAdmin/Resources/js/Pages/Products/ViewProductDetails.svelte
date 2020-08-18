@@ -1,221 +1,275 @@
 <script>
-    import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-    import { Inertia } from "@inertiajs/inertia";
-    import Layout from "@superadmin-shared/SuperAdminLayout";
-    import FlashMessage from "@usershared/FlashMessage";
-    import route from "ziggy";
+  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { Inertia } from "@inertiajs/inertia";
+  import Layout from "@superadmin-shared/SuperAdminLayout";
+  import FlashMessage from "@usershared/FlashMessage";
+  import route from "ziggy";
+  import { getErrorString } from "@public-assets/js/bootstrap";
 
-    $: ({ app } = $page);
+  $: ({ app, flash, errors } = $page);
+
+  export let productDetails = [],
+    productComments = [];
+
+  let userComment;
+
+  let commentOnProduct = uuid => {
+    BlockToast.fire({
+      text: "Creating comment ..."
+    });
+
+    Inertia.post(
+      route("superadmin.products.comment_on_product", uuid),
+      { comment: userComment },
+      {
+        preserveState: true,
+        preserveScroll: true,
+        only: ["flash", "errors", "productComments"]
+      }
+    ).then(() => {
+      if (flash.success) {
+        ToastLarge.fire({
+          title: "Successful!",
+          html: flash.success
+        });
+
+        userComment = null;
+      } else {
+        ToastLarge.fire({
+          title: "Oops!",
+          html: flash.error || getErrorString(errors),
+          timer: 10000,
+          icon: "error"
+        });
+      }
+    });
+  };
 </script>
 
 <Layout title="Stock List">
-    <div class="row vertical-gap">
-        <div class="col-lg-2">
-            <a
-                href="/img/iphone-11.png"
-                data-fancybox="images"
-                class="rui-gallery-item">
-                <img src="/img/iphone-11.png" class="rui-img" alt="" />
-            </a>
-        </div>
-        <div class="col-lg-5">
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col" colspan="2">IPHONE 11</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Product Category</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Product Model</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Product Brand</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Product Batch</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Product Color</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Product Grade</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Product Supplier</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Storage Size</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>RAM Size</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Storage Type</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Processor Speed</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>IMEI No.</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Serial No.</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="text-primary">
-                            <strong>Model No.</strong>
-                        </td>
-                        <th scope="row">
-                            <strong>Not Available</strong>
-                        </th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-lg-5">
-            <div class="col-12">
-                <label for="exampleBase1">Comment on this device</label>
-                <div class="a" style="display: flex;">
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="exampleBase1"
-                        placeholder="Enter Comment" />
-                    <button
-                        type="button"
-                        style="margin-left: 20px;"
-                        class="btn btn-brand btn-hover-primary">
-                        Comment
-                    </button>
-                </div>
-            </div>
-            <hr />
-            <div
-                class="tab-pane fade show active"
-                id="activity"
-                role="tabpanel"
-                aria-labelledby="activity-tab">
-                <ul
-                    class="list-group list-group-flush rui-profile-activity-list">
-                    <li class="list-group-item">
-                        <div class="media media-success media-retiring">
-                            <a href="#" class="media-link">
-                                <span class="media-body">
-                                    <span class="media-title">
-                                        Amber Smith
-                                        <span class="media-time">09:10</span>
-                                    </span>
-                                    <small class="media-subtitle">
-                                        Amet viverra dolor per mollis morbi
-                                        sagittis cursus sollicitudin cubilia.
-                                    </small>
-                                </span>
-                            </a>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="media media-success media-retiring">
-                            <a href="#" class="media-link">
-                                <span class="media-body">
-                                    <span class="media-title">
-                                        Amber Smith
-                                        <span class="media-time">09:10</span>
-                                    </span>
-                                    <small class="media-subtitle">
-                                        Amet viverra dolor per mollis morbi
-                                        sagittis cursus sollicitudin cubilia.
-                                    </small>
-                                </span>
-                            </a>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="media media-success media-retiring">
-                            <a href="#" class="media-link">
-                                <span class="media-body">
-                                    <span class="media-title">
-                                        Amber Smith
-                                        <span class="media-time">09:10</span>
-                                    </span>
-                                    <small class="media-subtitle">
-                                        Amet viverra dolor per mollis morbi
-                                        sagittis cursus sollicitudin cubilia.
-                                    </small>
-                                </span>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
+  <div class="row vertical-gap">
+    <div class="col-lg-2">
+      <a
+        href={productDetails.img}
+        data-fancybox="images"
+        class="rui-gallery-item">
+        <img
+          src={productDetails.img}
+          class="rui-img"
+          alt="{productDetails.model} stock image" />
+      </a>
     </div>
+    <div class="col-lg-5">
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col" colspan="2">
+              {productDetails.model} (Location: {productDetails.location}
+              branch)
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-primary">
+              <strong>STATUS</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.status}</strong>
+            </th>
+          </tr>
+          {#if productDetails.status == 'sold'}
+            <tr>
+              <td class="text-primary">
+                <strong>Buyer</strong>
+              </td>
+              <th scope="row">
+                <strong>
+                  {productDetails.buyer.first_name} ({productDetails.email} from
+                  {productDetails.city})
+                </strong>
+              </th>
+            </tr>
+          {/if}
+          <tr>
+            <td class="text-primary">
+              <strong>Cost Price (Restrict Field)</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.cost_price}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Selling Price</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.selling_price}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Product Category</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.category}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Product Model</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.model}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Product Brand</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.brand}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Product Batch</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.batch}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Product Color</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.color}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Product Grade</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.grade}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Product Supplier</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.supplier}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Storage Size</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.storage_size}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>RAM Size</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.ram_size}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Storage Type</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.storage_type}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Processor Speed</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.processor_speed}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Product ID</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.identifier}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
+              <strong>Product UUID</strong>
+            </td>
+            <th scope="row">
+              <strong>{productDetails.uuid}</strong>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-5">
+      <div class="col-12">
+        <label for="user-comment">Comment on this device</label>
+        <div class="a" style="display: flex;">
+          <input
+            type="text"
+            class="form-control"
+            id="user-comment"
+            bind:value={userComment}
+            placeholder="Enter Comment" />
+          <button
+            type="button"
+            disabled={!userComment}
+            on:click={() => {
+              commentOnProduct(productDetails.uuid);
+            }}
+            class="btn btn-brand btn-hover-primary ml-20">
+            Comment
+          </button>
+        </div>
+      </div>
+      <hr />
+      <div
+        class="tab-pane fade show active"
+        id="activity"
+        role="tabpanel"
+        aria-labelledby="activity-tab">
+        <ul class="list-group list-group-flush rui-profile-activity-list">
+          {#each productComments as comment}
+            <li class="list-group-item">
+              <div class="media media-success media-retiring">
+                <p class="media-link">
+                  <span class="media-body">
+                    <span class="media-title">
+                      {comment.user}
+                      <span class="media-time">{comment.date}</span>
+                    </span>
+                    <small class="media-subtitle">{comment.comment}</small>
+                  </span>
+                </p>
+              </div>
+            </li>
+          {:else}
+            <li class="list-group-item">
+              <div class="media media-success media-retiring">
+                <p class="media-link">
+                  <span class="media-body">
+                    <span class="media-title">NO COMMENTS</span>
+                  </span>
+                </p>
+              </div>
+            </li>
+          {/each}
+
+        </ul>
+      </div>
+    </div>
+  </div>
 </Layout>

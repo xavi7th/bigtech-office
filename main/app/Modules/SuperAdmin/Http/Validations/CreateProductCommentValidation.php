@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Modules\SuperAdmin\Http\Validations;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
-use App\Modules\AppUser\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
 class CreateProductCommentValidation extends FormRequest
 {

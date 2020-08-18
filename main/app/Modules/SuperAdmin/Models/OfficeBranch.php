@@ -17,52 +17,12 @@ use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 use App\Modules\SuperAdmin\Transformers\OfficeBranchTransformer;
+use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\OfficeBranch
- *
- * @property int $id
- * @property string $city
- * @property string $country
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Admin\Models\Admin[] $admins
- * @property-read int|null $admins_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductExpense[] $product_expenses
- * @property-read int|null $product_expenses_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductHistory[] $product_histories
- * @property-read int|null $product_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
- * @property-read int|null $products_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
- * @property-read int|null $reseller_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductSaleRecord[] $sales_records
- * @property-read int|null $sales_records_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereCountry($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OfficeBranch withoutTrashed()
- * @mixin \Eloquent
- */
 class OfficeBranch extends BaseModel
 {
   use SoftDeletes;
 
-  /**
-   * Duration in seconds to cache all queries from this model
-   *
-   * @var $rememberFor
-   */
-  protected $rememberFor = 5;
   protected $fillable = ['city', 'country'];
 
   public function admins()
@@ -138,31 +98,90 @@ class OfficeBranch extends BaseModel
       };
 
       Route::get('', [self::class, 'getOfficeBranches'])->name($others('office_branches'))->defaults('ex', __e('ss', 'trello', false));
-      Route::post('create', [self::class, 'createOfficeBranch'])->name($others('office_branches.create_office_branch'))->defaults('ex', __e('ss', 'trello', true));
-      Route::put('{branch}/edit', [self::class, 'editOfficeBranch'])->name($others('office_branches.edit_office_branch'))->defaults('ex', __e('ss', 'trello', true));
-      Route::get('{branch}/products', [self::class, 'getProductsInBranch'])->name($others('office_branches.view_products'))->defaults('ex', __e('ss', 'trello', true));
-      Route::get('{branch}/product-expenses', [self::class, 'getBranchProductExpenses'])->name($others('office_branches.prod_expenses'))->defaults('ex', __e('ss', 'trello', true));
-      Route::get('{branch}/product-histories', [self::class, 'getBranchProductHistories'])->name($others('office_branches.prod_histories'))->defaults('ex', __e('ss', 'trello', true));
-      Route::get('{branch}/reseller-histories', [self::class, 'getBranchResellerHistories'])->name($others('office_branches.res_histories'))->defaults('ex', __e('ss', 'trello', true));
-      Route::get('{branch}/products-with-resellers', [self::class, 'getBranchProductWithResellers'])->name($others('office_branches.res_prod'))->defaults('ex', __e('ss', 'trello', true));
-      Route::get('{branch}/sales-records', [self::class, 'getBranchSalesRecords'])->name($others('office_branches.sales_records'))->defaults('ex', __e('ss', 'trello', true));
-      Route::get('{branch}/staff', [self::class, 'getStaffFromBranch'])->name($others('office_branches.view_staff'))->defaults('ex', __e('ss', 'trello', true));
-      Route::get('{branch}/staff/departments', [self::class, 'getStaffFromBranchByDept'])->name($others('office_branches.staff_by_depts'))->defaults('ex', __e('ss', 'trello', true));
-      Route::get('{branch}/staff/activities', [self::class, 'getStaffActivitiesFromBranch'])->name($others('office_branches.staff_acts'))->defaults('ex', __e('ss', 'trello', true));
+      Route::post('create', [self::class, 'createOfficeBranch'])->name($others('create_office_branch'))->defaults('ex', __e('ss', 'trello', true));
+      Route::put('{officeBranch}/edit', [self::class, 'editOfficeBranch'])->name($others('edit_office_branch'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{officeBranch}/products', [self::class, 'getProductsInBranch'])->name($others('office_branches.view_products'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{officeBranch}/product-expenses', [self::class, 'getBranchProductExpenses'])->name($others('office_branches.prod_expenses'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{officeBranch}/product-histories', [self::class, 'getBranchProductHistories'])->name($others('office_branches.prod_histories'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{officeBranch}/reseller-histories', [self::class, 'getBranchResellerHistories'])->name($others('office_branches.res_histories'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{officeBranch}/products-with-resellers', [self::class, 'getBranchProductWithResellers'])->name($others('office_branches.res_prod'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{officeBranch}/sales-records', [self::class, 'getBranchSalesRecords'])->name($others('office_branches.sales_records'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{officeBranch}/staff', [self::class, 'getStaffFromBranch'])->name($others('office_branches.view_staff'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{officeBranch}/staff/departments', [self::class, 'getStaffFromBranchByDept'])->name($others('office_branches.staff_by_depts'))->defaults('ex', __e('ss', 'trello', true));
+      Route::get('{officeBranch}/staff/activities', [self::class, 'getStaffActivitiesFromBranch'])->name($others('office_branches.staff_acts'))->defaults('ex', __e('ss', 'trello', true));
     });
   }
 
   public function getOfficeBranches(Request $request)
   {
-    $officeBranches = (new OfficeBranchTransformer)->collectionTransformer(self::all(), 'basic');
-    if ($request->isApi())
-      return response()->json($officeBranches, 200);
+    $officeBranches = Cache::rememberForever('officeBranches', function () {
+      return (new OfficeBranchTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic');
+    });
+
+    if ($request->isApi())  return response()->json($officeBranches, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranches', compact('officeBranches'));
   }
 
-  public function getProductsInBranch(self $office_branch)
+  public function createOfficeBranch(Request $request)
   {
-    return response()->json((new OfficeBranchTransformer)->transformWithProducts($office_branch->load('products')), 200);
+
+    if (!$request->country || !$request->city) return generate_422_error('A name and city for this branch is required');
+    if (self::where('city', $request->city)->where('country', $request->country)->exists()) return generate_422_error('This branch exists already');
+
+    try {
+      $account = self::create([
+        'city' => $request->city,
+        'country' => $request->country,
+      ]);
+
+      Cache::forget('officeBranches');
+
+      if ($request->isApi()) return response()->json((new OfficeBranchTransformer)->basic($account), 201);
+      return back()->withSuccess('Office branch created.');
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdmin($request->user(), $th, 'Office Branch not created');
+
+      if ($request->isApi()) return response()->json(['err' => 'Office Branch not created'], 500);
+      return back()->withError('Office Branch creation failed');
+    }
+  }
+
+  public function editOfficeBranch(Request $request, self $officeBranch)
+  {
+
+    if (!$request->country || !$request->city) return generate_422_error('A name and city for this branch is required');
+    if (self::where('city', $request->city)->where('country', $request->country)->exists()) return generate_422_error('This branch exists already');
+
+    try {
+
+      $officeBranch->city = $request->city;
+      $officeBranch->country = $request->country;
+
+      $officeBranch->save();
+
+      Cache::forget('officeBranches');
+
+      if ($request->isApi()) return response()->json([], 204);
+      return back()->withSuccess('Office branch updated');
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdmin($request->user(), $th, 'Branch details NOT updated');
+
+      if ($request->isApi()) return response()->json(['err' => 'Branch details NOT updated'], 500);
+      return back()->withError('Branch update failed');
+    }
+  }
+
+  public function getProductsInBranch(Request $request, self $officeBranch)
+  {
+    Cache::forget('officeBranchProducts');
+    $officeBranch = Cache::rememberForever('officeBranchProducts', function () use ($officeBranch) {
+      return (new OfficeBranchTransformer)->transformWithProducts($officeBranch->load('products'));
+    });
+
+    // dd($officeBranch);
+
+    if ($request->isApi()) return response()->json($officeBranch, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranchProducts', compact('officeBranch'));
   }
 
   public function getBranchProductExpenses(self $office_branch)
@@ -218,37 +237,5 @@ class OfficeBranch extends BaseModel
   public function getStaffFromBranchByDept(self $office_branch)
   {
     return $office_branch->staff();
-  }
-
-  public function createOfficeBranch(Request $request)
-  {
-    try {
-      $account = self::create([
-        'city' => $request->city,
-        'country' => $request->country,
-      ]);
-
-      return response()->json((new OfficeBranchTransformer)->basic($account), 201);
-    } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Office Branch not created');
-      return response()->json(['err' => 'Office Branch not created'], 500);
-    }
-  }
-
-  public function editOfficeBranch(Request $request, self $office_branch)
-  {
-    // return $request;
-    try {
-      foreach ($request->all() as $key => $value) {
-        $office_branch->$key = $value;
-      }
-
-      $office_branch->save();
-
-      return response()->json([], 204);
-    } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Branch details NOT updated');
-      return response()->json(['err' => 'Branch details NOT updated'], 500);
-    }
   }
 }
