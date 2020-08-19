@@ -17,12 +17,13 @@ class Authenticate extends Middleware
     foreach (collect(config('auth.guards'))->except(['api']) as $key => $value) {
       try {
         auth($key)->logout();
-      } catch (\Throwable $e) { }
+      } catch (\Throwable $e) {
+      }
     }
     if ($request->isApi()) {
       return response()->json(['message' => 'Unauthenticated'], 401);
     } else {
-      return route('app.login');
+      return response('', 409)->header('X-Inertia-Location', route('app.login'));
     }
   }
 }
