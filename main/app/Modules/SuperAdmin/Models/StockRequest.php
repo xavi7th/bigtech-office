@@ -71,7 +71,7 @@ class StockRequest extends Model
     );
 
     /** record activity */
-    ActivityLog::logAdminActivity('Sales rep ' . auth()->user()->first_name . ' requested for ' . request('num') . ' cards');
+    ActivityLog::logUserActivity('Sales rep ' . auth()->user()->first_name . ' requested for ' . request('num') . ' cards');
 
     return response()->json([], 204);
   }
@@ -93,7 +93,7 @@ class StockRequest extends Model
     $stock_request->is_processed = true;
     $stock_request->save();
 
-    ActivityLog::logAdminActivity(auth()->user()->email . ' marked ' . $stock_request->sales_rep->email . '\'s stock request as processed');
+    ActivityLog::logUserActivity(auth()->user()->email . ' marked ' . $stock_request->sales_rep->email . '\'s stock request as processed');
 
     return response()->json([], 204);
   }
@@ -103,7 +103,7 @@ class StockRequest extends Model
     return;
     $stock_request->delete();
 
-    ActivityLog::logAdminActivity(auth()->user()->email . ' deleted ' . $stock_request->sales_rep->email . '\'s stock request.');
+    ActivityLog::logUserActivity(auth()->user()->email . ' deleted ' . $stock_request->sales_rep->email . '\'s stock request.');
 
     return response()->json(['rsp' => true], 204);
   }

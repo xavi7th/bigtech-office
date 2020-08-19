@@ -274,7 +274,7 @@ class AppUser extends User
         ]
       ]));
 
-      ActivityLog::logAdminActivity('New Card User account created. Details: ' . $admin->email);
+      ActivityLog::logUserActivity('New Card User account created. Details: ' . $admin->email);
 
       DB::commit();
       return response()->json(['rsp' => $admin], 201);
@@ -290,7 +290,7 @@ class AppUser extends User
   {
     $app_user->delete();
 
-    ActivityLog::logAdminActivity('Card User account suspended. Card user details: ' . $app_user->email);
+    ActivityLog::logUserActivity('Card User account suspended. Card user details: ' . $app_user->email);
 
     return response()->json(['rsp' => true], 204);
   }
@@ -300,7 +300,7 @@ class AppUser extends User
     $app_user = self::withTrashed()->find($id);
     $app_user->restore();
 
-    ActivityLog::logAdminActivity('Card User account restored. Card user details: ' . $app_user->email);
+    ActivityLog::logUserActivity('Card User account restored. Card user details: ' . $app_user->email);
 
     return response()->json(['rsp' => true], 204);
   }
@@ -309,7 +309,7 @@ class AppUser extends User
   {
     $app_user->forceDelete();
 
-    ActivityLog::logAdminActivity('Card User account deleted permanently. Card user details: ' . $app_user->email);
+    ActivityLog::logUserActivity('Card User account deleted permanently. Card user details: ' . $app_user->email);
 
     return response()->json(['rsp' => true], 204);
   }

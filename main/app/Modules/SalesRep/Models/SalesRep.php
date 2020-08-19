@@ -3,6 +3,7 @@
 namespace App\Modules\SalesRep\Models;
 
 use App\User;
+use Throwable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property string|null $avatar
  * @property string|null $gender
  * @property string|null $address
+ * @property string $unit
  * @property int $office_branch_id
  * @property string|null $verified_at
  * @property string|null $remember_token
@@ -40,9 +42,12 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
  * @property-read StockRequest|null $stock_request
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep callCenter()
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep socialMedia()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep walkIn()
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereAvatar($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereCreatedAt($value)
@@ -55,6 +60,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereVerifiedAt($value)
  * @mixin \Eloquent
@@ -141,7 +147,7 @@ class SalesRep extends User
 
       DB::commit();
 
-      ActivityLog::logAdminActivity(auth()->user()->email . ' created a sales rep account for ' . $sales_rep->email);
+      ActivityLog::logUserActivity(auth()->user()->email . ' created a sales rep account for ' . $sales_rep->email);
 
       return response()->json(['rsp' => $sales_rep], 201);
     } catch (Throwable $e) {
@@ -153,7 +159,7 @@ class SalesRep extends User
   }
   public function suspendSalesRep(self $sales_rep)
   {
-    ActivityLog::logAdminActivity(auth()->user()->email . ' suspended the account of ' . $sales_rep->email);
+    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $sales_rep->email);
 
     $sales_rep->delete();
 
@@ -166,17 +172,32 @@ class SalesRep extends User
 
     $sales_rep->restore();
 
-    ActivityLog::logAdminActivity(auth()->user()->email . ' restored the account of ' . $sales_rep->email);
+    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $sales_rep->email);
 
     return response()->json(['rsp' => true], 204);
   }
 
   public function deleteSalesRep(self $sales_rep)
   {
-    ActivityLog::logAdminActivity(auth()->user()->email . ' permanently deleted the account of ' . $sales_rep->email);
+    ActivityLog::logUserActivity(auth()->user()->email . ' permanently deleted the account of ' . $sales_rep->email);
 
     $sales_rep->forceDelete();
 
     return response()->json(['rsp' => true], 204);
+  }
+
+  public function scopeSocialMedia($query)
+  {
+    return $query->where('unit', 'social-media');
+  }
+
+  public function scopeWalkIn($query)
+  {
+    return $query->where('unit', 'walk-in');
+  }
+
+  public function scopeCallCenter($query)
+  {
+    return $query->where('unit', 'call-center');
   }
 }

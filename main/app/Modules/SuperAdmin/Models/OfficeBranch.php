@@ -2,23 +2,62 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Cache;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Modules\Admin\Models\Admin;
 use Illuminate\Support\Facades\Route;
+use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductExpense;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 use App\Modules\SuperAdmin\Transformers\OfficeBranchTransformer;
-use Cache;
+use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 
+/**
+ * App\Modules\SuperAdmin\Models\OfficeBranch
+ *
+ * @property int $id
+ * @property string $city
+ * @property string $country
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|Admin[] $admins
+ * @property-read int|null $admins_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductExpense[] $product_expenses
+ * @property-read int|null $product_expenses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductHistory[] $product_histories
+ * @property-read int|null $product_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read int|null $products_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ResellerHistory[] $reseller_histories
+ * @property-read int|null $reseller_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $sales_records
+ * @property-read int|null $sales_records_count
+ * @method static \Illuminate\Database\Eloquent\Builder|OfficeBranch newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|OfficeBranch newQuery()
+ * @method static \Illuminate\Database\Query\Builder|OfficeBranch onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|OfficeBranch query()
+ * @method static \Illuminate\Database\Eloquent\Builder|OfficeBranch whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OfficeBranch whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OfficeBranch whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OfficeBranch whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OfficeBranch whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OfficeBranch whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|OfficeBranch withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|OfficeBranch withoutTrashed()
+ * @mixin \Eloquent
+ */
 class OfficeBranch extends BaseModel
 {
   use SoftDeletes;
@@ -173,15 +212,18 @@ class OfficeBranch extends BaseModel
 
   public function getProductsInBranch(Request $request, self $officeBranch)
   {
-    Cache::forget('officeBranchProducts');
     $officeBranch = Cache::rememberForever('officeBranchProducts', function () use ($officeBranch) {
       return (new OfficeBranchTransformer)->transformWithProducts($officeBranch->load('products'));
     });
-
-    // dd($officeBranch);
+    $onlineReps = Cache::rememberForever('onlineReps', function () {
+      return (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic');
+    });
+    $salesChannel = Cache::rememberForever('salesChannel', function () {
+      return (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic');
+    });
 
     if ($request->isApi()) return response()->json($officeBranch, 200);
-    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranchProducts', compact('officeBranch'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranchProducts', compact('officeBranch', 'onlineReps', 'salesChannel'));
   }
 
   public function getBranchProductExpenses(self $office_branch)

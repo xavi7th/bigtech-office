@@ -78,7 +78,7 @@ class Voucher extends Model
       $voucher = self::create($request->all());
     }
 
-    ActivityLog::logAdminActivity(auth()->user()->email . ' created a voucher for ' . to_naira($voucher->amount));
+    ActivityLog::logUserActivity(auth()->user()->email . ' created a voucher for ' . to_naira($voucher->amount));
 
     return response()->json(['voucher' => $voucher], 201);
   }

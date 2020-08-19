@@ -265,7 +265,7 @@ class Product extends Model
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss', 'archive', true));
       Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true));
-      Route::post('{product}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true));
+      Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true));
       Route::put('{prodauct}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss', null, true));
@@ -470,6 +470,8 @@ class Product extends Model
   public function markProductAsSold(MarkProductAsSoldValidation $request, self $product)
   {
 
+    // dd($request->validated());
+
     DB::beginTransaction();
 
     /**
@@ -522,15 +524,14 @@ class Product extends Model
     $product->app_user_id = $app_user->id;
     $product->save();
 
-    $request->merge(['app_user_id' => $app_user->id]);
 
     /**
      * ! If swap deal, process the swap device
      */
     if (filter_var($request->is_swap_deal, FILTER_VALIDATE_BOOLEAN)) {
       // return $request->validated();
-      list($id_url, $reciept_url) = SwapDeal::store_documents($request);
-      SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $reciept_url);
+      list($id_url, $receipt_url) = SwapDeal::store_documents($request);
+      SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url);
     }
 
     /**
@@ -544,7 +545,8 @@ class Product extends Model
     ActivityLog::notifyAccountants($request->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
 
     DB::commit();
-    return response()->json([], 204);
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
   }
 
   /**

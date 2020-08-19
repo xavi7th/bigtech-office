@@ -123,13 +123,13 @@ mix
 	// )
 	.then(() => {
 		const _ = require('lodash');
-		var crypto = require("crypto");
-		const saltCssId = crypto.randomBytes(20)
-			.toString('hex');
-		console.log(
-			'\x1b[41m%s\x1b[0m',
-			saltCssId
-		)
+		// var crypto = require("crypto");
+		// const saltCssId = crypto.randomBytes(20)
+		// 	.toString('hex');
+		// console.log(
+		// 	'\x1b[41m%s\x1b[0m',
+		// 	saltCssId
+		// )
 		// let manifestData = require( './public_html/mix-manifest' )
 		let oldManifestData = JSON.parse(fs.readFileSync('./public_html/mix-manifest.json', 'utf-8'))
 		let newManifestData = {};
@@ -137,7 +137,7 @@ mix
 		_.map(oldManifestData, (actualFilename, mixKeyName) => {
 			if (_.startsWith(mixKeyName, '/css')) {
 				/** Exclude CSS files from renaming for now till we start cache busting them */
-				newManifestData[mixKeyName] = actualFilename + '?' + saltCssId;
+				// newManifestData[mixKeyName] = actualFilename + '?' + saltCssId;
 			} else {
 				let newMixKeyName = _.split(mixKeyName, '.')
 					.tap(o => {

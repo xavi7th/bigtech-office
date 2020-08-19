@@ -25,6 +25,7 @@ class ProductTransformer
       'identifier' => (string)$product->primary_identifier(),
       'cost_price' => $product->cost_price,
       'selling_price' => $product->proposed_selling_price,
+      'status' => $product->product_status->status,
     ];
   }
 

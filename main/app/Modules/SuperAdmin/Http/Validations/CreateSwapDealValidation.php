@@ -22,7 +22,7 @@ class CreateSwapDealValidation extends FormRequest
       'description' => $this->isMethod('PUT') ? 'string' : 'required|string',
       'owner_details' => $this->isMethod('PUT') ? 'string' : 'required|string',
       'id_url' => $this->isMethod('PUT') ? 'bail|file|mimes:jpeg,bmp,png' : 'bail|required|file|mimes:jpeg,bmp,png',
-      'reciept_url' => $this->isMethod('PUT') ? 'bail|file|mimes:jpeg,bmp,png' : 'bail|required|file|mimes:jpeg,bmp,png',
+      'receipt_url' => $this->isMethod('PUT') ? 'bail|file|mimes:jpeg,bmp,png' : 'bail|required|file|mimes:jpeg,bmp,png',
       'imei' => $this->isMethod('PUT') ? ['alpha_num',  Rule::unique('swap_deals')->ignore($this->route('swap_deal')->imei)] : 'required_without_all:model_no,serial_no|alpha_num|unique:swap_deals,imei',
       'serial_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('swap_deals')->ignore($this->route('swap_deal')->serial_no)] : 'required_without_all:imei,model_no|alpha_dash|unique:swap_deals,serial_no',
       'model_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('swap_deals')->ignore($this->route('swap_deal')->model_no)] : 'required_without_all:imei,serial_no|alpha_dash|unique:swap_deals,model_no',

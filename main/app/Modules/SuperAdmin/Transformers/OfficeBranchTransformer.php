@@ -36,7 +36,6 @@ class OfficeBranchTransformer
       'city' => (string)$office_branch->city,
       'country' => (string)$office_branch->country,
       'branchProducts' => (new ProductTransformer)->collectionTransformer($office_branch->products, 'basic'),
-      // 'products' => (array)(new ProductTransformer)->collectionTransformer($office_branch->products, 'basic')->groupBy('model'),
     ];
   }
 

@@ -39,19 +39,19 @@ class ActivityLog extends Model
 
   static function logUserActivity(string $activity)
   {
-    auth()->user()->activities()->create([
-      'activity' => $activity
-    ]);
-  }
-
-  static function logAdminActivity(string $activity)
-  {
-    auth()->user()->activities()->create([
+    request()->user()->activities()->create([
       'activity' => $activity
     ]);
   }
 
   static function notifySuperAdmins(string $activity)
+  {
+    SuperAdmin::find(1)->activities()->create([
+      'activity' => $activity
+    ]);
+  }
+
+  static function notifyAccountants(string $activity)
   {
     SuperAdmin::find(1)->activities()->create([
       'activity' => $activity

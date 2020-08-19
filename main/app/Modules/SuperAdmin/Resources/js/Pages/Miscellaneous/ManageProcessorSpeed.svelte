@@ -223,30 +223,29 @@
   </div>
   <div slot="modals">
     <Modal modalId="updateProcessorSpeed" modalTitle="Update Processor Speed">
-      <form class="#" on:submit|preventDefault={updateProcessorSpeed}>
-        <FlashMessage />
 
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="name">Change Processor Speed</label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Processor Speed Name"
-              bind:value={processorSpeedName} />
-          </div>
+      <FlashMessage />
 
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long"
-              disabled={!processorSpeedName}>
-              <span class="text">Update</span>
-            </button>
-          </div>
+      <div class="row vertical-gap sm-gap">
+        <div class="col-12">
+          <label for="name">Change Processor Speed</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            placeholder="Processor Speed Name"
+            bind:value={processorSpeedName} />
         </div>
-      </form>
+
+      </div>
+      <button
+        on:click={updateProcessorSpeed}
+        slot="footer-buttons"
+        class="btn btn-success btn-long"
+        disabled={!processorSpeedName}>
+        <span class="text">Update</span>
+      </button>
+
     </Modal>
   </div>
 </Layout>

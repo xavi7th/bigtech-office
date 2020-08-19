@@ -7,7 +7,7 @@ use App\Modules\Admin\Models\ProductStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
-use App\Modules\AppUser\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
 class MarkProductAsSoldValidation extends FormRequest
 {
@@ -19,7 +19,7 @@ class MarkProductAsSoldValidation extends FormRequest
   public function rules()
   {
     return [
-      'selling_price' => 'required|string',
+      'selling_price' => 'required|numeric',
       'first_name' => 'required|string',
       'last_name' => 'nullable|string',
       'phone' => 'required|regex:/^[\+]?[0-9\Q()\E\s-]+$/i|unique:app_users,phone',
@@ -30,17 +30,14 @@ class MarkProductAsSoldValidation extends FormRequest
       'ig_handle' => 'nullable|string',
       'online_rep_id' => 'nullable|exists:sales_reps,id',
       'is_swap_deal' => 'nullable',
-      'app_user_id' => 'nullable|exists:app_users,id',
-      'description' => 'required_with:is_swap_deal|string',
-      'owner_details' => 'required_with:is_swap_deal|string',
-      'id_url' => 'bail|required_with:is_swap_deal|file|mimes:jpeg,bmp,png',
-      'reciept_url' => 'bail|required_with:is_swap_deal|file|mimes:jpeg,bmp,png',
-      'imei' => 'alpha_num|unique:swap_deals,imei',
-      'serial_no' =>  'alpha_dash|unique:swap_deals,serial_no',
-      'model_no' =>  'alpha_dash|unique:swap_deals,model_no',
-      'swap_value' => 'required_with:is_swap_deal|numeric',
-      'selling_price' => 'nullable|numeric',
-      'sold_at' => 'nullable|date',
+      'description' => 'required_if:is_swap_deal,true|string',
+      'owner_details' => 'required_if:is_swap_deal,true|string',
+      'id_card' => 'required_if:is_swap_deal,true|file|mimes:jpeg,bmp,png',
+      'receipt' => 'required_if:is_swap_deal,true|file|mimes:jpeg,bmp,png',
+      'swap_value' => 'required_if:is_swap_deal,true|numeric',
+      'imei' => 'nullable|alpha_num|unique:swap_deals,imei',
+      'serial_no' =>  'nullable|alpha_dash|unique:swap_deals,serial_no',
+      'model_no' =>  'nullable|alpha_dash|unique:swap_deals,model_no'
     ];
   }
 
@@ -70,6 +67,7 @@ class MarkProductAsSoldValidation extends FormRequest
       'sales_channel_id.required' => 'Tell us where the customer started this sale from',
       'sales_channel_id.exists' => 'Invalid sales channel selected',
       'online_rep_id.exists' => 'Invalid sales rep selected',
+      'required_if' => 'The :attribute is required if it is a swap deal'
     ];
   }
 
@@ -94,7 +92,7 @@ class MarkProductAsSoldValidation extends FormRequest
       /**
        * Check if the product has been QA tested and put in tock
        */
-      if ($this->route('product')->in_stock()) {
+      if (!$this->route('product')->in_stock()) {
         $validator->errors()->add('Invalid transaction', 'This product has not being tested');
         return;
       }
@@ -107,7 +105,9 @@ class MarkProductAsSoldValidation extends FormRequest
         return;
       }
 
-      if ($this->is_swap_deal && (!$this->imei && !$this->serial_no && !$this->model_no)) {
+
+
+      if (filter_var($this->is_swap_deal, FILTER_VALIDATE_BOOLEAN) && (!$this->imei && !$this->serial_no && !$this->model_no)) {
         $validator->errors()->add('Err', 'The imei or serial no or model no field is required when it is a swap deal');
         return;
       }

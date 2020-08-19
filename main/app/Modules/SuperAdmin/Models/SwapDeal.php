@@ -2,12 +2,12 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
@@ -18,60 +18,55 @@ use App\Modules\SuperAdmin\Http\Validations\CreateSwapDealValidation;
 /**
  * App\Modules\SuperAdmin\Models\SwapDeal
  *
- * @property-read \App\Modules\AppUser\Models\AppUser $app_user
- * @property-read \App\Modules\SuperAdmin\Models\ProductStatus $product_status
- * @property-read \App\Modules\SuperAdmin\Models\Product $swapped_with
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal query()
- * @mixin \Eloquent
  * @property int $id
  * @property int|null $app_user_id
  * @property string $description
  * @property string $owner_details
  * @property string|null $id_url
- * @property string|null $reciept_url
+ * @property string|null $receipt_url
  * @property string|null $imei
  * @property string|null $serial_no
  * @property string|null $model_no
  * @property float $swap_value
  * @property float|null $selling_price
  * @property string|null $sold_at
+ * @property Product $swapped_with
  * @property int $product_status_id
  * @property string $product_uuid
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereAppUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereIdUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereImei($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereModelNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereOwnerDetails($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereProductStatusId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereProductUuid($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereRecieptUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereSellingPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereSerialNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereSoldAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereSwapValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereSwappedWith($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SwapDeal whereUpdatedAt($value)
+ * @property-read AppUser|null $app_user
+ * @property-read ProductStatus $product_status
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereAppUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereIdUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereImei($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereModelNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereOwnerDetails($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductStatusId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductUuid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereReceiptUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSellingPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSerialNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSoldAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwapValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWith($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
-class SwapDeal extends Model
+class SwapDeal extends BaseModel
 {
   protected $fillable = [
-    'description', 'owner_details', 'id_url', 'reciept_url', 'imei', 'serial_no', 'model_no',
+    'description', 'owner_details', 'id_url', 'receipt_url', 'imei', 'serial_no', 'model_no',
     'swap_value', 'swapped_with', 'product_status_id', 'app_user_id'
   ];
-
-  public function __construct()
-  {
-    Inertia::setRootView('superadmin::app');
-  }
 
   public function primary_identifier(): string
   {
@@ -108,23 +103,23 @@ class SwapDeal extends Model
   static function store_documents(Request $request)
   {
     Storage::makeDirectory('public/swap_deals_documents/' . now()->toDateString());
-    $id_url = Storage::url($request->file('id_url')->store('public/swap_deals_documents/' . now()->toDateString()));
-    $reciept_url = Storage::url($request->file('reciept_url')->store('public/swap_deals_documents/' . now()->toDateString()));
+    $id_url = Storage::url($request->file('id_card')->store('public/swap_deals_documents/' . now()->toDateString()));
+    $receipt_url = Storage::url($request->file('receipt')->store('public/swap_deals_documents/' . now()->toDateString()));
 
     return [
       $id_url,
-      $reciept_url,
+      $receipt_url,
     ];
   }
 
-  static function create_swap_record(object $request, string $id_url, string $reciept_url)
+  static function create_swap_record(object $request, string $id_url, string $receipt_url)
   {
     try {
       $swap_deal = self::create([
         'description' => $request->description,
         'owner_details' => $request->owner_details,
         'id_url' => $id_url,
-        'reciept_url' => $reciept_url,
+        'receipt_url' => $receipt_url,
         'imei' => $request->imei ?? null,
         'serial_no' => $request->serial_no ?? null,
         'model_no' => $request->model_no ?? null,
@@ -186,9 +181,9 @@ class SwapDeal extends Model
   {
     // return $request->validated();
 
-    list($id_url, $reciept_url) = $this->store_documents($request);
+    list($id_url, $receipt_url) = $this->store_documents($request);
 
-    return $this->create_swap_record($request, $id_url, $reciept_url);
+    return $this->create_swap_record($request, $id_url, $receipt_url);
   }
 
 

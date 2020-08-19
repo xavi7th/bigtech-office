@@ -12,6 +12,29 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductStatusTransformer;
 use Cache;
 
+/**
+ * App\Modules\SuperAdmin\Models\ProductStatus
+ *
+ * @property int $id
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read int|null $products_count
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductStatus onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductStatus withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductStatus withoutTrashed()
+ * @mixin \Eloquent
+ */
 class ProductStatus extends BaseModel
 {
   use SoftDeletes;
@@ -49,7 +72,7 @@ class ProductStatus extends BaseModel
    */
   static function undergoing_qa_id(): int
   {
-    return self::where('status', 'Undergoing QA')->first()->id;
+    return self::where('status', 'undergoing qa')->first()->id;
   }
 
   /**
@@ -59,7 +82,7 @@ class ProductStatus extends BaseModel
    */
   static function in_stock(): int
   {
-    return self::where('status', 'In stock')->first()->id;
+    return self::where('status', 'in stock')->first()->id;
   }
 
   /**
@@ -69,7 +92,7 @@ class ProductStatus extends BaseModel
    */
   static function with_reseller(): int
   {
-    return self::where('status', 'With reseller')->first()->id;
+    return self::where('status', 'with reseller')->first()->id;
   }
 
   public static function routes()

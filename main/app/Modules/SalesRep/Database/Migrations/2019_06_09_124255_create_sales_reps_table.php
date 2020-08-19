@@ -22,6 +22,7 @@ class CreateSalesRepsTable extends Migration
       $table->string('avatar')->nullable();
       $table->string('gender')->enum(['male', 'female'])->nullable();
       $table->string('address')->nullable();
+      $table->string('unit')->default('walk-in'); // walk-in,social-media,call-center
       $table->foreignId('office_branch_id')->default(1)->constrained()->onDelete('cascade');
       $table->timestamp('verified_at')->nullable();
 

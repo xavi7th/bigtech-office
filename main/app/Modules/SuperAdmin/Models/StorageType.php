@@ -11,6 +11,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\StorageTypeTransformer;
 use Cache;
 
+/**
+ * App\Modules\SuperAdmin\Models\StorageType
+ *
+ * @property int $id
+ * @property string $type
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageType newQuery()
+ * @method static \Illuminate\Database\Query\Builder|StorageType onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageType query()
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|StorageType withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|StorageType withoutTrashed()
+ * @mixin \Eloquent
+ */
 class StorageType extends BaseModel
 {
   use SoftDeletes;

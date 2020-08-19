@@ -11,6 +11,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
 use Cache;
 
+/**
+ * App\Modules\SuperAdmin\Models\StorageSize
+ *
+ * @property int $id
+ * @property string $size
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageSize newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageSize newQuery()
+ * @method static \Illuminate\Database\Query\Builder|StorageSize onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageSize query()
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|StorageSize withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|StorageSize withoutTrashed()
+ * @mixin \Eloquent
+ */
 class StorageSize extends BaseModel
 {
   use SoftDeletes;
