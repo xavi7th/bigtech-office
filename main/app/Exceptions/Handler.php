@@ -108,7 +108,8 @@ class Handler extends ExceptionHandler
         return Inertia::render('PublicPages,DisplayError', ['status' => $response->status()])
           ->toResponse($request)
           ->setStatusCode($response->status());
-      } catch (\Throwable $th) { }
+      } catch (\Throwable $th) {
+      }
     } elseif (in_array($response->status(), [419])) {
       return back()->withError('Your session has expired. Please try again');
     }

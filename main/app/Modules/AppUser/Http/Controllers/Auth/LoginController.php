@@ -14,6 +14,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Modules\SuperAdmin\Events\NotificationEvent;
 use App\Modules\SuperAdmin\Events\NotificationEvents;
+use Illuminate\Auth\SessionGuard;
 
 class LoginController extends Controller
 {
@@ -107,13 +108,13 @@ class LoginController extends Controller
    */
   public function logout(Request $request)
   {
+    $this->authenticatedGuard()->logout();
     collect(config('auth.guards'))->each(function ($details, $guard) {
       try {
         auth($guard)->logout();
       } catch (\Throwable $th) {
       }
     });
-    // $this->authenticatedGuard()->logout();
     $request->session()->invalidate();
 
     if ($request->isApi()) {
@@ -224,7 +225,7 @@ class LoginController extends Controller
     return Auth::guard('api');
   }
 
-  protected function authenticatedGuard()
+  protected function authenticatedGuard(): ?SessionGuard
   {
     if (Auth('app_user')->check()) {
       return Auth::guard('app_user');
