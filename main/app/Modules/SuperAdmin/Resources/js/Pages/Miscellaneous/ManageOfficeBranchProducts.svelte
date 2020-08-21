@@ -264,9 +264,7 @@
                   <InertiaLink
                     type="button"
                     preserve-scroll
-                    preserve-state
-                    replace
-                    href={route('superadmin.product_histories.view_product_history', product.uuid)}
+                    href={route('superadmin.miscellaneous.view_product_history', product.uuid)}
                     class="btn btn-info btn-xs btn-sm">
                     History
                   </InertiaLink>
