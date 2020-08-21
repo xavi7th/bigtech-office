@@ -69,7 +69,7 @@ class ProductHistory extends BaseModel
       };
       Route::get('', [self::class, 'getProductHistories'])->name($gen('histories', null))->defaults('ex', __e('ss', 'rewind', false));
       Route::get('detailed', [self::class, 'getDetailedProductHistories'])->name($gen('histories', '.detailed_product_histories'))->defaults('ex', __e('ss', 'rewind', false));
-      Route::get('{product}', [self::class, 'getSingleProductHistory'])->name($gen('histories', '.view_product_history'))->defaults('ex', __e('ss', 'rewind', true));
+      Route::get('{product:product_uuid}', [self::class, 'getSingleProductHistory'])->name($gen('histories', '.view_product_history'))->defaults('ex', __e('ss', 'rewind', true));
     });
   }
 
@@ -88,9 +88,8 @@ class ProductHistory extends BaseModel
 
   public function getSingleProductHistory(Request $request, Product $product)
   {
-    $productHistory = (new ProductTransformer)->transformWithStatusHistory($product->load('product_histories.user', 'product_histories.product_status'));
-    if ($request->isApi())
-      return response()->json($productHistory, 200);
-    return Inertia::render('SuperAdmin,Histories/ViewProductHistory', compact('productHistory'));
+    $productWithHistory = (new ProductTransformer)->transformWithStatusHistory($product->load('product_histories.user', 'product_histories.product_status'));
+    if ($request->isApi()) return response()->json($productWithHistory, 200);
+    return Inertia::render('SuperAdmin,Histories/ViewProductHistory', compact('productWithHistory'));
   }
 }
