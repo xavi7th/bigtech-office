@@ -95,6 +95,7 @@
           html: flash.success
         });
 
+        payment_records = [];
         bankRecords = [];
         paymentRecords = [];
         numOfBanks = 1;

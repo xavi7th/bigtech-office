@@ -2,6 +2,8 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Cache;
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
+use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\ProductBatch;
 use App\Modules\SuperAdmin\Models\ProductBrand;
@@ -42,10 +45,8 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductValidation;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateLocalSupplierProductValidation;
-use App\Modules\SuperAdmin\Traits\Commentable;
-use Cache;
 
-class Product extends Model
+class Product extends BaseModel
 {
   use SoftDeletes, Compoships, Commentable;
 
@@ -58,11 +59,6 @@ class Product extends Model
   protected $casts = [
     'product_status_id' => 'int'
   ];
-
-  public function __construct()
-  {
-    Inertia::setRootView('superadmin::app');
-  }
 
   public function app_user()
   {
