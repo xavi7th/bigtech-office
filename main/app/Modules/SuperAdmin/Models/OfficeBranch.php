@@ -20,6 +20,7 @@ use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
+use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Transformers\OfficeBranchTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 
@@ -218,12 +219,17 @@ class OfficeBranch extends BaseModel
     $onlineReps = Cache::rememberForever('onlineReps', function () {
       return (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic');
     });
+
     $salesChannel = Cache::rememberForever('salesChannel', function () {
       return (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic');
     });
 
+    $companyAccounts = Cache::rememberForever('companyAccounts', function () {
+      return (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic');
+    });
+
     if ($request->isApi()) return response()->json($officeBranch, 200);
-    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranchProducts', compact('officeBranch', 'onlineReps', 'salesChannel'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranchProducts', compact('officeBranch', 'onlineReps', 'salesChannel', 'companyAccounts'));
   }
 
   public function getBranchProductExpenses(self $office_branch)

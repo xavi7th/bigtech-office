@@ -43,6 +43,7 @@ use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateLocalSupplierProductValidation;
 use App\Modules\SuperAdmin\Traits\Commentable;
+use Cache;
 
 class Product extends Model
 {
@@ -266,7 +267,7 @@ class Product extends Model
       Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true));
-      Route::put('{prodauct}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
+      Route::put('{product:product_uuid}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss', null, true));
       Route::get('{product}/qa-tests', [self::class, 'getApplicableProductQATests'])->name($p('applicable_qa_tests'))->defaults('ex', __e('ss', null, true));
@@ -470,8 +471,6 @@ class Product extends Model
   public function markProductAsSold(MarkProductAsSoldValidation $request, self $product)
   {
 
-    // dd($request->validated());
-
     DB::beginTransaction();
 
     /**
@@ -492,7 +491,8 @@ class Product extends Model
       ]);
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
-      return response()->json(['err' => 'Could not create product sales record ' . $request->email], 500);
+      if ($request->isApi()) return response()->json(['err' => 'Could not create product sales record ' . $request->email], 500);
+      return back()->withError('Could not create product sales record. Try again');
     }
 
     /**
@@ -515,7 +515,8 @@ class Product extends Model
       );
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create account profile for ' . $request->email);
-      return response()->json(['err' => 'Could not create account profile for ' . $request->email], 500);
+      if ($request->isApi()) return response()->json(['err' => 'Could not create account profile for ' . $request->email], 500);
+      return back()->withError('Could not create account profile for buyer. Try again');
     }
 
     /**
@@ -545,6 +546,10 @@ class Product extends Model
     ActivityLog::notifyAccountants($request->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
 
     DB::commit();
+
+    Cache::forget('officeBranchProducts');
+    Cache::forget('products');
+
     if ($request->isApi()) return response()->json([], 204);
     return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
   }
@@ -555,6 +560,16 @@ class Product extends Model
    */
   public function confirmProductSale(Request $request, self $product)
   {
+    $paymentRecords = $request->payment_records;
+
+    /**
+     * !Remove any empty fields from input
+     */
+    foreach ($paymentRecords as $key => $value) {
+      if (!is_numeric($key)) {
+        unset($paymentRecords[$key]);
+      }
+    }
 
     $product_sales_record = $product->product_sales_record;
 
@@ -582,16 +597,14 @@ class Product extends Model
     /**
      * Mark the product's sales record as confirmed
      */
-
-    $product_sales_record->sale_confirmed_by = auth()->id();
-    $product_sales_record->sale_confirmer_type = get_class(auth()->user());
+    $product_sales_record->sale_confirmed_by = $request->user()->id;
+    $product_sales_record->sale_confirmer_type = get_class($request->user());
     $product_sales_record->save();
 
     /**
      * Record the bank account payments breakdown for this transaction
      */
-
-    $product_sales_record->bank_account_payments()->sync($request->payment_records);
+    $product_sales_record->bank_account_payments()->sync($paymentRecords);
 
     /**
      * add an entry for the product trail that it's status changed in the static updating boot method
@@ -606,7 +619,9 @@ class Product extends Model
     try {
       $receipt = $product->generate_receipt();
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth()->user(), $th, 'Receipt generation failed');
+      ErrLog::notifyAdmin($request->user(), $th, 'Receipt generation failed');
+      // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
+      // return back()->withError('Receipt generation failed');
     }
 
     /**
@@ -615,22 +630,30 @@ class Product extends Model
 
     try {
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
+      ErrLog::notifyAdmin($request->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
+      // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
+      // return back()->withError('Failed to send receipt to user  ' . $product->app_user->emai);
     }
 
 
     /**
      * Notify Admin that a product was sold
      */
-    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with imei/model num/serial no: ' . ($product->imei ?? $product->serial_no ?? $product->model_no) . ' as confirmed sold.');
+    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with ' . $product->primary_identifier() . ' as confirmed sold.');
 
     /**
      * Notify Accountant that a product was marked as sold
      */
-    ActivityLog::notifyAccountants($request->user()->email . ' marked product with imei/model num/serial no: ' . ($product->imei ?? $product->serial_no ?? $product->model_no) . ' as confirmed sold.');
+    ActivityLog::notifyAccountants($request->user()->email . ' marked product with ' . $product->primary_identifier() . ' as confirmed sold.');
 
     DB::commit();
-    return response()->json([], 204);
+
+
+    Cache::forget('officeBranchProducts');
+    Cache::forget('products');
+
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
   }
 
   public function commentOnProduct(CreateProductCommentValidation $request, self $product)

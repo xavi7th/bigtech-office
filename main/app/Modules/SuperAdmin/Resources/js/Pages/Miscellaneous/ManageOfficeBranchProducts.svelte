@@ -7,16 +7,23 @@
   import Modal from "@superadmin-shared/Partials/Modal";
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
+  import { onMount } from "svelte";
+  import { lang } from "moment";
 
   $: ({ app, flash, errors } = $page);
   export let onlineReps = [],
+    companyAccounts = [],
     salesChannel = [],
     officeBranch = {
       branchProducts: []
     };
 
   let details = {},
+    paymentRecords = [],
+    bankRecords = [],
     productToMarkAsSold,
+    productToMarkAsPaid,
+    numOfBanks = 1,
     files;
 
   let toggleSwap = () => {
@@ -32,24 +39,54 @@
     }
   };
 
-  let markProductAsSold = () => {
+  let markProductAsPaid = () => {
+    /** ! Make sure the form was properly filled **/
+    let isValid = true,
+      payment_records = {},
+      errMsg = "";
+
+    _.each(bankRecords, (val, key) => {
+      if (_.uniq(bankRecords).length !== bankRecords.length) {
+        isValid = false;
+        errMsg = "You selected an account twice. Correct your selections";
+      } else if (
+        _.compact(bankRecords).length == 0 ||
+        _.compact(paymentRecords).length == 0
+      ) {
+        isValid = false;
+        errMsg = "Enter at least one bank and the amount paid";
+      } else if (
+        (!bankRecords[key] && paymentRecords[key]) ||
+        (bankRecords[key] && !paymentRecords[key])
+      ) {
+        isValid = false;
+        errMsg = "You The banks and the amounts are not properly matched";
+      } else if (!_.every(paymentRecords, Number)) {
+        isValid = false;
+        errMsg = "All amounts must be numbers";
+      }
+    });
+
+    if (!isValid) {
+      ToastLarge.fire("Oops", errMsg, "error");
+      return;
+    }
+
     BlockToast.fire({
       text: "Marking product as sold ..."
     });
 
-    let formData = new FormData();
-
-    _.forEach(_.omit(details, ["set", "update", "subscribe"]), (val, key) => {
-      formData.append(key, val);
+    _.each(bankRecords, (val, key, coll) => {
+      payment_records[bankRecords[key]] = { amount: paymentRecords[key] };
     });
 
-    Inertia.post(
-      route("superadmin.products.mark_as_sold", productToMarkAsSold),
-      formData,
+    Inertia.put(
+      route("superadmin.products.confirm_sale", productToMarkAsPaid),
+      { payment_records },
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "branchProducts"]
+        only: ["flash", "errors", "officeBranch"]
       }
     ).then(() => {
       if (flash.success) {
@@ -58,8 +95,10 @@
           html: flash.success
         });
 
-        details = {};
-      } else {
+        bankRecords = [];
+        paymentRecords = [];
+        numOfBanks = 1;
+      } else if (flash.error || _.size(errors) > 0) {
         ToastLarge.fire({
           title: "Oops!",
           html: flash.error || getErrorString(errors),
@@ -69,6 +108,86 @@
       }
     });
   };
+
+  let markProductAsSold = () => {
+    swal
+      .fire({
+        title: "Are you sure?",
+        text:
+          "This will mark this product as sold for and update the sales reps daily sales",
+        icon: "question",
+        showCloseButton: false,
+        allowOutsideClick: () => !swal.isLoading(),
+        allowEscapeKey: false,
+        showCancelButton: true,
+        focusCancel: true,
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#725ec3",
+        confirmButtonText: "Yes, carry on!",
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+          let formData = new FormData();
+
+          _.forEach(
+            _.omit(details, ["set", "update", "subscribe"]),
+            (val, key) => {
+              formData.append(key, val);
+            }
+          );
+          return Inertia.post(
+            route("superadmin.products.mark_as_sold", productToMarkAsSold),
+            formData,
+            {
+              preserveState: true,
+              preserveScroll: true,
+              only: ["flash", "errors", "officeBranch"]
+            }
+          )
+            .then(() => {
+              if (flash.success) {
+                return true;
+              } else {
+                throw new Error(flash.error || getErrorString(errors));
+              }
+            })
+            .catch(error => {
+              swal.showValidationMessage(`Request failed: ${error}`);
+            });
+        }
+      })
+      .then(result => {
+        if (result.dismiss && result.dismiss == "cancel") {
+          swal.fire(
+            "Canceled!",
+            "You canceled the action. Nothing was changed",
+            "info"
+          );
+        } else if (flash.success) {
+          ToastLarge.fire({
+            title: "Successful!",
+            html: flash.success
+          });
+        }
+      });
+  };
+
+  onMount(() => {
+    if (flash.success) {
+      ToastLarge.fire({
+        title: "Successful!",
+        html: flash.success
+      });
+
+      details = {};
+    } else if (flash.error || _.size(errors) > 0) {
+      ToastLarge.fire({
+        title: "Oops!",
+        html: flash.error || getErrorString(errors),
+        timer: 10000,
+        icon: "error"
+      });
+    }
+  });
 </script>
 
 <Layout title={`${officeBranch.city}´s Stock List`}>
@@ -130,14 +249,22 @@
                       Mark Sold
                     </button>
                   {/if}
+                  {#if product.status == 'sold'}
+                    <button
+                      on:click={() => {
+                        productToMarkAsPaid = product.uuid;
+                      }}
+                      data-toggle="modal"
+                      data-target="#enterProductPaymentDetails"
+                      class="btn btn-brand btn-xs btn-sm">
+                      Mark Paid
+                    </button>
+                  {/if}
                   <InertiaLink
                     type="button"
-                    href={route('superadmin.products.view_product_details', 1)}
-                    class="btn btn-brand btn-xs btn-sm">
-                    Mark Paid
-                  </InertiaLink>
-                  <InertiaLink
-                    type="button"
+                    preserve-scroll
+                    preserve-state
+                    replace
                     href={route('superadmin.product_histories.view_product_history', 1)}
                     class="btn btn-info btn-xs btn-sm">
                     History
@@ -333,6 +460,55 @@
         slot="footer-buttons"
         class="btn btn-success btn-long"
         disabled={!details.selling_price}>
+        <span class="text">Mark As Sold</span>
+      </button>
+    </Modal>
+
+    <Modal
+      modalId="enterProductPaymentDetails"
+      modalTitle="Enter Payment Details">
+
+      <FlashMessage />
+
+      <div class="row vertical-gap sm-gap">
+
+        {#each Array(numOfBanks) as i, idx}
+          <div class="col-12">
+
+            <select class="custom-select " bind:value={bankRecords[idx]}>
+              <option value={null} selected>Bank Name</option>
+              {#each companyAccounts as acc}
+                <option value={acc.id}>
+                  {acc.bank} - {acc.account_number}
+                </option>
+              {/each}
+            </select>
+          </div>
+
+          <div class="col-12">
+            <input
+              type="number"
+              min="0"
+              class="form-control"
+              placeholder="Amount Paid"
+              bind:value={paymentRecords[idx]} />
+          </div>
+        {/each}
+
+      </div>
+
+      <button
+        on:click={() => ++numOfBanks}
+        slot="footer-buttons"
+        class="btn btn-dark btn-long">
+        <span class="text">Add Another Bank</span>
+      </button>
+
+      <button
+        on:click={markProductAsPaid}
+        slot="footer-buttons"
+        class="btn btn-success btn-long"
+        disabled={!numOfBanks}>
         <span class="text">Mark As Sold</span>
       </button>
     </Modal>
