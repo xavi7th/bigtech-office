@@ -195,6 +195,11 @@ class Product extends BaseModel
     return $this->belongsTo(StorageType::class);
   }
 
+  public function office_branch()
+  {
+    return $this->belongsTo(OfficeBranch::class);
+  }
+
   public function primary_identifier(): string
   {
     switch (true) {
@@ -543,7 +548,7 @@ class Product extends BaseModel
 
     DB::commit();
 
-    Cache::forget('officeBranchProducts');
+    Cache::forget($product->office_branch->city . 'officeBranchProducts');
     Cache::forget('products');
 
     if ($request->isApi()) return response()->json([], 204);
@@ -645,7 +650,7 @@ class Product extends BaseModel
     DB::commit();
 
 
-    Cache::forget('officeBranchProducts');
+    Cache::forget($product->office_branch->city . 'officeBranchProducts');
     Cache::forget('products');
 
     if ($request->isApi()) return response()->json([], 204);

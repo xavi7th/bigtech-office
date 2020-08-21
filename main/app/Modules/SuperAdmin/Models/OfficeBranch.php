@@ -213,8 +213,8 @@ class OfficeBranch extends BaseModel
 
   public function getProductsInBranch(Request $request, self $officeBranch)
   {
-    Cache::forget('officeBranchProducts');
-    $officeBranch = Cache::rememberForever('officeBranchProducts', function () use ($officeBranch) {
+    // Cache::forget('officeBranchProducts');
+    $officeBranch = Cache::rememberForever($officeBranch->city . 'officeBranchProducts', function () use ($officeBranch) {
       return (new OfficeBranchTransformer)->transformWithProducts($officeBranch->load('products'));
     });
     $onlineReps = Cache::rememberForever('onlineReps', function () {
