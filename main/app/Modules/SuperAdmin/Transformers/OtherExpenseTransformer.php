@@ -15,23 +15,24 @@ class OtherExpenseTransformer
       });
   }
 
-  public function basic(OtherExpense $reseller): array
+  public function basic(OtherExpense $expense): array
   {
     return [
-      'id' => (int)$reseller->id,
-      'amount' => (float)$reseller->amount,
-      'purpose' => (string)$reseller->purpose,
-      'recorder' => (string)$reseller->recorder->full_name,
+      'id' => (int)$expense->id,
+      'amount' => (string)to_naira($expense->amount),
+      'purpose' => (string)$expense->purpose,
+      'recorder' => (string)$expense->recorder->full_name,
+      'date' => (string)$expense->created_at->diffForHumans(),
     ];
   }
 
-  public function transformWithComment(OtherExpense $reseller)
+  public function transformWithComment(OtherExpense $expense)
   {
     return [
-      'id' => (int)$reseller->id,
-      'batch_number' => $reseller->batch_number,
-      'order_date' => $reseller->order_date,
-      'comments' => (new UserCommentTransformer)->collectionTransformer($reseller->comments, 'commentDetails'),
+      'id' => (int)$expense->id,
+      'batch_number' => $expense->batch_number,
+      'order_date' => $expense->order_date,
+      'comments' => (new UserCommentTransformer)->collectionTransformer($expense->comments, 'commentDetails'),
     ];
   }
 }

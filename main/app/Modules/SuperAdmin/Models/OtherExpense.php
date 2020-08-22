@@ -2,53 +2,22 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\OtherExpenseTransformer;
+use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\OtherExpense
- *
- * @property int $id
- * @property float $amount
- * @property string $purpose
- * @property int $recorder_id
- * @property string $recorder_type
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $recorder
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OtherExpense onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense wherePurpose($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense whereRecorderId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense whereRecorderType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\OtherExpense whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OtherExpense withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\OtherExpense withoutTrashed()
- * @mixin \Eloquent
- */
-class OtherExpense extends Model
+class OtherExpense extends BaseModel
 {
   use SoftDeletes;
   protected $fillable = ['amount', 'purpose'];
   protected $table = 'expenses';
-
-  public function __construct()
-  {
-    Inertia::setRootView('superadmin::app');
-  }
 
   public function recorder()
   {
@@ -62,33 +31,44 @@ class OtherExpense extends Model
         return 'superadmin.miscellaneous.' . $name;
       };
 
-      Route::get('', [self::class, 'getExpenses'])->name($gen('other_expenses'))->defaults('ex', __e('ss', 'clipboard', true));
-      Route::get('{date}', [self::class, 'getDailyExpenses'])->name($gen('daily_expenses'))->defaults('ex', __e('ss', 'clipboard', true));
-      Route::get('', [self::class, 'showCreateExpenseForm'])->name($gen('create_expense'))->defaults('ex', __e('ss', 'clipboard', false));
-      Route::post('create', [self::class, 'createExpense'])->name($gen('save_expense'))->defaults('ex', __e('ss', 'clipboard', true));
-      Route::put('{size}/edit', [self::class, 'editExpense'])->name($gen('edit_expense'))->defaults('ex', __e('ss', 'clipboard', true));
+      Route::get('', [self::class, 'getDailyExpenses'])->name($gen('daily_expense'))->defaults('ex', __e('ss', 'clipboard', false));
+      Route::get('all', [self::class, 'getAllExpenses'])->name($gen('all_expenses'))->defaults('ex', __e('ss', 'clipboard', false));
+      Route::get('{date}', [self::class, 'getExpensesByDate'])->name($gen('daily_expenses'))->defaults('ex', __e('ss', 'clipboard', true));
+      Route::post('create', [self::class, 'createExpense'])->name($gen('create_daily_expense'))->defaults('ex', __e('ss', 'clipboard', true));
+      // Route::put('{size}/edit', [self::class, 'editExpense'])->name($gen('edit_expense'))->defaults('ex', __e('ss', 'clipboard', true));
     });
   }
 
-
-  public function getExpenses()
+  public function getDailyExpenses(Request $request)
   {
-    return response()->json((new OtherExpenseTransformer)->collectionTransformer(self::with('recorder')->get(), 'basic'), 200);
+    $dailyExpenses = Cache::rememberForever('dailyExpenses', function () {
+      return (new OtherExpenseTransformer)->collectionTransformer(self::today()->with('recorder')->get(), 'basic');
+    });
+
+    if ($request->isApi()) return response()->json($dailyExpenses, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/CreateExpense', compact('dailyExpenses'));
   }
 
-  public function getDailyExpenses(Request $request, $date)
+  public function getAllExpenses(Request $request)
   {
-    $expenses = (new OtherExpenseTransformer)->collectionTransformer(self::with('recorder')->whereDate('created_at', Carbon::parse($date))->get(), 'basic');
+    $dailyExpenses = Cache::rememberForever('allExpenses', function () {
+      return (new OtherExpenseTransformer)->collectionTransformer(self::with('recorder')->get(), 'basic');
+    });
+
+    if ($request->isApi()) return response()->json($dailyExpenses, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/ViewAllExpenses', compact('dailyExpenses'));
+  }
+
+  public function getExpensesByDate(Request $request, $date)
+  {
+    $expenses = Cache::rememberForever('dateExpenses', function () {
+      return (new OtherExpenseTransformer)->collectionTransformer(self::with('recorder')->whereDate('created_at', Carbon::parse($date))->get(), 'basic');
+    });
     if ($request->isApi()) {
       return response()->json($expenses, 200);
     }
 
     return Inertia::render('SuperAdmin,Miscellaneous/DailyOtherExpenses', compact('date', 'expenses'));
-  }
-
-  public function showCreateExpenseForm()
-  {
-    return Inertia::render('SuperAdmin,Miscellaneous/CreateExpense');
   }
 
   public function createExpense(Request $request)
@@ -102,32 +82,37 @@ class OtherExpense extends Model
     }
 
     try {
-      $expense = auth()->user()->expenses()->create([
+      $expense = $request->user()->expenses()->create([
         'amount' => $request->amount,
         'purpose' => $request->purpose,
       ]);
 
-      return response()->json((new OtherExpenseTransformer)->basic($expense), 201);
+      Cache::forget('dailyExpenses');
+      Cache::forget('allExpenses');
+
+      if ($request->isApi()) return response()->json((new OtherExpenseTransformer)->basic($expense), 201);
+      return back()->withSuccess('Expense Record created. ');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth()->user(), $th, 'Expense record not created');
-      return response()->json(['err' => 'Expense record not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Expense record not created');
+      if ($request->isApi()) return response()->json(['err' => 'Expense record not created'], 500);
+      return back()->withError('Could not create expense record. Try again');
     }
   }
 
-
-  public function editExpense(Request $request, self $expense)
+  public function scopeToday($query)
   {
-    try {
-      foreach ($request->validated() as $key => $value) {
-        $expense->$key = $value;
-      }
+    return $query->whereDay('created_at', today());
+  }
 
-      $expense->save();
-
-      return response()->json([], 204);
-    } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth()->user(), $th, 'Expense record NOT updated');
-      return response()->json(['err' => 'Expense record NOT updated'], 500);
-    }
+  /**
+   * The "booted" method of the model.
+   *
+   * @return void
+   */
+  protected static function booted()
+  {
+    static::addGlobalScope('latest', function (Builder $builder) {
+      $builder->latest();
+    });
   }
 }

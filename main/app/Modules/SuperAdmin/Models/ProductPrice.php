@@ -2,11 +2,11 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,53 +19,7 @@ use App\Modules\SuperAdmin\Models\ProductSupplier;
 use App\Modules\SuperAdmin\Transformers\ProductPriceTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductPriceValidation;
 
-
-/**
- * App\Modules\SuperAdmin\Models\ProductPrice
- *
- * @property-read \App\Modules\SuperAdmin\Models\ProductBatch $product_batch
- * @property-read \App\Modules\SuperAdmin\Models\ProductColor $product_color
- * @property-read \App\Modules\SuperAdmin\Models\ProductGrade $product_grade
- * @property-read \App\Modules\SuperAdmin\Models\ProductModel $product_model
- * @property-read \App\Modules\SuperAdmin\Models\ProductSupplier $product_supplier
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
- * @property-read int|null $products_count
- * @property-read \App\Modules\SuperAdmin\Models\StorageSize $storage_size
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductPrice onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductPrice withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductPrice withoutTrashed()
- * @mixin \Eloquent
- * @property int $id
- * @property int $product_batch_id
- * @property int $product_brand_id
- * @property int $product_model_id
- * @property int $product_color_id
- * @property int $storage_size_id
- * @property int $product_grade_id
- * @property int $product_supplier_id
- * @property float $cost_price
- * @property float|null $proposed_selling_price
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereCostPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereProductBatchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereProductBrandId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereProductColorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereProductGradeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereProductModelId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereProductSupplierId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereProposedSellingPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereStorageSizeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductPrice whereUpdatedAt($value)
- */
-class ProductPrice extends Model
+class ProductPrice extends BaseModel
 {
   use SoftDeletes;
   use Compoships;
@@ -81,11 +35,6 @@ class ProductPrice extends Model
     'cost_price',
     'proposed_selling_price'
   ];
-
-  public function __construct()
-  {
-    Inertia::setRootView('superadmin::app');
-  }
 
   public function product_batch()
   {

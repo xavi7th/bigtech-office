@@ -2,60 +2,26 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\SuperAdmin\Models\ProductPrice;
 use App\Modules\SuperAdmin\Traits\Commentable;
+use App\Modules\SuperAdmin\Models\ProductPrice;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductBatch
- *
- * @property int $id
- * @property string $batch_number
- * @property \Illuminate\Support\Carbon $order_date
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductPrice[] $productPrices
- * @property-read int|null $product_prices_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductBatch onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereBatchNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereOrderDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductBatch withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductBatch withoutTrashed()
- * @mixin \Eloquent
- */
-class ProductBatch extends Model
+class ProductBatch extends BaseModel
 {
   use SoftDeletes, Commentable;
 
   protected $fillable = ['order_date', 'batch_number'];
 
   protected $dates = ['order_date'];
-
-  public function __construct()
-  {
-    Inertia::setRootView('superadmin::app');
-  }
 
   public function products()
   {
