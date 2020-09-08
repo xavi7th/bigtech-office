@@ -43,39 +43,37 @@ class ProductSupplier extends BaseModel
       $gen = function ($namespace, $name = null) {
         return 'superadmin.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductSuppliers'])->name($gen('suppliers', null))->defaults('ex', __e('ss', 'user-plus', false));
-      Route::post('create', [self::class, 'createProductSupplier'])->name($gen('suppliers', 'create_supplier'))->defaults('ex', __e('ss', 'user-plus', true));
-      Route::put('{supplier}/edit', [self::class, 'editProductSupplier'])->name($gen('suppliers', 'edit_supplier'))->defaults('ex', __e('ss', 'user-plus', true));
+      Route::get('', [self::class, 'getProductSuppliers'])->name($gen('suppliers'))->defaults('ex', __e('ss', 'user-plus', false));
+      Route::post('create', [self::class, 'createProductSupplier'])->name($gen('suppliers', '.create'))->defaults('ex', __e('ss', 'user-plus', true));
+      Route::put('{productSupplier}/edit', [self::class, 'editProductSupplier'])->name($gen('suppliers', '.edit'))->defaults('ex', __e('ss', 'user-plus', true));
     });
   }
 
   public function getProductSuppliers(Request $request)
   {
     $productSuppliers = (new ProductSupplierTransformer)->collectionTransformer(self::all(), 'basic');
-    if ($request->isApi())
-      return response()->json($productSuppliers, 200);
+    if ($request->isApi()) return response()->json($productSuppliers, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageProductSuppliers', compact('productSuppliers'));
   }
 
   public function createProductSupplier(Request $request)
   {
-    if (!$request->name) {
-      return generate_422_error('Specify a product supplier');
-    }
+    if (!$request->name) return generate_422_error('Specify a product supplier');
 
     try {
       $product_supplier = self::create([
         'name' => $request->name,
       ]);
 
-      return response()->json((new ProductSupplierTransformer)->basic($product_supplier), 201);
+      if ($request->isApi()) return response()->json((new ProductSupplierTransformer)->basic($product_supplier), 201);
+      return back()->withSuccess('Success');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product supplier not created');
+      ErrLog::notifyAdmin($request->user(), $th, 'Product supplier not created');
       return response()->json(['err' => 'Product supplier not created'], 500);
     }
   }
 
-  public function editProductSupplier(Request $request, self $product_supplier)
+  public function editProductSupplier(Request $request, self $productSupplier)
   {
     if (!$request->name) {
       return generate_422_error('Specify a new product supplier to change this to');
@@ -86,13 +84,15 @@ class ProductSupplier extends BaseModel
     }
 
     try {
-      $product_supplier->name = $request->name;
-      $product_supplier->save();
+      $productSupplier->name = $request->name;
+      $productSupplier->save();
 
-      return response()->json([], 204);
+      if ($request->isApi()) return response()->json([], 204);
+      return back()->withSuccess('Success');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product supplier not updated');
-      return response()->json(['err' => 'Product supplier not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Product supplier not updated');
+      if ($request->isApi()) return response()->json(['err' => 'Product supplier not updated'], 500);
+      return back()->withError('Product supplier not updated');
     }
   }
 }

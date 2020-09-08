@@ -10,6 +10,27 @@ use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Transformers\ProductExpenseTransformer;
 
+/**
+ * App\Modules\SuperAdmin\Models\ProductExpense
+ *
+ * @property int $id
+ * @property int $product_id
+ * @property float $amount
+ * @property string $reason
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Product $product
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class ProductExpense extends Model
 {
   protected $fillable = [

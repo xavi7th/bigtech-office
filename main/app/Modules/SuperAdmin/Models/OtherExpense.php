@@ -13,6 +13,35 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\OtherExpenseTransformer;
 use Cache;
 
+/**
+ * App\Modules\SuperAdmin\Models\OtherExpense
+ *
+ * @property int $id
+ * @property float $amount
+ * @property string $purpose
+ * @property int $recorder_id
+ * @property string $recorder_type
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $recorder
+ * @method static Builder|OtherExpense newModelQuery()
+ * @method static Builder|OtherExpense newQuery()
+ * @method static \Illuminate\Database\Query\Builder|OtherExpense onlyTrashed()
+ * @method static Builder|OtherExpense query()
+ * @method static Builder|OtherExpense today()
+ * @method static Builder|OtherExpense whereAmount($value)
+ * @method static Builder|OtherExpense whereCreatedAt($value)
+ * @method static Builder|OtherExpense whereDeletedAt($value)
+ * @method static Builder|OtherExpense whereId($value)
+ * @method static Builder|OtherExpense wherePurpose($value)
+ * @method static Builder|OtherExpense whereRecorderId($value)
+ * @method static Builder|OtherExpense whereRecorderType($value)
+ * @method static Builder|OtherExpense whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|OtherExpense withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|OtherExpense withoutTrashed()
+ * @mixin \Eloquent
+ */
 class OtherExpense extends BaseModel
 {
   use SoftDeletes;
