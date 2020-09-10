@@ -35,25 +35,25 @@ use App\Modules\SuperAdmin\Http\Validations\GiveResellerProcuctValidation;
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
  * @property-read int|null $products_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
+ * @property-read \Illuminate\Database\Eloquent\Collection|ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Reseller onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereBusinessName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereCeoName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Reseller whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Reseller withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Reseller withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Reseller onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereBusinessName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereCeoName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereImgUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Reseller withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Reseller withoutTrashed()
  * @mixin \Eloquent
  */
 class Reseller extends BaseModel
@@ -104,16 +104,14 @@ class Reseller extends BaseModel
   public function getResellers(Request $request)
   {
     $resellers = (new ResellerTransformer)->collectionTransformer(self::all(), 'basic');
-    if ($request->isApi())
-      return response()->json($resellers, 200);
+    if ($request->isApi()) return response()->json($resellers, 200);
     return Inertia::render('SuperAdmin,Resellers/ManageResellers', compact('resellers'));
   }
 
   public function getProductsWithReseller(Request $request, self $reseller)
   {
     $resellerProducts = (new ResellerTransformer)->transformWithTenuredProducts($reseller->load('products_in_possession'));
-    if ($request->isApi())
-      return response()->json($resellerProducts, 200);
+    if ($request->isApi())  return response()->json($resellerProducts, 200);
     return Inertia::render('SuperAdmin,Resellers/ViewProductsWithReseller', compact('resellerProducts'));
   }
 
@@ -130,29 +128,42 @@ class Reseller extends BaseModel
   public function createReseller(CreateResellerValidation $request)
   {
     try {
-      $reseller = self::create($request->validated());
 
-      return response()->json((new ResellerTransformer)->basic($reseller), 201);
+      if ($request->hasFile('img')) {
+        $reseller = self::create(collect($request->validated())->merge(['img_url' => compress_image_upload('img', 'product_models_images/', null, 200)['img_url']])->all());
+      } else {
+        $reseller = self::create($request->validated());
+      }
+
+      if ($request->isApi()) return response()->json((new ResellerTransformer)->basic($reseller), 201);
+      return back()->withSuccess('Success');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Reseller not created');
-      return response()->json(['err' => 'Reseller not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Reseller not created');
+      if ($request->isApi()) return response()->json(['err' => 'Reseller not created'], 500);
+      return back()->withError('Error');
     }
   }
 
   public function editReseller(CreateResellerValidation $request, self $reseller)
   {
-
     try {
+
       foreach ($request->validated() as $key => $value) {
         $reseller->$key = $value;
       }
 
+      if ($request->hasFile('brand_img')) {
+        $reseller->img_url = compress_image_upload('brand_img', 'product_models_images/', null, 200)['img_url'];
+      }
+
       $reseller->save();
 
-      return response()->json([], 204);
+      if ($request->isApi()) return response()->json([], 204);
+      return back()->withSuccess('Success');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Reseller not updated');
-      return response()->json(['err' => 'Reseller not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Reseller not updated');
+      if ($request->isApi()) return response()->json(['err' => 'Reseller not updated'], 500);
+      return back()->withError('Error');
     }
   }
 

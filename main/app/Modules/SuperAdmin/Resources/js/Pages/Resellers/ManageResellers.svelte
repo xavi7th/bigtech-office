@@ -1,91 +1,348 @@
 <script>
-    import Layout from "@superadmin-shared/SuperAdminLayout";
-    import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-    import { Inertia } from "@inertiajs/inertia";
-    import FlashMessage from "@usershared/FlashMessage";
-    import route from "ziggy";
+  import Layout from "@superadmin-shared/SuperAdminLayout";
+  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { Inertia } from "@inertiajs/inertia";
+  import FlashMessage from "@usershared/FlashMessage";
+  import Modal from "@superadmin-shared/Partials/Modal";
+  import route from "ziggy";
+  import { getErrorString } from "@public-assets/js/bootstrap";
 
-    $: ({ errors, auth } = $page);
-    let createResellers = () => {};
+  $: ({ errors, auth, flash } = $page);
+
+  let details = {},
+    currentReseller = {},
+    files;
+
+  let createReseller = () => {
+    BlockToast.fire({
+      text: "Creating reseller ..."
+    });
+
+    let formData = new FormData();
+
+    // formData.append("_method", "PUT");
+    _.forEach(details, (val, key) => {
+      formData.append(key, val);
+    });
+
+    Inertia.post(route("superadmin.resellers.create_reseller"), formData, {
+      preserveState: true,
+      preserveScroll: true,
+      only: ["flash", "errors", "resellers"],
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }).then(() => {
+      if (flash.success) {
+        ToastLarge.fire({
+          title: "Successful!",
+          html: flash.success
+        });
+
+        details = {};
+      } else {
+        ToastLarge.fire({
+          title: "Oops!",
+          html: flash.error || getErrorString(errors),
+          timer: 10000,
+          icon: "error"
+        });
+      }
+    });
+  };
+
+  let updateReseller = () => {
+    BlockToast.fire({
+      text: "Updating reseller ..."
+    });
+
+    let formData = new FormData();
+
+    formData.append("_method", "PUT");
+
+    _.forEach(currentReseller, (val, key) => {
+      formData.append(key, val);
+    });
+
+    Inertia.post(
+      route("superadmin.resellers.edit_reseller", currentReseller.id),
+      formData,
+      {
+        preserveState: true,
+        preserveScroll: true,
+        only: ["flash", "errors", "resellers"],
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    ).then(() => {
+      if (flash.success) {
+        currentReseller = {};
+
+        ToastLarge.fire({
+          title: "Successful!",
+          html: flash.success
+        });
+      } else {
+        ToastLarge.fire({
+          title: "Oops!",
+          html: flash.error || getErrorString(errors),
+          timer: 10000,
+          icon: "error"
+        });
+      }
+    });
+  };
+
+  let deleteReseller = id => {
+    swal
+      .fire({
+        title: "Are you sure?",
+        text:
+          "This reseller will be permanently deleted and products can no longer be created under it",
+        icon: "question",
+        showCloseButton: false,
+        allowOutsideClick: () => !swal.isLoading(),
+        allowEscapeKey: false,
+        showCancelButton: true,
+        focusCancel: true,
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#725ec3",
+        confirmButtonText: "Yes, carry on!",
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+          return Inertia.delete(
+            route("superadmin.resellers.delete_reseller", id),
+            {
+              preserveState: true,
+              preserveScroll: true,
+              only: ["flash", "errors", "resellers"]
+            }
+          )
+            .then(() => {
+              if (flash.success) {
+                return true;
+              } else {
+                throw new Error(flash.error || getErrorString(errors));
+              }
+            })
+            .catch(error => {
+              swal.showValidationMessage(`Request failed: ${error}`);
+            });
+        }
+      })
+      .then(result => {
+        if (result.dismiss && result.dismiss == "cancel") {
+          swal.fire(
+            "Canceled!",
+            "You canceled the action. Nothing was changed",
+            "info"
+          );
+        } else if (flash.success) {
+          ToastLarge.fire({
+            title: "Successful!",
+            html: flash.success
+          });
+        }
+      });
+  };
+
+  export let resellers = [];
 </script>
 
+<style>
+  img {
+    max-height: 100px;
+  }
+</style>
+
 <Layout title="Manage Resellers">
-    <div class="row vertical-gap">
-        <div class="col-lg-8 col-xl-8">
-            <div
-                class="d-flex align-items-center justify-content-between mb-25">
-                <h2 class="mnb-2" id="formBase">Available Resellers</h2>
-            </div>
-            <div class="table-responsive-md">
-                <table
-                    class="rui-datatable table table-bordered table-bordered
-                    table-sm"
-                    data-order="[]">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Number of products</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Red</td>
-                            <td>15</td>
-                            <td
-                                class="d-flex justify-content-between
-                                align-content-center">
-                                <button
-                                    type="button"
-                                    class="btn btn-danger btn-xs">
-                                    DELETE
-                                </button>
-                                <InertiaLink
-                                    href={route('superadmin.resellers.products', 1)}
-                                    class="btn btn-brand btn-xs">
-                                    Products
-                                </InertiaLink>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+  <div class="row vertical-gap">
+    <div class="col-lg-4 col-xl-4">
+
+      <form class="#" on:submit|preventDefault={createReseller}>
+        <FlashMessage />
+
+        <div class="row vertical-gap sm-gap">
+          <div class="col-12">
+            <label for="name">Business Name</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Business Name"
+              bind:value={details.business_name} />
+          </div>
+
+          <div class="col-12">
+            <label for="name">CEO</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="CEO Name"
+              bind:value={details.ceo_name} />
+          </div>
+
+          <div class="col-12">
+            <label for="name">Office Phone</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Office Phone"
+              bind:value={details.phone} />
+          </div>
+
+          <div class="col-12">
+            <label for="name">Office Address</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Office Address"
+              bind:value={details.address} />
+          </div>
+
+          <div class="col-12">
+            <label for="name">Business Logo</label>
+            <input
+              type="file"
+              class="form-control"
+              placeholder="Business Logo"
+              bind:files
+              on:change={() => (details.img = files[0])} />
+          </div>
+
+          <div class="col-12">
+            <button
+              type="submit"
+              class="btn btn-success btn-long"
+              disabled={!details.business_name}>
+              <span class="text">Create</span>
+            </button>
+          </div>
         </div>
-
-        <div class="col-lg-4 col-xl-4">
-
-            <form class="#" class:was-validated={createResellers}>
-                <FlashMessage />
-                <template v-if="errors">
-                    <div
-                        class="d-flex align-items-center justify-content-between
-                        flex-column mb-25">
-                        {#each Object.entries(errors) as [err], idx}
-                            <FlashMessage msg={err[0]} />
-                        {/each}
-                    </div>
-                </template>
-                <div class="row vertical-gap sm-gap">
-                    <div class="col-12">
-                        <label for="amount">Enter New Reseller</label>
-                        <input
-                            type="text"
-                            class="form-control {errors.amount ? ' is-invalid' : ' is-valid'}"
-                            id="amount"
-                            placeholder="Enter amount to auto save"
-                            v-model="details.amount" />
-                    </div>
-
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-success btn-long">
-                            <span class="text">Create</span>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
+      </form>
     </div>
+    <div class="col-lg-8 col-xl-8">
+      <div class="d-flex align-items-center justify-content-between mb-25">
+        <h2 class="mnb-2" id="formBase">Available Resellers</h2>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Business Name</th>
+              <th scope="col">CEO</th>
+              <th scope="col">Address</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each resellers as reseller, idx}
+              <tr>
+                <td>{idx + 1}</td>
+                <td>
+                  <img
+                    src={reseller.brand_img}
+                    alt="{reseller.business_name}'s Logo'"
+                    class="img-fluid" />
+                  {reseller.business_name}
+                </td>
+                <td>{reseller.ceo_name}</td>
+                <td>{reseller.address}</td>
+                <td>{reseller.phone}</td>
+                <td class="d-flex justify-content-between align-content-center">
+                  <!-- <button
+                    type="button"
+                    class="btn btn-danger btn-xs"
+                    on:click={() => {
+                      deleteReseller(reseller.id);
+                    }}>
+                    DELETE
+                  </button> -->
+                  <button
+                    type="button"
+                    class="btn btn-warning btn-xs"
+                    data-toggle="modal"
+                    data-target="#updateReseller"
+                    on:click={() => {
+                      currentReseller = reseller;
+                    }}>
+                    EDIT
+                  </button>
+                </td>
+              </tr>
+            {:else}
+              <tr>
+                <td colspan="5" class="text-center">NONE AVAILABLE</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <div slot="modals">
+    <Modal modalId="updateReseller" modalTitle="Update Reseller">
+
+      <FlashMessage />
+
+      <div class="row vertical-gap sm-gap">
+        <div class="col-12">
+          <label for="name">Business Name</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Business Name"
+            bind:value={currentReseller.business_name} />
+        </div>
+
+        <div class="col-12">
+          <label for="name">CEO</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="CEO Name"
+            bind:value={currentReseller.ceo_name} />
+        </div>
+
+        <div class="col-12">
+          <label for="name">Office Phone</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Office Phone"
+            bind:value={currentReseller.phone} />
+        </div>
+
+        <div class="col-12">
+          <label for="name">Office Address</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Office Address"
+            bind:value={currentReseller.address} />
+        </div>
+
+        <div class="col-12">
+          <label for="name">Business Logo</label>
+          <input
+            type="file"
+            class="form-control"
+            placeholder="Business Logo"
+            bind:files
+            on:change={() => (currentReseller.brand_img = files[0])} />
+        </div>
+
+      </div>
+      <button
+        on:click={updateReseller}
+        slot="footer-buttons"
+        class="btn btn-success btn-long">
+        <span class="text">Update</span>
+      </button>
+
+    </Modal>
+  </div>
 </Layout>

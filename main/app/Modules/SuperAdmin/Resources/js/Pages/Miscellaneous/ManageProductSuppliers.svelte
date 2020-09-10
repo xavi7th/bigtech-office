@@ -138,12 +138,6 @@
   export let productSuppliers = [];
 </script>
 
-<style>
-  img {
-    max-height: 50px;
-  }
-</style>
-
 <Layout title="Manage Product Suppliers">
   <div class="row vertical-gap">
     <div class="col-lg-4 col-xl-4">

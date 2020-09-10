@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
-use App\Modules\AppUser\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
 class CreateResellerValidation extends FormRequest
 {
@@ -22,7 +22,7 @@ class CreateResellerValidation extends FormRequest
       'business_name' => $this->isMethod("PUT") ? Rule::unique('resellers')->ignore($this->route('reseller')->business_name, 'business_name') : 'required|unique:resellers,business_name',
       'ceo_name' => $this->isMethod("PUT") ? 'string|max:50' : 'required|string|max:50',
       'address' =>  $this->isMethod("PUT") ? 'string'  : 'required|string',
-      'img' =>  $this->isMethod("PUT") ? 'string' : 'required|string', //|max:50,
+      'img' =>  'nullable|file|image',
       'phone' =>  $this->isMethod("PUT") ? 'regex:/^[\+]?[0-9\Q()\E\s-]+$/i' : 'required|regex:/^[\+]?[0-9\Q()\E\s-]+$/i',
     ];
   }
