@@ -158,6 +158,11 @@ class Product extends BaseModel
     return $this->hasMany(ProductExpense::class);
   }
 
+  public function product_expenses_sum()
+  {
+    return $this->product_expenses()->selectRaw('product_id, SUM(amount) as expense_amount')->groupBy('product_id');
+  }
+
   public function total_product_expenses(): float
   {
     return $this->product_expenses()->sum('amount');
@@ -240,8 +245,9 @@ class Product extends BaseModel
 
   public function getCostPriceAttribute()
   {
-    return is_numeric($this->product_price->cost_price) ?
-      to_naira($this->total_product_expenses() + (float)$this->product_price->cost_price) : $this->product_price->cost_price;
+    // dump($this->product_expenses_sum[0]->expense_amount);
+    return is_numeric($this->product_price->cost_price) &&  isset($this->product_expenses_sum[0]) ?
+      to_naira($this->product_expenses_sum[0]->expense_amount + (float)$this->product_price->cost_price) : $this->product_price->cost_price;
   }
 
   public function getProposedSellingPriceAttribute()
@@ -292,11 +298,15 @@ class Product extends BaseModel
   {
     // $price = ProductPrice::find(1);
     // dd($price->products->toArray());
-    if ($request->isApi()) {
-      return  response()->json((new ProductTransformer)->collectionTransformer(self::all(), 'basic'), 200);
-    } else {
-      return Inertia::render('SuperAdmin,Products/ListProducts');
-    }
+
+    /**
+     * ! Filter list based on logged in user.
+     */
+
+    $products = (new ProductTransformer)->collectionTransformer(self::justArrived()->with(['product_color', 'storage_size', 'product_status', 'product_model', 'product_price', 'product_expenses_sum'])->get(), 'basic');
+
+    if ($request->isApi()) return  response()->json($products, 200);
+    return Inertia::render('SuperAdmin,Products/ListProducts', compact('products'));
   }
 
   public function getProductDetails(Request $request, Product $product)
@@ -712,6 +722,16 @@ class Product extends BaseModel
     ]);
 
     return response()->json((new UserCommentTransformer)->detailed($comment), 201);
+  }
+
+  public function scopeInStock($query)
+  {
+    return $query->where('product_status_id', ProductStatus::inStockId());
+  }
+
+  public function scopeJustArrived($query)
+  {
+    return $query->where('product_status_id', ProductStatus::justArrivedId());
   }
 
   protected static function boot()

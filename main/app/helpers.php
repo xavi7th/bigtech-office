@@ -157,6 +157,7 @@ if (!function_exists('to_naira')) {
   function to_naira($amount): string
   {
     if (!is_numeric($amount)) {
+      dd($amount);
       throw new Exception("can only convert numbers to naira", 500);
     }
     return '₦' . number_format($amount, 2);

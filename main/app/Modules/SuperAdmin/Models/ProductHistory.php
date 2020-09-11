@@ -68,14 +68,8 @@ class ProductHistory extends BaseModel
         return 'superadmin.miscellaneous.' . $namespace . $name;
       };
       Route::get('', [self::class, 'getDetailedProductHistories'])->name($gen('product_histories', null))->defaults('ex', __e('ss', 'rewind', false));
-      // Route::get('detailed', [self::class, 'getDetailedProductHistories'])->name($gen('histories', '.detailed_product_histories'))->defaults('ex', __e('ss', 'rewind', false));
-      Route::get('{product:product_uuid}', [self::class, 'getSingleProductHistory'])->name($gen('view_product_history'))->defaults('ex', __e('ss', 'rewind', true));
+      Route::get('{product:id}', [self::class, 'getSingleProductHistory'])->name($gen('view_product_history'))->defaults('ex', __e('ss', 'rewind', true));
     });
-  }
-
-  public function getProductHistories()
-  {
-    return response()->json((new ProductHistoryTransformer)->collectionTransformer(self::all(), 'basic'), 200);
   }
 
   public function getDetailedProductHistories(Request $request)

@@ -46,23 +46,9 @@ class ProductStatus extends BaseModel
     return $this->hasMany(Product::class);
   }
 
-  /**
-   * Get the Id of the "SOLD" status
-   *
-   * @return integer
-   */
-  static function sold_id(): int
+  static function justArrivedId(): int
   {
-    return self::where('status', 'sold')->first()->id;
-  }
-  /**
-   * Get the Id of the "SALE CONFIRMED" status
-   *
-   * @return integer
-   */
-  static function sale_confirmed_id(): int
-  {
-    return self::where('status', 'sale confirmed')->first()->id;
+    return self::where('status', 'just arrived')->first()->id;
   }
 
   /**
@@ -70,9 +56,24 @@ class ProductStatus extends BaseModel
    *
    * @return integer
    */
-  static function undergoing_qa_id(): int
+  static function undergoingQaId(): int
   {
     return self::where('status', 'undergoing qa')->first()->id;
+  }
+
+  static function qaFailedId(): int
+  {
+    return self::where('status', 'qa failed')->first()->id;
+  }
+
+  static function rtoId(): int
+  {
+    return self::where('status', 'rto (damaged)')->first()->id;
+  }
+
+  static function backFromRepairsId(): int
+  {
+    return self::where('status', 'back from repairs')->first()->id;
   }
 
   /**
@@ -80,19 +81,44 @@ class ProductStatus extends BaseModel
    *
    * @return integer
    */
-  static function in_stock(): int
+  static function inStockId(): int
   {
     return self::where('status', 'in stock')->first()->id;
   }
 
   /**
-   * Get the Id of the "QA TESTED" status
+   * Get the Id of the "WITH RESELLER" status
    *
    * @return integer
    */
-  static function with_reseller(): int
+  static function withResellerId(): int
   {
     return self::where('status', 'with reseller')->first()->id;
+  }
+
+  static function soldByResellerId(): int
+  {
+    return self::where('status', 'sold by reseller')->first()->id;
+  }
+
+  /**
+   * Get the Id of the "SOLD" status
+   *
+   * @return integer
+   */
+  static function soldId(): int
+  {
+    return self::where('status', 'sold')->first()->id;
+  }
+
+  /**
+   * Get the Id of the "SALE CONFIRMED" status
+   *
+   * @return integer
+   */
+  static function saleConfirmedId(): int
+  {
+    return self::where('status', 'sale confirmed')->first()->id;
   }
 
   public static function routes()

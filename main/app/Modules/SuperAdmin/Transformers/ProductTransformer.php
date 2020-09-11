@@ -19,6 +19,7 @@ class ProductTransformer
 
   public function basic(Product $product)
   {
+    // dd($product->toArray());
     return [
       'uuid' => (string)$product->product_uuid,
       'model' => (string)$product->product_model->name,
@@ -26,6 +27,9 @@ class ProductTransformer
       'cost_price' => $product->cost_price,
       'selling_price' => $product->proposed_selling_price,
       'status' => $product->product_status->status,
+      'color' => (string)$product->product_color->name,
+      'storage_size' => (string)$product->storage_size->size,
+      'product_expenses_sum' => (string)$product->storage_size->size,
     ];
   }
 
