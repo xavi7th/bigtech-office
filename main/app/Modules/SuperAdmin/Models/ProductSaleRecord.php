@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
@@ -20,6 +21,7 @@ use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Transformers\ProductSaleRecordTransformer;
+use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductSaleRecord
@@ -178,12 +180,16 @@ class ProductSaleRecord extends BaseModel
       'sales_channel:id,channel_name',
       'bank_account_payments'
     )->whereDate('created_at', Carbon::parse($date))->get();
+
+    $companyAccounts = Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
+
     if ($request->isApi()) {
       return response()->json((new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic'), 200);
     } else {
       return Inertia::render('SuperAdmin,Products/SalesRecords', [
         'salesRecords' => (new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic'),
-        'date' => $date
+        'date' => $date,
+        'companyAccounts' => $companyAccounts
       ]);
     }
   }

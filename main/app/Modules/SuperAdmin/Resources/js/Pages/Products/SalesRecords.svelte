@@ -1,11 +1,15 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
+  import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
   import route from "ziggy";
 
-  $: ({ app, salesRecords, date } = $page);
+  $: ({ app } = $page);
 
-  console.log(salesRecords);
+  export let salesRecords = [],
+    date,
+    companyAccounts = [];
+  let productToMarkAsPaid;
 </script>
 
 <Layout title="Sales Records | {date}">
@@ -26,143 +30,58 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">33</th>
-              <td>iPhone 7+</td>
-              <td>imei:EcEgAoVpL0Oc</td>
-              <td>ta@fotheelects.com</td>
-              <td>43,916.85</td>
-              <td>71,172.96</td>
-              <td>Facebook</td>
-              <td>
-                {#if false}
-                  accountant@theelects.com
-                {:else}
-                  <button type="button" class="btn btn-warning btn-sm">
-                    Confirm Payment
-                  </button>
-                {/if}
-                &nbsp;
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">35</th>
-              <td>iPhone 7+</td>
-              <td>imei:lpotRNva0aQbQjU</td>
-              <td>zewitok@theelects.com</td>
-              <td>30,316.40</td>
-              <td>75,896.95</td>
-              <td>Facebook</td>
-              <td>
-                {#if false}
-                  accountant@theelects.com
-                {:else}
-                  <button type="button" class="btn btn-warning btn-sm">
-                    Confirm Payment
-                  </button>
-                {/if}
-                &nbsp;
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">13</th>
-              <td>iPhone 7+</td>
-              <td>imei:18pH96SWElQ1O3</td>
-              <td>jujritugu@entheelects.com</td>
-              <td>57,386.05</td>
-              <td>86,861.2</td>
-              <td>Facebook</td>
-              <td>
-                {#if false}
-                  accountant@theelects.com
-                {:else}
-                  <button type="button" class="btn btn-warning btn-sm">
-                    Confirm Payment
-                  </button>
-                {/if}
-                &nbsp;
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">5</th>
-              <td>iPhone 7+</td>
-              <td>imei:7IfhsL</td>
-              <td>nafa@theelects.com</td>
-              <td>70,478.6</td>
-              <td>62,040.40</td>
-              <td>Facebook</td>
-              <td>
-                {#if false}
-                  accountant@theelects.com
-                {:else}
-                  <button type="button" class="btn btn-warning btn-sm">
-                    Confirm Payment
-                  </button>
-                {/if}
-                &nbsp;
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">27</th>
-              <td>iPhone 7+</td>
-              <td>imei:EWEIEQHvjhcfOn</td>
-              <td>keecnek@ztheelects.com</td>
-              <td>91,947.12</td>
-              <td>54,476.50</td>
-              <td>Facebook</td>
-              <td>
-                {#if false}
-                  accountant@theelects.com
-                {:else}
-                  <button type="button" class="btn btn-warning btn-sm">
-                    Confirm Payment
-                  </button>
-                {/if}
-                &nbsp;
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">20</th>
-              <td>iPhone 7+</td>
-              <td>imei:Y3T8At</td>
-              <td>mef@gtheelects.com</td>
-              <td>54,814.76</td>
-              <td>57,601.67</td>
-              <td>Facebook</td>
-              <td>
-                {#if false}
-                  accountant@theelects.com
-                {:else}
-                  <button type="button" class="btn btn-warning btn-sm">
-                    Confirm Payment
-                  </button>
-                {/if}
-                &nbsp;
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">11</th>
-              <td>iPhone 7+</td>
-              <td>imei:lgFfNShoMpHYLq9NNUG</td>
-              <td>bomjivig@litheelects.com</td>
-              <td>34,236.34</td>
-              <td>71,223.17</td>
-              <td>Facebook</td>
-              <td>
-                {#if false}
-                  accountant@theelects.com
-                {:else}
-                  <button type="button" class="btn btn-warning btn-sm">
-                    Confirm Payment
-                  </button>
-                {/if}
-                &nbsp;
-              </td>
-            </tr>
+            {#each salesRecords as record}
+              <tr>
+                <th scope="row">{record.id}</th>
+                <td>
+                  {record.product_model}
+                  {#if record.is_swap_deal}
+                    <span class="badge badge-danger">SWAP</span>
+                  {/if}
+                </td>
+                <td>{record.primary_identifier}</td>
+                <td>
+                  {record.sales_rep}
+                  <br />
+                  {record.online_rep}
+                </td>
+                <td>{record.proposed_selling_price}</td>
+                <td>{record.selling_price}</td>
+                <td>{record.sales_channel}</td>
+                <td>
+                  {#if record.is_confirmed}
+                    {record.sale_confirmer}
+                    {#if record.is_payment_complete}
+                      <span class="badge badge-success">
+                        AMOUNT PAID: {record.total_bank_payments_amount}
+                      </span>
+                    {:else}
+                      <span class="badge badge-danger">
+                        AMOUNT PAID: {record.total_bank_payments_amount}
+                      </span>
+                    {/if}
+                  {:else}
+                    <button
+                      on:click={() => {
+                        productToMarkAsPaid = record.product_uuid;
+                      }}
+                      data-toggle="modal"
+                      data-target="#enterProductPaymentDetails"
+                      class="btn btn-brand btn-xs btn-sm">
+                      Mark Paid
+                    </button>
+                  {/if}
+                  &nbsp;
+                </td>
+              </tr>
+            {/each}
 
           </tbody>
         </table>
       </div>
     </div>
+  </div>
+  <div slot="modals">
+    <MarkAsPaidModal {companyAccounts} {productToMarkAsPaid} />
   </div>
 </Layout>

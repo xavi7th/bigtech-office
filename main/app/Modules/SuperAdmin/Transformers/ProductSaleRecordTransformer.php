@@ -35,6 +35,7 @@ class ProductSaleRecordTransformer
       'online_rep' => (string)$sale_record->online_rep->full_name . '(' . $sale_record->online_rep->email . ')',
       'sale_confirmer' => $sale_record->sale_confirmer ? (string)$sale_record->sale_confirmer->full_name . '(' . $sale_record->sale_confirmer->email . ')' : null,
       'is_confirmed' => (bool)$sale_record->sale_confirmer,
+      'product_uuid' => (string)$sale_record->product->product_uuid,
     ];
   }
 
