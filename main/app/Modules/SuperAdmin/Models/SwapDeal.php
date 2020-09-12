@@ -126,7 +126,7 @@ class SwapDeal extends BaseModel
         'swap_value' => $request->swap_value,
         'swapped_with' => $request->swapped_with ?? null,
         'app_user_id' => $request->app_user_id ?? null,
-        'product_status_id' => ProductStatus::undergoing_qa_id(),
+        'product_status_id' => ProductStatus::undergoingQaId(),
       ]);
 
       return response()->json((new SwapDealTransformer)->detailed($swap_deal), 201);

@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Models;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
+use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Transformers\AdminActivityLogTransformer;
 
 /**
@@ -30,7 +31,7 @@ use App\Modules\SuperAdmin\Transformers\AdminActivityLogTransformer;
  */
 class ActivityLog extends Model
 {
-  protected $fillable = ['activity'];
+  protected $fillable = ['activity', 'user_id', 'user_type'];
 
   public function user()
   {
@@ -46,15 +47,19 @@ class ActivityLog extends Model
 
   static function notifySuperAdmins(string $activity)
   {
-    SuperAdmin::find(1)->activities()->create([
-      'activity' => $activity
+    ActivityLog::create([
+      'activity' => $activity,
+      'user_id' => 1,
+      'user_type' => SuperAdmin::class,
     ]);
   }
 
   static function notifyAccountants(string $activity)
   {
-    SuperAdmin::find(1)->activities()->create([
-      'activity' => $activity
+    ActivityLog::create([
+      'activity' => $activity,
+      'user_id' => 1,
+      'user_type' => SuperAdmin::class,
     ]);
   }
 

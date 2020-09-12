@@ -68,7 +68,7 @@ class ProductHistory extends BaseModel
         return 'superadmin.miscellaneous.' . $namespace . $name;
       };
       Route::get('', [self::class, 'getDetailedProductHistories'])->name($gen('product_histories', null))->defaults('ex', __e('ss', 'rewind', false));
-      Route::get('{product:id}', [self::class, 'getSingleProductHistory'])->name($gen('view_product_history'))->defaults('ex', __e('ss', 'rewind', true));
+      Route::get('{product:product_uuid}', [self::class, 'getSingleProductHistory'])->name($gen('view_product_history'))->defaults('ex', __e('ss', 'rewind', true));
     });
   }
 
@@ -76,8 +76,7 @@ class ProductHistory extends BaseModel
   {
     $productHistories = (new ProductHistoryTransformer)->collectionTransformer(self::with('product.product_model', 'product_status', 'user')->get(), 'detailed');
 
-    if ($request->isApi())
-      return response()->json($productHistories, 200);
+    if ($request->isApi()) return response()->json($productHistories, 200);
     return Inertia::render('SuperAdmin,Histories/ViewProductHistories', compact('productHistories'));
   }
 

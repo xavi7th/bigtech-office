@@ -8,7 +8,7 @@
 
   $: ({ app, flash, errors } = $page);
 
-  export let productDetails = [],
+  export let productDetails = {},
     productComments = [];
 
   let userComment;

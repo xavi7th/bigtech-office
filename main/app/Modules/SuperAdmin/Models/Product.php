@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
 use App\Modules\SuperAdmin\Models\RamSize;
@@ -38,10 +39,13 @@ use App\Modules\SuperAdmin\Models\ProductSupplier;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\QATestTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
+use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductValidation;
+use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateLocalSupplierProductValidation;
@@ -227,7 +231,7 @@ class Product extends BaseModel
     /**
      * Check if the product has been sold already or confirmed
      */
-    return $this->product_status_id === ProductStatus::sold_id() || $this->product_status_id === ProductStatus::sale_confirmed_id();
+    return $this->product_status_id === ProductStatus::soldId() || $this->product_status_id === ProductStatus::saleConfirmedId();
   }
 
   public function in_stock(): bool
@@ -235,12 +239,12 @@ class Product extends BaseModel
     /**
      * Check if the product has been sold already or confirmed
      */
-    return $this->product_status_id === ProductStatus::in_stock();
+    return $this->product_status_id === ProductStatus::inStockId();
   }
 
   public function with_reseller(): bool
   {
-    return $this->product_status_id === ProductStatus::with_reseller();
+    return $this->product_status_id === ProductStatus::withResellerId();
   }
 
   public function getCostPriceAttribute()
@@ -303,10 +307,13 @@ class Product extends BaseModel
      * ! Filter list based on logged in user.
      */
 
-    $products = (new ProductTransformer)->collectionTransformer(self::justArrived()->with(['product_color', 'storage_size', 'product_status', 'product_model', 'product_price', 'product_expenses_sum'])->get(), 'basic');
+    $products = Cache::rememberForever('products', fn () => (new ProductTransformer)->collectionTransformer(self::with(['product_color', 'storage_size', 'product_status', 'product_model', 'product_price', 'product_expenses_sum'])->get(), 'basic'));
+    $onlineReps = Cache::rememberForever('onlineReps', fn () => (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic'));
+    $salesChannel = Cache::rememberForever('salesChannel', fn () => (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic'));
+    $companyAccounts = Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
 
     if ($request->isApi()) return  response()->json($products, 200);
-    return Inertia::render('SuperAdmin,Products/ListProducts', compact('products'));
+    return Inertia::render('SuperAdmin,Products/ListProducts', compact('products', 'onlineReps', 'salesChannel', 'companyAccounts'));
   }
 
   public function getProductDetails(Request $request, Product $product)
@@ -466,9 +473,9 @@ class Product extends BaseModel
     /**
      * Update the status
      */
-    if ($product_status->id === ProductStatus::sold_id()) {
+    if ($product_status->id === ProductStatus::soldId()) {
       return generate_422_error('Mark this product as sold instead');
-    } elseif ($product_status->id === ProductStatus::sale_confirmed_id()) {
+    } elseif ($product_status->id === ProductStatus::saleConfirmedId()) {
       return generate_422_error('Confirm this product as sold instead');
     } else {
       $product->product_status_id = $request->product_status_id;
@@ -482,12 +489,14 @@ class Product extends BaseModel
   public function markProductAsSold(MarkProductAsSoldValidation $request, self $product)
   {
 
+    dd($product);
+
     DB::beginTransaction();
 
     /**
      * Update product status to sold
      */
-    $product->product_status_id = $status_id = ProductStatus::sold_id();
+    $product->product_status_id = $status_id = ProductStatus::soldId();
 
     /**
      * Create a sales record for the product
@@ -592,7 +601,7 @@ class Product extends BaseModel
       return generate_422_error('This product has not being sold');
     }
 
-    $status_id = ProductStatus::sale_confirmed_id();
+    $status_id = ProductStatus::saleConfirmedId();
 
     if ($product->product_status_id === $status_id) {
       return generate_422_error('This product has being confirmed sold already');

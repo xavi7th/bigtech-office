@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\QueryException;
 use Illuminate\Notifications\Notifiable;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
@@ -210,7 +211,7 @@ class Reseller extends BaseModel
     /**
      * Change the product's status to reflect that it's with reseller
      */
-    $product->product_status_id = ProductStatus::with_reseller();
+    $product->product_status_id = ProductStatus::withResellerId();
     $product->save();
 
     /**
@@ -241,7 +242,7 @@ class Reseller extends BaseModel
      */
     if (!$product->with_reseller()) {
       ActivityLog::notifySuperAdmins(
-        auth(auth()->getDefaultDriver())->user()->email . ' tried to return a product with ' . $product->primary_identifier() . ' from a reseller that wasn\'t signed out to any reseller'
+        $request->user()->email . ' tried to return a product with ' . $product->primary_identifier() . ' from a reseller that wasn\'t signed out to any reseller'
       );
       return generate_422_error('This product is not supposed to be with a reseller');
     }
@@ -254,8 +255,8 @@ class Reseller extends BaseModel
 
       $reseller->reseller_histories()->create([
         'product_id' => $product->id,
-        'handled_by' => auth(auth()->getDefaultDriver())->id(),
-        'handler_type' => get_class(auth(auth()->getDefaultDriver())->user()),
+        'handled_by' => $request->user()->id,
+        'handler_type' => get_class($request->user()),
         'product_status' => 'returned'
       ]);
       /**
@@ -274,7 +275,7 @@ class Reseller extends BaseModel
     /**
      * Change the product's status to reflect that it has been returned to stock
      */
-    $product->product_status_id = ProductStatus::in_stock();
+    $product->product_status_id = ProductStatus::inStockId();
     $product->save();
 
     /**
@@ -283,7 +284,7 @@ class Reseller extends BaseModel
     try {
       $reseller->notify(new ProductUpdate($product));
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Reseller notification failed');
+      ErrLog::notifyAdmin($request->user(), $th, 'Reseller notification failed');
     }
 
     DB::commit();
@@ -301,14 +302,14 @@ class Reseller extends BaseModel
 
     if ($product->is_sold()) {
       ActivityLog::notifySuperAdmins(
-        auth(auth()->getDefaultDriver())->user()->email . ' tried to mark a product with ' . $product->primary_identifier() . ' as sold when it has been previously marked as sold'
+        $request->user()->email . ' tried to mark a product with ' . $product->primary_identifier() . ' as sold when it has been previously marked as sold'
       );
       return generate_422_error('This product is sold already');
     }
 
     if (!$product->with_reseller()) {
       ActivityLog::notifySuperAdmins(
-        auth(auth()->getDefaultDriver())->user()->email . ' tried to mark a product with ' . $product->primary_identifier() . ' from a reseller that wasn\'t signed out to any reseller as returned'
+        $request->user()->email . ' tried to mark a product with ' . $product->primary_identifier() . ' from a reseller that wasn\'t signed out to any reseller as returned'
       );
       return generate_422_error('This product is not supposed to be with a reseller');
     }
@@ -322,8 +323,8 @@ class Reseller extends BaseModel
 
       $reseller->reseller_histories()->create([
         'product_id' => $product->id,
-        'handled_by' => auth(auth()->getDefaultDriver())->id(),
-        'handler_type' => get_class(auth(auth()->getDefaultDriver())->user()),
+        'handled_by' => $request->id(),
+        'handler_type' => get_class($request->user()),
         'product_status' => 'sold'
       ]);
 
@@ -343,7 +344,7 @@ class Reseller extends BaseModel
     /**
      * Change the product's status to reflect that it has been sold
      */
-    $product->product_status_id = ProductStatus::sold_id();
+    $product->product_status_id = ProductStatus::soldId();
     $product->save();
 
     /**
@@ -355,8 +356,8 @@ class Reseller extends BaseModel
       'sales_channel_id' => SalesChannel::reseller_id(),
     ]);
 
-    ActivityLog::notifySuperAdmins(auth(auth()->getDefaultDriver())->user()->email . ' marked product with UUID no: ' . $product->product_uuid . ' as sold.');
-    ActivityLog::notifyAccountants(auth(auth()->getDefaultDriver())->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
+    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with UUID no: ' . $product->product_uuid . ' as sold.');
+    ActivityLog::notifyAccountants($request->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
 
     /**
      * Send CEO of the reseller company an SMS or email that he just picked up a device
@@ -364,7 +365,7 @@ class Reseller extends BaseModel
     try {
       $reseller->notify(new ProductUpdate($product));
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Reseller notification failed');
+      ErrLog::notifyAdmin($request->user(), $th, 'Reseller notification failed');
     }
 
     DB::commit();

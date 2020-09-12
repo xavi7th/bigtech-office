@@ -5,10 +5,17 @@
   import FlashMessage from "@usershared/FlashMessage";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
   import route from "ziggy";
+  import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
+  import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
 
   $: ({ app } = $page);
 
-  export let products;
+  export let products = [],
+    onlineReps = [],
+    companyAccounts = [],
+    salesChannel = [];
+
+  let productToMarkAsPaid, productToMarkAsSold;
 </script>
 
 <Layout title="Stock List">
@@ -61,21 +68,32 @@
                     class="btn btn-primary btn-xs btn-sm">
                     Details
                   </InertiaLink>
+                  {#if product.status == 'in stock'}
+                    <button
+                      type="button"
+                      on:click={() => {
+                        productToMarkAsSold = product.uuid;
+                      }}
+                      data-toggle="modal"
+                      data-target="#enterSalesDetails"
+                      class="btn btn-success btn-xs btn-sm">
+                      Mark Sold
+                    </button>
+                  {/if}
+                  {#if product.status == 'sold'}
+                    <button
+                      on:click={() => {
+                        productToMarkAsPaid = product.uuid;
+                      }}
+                      data-toggle="modal"
+                      data-target="#enterProductPaymentDetails"
+                      class="btn btn-brand btn-xs btn-sm">
+                      Mark Paid
+                    </button>
+                  {/if}
                   <InertiaLink
                     type="button"
-                    href={route('superadmin.products.view_product_details', product.uuid)}
-                    class="btn btn-success btn-xs btn-sm">
-                    Mark Sold
-                  </InertiaLink>
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.view_product_details', 1)}
-                    class="btn btn-brand btn-xs btn-sm">
-                    Mark Paid
-                  </InertiaLink>
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.miscellaneous.view_product_history', 1)}
+                    href={route('superadmin.miscellaneous.view_product_history', product.uuid)}
                     class="btn btn-info btn-xs btn-sm">
                     History
                   </InertiaLink>
@@ -87,5 +105,11 @@
         </table>
       </div>
     </div>
+  </div>
+  <div slot="modals">
+
+    <MarkAsPaidModal {companyAccounts} {productToMarkAsPaid} />
+
+    <MarkAsSoldModal {salesChannel} {onlineReps} {productToMarkAsSold} />
   </div>
 </Layout>

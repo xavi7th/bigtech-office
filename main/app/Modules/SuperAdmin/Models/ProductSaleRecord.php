@@ -192,7 +192,7 @@ class ProductSaleRecord extends BaseModel
   {
 
     $product = $sales_record->product;
-    $status_id = ProductStatus::sale_confirmed_id();
+    $status_id = ProductStatus::saleConfirmedId();
 
     if ($product->product_status_id === $status_id) {
       return generate_422_error('This product has being confirmed sold already');
