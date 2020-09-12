@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Models;
 use Cache;
 use App\BaseModel;
 use Inertia\Inertia;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Awobaz\Compoships\Compoships;
@@ -348,8 +349,11 @@ class Product extends BaseModel
   {
     $aggregatedSalesRecords = ProductSaleRecord::addSelect(DB::raw('COUNT(created_at) as num_of_sales,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
     $aggregatedProductExpenseRecords = ProductExpense::addSelect(DB::raw('COUNT(created_at) as num_of_product_expenses,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
-    $aggregatedOtherExpenseRecords = OtherExpense::addSelect(DB::raw('COUNT(created_at) as num_of_other_expenses,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
-    return Inertia::render('SuperAdmin,Products/DailyRecords', compact('aggregatedSalesRecords', 'aggregatedProductExpenseRecords', 'aggregatedOtherExpenseRecords'));
+    $aggregatedOtherExpenseRecords = OtherExpense::withoutGlobalScope('latest')->addSelect(DB::raw('COUNT(created_at) as num_of_other_expenses,DATE(created_at) as day'))->groupBy('day')->latest('day')->get()->each->setAppends([]);
+
+    $dailyRecords = ($aggregatedOtherExpenseRecords->concat($aggregatedProductExpenseRecords)->concat($aggregatedSalesRecords)->mapToGroups(fn ($item, $key) => [$item['day'] => $item])->transform(fn ($item) => Arr::collapse($item->toArray()))->except('day'))->toArray();
+
+    return Inertia::render('SuperAdmin,Products/DailyRecords', compact('dailyRecords'));
   }
 
   public function getProductsWithResellers(Request $request)

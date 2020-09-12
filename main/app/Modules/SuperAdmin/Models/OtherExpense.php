@@ -90,7 +90,7 @@ class OtherExpense extends BaseModel
 
   public function getExpensesByDate(Request $request, $date)
   {
-    $expenses = Cache::rememberForever('dateExpenses', function () {
+    $expenses = Cache::rememberForever('dateExpenses', function () use ($date) {
       return (new OtherExpenseTransformer)->collectionTransformer(self::with('recorder')->whereDate('created_at', Carbon::parse($date))->get(), 'basic');
     });
     if ($request->isApi()) {

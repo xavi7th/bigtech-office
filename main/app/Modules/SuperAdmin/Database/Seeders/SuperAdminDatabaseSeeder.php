@@ -29,6 +29,7 @@ use App\Modules\SuperAdmin\Database\Seeders\ProductSaleRecordsTableSeeder;
 use App\Modules\SuperAdmin\Database\Seeders\CompanyBankAccountsTableSeeder;
 use App\Modules\SuperAdmin\Database\Seeders\ProductQaTestResultsTableSeeder;
 use App\Modules\SuperAdmin\Database\Seeders\ProductDescriptionSummariesTableSeeder;
+use App\Modules\SuperAdmin\Models\OtherExpense;
 
 class SuperAdminDatabaseSeeder extends Seeder
 {
@@ -42,6 +43,7 @@ class SuperAdminDatabaseSeeder extends Seeder
     Model::unguard();
 
     factory(SuperAdmin::class, 1)->create();
+    factory(OtherExpense::class, 50)->create();
 
     $this->call(ProductBatchesTableSeeder::class);
     $this->call(ProductBrandsTableSeeder::class);

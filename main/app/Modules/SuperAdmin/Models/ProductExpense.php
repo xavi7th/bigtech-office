@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\BaseModel;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -31,17 +32,17 @@ use App\Modules\SuperAdmin\Transformers\ProductExpenseTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class ProductExpense extends Model
+class ProductExpense extends BaseModel
 {
   protected $fillable = [
     'amount',
     'reason',
   ];
 
-  public function __construct()
-  {
-    Inertia::setRootView('superadmin::app');
-  }
+  // public function __construct()
+  // {
+  //   Inertia::setRootView('superadmin::app');
+  // }
 
   public function product()
   {

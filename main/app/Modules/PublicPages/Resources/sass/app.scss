@@ -7,3 +7,8 @@
 @import './vendor/style';
 @import './vendor/all.min';
 @import './vendor/stroyka';
+
+/** PHP DEBUGBAR EXCEPTION NAME BLOCKING EXCEPTION MESSAGE **/
+div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-type {
+	top: -7px !important;
+}
