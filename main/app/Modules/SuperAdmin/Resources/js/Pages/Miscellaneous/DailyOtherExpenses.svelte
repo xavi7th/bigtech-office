@@ -3,7 +3,9 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import route from "ziggy";
 
-  $: ({ app, expenses, date } = $page);
+  $: ({ app } = $page);
+
+  export let expenses, date;
 </script>
 
 <Layout title="Other Expenses | {date}">
@@ -14,22 +16,22 @@
           <thead class="thead-dark">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Model</th>
-              <th scope="col">Product ID</th>
-              <th scope="col">Cost Price</th>
-              <th scope="col">Expense Amount</th>
-              <th scope="col">Expense Reason</th>
+              <th scope="col">Time</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Purpose</th>
+              <th scope="col">Recorder</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">33</th>
-              <td>iPhone 7+</td>
-              <td>imei:45467798097654534235467</td>
-              <td>N24,476</td>
-              <td>N12,500</td>
-              <td>Camera and battery replacement</td>
-            </tr>
+            {#each expenses as expense, idx}
+              <tr>
+                <th scope="row">{idx + 1}</th>
+                <td>{expense.date}</td>
+                <td>{expense.amount}</td>
+                <td>{expense.purpose}</td>
+                <td>{expense.recorder}</td>
+              </tr>
+            {/each}
 
           </tbody>
         </table>

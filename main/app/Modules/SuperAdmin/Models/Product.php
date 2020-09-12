@@ -163,9 +163,14 @@ class Product extends BaseModel
     return $this->hasMany(ProductExpense::class);
   }
 
-  public function product_expenses_sum()
+  public function product_expenses_amount()
   {
     return $this->product_expenses()->selectRaw('product_id, SUM(amount) as expense_amount')->groupBy('product_id');
+  }
+
+  public function product_expenses_sum(): float
+  {
+    return isset($this->product_expenses_amount[0]) ? $this->product_expenses_amount[0]->expense_amount : 0;
   }
 
   public function total_product_expenses(): float
@@ -250,9 +255,8 @@ class Product extends BaseModel
 
   public function getCostPriceAttribute()
   {
-    // dump($this->product_expenses_sum[0]->expense_amount);
-    return is_numeric($this->product_price->cost_price) &&  isset($this->product_expenses_sum[0]) ?
-      to_naira($this->product_expenses_sum[0]->expense_amount + (float)$this->product_price->cost_price) : $this->product_price->cost_price;
+    return is_numeric($this->product_price->cost_price)  ?
+      to_naira($this->product_expenses_sum() + (float)$this->product_price->cost_price) : $this->product_price->cost_price;
   }
 
   public function getProposedSellingPriceAttribute()
@@ -308,7 +312,7 @@ class Product extends BaseModel
      * ! Filter list based on logged in user.
      */
 
-    $products = Cache::rememberForever('products', fn () => (new ProductTransformer)->collectionTransformer(self::with(['product_color', 'storage_size', 'product_status', 'product_model', 'product_price', 'product_expenses_sum'])->get(), 'basic'));
+    $products = Cache::rememberForever('products', fn () => (new ProductTransformer)->collectionTransformer(self::with(['product_color', 'storage_size', 'product_status', 'product_model', 'product_price', 'product_expenses_amount'])->get(), 'basic'));
     $onlineReps = Cache::rememberForever('onlineReps', fn () => (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic'));
     $salesChannel = Cache::rememberForever('salesChannel', fn () => (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic'));
     $companyAccounts = Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));

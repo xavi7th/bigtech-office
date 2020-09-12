@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\SuperAdmin\Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -28,13 +29,13 @@ class ProductExpensesTableSeeder extends Seeder
       array(
         'product_id' => 28,
         'amount' => 5000.0,
-        'reason' => 'Magni et mollitia deserunt exercitationem tempore qui harum ut nobis.',
+        'reason' => 'Camera and battery replacement.',
       ),
       2 =>
       array(
         'product_id' => 2,
         'amount' => 5000.0,
-        'reason' => 'Excepturi quia necessitatibus sunt voluptate voluptatum veritatis aut aperiam.',
+        'reason' => 'Back glass',
       ),
       3 =>
       array(
@@ -46,7 +47,7 @@ class ProductExpensesTableSeeder extends Seeder
       array(
         'product_id' => 21,
         'amount' => 308.0,
-        'reason' => 'Magni fugit aperiam ea soluta mollitia consequuntur.',
+        'reason' => 'Charging port',
       ),
       5 =>
       array(
@@ -58,55 +59,55 @@ class ProductExpensesTableSeeder extends Seeder
       array(
         'product_id' => 3,
         'amount' => 933.0,
-        'reason' => 'Quisquam qui enim fuga autem.',
+        'reason' => 'Charging port',
       ),
       7 =>
       array(
         'product_id' => 22,
         'amount' => 739.0,
-        'reason' => 'Cupiditate temporibus rerum quia non aperiam sapiente quia veniam quaerat.',
+        'reason' => 'Back camera not snapping',
       ),
       8 =>
       array(
         'product_id' => 28,
         'amount' => 451.0,
-        'reason' => 'Veniam corrupti sunt vel velit eum voluptas cupiditate.',
+        'reason' => 'Back camera not snapping',
       ),
       9 =>
       array(
         'product_id' => 21,
         'amount' => 440.0,
-        'reason' => 'Et enim fugiat explicabo iure velit aut provident.',
+        'reason' => 'Back camera not snapping',
       ),
       10 =>
       array(
         'product_id' => 17,
         'amount' => 608.0,
-        'reason' => 'Asperiores aperiam nihil qui dolor.',
+        'reason' => 'Back camera not snapping',
       ),
       11 =>
       array(
         'product_id' => 5,
         'amount' => 993.0,
-        'reason' => 'Ut hic exercitationem.',
+        'reason' => 'Back camera not snapping',
       ),
       12 =>
       array(
         'product_id' => 7,
         'amount' => 2356264.0,
-        'reason' => 'Voluptas doloremque occaecati sit fugiat voluptates eius sunt aperiam.',
+        'reason' => 'Back camera not snapping',
       ),
       13 =>
       array(
         'product_id' => 6,
         'amount' => 1508080.0,
-        'reason' => 'Eos architecto saepe animi.',
+        'reason' => 'Back camera not snapping',
       ),
       14 =>
       array(
         'product_id' => 12,
         'amount' => 2496218.0,
-        'reason' => 'Expedita nemo voluptatem sit hic.',
+        'reason' => 'Back camera not snapping',
       ),
       15 =>
       array(

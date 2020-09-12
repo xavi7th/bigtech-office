@@ -29,7 +29,7 @@ class ProductTransformer
       'status' => $product->product_status->status,
       'color' => (string)$product->product_color->name,
       'storage_size' => (string)$product->storage_size->size,
-      'product_expenses_sum' => (string)$product->storage_size->size,
+      'product_expenses_sum' => (float)$product->product_expenses_sum()
     ];
   }
 
