@@ -7,15 +7,17 @@
   import route from "ziggy";
   import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
+  import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
 
   $: ({ app } = $page);
 
   export let products = [],
+    resellers = [],
     onlineReps = [],
     companyAccounts = [],
     salesChannel = [];
 
-  let productToMarkAsPaid, productToMarkAsSold;
+  let productToMarkAsPaid, productToMarkAsSold, productToGiveReseller;
 </script>
 
 <Layout title="Stock List">
@@ -79,6 +81,17 @@
                       class="btn btn-success btn-xs btn-sm">
                       Mark Sold
                     </button>
+
+                    <button
+                      type="button"
+                      on:click={() => {
+                        productToGiveReseller = product.uuid;
+                      }}
+                      data-toggle="modal"
+                      data-target="#giveProductToReseller"
+                      class="btn btn-warning btn-xs btn-sm">
+                      Give Reseller
+                    </button>
                   {/if}
                   {#if product.status == 'sold'}
                     <button
@@ -111,5 +124,7 @@
     <MarkAsPaidModal {companyAccounts} {productToMarkAsPaid} />
 
     <MarkAsSoldModal {salesChannel} {onlineReps} {productToMarkAsSold} />
+
+    <GiveProductToReseller {resellers} {productToGiveReseller} />
   </div>
 </Layout>

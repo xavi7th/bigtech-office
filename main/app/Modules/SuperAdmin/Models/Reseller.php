@@ -2,15 +2,15 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Cache;
 use App\BaseModel;
-use App\Modules\SalesRep\Models\SalesRep;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\QueryException;
 use Illuminate\Notifications\Notifiable;
+use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,11 +20,11 @@ use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
-use App\Modules\SuperAdmin\Http\Validations\GiveResellerProcuctValidation;
 
 /**
  * App\Modules\SuperAdmin\Models\Reseller
@@ -100,7 +100,7 @@ class Reseller extends BaseModel
       Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name($others('resellers.products', null))->defaults('ex', __e('ss', 'at-sign', true));
       Route::post('create', [self::class, 'createReseller'])->name($others('resellers.create_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
-      Route::post('{reseller}/give-product', [self::class, 'giveProductToReseller'])->name($others('resellers.give_product'))->defaults('ex', __e('ss', 'at-sign', true));
+      Route::post('{reseller}/give-product/{product_uuid}', [self::class, 'giveProductToReseller'])->name($others('resellers.give_product'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::post('{reseller}/{product:product_uuid}/return', [self::class, 'resellerReturnProduct'])->name($others('resellers.return_product'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::post('{reseller}/{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($others('resellers.mark_as_sold'))->defaults('ex', __e('ss', 'at-sign', true));
     });
@@ -108,7 +108,8 @@ class Reseller extends BaseModel
 
   public function getResellers(Request $request)
   {
-    $resellers = (new ResellerTransformer)->collectionTransformer(self::all(), 'basic');
+    $resellers = Cache::rememberForever('resellers', fn () => (new ResellerTransformer)->collectionTransformer(self::all(), 'basic'));
+
     if ($request->isApi()) return response()->json($resellers, 200);
     return Inertia::render('SuperAdmin,Resellers/ManageResellers', compact('resellers'));
   }
@@ -139,6 +140,8 @@ class Reseller extends BaseModel
       } else {
         $reseller = self::create($request->validated());
       }
+
+      Cache::forget('resellers');
 
       if ($request->isApi()) return response()->json((new ResellerTransformer)->basic($reseller), 201);
       return back()->withSuccess('Success');
@@ -172,22 +175,22 @@ class Reseller extends BaseModel
     }
   }
 
-  public function giveProductToReseller(Request $request, self $reseller)
+  public function giveProductToReseller(Request $request, self $reseller,  $product_uuid)
   {
+    try {
+      $product =  Product::where('product_uuid', $product_uuid)->firstOrFail();
+    } catch (ModelNotFoundException $th) {
+      return generate_422_error('Invalid product selected');
+    }
+
     DB::beginTransaction();
-
-    $product = Product::where($request->code_type, $request->product_code)->firstOrFail();
-
-    /**
-     * create a reseller history for picking up this device
-     * ? Default status is tenured
-     */
 
     /**
      * Check if this product is marked as with reseller already
      */
 
     if ($product->with_reseller()) {
+      DB::rollBack();
       ActivityLog::notifySuperAdmins(
         $request->user()->email . ' tried to give a product: ' . $product->primary_identifier() . ' with a reseller to another reseller without signing out from previous reseller'
       );
@@ -195,6 +198,8 @@ class Reseller extends BaseModel
     }
 
     if (!$product->in_stock()) {
+      DB::rollBack();
+
       ActivityLog::notifySuperAdmins(
         $request->user()->email . ' tried to give a product: ' . $product->primary_identifier() . ' that is not listed as being in stock to a reseller'
       );
@@ -202,6 +207,11 @@ class Reseller extends BaseModel
     }
 
     try {
+
+      /**
+       * create a reseller history for picking up this device
+       * ? Default status is tenured
+       */
 
       $reseller->reseller_histories()->create([
         'product_id' => $product->id,
@@ -215,6 +225,7 @@ class Reseller extends BaseModel
        */
       $reseller->products()->save($product);
     } catch (QueryException $th) {
+      ErrLog::notifyAdminAndFail($request->user(), $th, 'Error giving product to reseller');
       if ($th->errorInfo[1] == 1062) {
         return generate_422_error($th->errorInfo[2]);
       }
@@ -240,9 +251,12 @@ class Reseller extends BaseModel
       ErrLog::notifyAdmin($request->user(), $th, 'Reseller notification failed');
     }
 
+    Cache::forget('products');
+
     DB::commit();
 
-    return response()->json((new ProductTransformer)->basic($product), 201);
+    if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
+    return back()->withSuccess('Done. Product has been removed from stock list');
   }
 
   public function resellerReturnProduct(Request $request, self $reseller, Product $product)
@@ -350,7 +364,6 @@ class Reseller extends BaseModel
       ]);
     } catch (QueryException $th) {
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Error trying to mark product from a reseller as sold.');
-
       if ($th->errorInfo[1] == 1062) {
         return generate_422_error($th->errorInfo[2]);
       }
