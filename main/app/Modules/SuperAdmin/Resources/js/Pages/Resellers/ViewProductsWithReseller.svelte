@@ -1,129 +1,243 @@
 <script>
-    import Layout from "@superadmin-shared/SuperAdminLayout";
-    import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-    import { Inertia } from "@inertiajs/inertia";
-    import FlashMessage from "@usershared/FlashMessage";
-    import route from "ziggy";
+  import Layout from "@superadmin-shared/SuperAdminLayout";
+  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { Inertia } from "@inertiajs/inertia";
+  import FlashMessage from "@usershared/FlashMessage";
+  import Modal from "@superadmin-shared/Partials/Modal.svelte";
+  import route from "ziggy";
+  import { getErrorString } from "@public-assets/js/bootstrap";
+  import { afterUpdate, onMount } from "svelte";
 
-    $: ({ errors, auth } = $page);
+  $: ({ errors, auth, flash } = $page);
+
+  export let resellerWithProducts = {};
+  let sellingPrice, productToMarkAsSold;
+
+  let markProductAsSold = () => {
+    swal
+      .fire({
+        title: "Are you sure?",
+        text:
+          "This will mark this product as sold no longer available in the stock list",
+        icon: "question",
+        showCloseButton: false,
+        allowOutsideClick: () => !swal.isLoading(),
+        allowEscapeKey: false,
+        showCancelButton: true,
+        focusCancel: true,
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#725ec3",
+        confirmButtonText: "Yes, carry on!",
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+          return Inertia.post(
+            route("superadmin.resellers.mark_as_sold", [
+              resellerWithProducts.id,
+              productToMarkAsSold
+            ]),
+            {
+              selling_price: sellingPrice
+            },
+            {
+              preserveState: true,
+              preserveScroll: true,
+              only: ["flash", "errors", "resellerWithProducts"]
+            }
+          )
+            .then(() => {
+              if (flash.success) {
+                return true;
+              } else {
+                throw new Error(flash.error || getErrorString(errors));
+              }
+            })
+            .catch(error => {
+              swal.showValidationMessage(`${error}`);
+            });
+        }
+      })
+      .then(result => {
+        if (result.dismiss && result.dismiss == "cancel") {
+          swal.fire(
+            "Canceled!",
+            "You canceled the action. Nothing was changed",
+            "info"
+          );
+        } else if (flash.success) {
+          sellingPrice = null;
+          ToastLarge.fire({
+            title: "Successful!",
+            html: flash.success
+          });
+        } else {
+          swal.close();
+        }
+      });
+  };
+
+  onMount(() => {
+    if (flash.error || _.size(errors) > 0) {
+      ToastLarge.fire({
+        title: "Oops!",
+        html: flash.error || getErrorString(errors),
+        timer: 10000,
+        icon: "error"
+      });
+    } else if (flash.success) {
+      ToastLarge.fire({
+        title: "Completed!",
+        html: flash.success,
+        timer: 3000,
+        icon: "success"
+      });
+    }
+  });
 </script>
 
 <Layout title="Manage Resellers">
-    <div class="row vertical-gap">
-        <div class="col-lg-4 col-xl-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row vertical-gap">
-                        <div class="col-auto">
-                            <div class="rui-profile-img">
-                                <img
-                                    src="/img/logo.png"
-                                    alt="user id card"
-                                    width="100" />
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="rui-profile-info">
-                                <h3 class="rui-profile-info-title h4">
-                                    Ugo Sam Company
-                                </h3>
-                                <small class="text-grey-6 mt-2 mb-15">
-                                    Registered: 25 days ago
-                                </small>
-                                <a class="rui-profile-info-mail" href="#">
-                                    ugosam@hello.com
-                                </a>
-                                <br />
-                                <a class="rui-profile-info-phone" href="#">
-                                    0908 426 6543
-                                </a>
-                            </div>
-                            <br />
-                        </div>
-                    </div>
-                    <div class="rui-profile-numbers">
-                        <div class="row justify-content-center">
-                            <div class="col" />
-                            <div class="col-auto">
-                                <div class="rui-profile-number text-center">
-                                    <h4 class="rui-profile-number-title h2">
-                                        Male
-                                    </h4>
-                                    <small class="text-grey-6">Gender</small>
-                                </div>
-                            </div>
-                            <div class="col p-0" />
-                            <div class="col-auto">
-                                <div class="rui-profile-number text-center">
-                                    <h4 class="rui-profile-number-title h2">
-                                        N/A
-                                    </h4>
-                                    <small class="text-grey-6">
-                                        Date of Birth
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="col" />
-                        </div>
-                    </div>
+  <div class="row vertical-gap">
+    <div class="col-lg-4 col-xl-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="row vertical-gap">
+            <div class="col-auto">
+              <div class="rui-profile-img">
+                <img
+                  src={resellerWithProducts.img_url}
+                  alt="{resellerWithProducts.business_name}'s logo'"
+                  width="100" />
+              </div>
+            </div>
+            <div class="col">
+              <div class="rui-profile-info">
+                <h3 class="rui-profile-info-title h4">
+                  {resellerWithProducts.ceo_name}
+                </h3>
+                <small class="text-grey-6 mt-2 mb-15">
+                  Registered: {resellerWithProducts.registered_on}
+                </small>
+                <br />
+                <a class="rui-profile-info-mail" href="#home">
+                  {resellerWithProducts.phone}
+                </a>
+                <br />
+                <a class="rui-profile-info-phone" href="#home">
+                  {resellerWithProducts.address}
+                </a>
+              </div>
+              <br />
+            </div>
+          </div>
+          <div class="rui-profile-numbers">
+            <div class="row justify-content-center">
+              <div class="col-12">
+                <div class="rui-profile-number text-center">
+                  <h4 class="rui-profile-number-title h2">
+                    {resellerWithProducts.business_name}
+                  </h4>
+                  <small class="text-grey-6">BUSINESS NAME</small>
                 </div>
+              </div>
             </div>
-
-            <hr />
+          </div>
         </div>
+      </div>
 
-        <div class="col-lg-8 col-xl-8">
-            <div
-                class="d-flex align-items-center justify-content-between mb-25">
-                <h2 class="mnb-2" id="formBase">Tenured Products</h2>
-            </div>
-            <div class="table-responsive-md">
-                <table
-                    class="rui-datatable table table-bordered table-bordered
-                    table-sm"
-                    data-order="[]">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Product Code</th>
-                            <th scope="col">Collection Date</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Red</td>
-                            <td>15</td>
-                            <td>June 12th 2020 15:32</td>
-                            <td
-                                class="d-flex justify-content-between
-                                align-content-center">
-                                <InertiaLink
-                                    href={route('superadmin.resellers.return_product', 1)}
-                                    method="post"
-                                    preserve-scroll
-                                    preserve-state
-                                    data={{ product_code: 'htghfg', code_type: 'imei' }}
-                                    class="btn btn-danger btn-xs">
-                                    Return
-                                </InertiaLink>
-                                <InertiaLink
-                                    href={route('superadmin.resellers.pay_for_product', 1)}
-                                    method="post"
-                                    preserve-scroll
-                                    preserve-state
-                                    data={{ product_code: 'htghfg', code_type: 'imei', selling_price: 230000 }}
-                                    class="btn btn-brand btn-xs">
-                                    Mark Paid
-                                </InertiaLink>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
+      <hr />
     </div>
+
+    <div class="col-lg-8 col-xl-8">
+      <div class="d-flex align-items-center justify-content-between mb-25">
+        <h2 class="mnb-2" id="formBase">Tenured Products</h2>
+      </div>
+      <div class="table-responsive-md">
+        <table
+          class="rui-datatable table table-bordered table-bordered table-sm"
+          data-order="[]">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Device</th>
+              <th scope="col">Product Code</th>
+              <th scope="col">Collection Date</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {#each resellerWithProducts.products_in_possession as product, idx}
+              <tr>
+                <td>{idx + 1}</td>
+                <td>{product.color} {product.model} {product.storage_size}</td>
+                <td>{product.identifier}</td>
+                <td>{product.collection_date}</td>
+                <td>
+                  <InertiaLink
+                    href={route('superadmin.resellers.return_product', [
+                      resellerWithProducts.id,
+                      product.uuid
+                    ])}
+                    method="post"
+                    preserve-scroll
+                    preserve-state
+                    only={['flash', 'errors', 'resellerWithProducts']}
+                    class="btn btn-info btn-xs">
+                    Return
+                  </InertiaLink>
+
+                  <button
+                    on:click={() => {
+                      productToMarkAsSold = product.uuid;
+                    }}
+                    data-toggle="modal"
+                    data-target="#enterProductSellingPrice"
+                    class="btn btn-success btn-xs btn-sm">
+                    Mark Sold
+                  </button>
+
+                  <InertiaLink
+                    type="button"
+                    href={route('superadmin.products.view_product_details', product.uuid)}
+                    class="btn btn-primary btn-xs btn-sm">
+                    View Product
+                  </InertiaLink>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div slot="modals">
+
+    <Modal modalId="enterProductSellingPrice" modalTitle="Enter Selling Price">
+
+      <FlashMessage />
+
+      <div class="row vertical-gap sm-gap">
+
+        <div class="col-12">
+          <input
+            type="number"
+            min="0"
+            class="form-control"
+            placeholder="Selling Price"
+            bind:value={sellingPrice} />
+        </div>
+
+      </div>
+      <button
+        on:click={markProductAsSold}
+        slot="footer-buttons"
+        class="btn btn-success btn-long"
+        disabled={!sellingPrice}>
+        <span class="text">Mark As Sold</span>
+      </button>
+    </Modal>
+
+  </div>
+
 </Layout>

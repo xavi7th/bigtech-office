@@ -88,13 +88,15 @@ class ProductTransformer
   {
     return [
       'id' => (int)$product->id,
+      'uuid' => (string)$product->product_uuid,
       'color' => (string)$product->product_color->name,
       'model' => (string)$product->product_model->name,
+      'storage_size' => (string)$product->storage_size->size,
       'identifier' => (string)$product->primary_identifier(),
       'collection_date' => (string)$product->tenure_record->created_at,
-      'status' => (string)$product->tenure_record->status,
-      'cost_price' => $product->product_price->cost_price,
-      'selling_price' => $product->product_price->proposed_selling_price,
+      // 'status' => (string)$product->tenure_record->status,
+      // 'cost_price' => $product->product_price->cost_price,
+      // 'selling_price' => $product->product_price->proposed_selling_price,
     ];
   }
 
@@ -109,8 +111,9 @@ class ProductTransformer
       'reseller' => (string)$product->with_resellers[0]->business_name,
       'reseller_phone' => (string)$product->with_resellers[0]->phone,
       'date_collected' => (string)$product->with_resellers[0]->tenure_record->created_at,
-      'cost_price' => $product->product_price->cost_price,
-      'selling_price' => $product->product_price->proposed_selling_price,
+      'uuid' => $product->product_uuid,
+      // 'cost_price' => $product->product_price->cost_price,
+      // 'selling_price' => $product->product_price->proposed_selling_price,
       // 'collection_date' => (string)$product->tenure_record->created_at,
       // 'status' => (string)$product->tenure_record->status,
     ];

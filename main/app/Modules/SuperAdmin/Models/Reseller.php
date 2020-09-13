@@ -3,9 +3,11 @@
 namespace App\Modules\SuperAdmin\Models;
 
 use App\BaseModel;
+use App\Modules\SalesRep\Models\SalesRep;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\QueryException;
 use Illuminate\Notifications\Notifiable;
@@ -17,9 +19,11 @@ use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
+use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
+use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\GiveResellerProcuctValidation;
 
 /**
@@ -97,8 +101,8 @@ class Reseller extends BaseModel
       Route::post('create', [self::class, 'createReseller'])->name($others('resellers.create_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::post('{reseller}/give-product', [self::class, 'giveProductToReseller'])->name($others('resellers.give_product'))->defaults('ex', __e('ss', 'at-sign', true));
-      Route::post('{reseller}/return-product', [self::class, 'resellerReturnProduct'])->name($others('resellers.return_product'))->defaults('ex', __e('ss', 'at-sign', true));
-      Route::post('{reseller}/pay-for-product', [self::class, 'payForProduct'])->name($others('resellers.pay_for_product'))->defaults('ex', __e('ss', 'at-sign', true));
+      Route::post('{reseller}/{product:product_uuid}/return', [self::class, 'resellerReturnProduct'])->name($others('resellers.return_product'))->defaults('ex', __e('ss', 'at-sign', true));
+      Route::post('{reseller}/{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($others('resellers.mark_as_sold'))->defaults('ex', __e('ss', 'at-sign', true));
     });
   }
 
@@ -109,21 +113,21 @@ class Reseller extends BaseModel
     return Inertia::render('SuperAdmin,Resellers/ManageResellers', compact('resellers'));
   }
 
-  public function getProductsWithReseller(Request $request, self $reseller)
-  {
-    $resellerProducts = (new ResellerTransformer)->transformWithTenuredProducts($reseller->load('products_in_possession'));
-    if ($request->isApi())  return response()->json($resellerProducts, 200);
-    return Inertia::render('SuperAdmin,Resellers/ViewProductsWithReseller', compact('resellerProducts'));
-  }
-
   public function getResellersWithProducts(Request $request)
   {
-    // return self::has('products_in_possession')->with('products_in_possession')->get();
-    $records = (new ResellerTransformer)->collectionTransformer(self::has('products_in_possession')->with('products_in_possession')->get(), 'transformWithTenuredProducts');
+    $resellersWithProducts = (new ResellerTransformer)->collectionTransformer(self::has('products_in_possession')->with('products_in_possession')->get(), 'transformWithTenuredProducts');
 
-    if ($request->isApi())
-      return response()->json($records, 200);
-    return Inertia::render('SuperAdmin,Resellers/ViewResellersWithProducts', compact('records'));
+    if ($request->isApi()) return response()->json($resellersWithProducts, 200);
+    return Inertia::render('SuperAdmin,Resellers/ViewResellersWithProducts', compact('resellersWithProducts'));
+  }
+
+  public function getProductsWithReseller(Request $request, self $reseller)
+  {
+    $resellerWithProducts = fn () => (new ResellerTransformer)->fullDetailsWithTenuredProducts($reseller->load('products_in_possession'));
+    $companyAccounts = fn () => Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
+
+    if ($request->isApi())  return response()->json($resellerWithProducts, 200);
+    return Inertia::render('SuperAdmin,Resellers/ViewProductsWithReseller', compact('resellerWithProducts', 'companyAccounts'));
   }
 
   public function createReseller(CreateResellerValidation $request)
@@ -168,7 +172,7 @@ class Reseller extends BaseModel
     }
   }
 
-  public function giveProductToReseller(GiveResellerProcuctValidation $request, self $reseller)
+  public function giveProductToReseller(Request $request, self $reseller)
   {
     DB::beginTransaction();
 
@@ -182,11 +186,19 @@ class Reseller extends BaseModel
     /**
      * Check if this product is marked as with reseller already
      */
+
     if ($product->with_reseller()) {
       ActivityLog::notifySuperAdmins(
         $request->user()->email . ' tried to give a product: ' . $product->primary_identifier() . ' with a reseller to another reseller without signing out from previous reseller'
       );
       return generate_422_error('This product is already with a reseller');
+    }
+
+    if (!$product->in_stock()) {
+      ActivityLog::notifySuperAdmins(
+        $request->user()->email . ' tried to give a product: ' . $product->primary_identifier() . ' that is not listed as being in stock to a reseller'
+      );
+      return generate_422_error('This product is currently not in the stock list and cannot be given to a reseller');
     }
 
     try {
@@ -196,6 +208,7 @@ class Reseller extends BaseModel
         'handled_by' => $request->user()->id,
         'handler_type' => get_class($request->user()),
       ]);
+
       /**
        * Create an entry in the product reseller table
        * ! syncwithoutdetach()
@@ -232,10 +245,8 @@ class Reseller extends BaseModel
     return response()->json((new ProductTransformer)->basic($product), 201);
   }
 
-  public function resellerReturnProduct(GiveResellerProcuctValidation $request, self $reseller)
+  public function resellerReturnProduct(Request $request, self $reseller, Product $product)
   {
-
-    $product = Product::where($request->code_type, $request->product_code)->firstOrFail();
 
     /**
      * Check if this product is marked as with reseller
@@ -289,16 +300,19 @@ class Reseller extends BaseModel
 
     DB::commit();
 
-    return response()->json((new ProductTransformer)->basic($product), 201);
+    if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
+    return back()->withSuccess('The product has been marked as returned and is back in the stock list');
   }
 
-  public function payForProduct(GiveResellerProcuctValidation $request, self $reseller)
+  public function markProductAsSold(Request $request, self $reseller, Product $product)
   {
+
     if (!$request->selling_price) {
       return generate_422_error('Specify selling price');
     }
-
-    $product = Product::where($request->code_type, $request->product_code)->firstOrFail();
+    if (!is_numeric($request->selling_price)) {
+      return generate_422_error('The selling price must be a number');
+    }
 
     if ($product->is_sold()) {
       ActivityLog::notifySuperAdmins(
@@ -323,7 +337,7 @@ class Reseller extends BaseModel
 
       $reseller->reseller_histories()->create([
         'product_id' => $product->id,
-        'handled_by' => $request->id(),
+        'handled_by' => $request->user()->id,
         'handler_type' => get_class($request->user()),
         'product_status' => 'sold'
       ]);
@@ -335,6 +349,8 @@ class Reseller extends BaseModel
         'status' => 'sold'
       ]);
     } catch (QueryException $th) {
+      ErrLog::notifyAdminAndFail($request->user(), $th, 'Error trying to mark product from a reseller as sold.');
+
       if ($th->errorInfo[1] == 1062) {
         return generate_422_error($th->errorInfo[2]);
       }
@@ -352,11 +368,11 @@ class Reseller extends BaseModel
      */
     $product->product_sales_record()->create([
       'selling_price' => $request->selling_price,
-      'sales_rep_id' => 1,
-      'sales_channel_id' => SalesChannel::reseller_id(),
+      'sales_rep_id' => SalesRep::defaultSystemAccountId(),
+      'sales_channel_id' => SalesChannel::resellerId(),
     ]);
 
-    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with UUID no: ' . $product->product_uuid . ' as sold.');
+    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
     ActivityLog::notifyAccountants($request->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
 
     /**
@@ -370,6 +386,7 @@ class Reseller extends BaseModel
 
     DB::commit();
 
-    return response()->json((new ProductTransformer)->basic($product), 201);
+    if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
+    return back()->withSuccess('Product marked as sold to reseller');
   }
 }

@@ -61,7 +61,7 @@
     }
 
     BlockToast.fire({
-      text: "Marking product as sold ..."
+      text: "Marking product as paid for ..."
     });
 
     _.each(bankRecords, (val, key, coll) => {

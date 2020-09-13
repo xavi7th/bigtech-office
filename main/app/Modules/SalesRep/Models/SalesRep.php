@@ -74,16 +74,21 @@ class SalesRep extends User
   const DASHBOARD_ROUTE_PREFIX = 'sales-reps';
 
 
-  public function is_verified()
-  {
-    return $this->verified_at !== null;
-  }
-
-
   public function stock_request()
   {
     return $this->hasOne(StockRequest::class);
   }
+
+  public function is_verified(): bool
+  {
+    return $this->verified_at !== null;
+  }
+
+  static function defaultSystemAccountId(): int
+  {
+    return 1;
+  }
+
 
 
   static function adminRoutes()

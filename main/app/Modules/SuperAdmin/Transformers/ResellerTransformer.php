@@ -47,4 +47,18 @@ class ResellerTransformer
       'products_in_possession' => (new ProductTransformer)->collectionTransformer($reseller->products_in_possession->load('product_color', 'product_model'), 'transformWithTenureDetails'),
     ];
   }
+
+  public function fullDetailsWithTenuredProducts(Reseller $reseller)
+  {
+    return [
+      'id' => (int)$reseller->id,
+      'business_name' => $reseller->business_name,
+      'ceo_name' => $reseller->ceo_name,
+      'phone' => $reseller->phone,
+      'address' => $reseller->address,
+      'img_url' => $reseller->img_url,
+      'registered_on' => $reseller->created_at->diffForHumans(),
+      'products_in_possession' => (new ProductTransformer)->collectionTransformer($reseller->products_in_possession->load('product_color', 'product_model', 'storage_size'), 'transformWithTenureDetails'),
+    ];
+  }
 }

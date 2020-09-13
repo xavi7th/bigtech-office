@@ -46,7 +46,7 @@ class SalesChannel extends BaseModel
     return $this->hasMany(ProductSaleRecord::class);
   }
 
-  static function reseller_id(): int
+  static function resellerId(): int
   {
     return self::where('channel_name', 'Reseller')->first()->id;
   }

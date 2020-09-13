@@ -305,9 +305,6 @@ class Product extends BaseModel
 
   public function getProducts(Request $request)
   {
-    // $price = ProductPrice::find(1);
-    // dd($price->products->toArray());
-
     /**
      * ! Filter list based on logged in user.
      */
@@ -362,10 +359,8 @@ class Product extends BaseModel
 
   public function getProductsWithResellers(Request $request)
   {
-    $productsWithResellers = (new ProductTransformer)->collectionTransformer(self::has('with_resellers')->with('with_resellers')->get(), 'transformWithResellerDetails');
-    if ($request->isApi()) {
-      return response()->json($productsWithResellers, 200);
-    }
+    $productsWithResellers = (new ProductTransformer)->collectionTransformer(self::has('with_resellers')->with('with_resellers', 'product_color', 'product_model')->get(), 'transformWithResellerDetails');
+    if ($request->isApi())  return response()->json($productsWithResellers, 200);
     return Inertia::render('SuperAdmin,Products/ProductsWithResellers', compact('productsWithResellers'));
   }
 
