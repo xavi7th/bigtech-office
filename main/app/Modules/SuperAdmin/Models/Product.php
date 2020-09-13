@@ -765,6 +765,9 @@ class Product extends BaseModel
       // dump($product->getOriginal());
       // dd($product->toArray());
 
+
+      Cache::forget('products');
+
       /**
        * add an entry for the product trail that it's status changed
        */
