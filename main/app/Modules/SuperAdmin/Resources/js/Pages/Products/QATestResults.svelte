@@ -5,6 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
+import { afterUpdate, onMount } from "svelte";
 
   $: ({ app, errors, flash } = $page);
 
@@ -60,6 +61,27 @@
       return null;
     }
   };
+
+  afterUpdate(() => {
+   if (flash.success) {
+        ToastLarge.fire({
+          title: "Successful!",
+          html: flash.success
+        });
+        delete flash.success
+        comment = null
+
+      } else if (flash.error || _.size(errors) > 0) {
+        ToastLarge.fire({
+          title: "Oops!",
+          html: flash.error || getErrorString(errors),
+          timer: 10000,
+          icon: "error"
+        });
+        delete flash.error
+        errors = null
+      }
+  })
 </script>
 
 <style>
@@ -184,7 +206,7 @@
                     bind:value="{comment}"
                     placeholder="Enter Comment" />
 
-                  <InertiaLink class="btn btn-brand ml-20 {!comment ? 'disabled' : ''}" aria-disabled="true" tabindex="-1" role="button" href="{route('superadmin.products.comment_on_qa_test', product.uuid)}" only="{['comments', 'flash', 'errors']}" preserve-scroll data="{ {comment} }" preserve-state replace  method="post" >Comment</InertiaLink>`
+                  <InertiaLink class="btn btn-brand ml-20 {!comment ? 'disabled' : ''}" aria-disabled="true" tabindex="-1" role="button" href="{route('superadmin.products.comment_on_qa_test', product.uuid)}" only="{['comments', 'flash', 'errors']}" preserveScroll data="{ {comment} }" preserveState replace  method="post" >Comment</InertiaLink>`
                 </div>
               </div>
               <hr />
