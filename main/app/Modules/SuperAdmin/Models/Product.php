@@ -12,11 +12,11 @@ use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
 use App\Modules\SuperAdmin\Models\RamSize;
+
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -285,13 +285,12 @@ class Product extends BaseModel
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true));
       Route::put('{product:product_uuid}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
-      Route::put('{product}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss', null, true));
+      Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss', null, true));
-      Route::get('{product}/qa-tests', [self::class, 'getApplicableProductQATests'])->name($p('applicable_qa_tests'))->defaults('ex', __e('ss', null, true));
-      Route::get('{product}/qa-tests/comments', [self::class, 'getCommentsOnProductQATestResults'])->name($p('qa_test_comments'))->defaults('ex', __e('ss', null, true));
-      Route::post('{product}/qa-tests/comment', [self::class, 'commentOnProductQATestResults'])->name($p('comment_on_qa_test'))->defaults('ex', __e('ss', null, true));
-      Route::get('{product}/qa-test-results', [self::class, 'getProductQATestResults'])->name($p('qa_test_results'))->defaults('ex', __e('ss', null, true));
-      Route::put('{product}/qa-test-results', [self::class, 'updateProductQATestResults'])->name($p('update_qa_result'))->defaults('ex', __e('ss', null, true));
+      Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name($p('applicable_qa_tests'))->defaults('ex', __e('ss', null, true));
+      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name($p('comment_on_qa_test'))->defaults('ex', __e('ss', null, true));
+      Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name($p('qa_test_results'))->defaults('ex', __e('ss', null, true));
+      Route::put('{product:product_uuid}/qa-test-results', [self::class, 'updateProductQATestResults'])->name($p('update_qa_result'))->defaults('ex', __e('ss', null, true));
       Route::get('search', [self::class, 'findProduct'])->name($p('find_product'))->defaults('ex', __e('archive'));
     });
   }
@@ -700,31 +699,35 @@ class Product extends BaseModel
 
   public function getProductQATestResults(Request $request, Product $product)
   {
-    $productQATestResults = (new ProductTransformer)->transformWithTestResults($product->load('qa_tests', 'product_model.qa_tests'));
+    $productQATestResults = fn () => (new ProductTransformer)->transformWithTestResults($product->load('qa_tests', 'product_model.qa_tests'));
+    $productQATestResultsComments = fn () => (new UserCommentTransformer)->collectionTransformer($product->test_result_comments, 'detailed');
 
     if ($request->isApi()) {
-      return response()->json($productQATestResults, 200);
+      return response()->json([
+        'product' => $productQATestResults,
+        'comments' => $productQATestResultsComments,
+      ], 200);
     }
     return Inertia::render('SuperAdmin,Products/QATestResults', [
-      'details' => $productQATestResults
+      'product' => $productQATestResults,
+      'comments' => $productQATestResultsComments,
     ]);
   }
 
   public function updateProductQATestResults(Request $request, self $product)
   {
-    // dd($request->all());
     if (!$request->qa_test_results) {
       return generate_422_error('Specify valid QA tests results');
     }
 
-    $tests = $product->qa_tests()->sync($request->qa_test_results);
+    $filtered = Arr::where($request->qa_test_results, function ($value, $key) {
+      return !empty($value) && !is_null($value['is_qa_certified']);
+    });
 
-    return response()->json($tests, 201);
-  }
+    $tests = $product->qa_tests()->sync($filtered);
 
-  public function getCommentsOnProductQATestResults(self $product)
-  {
-    return response()->json((new UserCommentTransformer)->collectionTransformer($product->test_result_comments, 'detailed'), 200);
+    if ($request->isApi()) return response()->json($tests, 201);
+    return back()->withSuccess('Updated Test Results');
   }
 
   public function commentOnProductQATestResults(CreateProductCommentValidation $request, self $product)
@@ -735,7 +738,8 @@ class Product extends BaseModel
       'comment' => 'Test Result: ' . $request->comment
     ]);
 
-    return response()->json((new UserCommentTransformer)->detailed($comment), 201);
+    if ($request->isApi()) return response()->json((new UserCommentTransformer)->detailed($comment), 201);
+    return back()->withSuccess('Product created');
   }
 
   public function scopeInStock($query)
@@ -753,6 +757,7 @@ class Product extends BaseModel
     parent::boot();
 
     static::creating(function ($product) {
+      Cache::forget('products');
       $product->product_uuid = (string)Str::uuid();
     });
 

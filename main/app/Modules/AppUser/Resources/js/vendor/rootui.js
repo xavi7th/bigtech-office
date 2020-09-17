@@ -1408,7 +1408,7 @@
             }, {
 				key: "initAjax",
 				value: function() {
-					console.log('initAjax disabled by dev');
+					// console.log('initAjax disabled by dev');
 					return;
 					// return D.call(this)
 				}
@@ -1425,14 +1425,14 @@
             }, {
 				key: "initMessenger",
 				value: function() {
-					console.log('initMessenger disabled by dev');
+					// console.log('initMessenger disabled by dev');
 					return;
 					// return _.call(this)
 				}
             }, {
 				key: "initMailbox",
 				value: function() {
-					console.log('initMailbox disabled by dev');
+					// console.log('initMailbox disabled by dev');
 					return;
 					// return E.call(this)
 				}
@@ -1459,7 +1459,7 @@
             }, {
 				key: "initToasts",
 				value: function() {
-					console.log('initToasts disabled by dev');
+					// console.log('initToasts disabled by dev');
 					return;
 					// return F.call(this)
 				}
@@ -1486,7 +1486,7 @@
             }, {
 				key: "initPluginIonRangeslider",
 				value: function() {
-					console.log('initPluginIonRangeslider disabled by dev');
+					// console.log('initPluginIonRangeslider disabled by dev');
 					return;
 					// return L.call(this)
 				}
@@ -1498,14 +1498,14 @@
             }, {
 				key: "initPluginDateRangePicker",
 				value: function() {
-					console.log('initPluginDateRangePicker disabled by dev');
+					// console.log('initPluginDateRangePicker disabled by dev');
 					return;
 					// return K.call(this)
 				}
             }, {
 				key: "initPluginDateTimePicker",
 				value: function() {
-					console.log('initPluginDateTimePicker disabled by dev');
+					// console.log('initPluginDateTimePicker disabled by dev');
 					return;
 					// return G.call(this)
 				}
@@ -1517,7 +1517,7 @@
             }, {
 				key: "initPluginJstree",
 				value: function() {
-					console.log('initPluginJstree disabled by dev');
+					// console.log('initPluginJstree disabled by dev');
 					return;
 					// return V.call(this)
 				}
@@ -1539,7 +1539,7 @@
             }, {
 				key: "initPluginEmojioneArea",
 				value: function() {
-					console.log('initPluginEmojioneArea disabled by dev');
+					// console.log('initPluginEmojioneArea disabled by dev');
 					return;
 					// return tt.call(this)
 				}
@@ -1556,7 +1556,7 @@
             }, {
 				key: "initPluginSweetalert",
 				value: function() {
-					console.log('initPluginSweetalert disabled by dev');
+					// console.log('initPluginSweetalert disabled by dev');
 					return;
 					// return it.call(this)
 				}
@@ -1568,35 +1568,35 @@
             }, {
 				key: "initPluginInputmask",
 				value: function() {
-					console.log('initPluginInputmask disabled by dev');
+					// console.log('initPluginInputmask disabled by dev');
 					return;
 					// return ot.call(this)
 				}
             }, {
 				key: "initPluginSelectize",
 				value: function() {
-					console.log('initPluginSelectize disabled by dev');
+					// console.log('initPluginSelectize disabled by dev');
 					return;
 					// return rt.call(this)
 				}
             }, {
 				key: "initPluginQuill",
 				value: function() {
-					console.log('initPluginQuill disabled by dev');
+					// console.log('initPluginQuill disabled by dev');
 					return;
 					// return st.call(this)
 				}
             }, {
 				key: "initPluginDropzone",
 				value: function() {
-					console.log('initPluginDropzone disabled by dev');
+					// console.log('initPluginDropzone disabled by dev');
 					return;
 					// return lt.call(this)
 				}
             }, {
 				key: "initTransitionFix",
 				value: function() {
-					console.log('initTransitionFix disabled by dev');
+					// console.log('initTransitionFix disabled by dev');
 					return;
 					// return ut.call(this)
 				}

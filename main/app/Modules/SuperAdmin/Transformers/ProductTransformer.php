@@ -67,8 +67,6 @@ class ProductTransformer
       'identifier' => (string)$product->primary_identifier(),
       'qa_tests' => (new QATestTransformer)->collectionTransformer($product->qa_tests, 'transformWithTestResult'),
       'valid_tests' => (new QATestTransformer)->collectionTransformer($product->product_model->qa_tests, 'basic'),
-      'cost_price' => $product->product_price->cost_price,
-      'selling_price' => $product->product_price->proposed_selling_price,
     ];
   }
 
