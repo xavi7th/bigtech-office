@@ -4,6 +4,7 @@ namespace App\Modules\SuperAdmin\Transformers;
 
 use App\Modules\SuperAdmin\Models\ProductBatch;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductPriceTransformer;
 
 
 class ProductBatchTransformer
@@ -16,22 +17,42 @@ class ProductBatchTransformer
       });
   }
 
-  public function basic(ProductBatch $product_batch)
+  public function basic(ProductBatch $productBatch)
   {
     return [
-      'id' => (int)$product_batch->id,
-      'batch_number' => (string)$product_batch->batch_number,
-      'order_date' => (string)$product_batch->order_date->toDateString(),
+      'id' => (int)$productBatch->id,
+      'batch_number' => (string)$productBatch->batch_number,
+      'order_date' => (string)$productBatch->order_date->toDateString(),
     ];
   }
 
-  public function transformWithComment(ProductBatch $product_batch)
+  public function transformWithComment(ProductBatch $productBatch)
   {
     return [
-      'id' => (int)$product_batch->id,
-      'batch_number' => $product_batch->batch_number,
-      'order_date' => $product_batch->order_date,
-      'comments' => (new UserCommentTransformer)->collectionTransformer($product_batch->comments, 'commentDetails'),
+      'id' => (int)$productBatch->id,
+      'batch_number' => $productBatch->batch_number,
+      'order_date' => $productBatch->order_date,
+      'comments' => (new UserCommentTransformer)->collectionTransformer($productBatch->comments, 'commentDetails'),
+    ];
+  }
+
+  public function transformWithPriceDetails(ProductBatch $productBatch)
+  {
+    return [
+      'id' => (int)$productBatch->id,
+      'batch_number' => $productBatch->batch_number,
+      'order_date' => $productBatch->order_date,
+      'prices' => (new ProductPriceTransformer)->collectionTransformer($productBatch->productPrices, 'basic'),
+    ];
+  }
+
+  public function transformWithProductSummaries(ProductBatch $productBatch)
+  {
+    return [
+      'id' => (int)$productBatch->id,
+      'batch_number' => $productBatch->batch_number,
+      'order_date' => $productBatch->order_date,
+      'num_of_products' => $productBatch->products()->count()
     ];
   }
 }

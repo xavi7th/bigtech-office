@@ -5,13 +5,22 @@
 
   let editPrices = false,
     details = {};
+
+  export let productBatchWithPriceDetails = {};
 </script>
 
-<Layout title="View Product Prices">
+<style>
+  td {
+    text-transform: capitalize;
+  }
+</style>
+
+<Layout
+  title="View Product Prices for Batch {productBatchWithPriceDetails.batch_number}">
   <div class="row vertical-gap">
     <div class="col-12">
       <InertiaLink
-        href={route('superadmin.prices.create_page', 'LOCAL-SUPPLIER')}
+        href={route('superadmin.products.create_batch_price', productBatchWithPriceDetails.batch_number)}
         class="btn btn-brand btn-long text-white">
         <span class="text">Create New Price</span>
         <span class="icon">
@@ -28,38 +37,36 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Model</th>
-              <th scope="col">Color</th>
-              <th scope="col">Storage</th>
-              <th scope="col">Grade</th>
               <th scope="col">Supplier</th>
+              <th scope="col">Grade</th>
               <th scope="col">Cost</th>
               <th scope="col">Selling</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Iphone 7+</td>
-              <td>Rose Gold</td>
-              <td>16gb</td>
-              <td>B+</td>
-              <td>Ontronix</td>
-              <td>N75,000</td>
-              <td>
-                N25,000
-                {#if editPrices}
-                  <input type="text" bind:value={details.cost_price} />
-                {:else}
-                  <button
-                    on:click={() => {
-                      editPrices = true;
-                    }}
-                    class="btn btn-link">
-                    Edit
-                  </button>
-                {/if}
-              </td>
-            </tr>
+            {#each productBatchWithPriceDetails.prices as price, idx}
+              <tr>
+                <th scope="row">{idx + 1}</th>
+                <td>{price.color} {price.model} {price.storage_size}</td>
+                <td>{price.supplier}</td>
+                <td>{price.grade}</td>
+                <td>{price.cost_price}</td>
+                <td>
+                  {price.proposed_selling_price}
+                  {#if editPrices}
+                    <input type="text" bind:value={details.cost_price} />
+                  {:else}
+                    <button
+                      on:click={() => {
+                        editPrices = true;
+                      }}
+                      class="btn btn-link">
+                      Edit
+                    </button>
+                  {/if}
+                </td>
+              </tr>
+            {/each}
           </tbody>
         </table>
       </div>

@@ -127,8 +127,6 @@ class ProductPrice extends BaseModel
         return 'superadmin.prices.' . $name;
       };
       // Route::get('', [self::class, 'getProductPrices'])->name($p('view_prices', null))->defaults('ex', __e('ss', 'dollar-sign', false));
-      Route::get('/{productBatch:batch_number}', [self::class, 'getProductPricesByBatch'])->name($p('by_batch', null))->defaults('ex', __e('ss', 'dollar-sign', true));
-      Route::get('{productBatch:batch_number}/create', [self::class, 'createProductPricePage'])->name($p('create_page'))->defaults('ex', __e('ss', 'dollar-sign', true));
       Route::post('create', [self::class, 'createProductPrice'])->name($p('create'))->defaults('ex', __e('ss', 'dollar-sign', true));
       Route::put('{price}/edit', [self::class, 'editProductPrice'])->name($p('edit'))->defaults('ex', __e('ss', 'dollar-sign', true));
     });
@@ -142,25 +140,6 @@ class ProductPrice extends BaseModel
     ), 200);
   }
 
-  public function getProductPricesByBatch(Request $request, ProductBatch $productBatch)
-  {
-    if ($request->isApi()) {
-      return response()->json((new ProductPriceTransformer)->collectionTransformer(
-        $productBatch->productPrices->load('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')->get(),
-        'basic'
-      ), 200);
-    } else {
-      return Inertia::render('SuperAdmin,Products/Prices');
-    }
-  }
-
-  public function createProductPricePage(Request $request, ProductBatch $productBatch)
-  {
-    return Inertia::render('SuperAdmin,Products/CreatePrice', [
-      'batch' => $productBatch
-    ]);
-  }
-
   public function createProductPrice(CreateProductPriceValidation $request)
   {
     try {
@@ -170,7 +149,7 @@ class ProductPrice extends BaseModel
         $product_price->load('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')
       ), 201);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product price not created');
+      ErrLog::notifyAdmin($request->user(), $th, 'Product price not created');
       return response()->json(['err' => 'Product price not created'], 500);
     }
   }
@@ -187,7 +166,7 @@ class ProductPrice extends BaseModel
 
       return response()->json([], 204);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product price not updated');
+      ErrLog::notifyAdmin($request->user(), $th, 'Product price not updated');
       return response()->json(['err' => 'Product price not updated'], 500);
     }
   }

@@ -1,8 +1,6 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import FlashMessage from "@usershared/FlashMessage";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
   import route from "ziggy";
   import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";

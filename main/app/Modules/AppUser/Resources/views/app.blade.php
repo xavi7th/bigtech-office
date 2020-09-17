@@ -21,7 +21,6 @@
 	<meta property="og:description" content="{{$metaDesc ?? 'Sales of phones etc '}}" />
 	<meta property="og:image" content="{{ asset($ogImg ?? '/img/the-elects-logo.png') }}" />
 
-	<link href="{{ mix('css/dashboard-app.css') }}" rel="stylesheet" />
 	<link rel="canonical" href="{{ $cononical ?? route('app.home')}}" />
 	<link rel="icon" type="image/png" href="{{ asset('/img/favicon.png') }}">
 

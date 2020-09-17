@@ -80,31 +80,21 @@ class ProductBatch extends BaseModel
       };
       Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss', 'package', false));
       Route::post('create', [self::class, 'createProductBatch'])->name($p('create_batch'))->defaults('ex', __e('ss', 'package', true));
-      Route::post('{batch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss', 'package', true));
+      Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss', 'package', true));
       Route::get('{productBatch}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss', 'package', true));
+      Route::get('{productBatch:batch_number}/price/create', [self::class, 'createProductPricePage'])->name($p('create_batch_price'))->defaults('ex', __e('ss', 'package', true));
+      Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss', 'package', true));
     });
   }
 
   public function getProductBatches(Request $request)
   {
-    $productBatches = (new ProductBatchTransformer)->collectionTransformer(self::all(), 'basic');
+    $productBatches = (new ProductBatchTransformer)->collectionTransformer(self::all(), 'transformWithProductSummaries');
     if ($request->isApi()) {
       return response()->json($productBatches, 200);
     } else {
       return Inertia::render('SuperAdmin,Products/ManageBatches', [
         'batches' => $productBatches
-      ]);
-    }
-  }
-
-  public function getBatchProducts(Request $request, ProductBatch $productBatch)
-  {
-    $batchProducts = $productBatch->products;
-    if ($request->isApi()) {
-      return response()->json($batchProducts, 200);
-    } else {
-      return Inertia::render('SuperAdmin,Products/BatchProducts', [
-        'products' => $batchProducts
       ]);
     }
   }
@@ -151,5 +141,33 @@ class ProductBatch extends BaseModel
     ]);
 
     return response()->json((new UserCommentTransformer)->basic($comment), 201);
+  }
+
+  public function getBatchProducts(Request $request, ProductBatch $productBatch)
+  {
+    $batchProducts = $productBatch->products;
+    if ($request->isApi()) {
+      return response()->json($batchProducts, 200);
+    } else {
+      return Inertia::render('SuperAdmin,Products/BatchProducts', [
+        'products' => $batchProducts
+      ]);
+    }
+  }
+
+  public function createProductPricePage(Request $request, ProductBatch $productBatch)
+  {
+    return Inertia::render('SuperAdmin,Products/CreatePrice', [
+      'batch' => $productBatch
+    ]);
+  }
+
+  public function getBatchPrices(Request $request, ProductBatch $productBatch)
+  {
+    // $loadedProductBatch = $productBatch->productPrices()->with('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')->get();
+    $productBatchWithPriceDetails = (new ProductBatchTransformer)->transformWithPriceDetails($productBatch->load('productPrices', 'productPrices.product_color', 'productPrices.product_grade', 'productPrices.product_model', 'productPrices.product_supplier', 'productPrices.storage_size', 'productPrices.product_batch'));
+
+    if ($request->isApi()) return response()->json($productBatchWithPriceDetails, 200);
+    return Inertia::render('SuperAdmin,Products/Prices', compact('productBatchWithPriceDetails', 'productBatch'));
   }
 }

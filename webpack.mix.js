@@ -37,9 +37,7 @@ mix.webpackConfig({
     new MomentLocalesPlugin(),
     new CleanWebpackPlugin({
 			dry: false,
-			cleanOnceBeforeBuildPatterns: ['js/*', './*.js', 'robots.txt', 'css/*', 'fonts/*', '/img/*',
-				'./mix-manifest.json']
-
+			cleanOnceBeforeBuildPatterns: ['js/*', './*.js', 'css/*', 'fonts/*', '/img/*', './mix-manifest.json']
 		}),
   ]
 });
@@ -93,51 +91,44 @@ mix
 		}
 	})
 	.extract()
-	// .imagemin(
+	.imagemin(
 
-	// 	[
-	// 		{
-	// 			from: '**/img/**/**.*',
-	// 			to: 'img/[folder]/[name].[ext]',
-	// 			toType: 'template',
-	//    },
-	// 		{
-	// 			from: '**/img/**.*',
-	// 			to: 'img/[name].[ext]',
-	// 			toType: 'template',
-	//    }
-	//   ], {
-	// 		context: './main/app/Modules',
-	// 	}, {
-	// 		optipng: {
-	// 			optimizationLevel: 7
-	// 		},
-	// 		jpegtran: null,
-	// 		plugins: [
-	//               require('imagemin-mozjpeg')({
-	// 				quality: 75,
-	// 				progressive: true,
-	// 			}),
-	//           ],
-	// 	}
-	// )
+		[
+			{
+				from: '**/img/**/**.*',
+				to: 'img/[folder]/[name].[ext]',
+				toType: 'template',
+	   },
+			{
+				from: '**/img/**.*',
+				to: 'img/[name].[ext]',
+				toType: 'template',
+	   }
+	  ], {
+			context: './main/app/Modules',
+		}, {
+			optipng: {
+				optimizationLevel: 7
+			},
+			jpegtran: null,
+			plugins: [
+	              require('imagemin-mozjpeg')({
+					quality: 75,
+					progressive: true,
+				}),
+	          ],
+		}
+	)
 	.then(() => {
 		const _ = require('lodash');
-		// var crypto = require("crypto");
-		// const saltCssId = crypto.randomBytes(20)
-		// 	.toString('hex');
-		// console.log(
-		// 	'\x1b[41m%s\x1b[0m',
-		// 	saltCssId
-		// )
-		// let manifestData = require( './public_html/mix-manifest' )
+
 		let oldManifestData = JSON.parse(fs.readFileSync('./public_html/mix-manifest.json', 'utf-8'))
 		let newManifestData = {};
 
 		_.map(oldManifestData, (actualFilename, mixKeyName) => {
 			if (_.startsWith(mixKeyName, '/css')) {
 				/** Exclude CSS files from renaming for now till we start cache busting them */
-				// newManifestData[mixKeyName] = actualFilename + '?' + saltCssId;
+				newManifestData[mixKeyName] = actualFilename;
 			} else {
 				let newMixKeyName = _.split(mixKeyName, '.')
 					.tap(o => {
