@@ -5,7 +5,7 @@ namespace App\Modules\SuperAdmin\Http\Validations;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
-use App\Modules\AppUser\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
 class CreateProductPriceValidation extends FormRequest
 {
@@ -65,8 +65,4 @@ class CreateProductPriceValidation extends FormRequest
     throw new AxiosValidationExceptionBuilder($validator);
   }
 
-  protected function failedAuthorization()
-  {
-    throw new AuthorizationException('You are yet to get a credit card. Order one first');
-  }
 }

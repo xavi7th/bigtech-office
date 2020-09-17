@@ -11,9 +11,17 @@ use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Traits\Commentable;
+use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Models\ProductPrice;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductGradeTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
+use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
+use Cache;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductBatch
@@ -152,7 +160,13 @@ class ProductBatch extends BaseModel
   public function createProductPricePage(Request $request, ProductBatch $productBatch)
   {
     return Inertia::render('SuperAdmin,Products/CreatePrice', [
-      'batch' => $productBatch
+      'batch' => $productBatch,
+      'models' => fn () => Cache::rememberForever('models', fn () => (new ProductModelTransformer)->collectionTransformer(ProductModel::all(), 'basic')),
+      'brands' => fn () => Cache::rememberForever('brands', fn () => (new ProductBrandTransformer)->collectionTransformer(ProductBrand::all(), 'basic')),
+      'colors' => fn () => Cache::rememberForever('colors', fn () => (new ProductColorTransformer)->collectionTransformer(ProductColor::all(), 'basic')),
+      'grades' => fn () => Cache::rememberForever('grades', fn () => (new ProductGradeTransformer)->collectionTransformer(ProductGrade::all(), 'basic')),
+      'suppliers' => fn () => Cache::rememberForever('suppliers', fn () => (new ProductSupplierTransformer)->collectionTransformer(ProductSupplier::all(), 'basic')),
+      'storage_sizes' => fn () => Cache::rememberForever('storage_sizes', fn () => (new StorageSizeTransformer)->collectionTransformer(StorageSize::all(), 'basic')),
     ]);
   }
 

@@ -39,22 +39,22 @@ class StorageSize extends BaseModel
   protected $fillable = ['size'];
   protected $casts = ['size' => 'double'];
 
-  public function getSizeAttribute($value): string
+  public function getHumanSizeAttribute(): string
   {
 
     switch (true) {
-      case $value <= 1:
-        return $value * 1000 . 'MB';
+      case $this->size <= 1:
+        return $this->size * 1000 . 'MB';
         break;
-      case $value < 1000:
-        return $value . 'GB';
+      case $this->size < 1000:
+        return $this->size . 'GB';
         break;
-      case $value >= 1000:
-        return $value / 1000 . 'TB';
+      case $this->size >= 1000:
+        return $this->size / 1000 . 'TB';
         break;
 
       default:
-        return $value;
+        return $this->size;
         break;
     }
     return '$value';

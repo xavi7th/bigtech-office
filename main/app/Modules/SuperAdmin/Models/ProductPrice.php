@@ -145,12 +145,23 @@ class ProductPrice extends BaseModel
     try {
       $product_price = self::create($request->validated());
 
-      return response()->json((new ProductPriceTransformer)->basic(
+      if ($request->isApi()) return response()->json((new ProductPriceTransformer)->basic(
         $product_price->load('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')
       ), 201);
+
+      return back()->withSuccess('Product Price created for this batch');
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product price not created');
-      return response()->json(['err' => 'Product price not created'], 500);
+
+      if ($th->getCode() == 23000) {
+        if ($request->isApi()) return response()->json(['err' => 'This item´s price has been created for this batch already. If you want to make corrections, edit it instead.'], 500);
+        return back()->withError('This item´s price has been created for this batch already. If you want to make corrections, edit it instead.');
+      }
+
+      if ($request->isApi()) return response()->json(['err' => 'Product price not created'], 500);
+      return back()->withError('Product price not created');
+
+
     }
   }
 

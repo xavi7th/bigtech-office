@@ -18,7 +18,8 @@ class StorageSizeTransformer
   {
     return [
       'id' => (int)$storage_size->id,
-      'size' => (int)$storage_size->size
+      'size' => $storage_size->size,
+      'human_size' => $storage_size->human_size
     ];
   }
 }
