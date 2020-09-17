@@ -19,6 +19,16 @@ class ProductExpenseTransformer
   {
     return [
       'id' => (int)$product_expense->id,
+      'amount' => (string)to_naira($product_expense->amount),
+      'reason' => (string)$product_expense->reason,
+      'date' => (string)$product_expense->created_at,
+    ];
+  }
+
+  public function transformWithProduct(ProductExpense $product_expense)
+  {
+    return [
+      'id' => (int)$product_expense->id,
       'product' => (new ProductTransformer)->basic($product_expense->product),
       'amount' => (string)to_naira($product_expense->amount),
       'reason' => (string)$product_expense->reason,

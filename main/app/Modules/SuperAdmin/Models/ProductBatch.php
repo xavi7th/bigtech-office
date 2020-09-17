@@ -90,13 +90,11 @@ class ProductBatch extends BaseModel
   public function getProductBatches(Request $request)
   {
     $productBatches = (new ProductBatchTransformer)->collectionTransformer(self::all(), 'transformWithProductSummaries');
-    if ($request->isApi()) {
-      return response()->json($productBatches, 200);
-    } else {
-      return Inertia::render('SuperAdmin,Products/ManageBatches', [
-        'batches' => $productBatches
-      ]);
-    }
+
+    if ($request->isApi()) return response()->json($productBatches, 200);
+    return Inertia::render('SuperAdmin,Products/ManageBatches', [
+      'batches' => $productBatches
+    ]);
   }
 
   public function createProductBatch(Request $request)
@@ -123,7 +121,7 @@ class ProductBatch extends BaseModel
 
       return response()->json((new ProductBatchTransformer)->basic($product_batch), 201);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'Product supplier not created');
+      ErrLog::notifyAdmin($request->user(), $th, 'Product supplier not created');
       return response()->json(['err' => 'Product supplier not created'], 500);
     }
   }
@@ -134,7 +132,7 @@ class ProductBatch extends BaseModel
       return generate_422_error('Make a comment');
     }
 
-    $comment =  auth()->user()->comments()->create([
+    $comment =  $request->user()->comments()->create([
       'subject_id' => $productBatch->id,
       'subject_type' => get_class($productBatch),
       'comment' => $request->comment
@@ -145,7 +143,6 @@ class ProductBatch extends BaseModel
 
   public function getBatchProducts(Request $request, ProductBatch $productBatch)
   {
-
     $batchWithProducts = (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load('products', 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch'));
 
     if ($request->isApi()) return response()->json($batchWithProducts, 200);

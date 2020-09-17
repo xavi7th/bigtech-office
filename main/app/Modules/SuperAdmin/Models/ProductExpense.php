@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Transformers\ProductExpenseTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductExpense
@@ -57,8 +58,8 @@ class ProductExpense extends BaseModel
       };
       // Route::get('', [self::class, 'getAllProductExpenses'])->name($p('create_expense'))->defaults('ex', __e('ss', 'credit-card', true));
       Route::get('{date}', [self::class, 'getDailyProductExpenses'])->name($p('daily_expenses'))->defaults('ex', __e('ss', 'credit-card', true));
-      Route::get('{product}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss', null, true));
-      Route::post('{product}/create', [self::class, 'createProductExpense'])->name($p('create_product_expense'))->defaults('ex', __e('ss', null, true));
+      Route::get('product/{product:product_uuid}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss', null, true));
+      Route::post('product/{product:product_uuid}/create', [self::class, 'createProductExpense'])->name($p('create_product_expense'))->defaults('ex', __e('ss', null, true));
     });
   }
 
@@ -81,19 +82,17 @@ class ProductExpense extends BaseModel
 
   public function getProductExpenses(Request $request, Product $product)
   {
-    if ($request->isApi()) {
-      return response()->json((new ProductExpenseTransformer)->collectionTransformer($product->product_expenses, 'basic'), 200);
-    } else {
-      return Inertia::render('SuperAdmin,Products/Expenses', [
-        'expenses' => (new ProductExpenseTransformer)->collectionTransformer($product->product_expenses, 'basic')
-      ]);
-    }
+    $productWithExpenses = (new ProductExpenseTransformer)->collectionTransformer($product->product_expenses, 'basic');
+    $product = ['uuid' => $product->product_uuid, 'identifier' => $product->primary_identifier()];
+
+    if ($request->isApi()) return response()->json($productWithExpenses, 200);
+    return Inertia::render('SuperAdmin,Products/Expenses', compact('productWithExpenses', 'product'));
   }
 
-  public function createProductExpense(Request $request, self $product)
+  public function createProductExpense(Request $request, Product $product)
   {
     if (!$request->amount || !$request->reason) {
-      return generate_422_error('Amount and expense reason required');
+      return generate_422_error('Amount and reason for expense required');
     }
 
     if (!is_numeric($request->amount)) {
@@ -103,9 +102,10 @@ class ProductExpense extends BaseModel
     try {
       $product_expense = $product->product_expenses()->create($request->only(['amount', 'reason']));
 
-      return response()->json((new ProductExpenseTransformer)->basic($product_expense), 201);
+      if ($request->isApi()) return response()->json((new ProductExpenseTransformer)->basic($product_expense), 201);
+      return back()->withSuccess('Expense created');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth(auth()->getDefaultDriver())->user(), $th, 'ProductExpense not created');
+      ErrLog::notifyAdmin($request->user(), $th, 'ProductExpense not created');
       return response()->json(['err' => 'ProductExpense not created'], 500);
     }
   }
