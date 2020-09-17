@@ -81,7 +81,7 @@ class ProductBatch extends BaseModel
       Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss', 'package', false));
       Route::post('create', [self::class, 'createProductBatch'])->name($p('create_batch'))->defaults('ex', __e('ss', 'package', true));
       Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss', 'package', true));
-      Route::get('{productBatch}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss', 'package', true));
+      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss', 'package', true));
       Route::get('{productBatch:batch_number}/price/create', [self::class, 'createProductPricePage'])->name($p('create_batch_price'))->defaults('ex', __e('ss', 'package', true));
       Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss', 'package', true));
     });
@@ -145,14 +145,11 @@ class ProductBatch extends BaseModel
 
   public function getBatchProducts(Request $request, ProductBatch $productBatch)
   {
-    $batchProducts = $productBatch->products;
-    if ($request->isApi()) {
-      return response()->json($batchProducts, 200);
-    } else {
-      return Inertia::render('SuperAdmin,Products/BatchProducts', [
-        'products' => $batchProducts
-      ]);
-    }
+
+    $batchWithProducts = (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load('products', 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch'));
+
+    if ($request->isApi()) return response()->json($batchWithProducts, 200);
+    return Inertia::render('SuperAdmin,Products/BatchProducts', compact('batchWithProducts'));
   }
 
   public function createProductPricePage(Request $request, ProductBatch $productBatch)
@@ -164,7 +161,7 @@ class ProductBatch extends BaseModel
 
   public function getBatchPrices(Request $request, ProductBatch $productBatch)
   {
-    // $loadedProductBatch = $productBatch->productPrices()->with('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')->get();
+    // $productBatch->products()->with('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')->get()
     $productBatchWithPriceDetails = (new ProductBatchTransformer)->transformWithPriceDetails($productBatch->load('productPrices', 'productPrices.product_color', 'productPrices.product_grade', 'productPrices.product_model', 'productPrices.product_supplier', 'productPrices.storage_size', 'productPrices.product_batch'));
 
     if ($request->isApi()) return response()->json($productBatchWithPriceDetails, 200);

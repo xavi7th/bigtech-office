@@ -55,4 +55,14 @@ class ProductBatchTransformer
       'num_of_products' => $productBatch->products()->count()
     ];
   }
+
+  public function transformWithBasicProductDetails(ProductBatch $productBatch)
+  {
+    return [
+      'id' => (int)$productBatch->id,
+      'batch_number' => $productBatch->batch_number,
+      'order_date' => $productBatch->order_date,
+      'products' => (new ProductTransformer)->collectionTransformer($productBatch->products, 'basic')
+    ];
+  }
 }
