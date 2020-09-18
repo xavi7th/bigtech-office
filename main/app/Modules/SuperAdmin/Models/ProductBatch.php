@@ -170,6 +170,7 @@ class ProductBatch extends BaseModel
     ]);
   }
 
+
   public function getBatchPrices(Request $request, ProductBatch $productBatch)
   {
     // $productBatch->products()->with('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')->get()

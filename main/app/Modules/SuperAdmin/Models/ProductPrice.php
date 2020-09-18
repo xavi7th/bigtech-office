@@ -6,17 +6,25 @@ use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Awobaz\Compoships\Compoships;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\ProductBatch;
+use App\Modules\SuperAdmin\Models\ProductBrand;
 use App\Modules\SuperAdmin\Models\ProductColor;
 use App\Modules\SuperAdmin\Models\ProductGrade;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Models\ProductSupplier;
+use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductGradeTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductPriceTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductPriceValidation;
 
 /**
@@ -128,7 +136,8 @@ class ProductPrice extends BaseModel
       };
       // Route::get('', [self::class, 'getProductPrices'])->name($p('view_prices', null))->defaults('ex', __e('ss', 'dollar-sign', false));
       Route::post('create', [self::class, 'createProductPrice'])->name($p('create'))->defaults('ex', __e('ss', 'dollar-sign', true));
-      Route::put('{price}/edit', [self::class, 'editProductPrice'])->name($p('edit'))->defaults('ex', __e('ss', 'dollar-sign', true));
+      Route::get('{productPrice}/edit', [self::class, 'showEditProductPricePage'])->name($p('edit_page'))->defaults('ex', __e('ss', 'dollar-sign', true));
+      Route::put('{productPrice}/edit', [self::class, 'editProductPrice'])->name($p('edit'))->defaults('ex', __e('ss', 'dollar-sign', true));
     });
   }
 
@@ -165,20 +174,38 @@ class ProductPrice extends BaseModel
     }
   }
 
-  public function editProductPrice(CreateProductPriceValidation $request, self $product_price)
+  public function showEditProductPricePage(Request $request, self $productPrice)
   {
 
+    // dd($productPrice);
+
+    return Inertia::render('SuperAdmin,Products/EditPrice', [
+      'price' => $productPrice->load('product_batch'),
+      'models' => fn () => Cache::rememberForever('models', fn () => (new ProductModelTransformer)->collectionTransformer(ProductModel::all(), 'basic')),
+      'brands' => fn () => Cache::rememberForever('brands', fn () => (new ProductBrandTransformer)->collectionTransformer(ProductBrand::all(), 'basic')),
+      'colors' => fn () => Cache::rememberForever('colors', fn () => (new ProductColorTransformer)->collectionTransformer(ProductColor::all(), 'basic')),
+      'grades' => fn () => Cache::rememberForever('grades', fn () => (new ProductGradeTransformer)->collectionTransformer(ProductGrade::all(), 'basic')),
+      'suppliers' => fn () => Cache::rememberForever('suppliers', fn () => (new ProductSupplierTransformer)->collectionTransformer(ProductSupplier::all(), 'basic')),
+      'storage_sizes' => fn () => Cache::rememberForever('storage_sizes', fn () => (new StorageSizeTransformer)->collectionTransformer(StorageSize::all(), 'basic')),
+    ]);
+  }
+
+
+  public function editProductPrice(CreateProductPriceValidation $request, self $productPrice)
+  {
     try {
       foreach ($request->validated() as $key => $value) {
-        $product_price->$key = $value;
+        $productPrice->$key = $value;
       }
 
-      $product_price->save();
+      $productPrice->save();
 
-      return response()->json([], 204);
+      if ($request->isApi()) return response()->json([], 204);
+      return back()->withSuccess('Updated successfully');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product price not updated');
-      return response()->json(['err' => 'Product price not updated'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Batch price not updated');
+      if ($request->isApi()) return response()->json(['err' => 'Batch price not updated'], 500);
+      return back()->withError('Batch Price not updated');
     }
   }
 }

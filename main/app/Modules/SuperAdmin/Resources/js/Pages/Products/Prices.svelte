@@ -53,17 +53,13 @@
                 <td>{price.cost_price}</td>
                 <td>
                   {price.proposed_selling_price}
-                  {#if editPrices}
-                    <input type="text" bind:value={details.cost_price} />
-                  {:else}
-                    <button
-                      on:click={() => {
-                        editPrices = true;
-                      }}
+
+                    <InertiaLink
+                      href={route('superadmin.prices.edit_page', price.id)}
                       class="btn btn-link">
                       Edit
-                    </button>
-                  {/if}
+                    </InertiaLink>
+
                 </td>
               </tr>
             {/each}
