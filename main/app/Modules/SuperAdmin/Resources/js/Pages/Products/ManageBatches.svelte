@@ -2,31 +2,73 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
+  import { getErrorString } from "@public-assets/js/bootstrap";
   import route from "ziggy";
-  import FlashMessage from "@usershared/FlashMessage";
-  import Icon from "@superadmin-shared/Partials/TableSortIcon";
-  import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
-  import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
-  import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
 
-  $: ({ app } = $page);
+  $: ({ app , flash, errors} = $page);
 
   export let batches = [];
+  let batch_number, auto_generate, order_date;
+
+  let createNewBatch = () => {
+    BlockToast.fire({
+      text: "Creating new batch for today ..."
+    });
+
+    Inertia.post(
+      route("superadmin.products.create_batch"),
+      {batch_number, auto_generate, order_date},
+      {
+        preserveState: true,
+        preserveScroll: true,
+        only: ["flash", "errors", 'batches']
+      }
+    ).then(() => {
+      if (flash.success) {
+        ToastLarge.fire({
+          title: "Successful!",
+          html: flash.success
+        });
+
+      } else if (flash.error || _.size(errors) > 0) {
+        ToastLarge.fire({
+          title: "Oops!",
+          html: flash.error || getErrorString(errors),
+          timer: 10000,
+          icon: "error"
+        });
+      } else {
+        swal.close();
+      }
+    });
+  };
 </script>
 
 <Layout title="Manage Product Batches">
   <div class="row vertical-gap">
     <div class="col-lg-4 offset-lg-4 order-1">
-      <form class="#">
+      <form class="#" on:submit|preventDefault="{createNewBatch}">
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
-            <label for="exampleBase1">
+            <label for="orderDate">
+              Date of Order
+            </label>
+            <input
+              type="date"
+              class="form-control"
+              id="orderDate"
+              bind:value="{order_date}"
+              placeholder="Enter Order Date." />
+          </div>
+          <div class="col-12">
+            <label for="batchNumber">
               Batch No.(Show for only stock keeper)
             </label>
             <input
               type="text"
+              id="batchNumber"
               class="form-control"
-              id="exampleBase1"
+              bind:value="{batch_number}"
               placeholder="Enter Batch No." />
           </div>
           <div class="col-12">
@@ -34,21 +76,21 @@
               <input
                 type="checkbox"
                 class="custom-control-input"
-                id="customCheck1" />
-              <label class="custom-control-label" for="customCheck1">
+                bind:checked="{auto_generate}"
+                id="autoGenerate" />
+              <label class="custom-control-label" for="autoGenerate">
                 Auto-generate batch no.
               </label>
             </div>
             <br />
-            <button type="button" class="btn btn-brand btn-long">
-              <span class="text">Add Batch</span>
+            <button class="btn btn-brand btn-long">
+              <span class="text">Create New Batch</span>
               <span class="icon">
                 <span
                   data-feather="check-circle"
                   class="rui-icon rui-icon-stroke-1_5" />
               </span>
             </button>
-            &nbsp;
           </div>
         </div>
       </form>
@@ -76,7 +118,7 @@
                   </span>
                 </td>
                 <td class="text-nowrap">
-                  {new Date().toDateString(batch.order_date)}
+                  {new Date(batch.order_date).toDateString()}
                 </td>
                 <td class="d-flex">
                   <InertiaLink

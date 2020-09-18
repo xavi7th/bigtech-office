@@ -97,7 +97,7 @@ class ProductBatch extends BaseModel
 
   public function getProductBatches(Request $request)
   {
-    $productBatches = (new ProductBatchTransformer)->collectionTransformer(self::all(), 'transformWithProductSummaries');
+    $productBatches = (new ProductBatchTransformer)->collectionTransformer(self::latest()->get(), 'transformWithProductSummaries');
 
     if ($request->isApi()) return response()->json($productBatches, 200);
     return Inertia::render('SuperAdmin,Products/ManageBatches', [
@@ -127,10 +127,12 @@ class ProductBatch extends BaseModel
         'order_date' => Carbon::parse($request->order_date),
       ]);
 
-      return response()->json((new ProductBatchTransformer)->basic($product_batch), 201);
+      if ($request->isApi()) return response()->json((new ProductBatchTransformer)->basic($product_batch), 201);
+      return back()->withSuccess('New batch created');
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product supplier not created');
-      return response()->json(['err' => 'Product supplier not created'], 500);
+      ErrLog::notifyAdmin($request->user(), $th, 'Batch not created');
+      if ($request->isApi()) return response()->json(['err' => 'Batch not created'], 500);
+      return back()->withError('Batch not created');
     }
   }
 
@@ -169,7 +171,6 @@ class ProductBatch extends BaseModel
       'storage_sizes' => fn () => Cache::rememberForever('storage_sizes', fn () => (new StorageSizeTransformer)->collectionTransformer(StorageSize::all(), 'basic')),
     ]);
   }
-
 
   public function getBatchPrices(Request $request, ProductBatch $productBatch)
   {

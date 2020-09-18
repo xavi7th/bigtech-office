@@ -1,14 +1,13 @@
 <script>
-    import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+    import { page } from "@inertiajs/inertia-svelte";
     import { Inertia } from "@inertiajs/inertia";
     import Layout from "@superadmin-shared/SuperAdminLayout";
-    import FlashMessage from "@usershared/FlashMessage";
     import route from "ziggy";
-import { getErrorString } from "@public-assets/js/bootstrap";
+    import { getErrorString } from "@public-assets/js/bootstrap";
 
     export let models,brands,colors,grades,suppliers,storage_sizes, price;
 
-    $: ({ app,flash,errors } = $page);
+    $: ({ flash,errors } = $page);
 
   let updateBatchPrice = () => {
     BlockToast.fire({
