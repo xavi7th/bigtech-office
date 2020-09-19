@@ -18,7 +18,7 @@ class CreateSwapDealValidation extends FormRequest
    */
   public function rules()
   {
-    if ($this->method('PUT')) {
+    if ($this->isMethod('PUT')) {
       return [
         'description' => 'nullable|string',
         'selling_price' => 'nullable|numeric',

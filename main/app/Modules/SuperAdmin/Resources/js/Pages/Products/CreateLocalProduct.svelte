@@ -29,7 +29,7 @@
     Inertia.post(route("superadmin.products.create_local"), details, {
       preserveState: true,
       preserveScroll: true,
-      only: ["flash", "errors", "batch"]
+      only: ["flash", "errors"]
     }).then(() => {
       if (flash.success) {
         ToastLarge.fire({

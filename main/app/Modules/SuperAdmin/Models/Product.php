@@ -12,6 +12,7 @@ use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
+use Illuminate\Database\QueryException;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
@@ -49,6 +50,7 @@ use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
 use App\Modules\SuperAdmin\Transformers\StorageTypeTransformer;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductGradeTransformer;
@@ -62,7 +64,6 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateLocalSupplierProductValidation;
-use Illuminate\Database\QueryException;
 
 class Product extends BaseModel
 {
@@ -379,7 +380,18 @@ class Product extends BaseModel
 
   public function showCreateProductForm()
   {
-    return Inertia::render('SuperAdmin,Products/CreateProduct');
+    return Inertia::render('SuperAdmin,Products/CreateProduct', [
+      'batches' => fn () => Cache::remember('batches', (15 * 60 * 60), fn () => (new ProductBatchTransformer)->collectionTransformer(ProductBatch::latest()->take(10)->get(), 'basic')),
+      'categories' => fn () => Cache::rememberForever('categories', fn () => (new ProductCategoryTransformer)->collectionTransformer(ProductCategory::all(), 'basic')),
+      'models' => fn () => Cache::rememberForever('models', fn () => (new ProductModelTransformer)->collectionTransformer(ProductModel::all(), 'basic')),
+      'brands' => fn () => Cache::rememberForever('brands', fn () => (new ProductBrandTransformer)->collectionTransformer(ProductBrand::all(), 'basic')),
+      'colors' => fn () => Cache::rememberForever('colors', fn () => (new ProductColorTransformer)->collectionTransformer(ProductColor::all(), 'basic')),
+      'grades' => fn () => Cache::rememberForever('grades', fn () => (new ProductGradeTransformer)->collectionTransformer(ProductGrade::all(), 'basic')),
+      'suppliers' => fn () => Cache::rememberForever('suppliers', fn () => (new ProductSupplierTransformer)->collectionTransformer(ProductSupplier::all(), 'basic')),
+      'storage_sizes' => fn () => Cache::rememberForever('storage_sizes', fn () => (new StorageSizeTransformer)->collectionTransformer(StorageSize::all(), 'basic')),
+      'storage_types' => fn () => Cache::rememberForever('storage_types', fn () => (new StorageTypeTransformer)->collectionTransformer(StorageType::all(), 'basic')),
+      'processor_speeds' => fn () => Cache::rememberForever('processor_speeds', fn () => (new ProcessorSpeedTransformer)->collectionTransformer(ProcessorSpeed::all(), 'basic')),
+    ]);
   }
 
   public function createProduct(CreateProductValidation $request)
@@ -401,6 +413,9 @@ class Product extends BaseModel
 
   public function showCreateLocalProductForm()
   {
+    /**
+     * ! Only those who are allowed to set price should see this page
+     */
     return Inertia::render('SuperAdmin,Products/CreateLocalProduct', [
       'categories' => fn () => Cache::rememberForever('categories', fn () => (new ProductCategoryTransformer)->collectionTransformer(ProductCategory::all(), 'basic')),
       'models' => fn () => Cache::rememberForever('models', fn () => (new ProductModelTransformer)->collectionTransformer(ProductModel::all(), 'basic')),
@@ -784,22 +799,14 @@ class Product extends BaseModel
     parent::boot();
 
     static::creating(function ($product) {
-      Cache::forget('products');
       $product->product_uuid = (string)Str::uuid();
     });
 
-    // static::retrieved(function ($product) {
-    // 	$product->load('product_price');
-    // });
+    static::saved(function ($product) {
+    	Cache::forget('products');
+    });
 
     static::updating(function ($product) {
-
-      // dump($product->getOriginal());
-      // dd($product->toArray());
-
-
-      Cache::forget('products');
-
       /**
        * add an entry for the product trail that it's status changed
        */
