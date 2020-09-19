@@ -6,8 +6,9 @@
     import Icon from "@superadmin-shared/Partials/TableSortIcon";
     import route from "ziggy";
 
-    $: ({ app, swapDeals } = $page);
-    console.log(swapDeals);
+    $: ({ app } = $page);
+
+    export let swapDeals = [];
 </script>
 
 <Layout title="Awoof Deals">
@@ -40,35 +41,36 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">16</th>
+                        {#each swapDeals as product, idx}
+                          <tr>
+                            <th scope="row">{idx + 1}</th>
                             <td>
-                                Blue samsung s7 edge with small crack on the
-                                screen
+                               {product.description}
                             </td>
-                            <td>imei: 65879G95ldJMbs5X10VnUL1</td>
-                            <td>N306,418.20</td>
+                            <td>{product.identifier}</td>
+                            <td>{product.selling_price}</td>
                             <td class="nowrap">
                                 <InertiaLink
                                     type="button"
-                                    href={route('superadmin.products.swap_deal_details', '0a93adb9-94d7-4eaf-9916-90e198478d38')}
-                                    class="btn btn-primary btn-sm">
+                                    href={route('superadmin.products.swap_deal_details', product.uuid)}
+                                    class="btn btn-primary btn-xs">
                                     Details
                                 </InertiaLink>
                                 <InertiaLink
                                     type="button"
                                     href={route('superadmin.products.view_product_details', 2)}
-                                    class="btn btn-success btn-sm">
+                                    class="btn btn-success btn-xs">
                                     Sold
                                 </InertiaLink>
                                 <InertiaLink
                                     type="button"
                                     href={route('superadmin.products.view_product_details', 1)}
-                                    class="btn btn-brand btn-sm">
+                                    class="btn btn-brand btn-xs">
                                     Paid
                                 </InertiaLink>
                             </td>
                         </tr>
+                        {/each}
                     </tbody>
                 </table>
             </div>

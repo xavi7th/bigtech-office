@@ -76,11 +76,11 @@ class ProductStatus extends BaseModel
     return self::where('status', 'back from repairs')->first()->id;
   }
 
-  /**
-   * Get the Id of the "QA TESTED" status
-   *
-   * @return integer
-   */
+  static function outForRepairsId(): int
+  {
+    return self::where('status', 'out for repairs')->first()->id;
+  }
+
   static function inStockId(): int
   {
     return self::where('status', 'in stock')->first()->id;

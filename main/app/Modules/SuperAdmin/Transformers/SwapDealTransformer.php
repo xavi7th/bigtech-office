@@ -15,37 +15,44 @@ class SwapDealTransformer
       });
   }
 
-  public function basic(SwapDeal $swap_deal): array
+  public function basic(SwapDeal $swapDeal): array
   {
     return [
-      'description' => (string)$swap_deal->description,
-      'primary_identifier' => (string)$swap_deal->primary_identifier(),
+      'description' => (string)$swapDeal->description,
+      'identifier' => (string)$swapDeal->primary_identifier(),
+      'selling_price' => (float)$swapDeal->selling_price,
+      'uuid' => $swapDeal->product_uuid,
     ];
   }
 
-  public function detailed(SwapDeal $swap_deal): array
+  public function detailed(SwapDeal $swapDeal): array
   {
     return [
-      'description' => (string)$swap_deal->description,
-      'seller_details' => (string)$swap_deal->owner_details,
-      'primary_identifier' => (string)$swap_deal->primary_identifier(),
-      'swap_value' => (float)$swap_deal->swap_value,
-      'selling_price' => (float)$swap_deal->selling_price,
-      'sold_at' => (string)$swap_deal->sold_at,
-      'swapped_with' => $swap_deal->swapped_with,
-      'status' => $swap_deal->product_status->status,
-      'uuid' => $swap_deal->product_uuid,
-      'buyer' => optional($swap_deal->app_user)->email,
+      'description' => (string)$swapDeal->description,
+      'seller_details' => (string)$swapDeal->owner_details,
+      'identifier' => (string)$swapDeal->primary_identifier(),
+      'id_url' => (string)$swapDeal->id_url,
+      'id_thumb_url' => (string)$swapDeal->id_thumb_url,
+      'receipt_url' => (string)$swapDeal->receipt_url,
+      'receipt_thumb_url' => (string)$swapDeal->receipt_thumb_url,
+      'swap_value' => (float)$swapDeal->swap_value,
+      'selling_price' => (float)$swapDeal->selling_price,
+      'sold_at' => (float)$swapDeal->sold_at,
+      'swapped_with' => $swapDeal->swapped_with,
+      'status' => $swapDeal->product_status->status,
+      'uuid' => $swapDeal->product_uuid,
+      'comments' => (new UserCommentTransformer)->collectionTransformer($swapDeal->comments, 'commentDetails'),
+      'buyer' => optional($swapDeal->app_user)->email ?? 'N/A',
     ];
   }
 
-  public function transformWithComment(SwapDeal $swap_deal)
+  public function transformWithComment(SwapDeal $swapDeal): array
   {
     return [
-      'id' => (int)$swap_deal->id,
-      'batch_number' => $swap_deal->batch_number,
-      'order_date' => $swap_deal->order_date,
-      'comments' => (new UserCommentTransformer)->collectionTransformer($swap_deal->comments, 'commentDetails'),
+      'id' => (int)$swapDeal->id,
+      'batch_number' => $swapDeal->batch_number,
+      'order_date' => $swapDeal->order_date,
+      'comments' => (new UserCommentTransformer)->collectionTransformer($swapDeal->comments, 'commentDetails'),
     ];
   }
 }

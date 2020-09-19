@@ -5,6 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
+import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
 
   $: ({ app, flash, errors } = $page);
 
@@ -236,40 +237,7 @@
         </div>
       </div>
       <hr />
-      <div
-        class="tab-pane fade show active"
-        id="activity"
-        role="tabpanel"
-        aria-labelledby="activity-tab">
-        <ul class="list-group list-group-flush rui-profile-activity-list">
-          {#each productComments as comment}
-            <li class="list-group-item">
-              <div class="media media-success media-retiring">
-                <p class="media-link">
-                  <span class="media-body">
-                    <span class="media-title">
-                      {comment.user}
-                      <span class="media-time">{comment.date}</span>
-                    </span>
-                    <small class="media-subtitle">{comment.comment}</small>
-                  </span>
-                </p>
-              </div>
-            </li>
-          {:else}
-            <li class="list-group-item">
-              <div class="media media-success media-retiring">
-                <p class="media-link">
-                  <span class="media-body">
-                    <span class="media-title">NO COMMENTS</span>
-                  </span>
-                </p>
-              </div>
-            </li>
-          {/each}
-
-        </ul>
-      </div>
+     <DisplayUserComments comments={productComments}/>
     </div>
   </div>
 </Layout>
