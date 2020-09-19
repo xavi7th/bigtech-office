@@ -152,7 +152,6 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                                     class="rui-icon rui-icon-stroke-1_5" />
                             </span>
                         </button>
-                        &nbsp;
                     </div>
                 </div>
             </form>

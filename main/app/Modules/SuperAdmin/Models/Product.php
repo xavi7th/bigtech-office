@@ -24,12 +24,14 @@ use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
 use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
+use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\ProductBatch;
 use App\Modules\SuperAdmin\Models\ProductBrand;
 use App\Modules\SuperAdmin\Models\ProductColor;
 use App\Modules\SuperAdmin\Models\ProductGrade;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Models\ProductPrice;
+use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ProcessorSpeed;
 use App\Modules\SuperAdmin\Models\ProductExpense;
@@ -39,17 +41,28 @@ use App\Modules\SuperAdmin\Models\ProductSupplier;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\QATestTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
+use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
+use App\Modules\SuperAdmin\Transformers\StorageTypeTransformer;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductGradeTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
+use App\Modules\SuperAdmin\Transformers\ProcessorSpeedTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductValidation;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateLocalSupplierProductValidation;
+use Illuminate\Database\QueryException;
 
 class Product extends BaseModel
 {
@@ -378,11 +391,8 @@ class Product extends BaseModel
         'office_branch_id' => OfficeBranch::head_office_id()
       ])->all());
 
-      if ($request->isApi()) {
-        return response()->json($product, 201);
-      } else {
-        return back()->withSuccess('Product created');
-      }
+      if ($request->isApi()) return response()->json($product, 201);
+      return back()->withSuccess('Product created');
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product not created');
       return response()->json(['err' => 'Product not created'], 500);
@@ -391,39 +401,49 @@ class Product extends BaseModel
 
   public function showCreateLocalProductForm()
   {
-    return Inertia::render('SuperAdmin,Products/CreateLocalProduct');
+    return Inertia::render('SuperAdmin,Products/CreateLocalProduct', [
+      'categories' => fn () => Cache::rememberForever('categories', fn () => (new ProductCategoryTransformer)->collectionTransformer(ProductCategory::all(), 'basic')),
+      'models' => fn () => Cache::rememberForever('models', fn () => (new ProductModelTransformer)->collectionTransformer(ProductModel::all(), 'basic')),
+      'brands' => fn () => Cache::rememberForever('brands', fn () => (new ProductBrandTransformer)->collectionTransformer(ProductBrand::all(), 'basic')),
+      'colors' => fn () => Cache::rememberForever('colors', fn () => (new ProductColorTransformer)->collectionTransformer(ProductColor::all(), 'basic')),
+      'grades' => fn () => Cache::rememberForever('grades', fn () => (new ProductGradeTransformer)->collectionTransformer(ProductGrade::all(), 'basic')),
+      'suppliers' => fn () => Cache::rememberForever('suppliers', fn () => (new ProductSupplierTransformer)->collectionTransformer(ProductSupplier::all(), 'basic')),
+      'storage_sizes' => fn () => Cache::rememberForever('storage_sizes', fn () => (new StorageSizeTransformer)->collectionTransformer(StorageSize::all(), 'basic')),
+      'storage_types' => fn () => Cache::rememberForever('storage_types', fn () => (new StorageTypeTransformer)->collectionTransformer(StorageType::all(), 'basic')),
+      'processor_speeds' => fn () => Cache::rememberForever('processor_speeds', fn () => (new ProcessorSpeedTransformer)->collectionTransformer(ProcessorSpeed::all(), 'basic')),
+    ]);
   }
 
   public function createLocalSupplierProduct(CreateLocalSupplierProductValidation $request)
   {
     DB::beginTransaction();
     try {
-      /**
-       * Create the product with predefined batch_num
-       */
 
-      $product = self::create(collect($request->validated())->merge([
-        'stocked_by' => auth()->id(),
-        'stocker_type' => get_class(auth()->user()),
-        'office_branch_id' => OfficeBranch::head_office_id(),
-        'product_batch_id' => $local_supplier_id = ProductBatch::local_supplied_id()
-      ])->all());
+      $product = self::create($request->validated());
 
-
-      /**
+      try {
+        /**
        * create the product price record
        */
 
-      ProductPrice::create(collect($request->validated())->merge([
-        'product_batch_id' => $local_supplier_id
+        ProductPrice::create(collect($request->validated())->merge(['product_batch_id' => $request->localSupplierId
       ])->all());
+      } catch (QueryException $th) {
+        if ($th->getCode() == 23000) {
+        } else {
+          throw_if(true, $th);
+        }
+      }
 
       DB::commit();
 
-      return response()->json($product, 201);
+      if ($request->isApi()) return response()->json($product, 201);
+      return back()->withSuccess('Product created');
+
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Product not created');
-      return response()->json(['err' => 'Product not created'], 500);
+      if ($request->isApi()) return response()->json(['err' => 'Product not created'], 500);
+      return back()->withError('Product not created');
     }
   }
 
@@ -704,7 +724,7 @@ class Product extends BaseModel
     return response()->json((new QATestTransformer)->collectionTransformer($product->product_model->qa_tests, 'basic'), 200);
   }
 
-  public function getProductQATestResults(Request $request, Product $product)
+  public function getProductQATestResults(Request $request, self $product)
   {
     $productQATestResults = fn () => (new ProductTransformer)->transformWithTestResults($product->load('qa_tests', 'product_model.qa_tests'));
     $productQATestResultsComments = fn () => (new UserCommentTransformer)->collectionTransformer($product->test_result_comments, 'detailed');

@@ -5,11 +5,15 @@ namespace App\Modules\SuperAdmin\Http\Validations;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
+use App\Modules\SuperAdmin\Models\OfficeBranch;
+use App\Modules\SuperAdmin\Models\ProductBatch;
 use Illuminate\Auth\Access\AuthorizationException;
-use App\Modules\AppUser\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
 class CreateLocalSupplierProductValidation extends FormRequest
 {
+
+  public $localSupplierId;
   /**
    * Get the validation rules that apply to the request.
    *
@@ -59,6 +63,17 @@ class CreateLocalSupplierProductValidation extends FormRequest
       'model_no.required_without_all' => 'A product must have either an IMEI, a Serial Number or a Model Number',
     ];
   }
+
+  public function validated()
+  {
+    return array_merge(parent::validated(), [
+      'stocked_by' => auth()->id(),
+      'stocker_type' => get_class(auth()->user()),
+      'office_branch_id' => OfficeBranch::head_office_id(),
+      'product_batch_id' => $this->localSupplierId = ProductBatch::local_supplied_id()
+    ]);
+  }
+
 
   /**
    * Overwrite the validator response so we can customise it per the structure requested from the fronend
