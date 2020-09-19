@@ -29,7 +29,7 @@ import { afterUpdate, onMount } from "svelte";
       route("superadmin.products.update_qa_result", product.uuid),
       { qa_test_results: parsedResults },
       {
-        preserveState: true,
+        preserveState: false,
         preserveScroll: true,
         only: ["flash", "errors", "product"]
       }

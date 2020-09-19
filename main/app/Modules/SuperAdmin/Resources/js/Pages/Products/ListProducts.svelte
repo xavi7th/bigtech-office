@@ -44,7 +44,7 @@
                 <Icon />
               </th>
               <th scope="col">
-                Sold At
+                Selling Price
                 <Icon />
               </th>
               <th scope="col">Action</th>
