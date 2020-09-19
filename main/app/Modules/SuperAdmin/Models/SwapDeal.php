@@ -68,6 +68,8 @@ class SwapDeal extends BaseModel
     'swap_value', 'swapped_with', 'product_status_id', 'app_user_id'
   ];
 
+  protected $apennds = ['id_thumb_url', 'receipt_thumb_url'];
+
   public function primary_identifier(): string
   {
     switch (true) {
@@ -100,22 +102,28 @@ class SwapDeal extends BaseModel
     return $this->belongsTo(AppUser::class);
   }
 
-  static function store_documents(Request $request)
+  public function getIdThumbUrlAttribute()
   {
-    Storage::makeDirectory('public/swap_deals_documents/' . now()->toDateString());
-    $id_url = Storage::url($request->file('id_card')->store('public/swap_deals_documents/' . now()->toDateString()));
-    $receipt_url = Storage::url($request->file('receipt')->store('public/swap_deals_documents/' . now()->toDateString()));
+    return Str::of($this->id_url)->replace(Str::of($this->id_url)->dirname(), Str::of($this->id_url)->dirname() . '/thumb');
+  }
 
+  public function getReceiptThumbUrlAttribute()
+  {
+    return Str::of($this->id_url)->replace(Str::of($this->id_url)->dirname(), Str::of($this->id_url)->dirname() . '/thumb');
+  }
+
+  static function store_documents()
+  {
     return [
-      $id_url,
-      $receipt_url,
+      compress_image_upload('id_card', 'swap-deal-documents/' . now()->toDateString() . '/', 'swap-deal-documents/' . now()->toDateString() . '/thumbs/', 800)['img_url'],
+      compress_image_upload('receipt', 'swap-deal-documents/' . now()->toDateString() . '/', 'swap-deal-documents/' . now()->toDateString() . '/thumbs/', 800)['img_url'],
     ];
   }
 
   static function create_swap_record(object $request, string $id_url, string $receipt_url)
   {
     try {
-      $swap_deal = self::create([
+      self::create([
         'description' => $request->description,
         'owner_details' => $request->owner_details,
         'id_url' => $id_url,
@@ -129,11 +137,11 @@ class SwapDeal extends BaseModel
         'product_status_id' => ProductStatus::undergoingQaId(),
       ]);
 
-      return response()->json((new SwapDealTransformer)->detailed($swap_deal), 201);
+      return true;
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Swap Deal not created');
-      abort(500, 'Swap Deal not created', ['Content-Type' => 'application/json']);
-      return response()->json(['err' => 'Swap Deal not created'], 500);
+
+      return false;
     }
   }
 
@@ -179,11 +187,18 @@ class SwapDeal extends BaseModel
 
   public function createSwapDeal(CreateSwapDealValidation $request)
   {
-    // return $request->validated();
-
+    // dd($request->validated());
     list($id_url, $receipt_url) = $this->store_documents($request);
 
-    return $this->create_swap_record($request, $id_url, $receipt_url);
+    if ($this->create_swap_record($request, $id_url, $receipt_url)) {
+      if ($request->isApi()) return response()->json([], 201);
+      return back()->withSuccess('Swap deal created');
+    } else {
+      //  abort(500, 'Swap Deal not created', ['Content-Type' => 'application/json']);
+
+      if ($request->isApi()) return response()->json(['err' => 'Swap Deal not created'], 500);
+      return back()->withError('Swap Deal not created');
+    }
   }
 
 

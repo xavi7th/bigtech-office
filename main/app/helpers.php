@@ -540,8 +540,6 @@ if (!function_exists('routeHasRootNamespace')) {
   }
 }
 
-
-
 if (!function_exists('compress_image_upload')) {
 
   /**

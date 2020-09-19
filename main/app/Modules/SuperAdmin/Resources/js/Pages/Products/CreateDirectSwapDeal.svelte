@@ -1,13 +1,56 @@
 <script>
-    import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+    import { page } from "@inertiajs/inertia-svelte";
     import { Inertia } from "@inertiajs/inertia";
     import Layout from "@superadmin-shared/SuperAdminLayout";
     import FlashMessage from "@usershared/FlashMessage";
+    import { getErrorString } from "@public-assets/js/bootstrap";
     import route from "ziggy";
 
-    $: ({ app } = $page);
+    $: ({ flash, errors } = $page);
 
-    // export let details;
+    let details = {}, files
+
+    let createDirectSwapDeal = ()=>{
+      BlockToast.fire({
+      text: "Creating reseller ..."
+    });
+
+    let formData = new FormData();
+
+    _.forEach(details, (val, key) => {
+      formData.append(key, val);
+    });
+
+    Inertia.post(route("superadmin.products.create_swap_deal"), formData, {
+      preserveState: true,
+      preserveScroll: true,
+      only: ["flash", "errors"],
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }).then(() => {
+      if (flash.success) {
+        ToastLarge.fire({
+          title: "Successful!",
+          html: flash.success
+        });
+
+        details = {};
+      } else if (flash.error || _.size(errors) > 0) {
+        ToastLarge.fire({
+          title: "Oops!",
+          html: flash.error || getErrorString(errors),
+          timer: 10000,
+          icon: "error"
+        });
+      }
+      else{
+        swal.close()
+      }
+    });
+    }
+
+
 </script>
 
 <style>
@@ -19,7 +62,7 @@
 <Layout title="Create New Swap Deal">
     <div class="row vertical-gap">
         <div class="col-lg-8 col-xl-6">
-            <form class="#">
+            <form class="#" on:submit|preventDefault="{createDirectSwapDeal}">
                 <div class="row vertical-gap sm-gap">
                     <div class="col-12">
                         <label for="swapDescription">Description</label>
@@ -27,17 +70,18 @@
                             <textarea
                                 name="swapDescription"
                                 id="swapDescription"
+                                bind:value="{details.description}"
                                 class="form-control"
-                                placeholder="Blue samsung s7 edge with small
-                                crack on the screen" />
+                                placeholder="Blue samsung s7 edge with small crack on the screen" />
                         </div>
                     </div>
                     <div class="col-12">
-                        <label for="swapDetails">Owner Details</label>
+                        <label for="swapOwnerDetails">Owner Details</label>
                         <div class="input-group">
                             <textarea
-                                name="swapDetails"
-                                id="swapDetails"
+                                name="swapOwnerDetails"
+                                id="swapOwnerDetails"
+                                bind:value="{details.owner_details}"
                                 class="form-control"
                                 placeholder="Name, phone, address etc" />
                         </div>
@@ -46,80 +90,107 @@
                         <div class="custom-control custom-radio">
                             <input
                                 type="radio"
-                                id="customRadio1"
-                                name="customRadio"
+                                id="imei-option"
+                                name="primary-identifier"
+                                value="imei"
+                                on:change="{() => {delete details.model_no; delete details.serial_no}}"
+                                bind:group="{details.identification_type}"
                                 class="custom-control-input" />
                             <label
                                 class="custom-control-label"
-                                for="customRadio1">
+                                for="imei-option">
                                 IMEI
                             </label>
                         </div>
                         <div class="custom-control custom-radio mt-5">
                             <input
                                 type="radio"
-                                id="customRadio2"
-                                name="customRadio"
+                                id="serial-no-option"
+                                name="primary-identifier"
+                                value="serial_no"
+                                on:change="{() => {delete details.imei; delete details.model_no}}"
+                                bind:group="{details.identification_type}"
                                 class="custom-control-input" />
                             <label
                                 class="custom-control-label"
-                                for="customRadio2">
+                                for="serial-no-option">
                                 Serial No.
                             </label>
                         </div>
                         <div class="custom-control custom-radio mt-5">
                             <input
                                 type="radio"
-                                id="customRadio3"
-                                name="customRadio"
+                                id="model-no-option"
+                                name="primary-identifier"
+                                value="model_no"
+                                on:change="{() => {delete details.imei; delete details.serial_no}}"
+                                bind:group="{details.identification_type}"
                                 class="custom-control-input" />
                             <label
                                 class="custom-control-label"
-                                for="customRadio3">
+                                for="model-no-option">
                                 Model No.
                             </label>
                         </div>
                     </div>
+                    {#if details.identification_type === 'imei'}
                     <div class="col-12">
                         <label for="exampleBase1">Imei No.</label>
                         <input
                             type="text"
                             class="form-control"
-                            id="exampleBase1"
+                            bind:value="{details.imei}"
                             placeholder="Enter Imei No." />
                     </div>
+                    {:else if details.identification_type === 'serial_no'}
                     <div class="col-12">
                         <label for="exampleBase1">Serial No.</label>
                         <input
                             type="text"
                             class="form-control"
-                            id="exampleBase1"
+                            bind:value="{details.serial_no}"
                             placeholder="Enter Serial No." />
                     </div>
+                    {:else if details.identification_type === 'model_no'}
                     <div class="col-12">
                         <label for="exampleBase1">Model No.</label>
                         <input
                             type="text"
                             class="form-control"
-                            id="exampleBase1"
+                            bind:value="{details.model_no}"
                             placeholder="Enter Model No." />
                     </div>
+                    {/if}
                     <div class="col-12">
                         <label for="exampleBase1">ID Card</label>
                         <input
                             type="file"
                             class="form-control"
-                            id="exampleBase1" />
+                            bind:files
+                            on:change="{details.id_card = files[0]}" />
                     </div>
                     <div class="col-12">
                         <label for="exampleBase1">Receipt</label>
                         <input
                             type="file"
                             class="form-control"
-                            id="exampleBase1" />
+                            bind:files
+                            on:change="{details.receipt = files[0]}" />
+                    </div>
+                     <div class="col-12">
+                        <label for="swapValue">Swap Value</label>
+                        <div class="input-group">
+                            <input
+                              type="number"
+                                name="swapValue"
+                                id="swapValue"
+                                bind:value="{details.swap_value}"
+                                class="form-control"
+                                placeholder="The amount the device was valued for" />
+                        </div>
                     </div>
                     <div class="col-12">
-                        <button type="button" class="btn btn-primary btn-long">
+                        <button class="btn btn-primary btn-long">
                             <span class="text">Create Swap Deal</span>
                             <span class="icon">
                                 <span

@@ -16,7 +16,6 @@ use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
 use App\Modules\SuperAdmin\Models\RamSize;
-
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -556,7 +555,15 @@ class Product extends BaseModel
     if (filter_var($request->is_swap_deal, FILTER_VALIDATE_BOOLEAN)) {
       // return $request->validated();
       list($id_url, $receipt_url) = SwapDeal::store_documents($request);
-      SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url);
+      if (SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url)) {
+        if ($request->isApi()) return response()->json([], 201);
+        return back()->withSuccess('Swap deal created');
+      } else {
+        //  abort(500, 'Swap Deal not created', ['Content-Type' => 'application/json']);
+
+        if ($request->isApi()) return response()->json(['err' => 'Swap Deal not created'], 500);
+        return back()->withError('Swap Deal not created');
+      }
     }
 
     /**

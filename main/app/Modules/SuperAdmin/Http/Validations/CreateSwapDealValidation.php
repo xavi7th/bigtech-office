@@ -6,7 +6,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
-use App\Modules\AppUser\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
+use App\Modules\SuperAdmin\Models\SwapDeal;
 
 class CreateSwapDealValidation extends FormRequest
 {
@@ -21,8 +22,8 @@ class CreateSwapDealValidation extends FormRequest
       'app_user_id' => 'nullable|exists:app_users,id',
       'description' => $this->isMethod('PUT') ? 'string' : 'required|string',
       'owner_details' => $this->isMethod('PUT') ? 'string' : 'required|string',
-      'id_url' => $this->isMethod('PUT') ? 'bail|file|mimes:jpeg,bmp,png' : 'bail|required|file|mimes:jpeg,bmp,png',
-      'receipt_url' => $this->isMethod('PUT') ? 'bail|file|mimes:jpeg,bmp,png' : 'bail|required|file|mimes:jpeg,bmp,png',
+      'id_card' => $this->isMethod('PUT') ? 'bail|file|mimes:jpeg,bmp,png' : 'bail|required|file|mimes:jpeg,bmp,png',
+      'receipt' => $this->isMethod('PUT') ? 'bail|file|mimes:jpeg,bmp,png' : 'bail|required|file|mimes:jpeg,bmp,png',
       'imei' => $this->isMethod('PUT') ? ['alpha_num',  Rule::unique('swap_deals')->ignore($this->route('swap_deal')->imei)] : 'required_without_all:model_no,serial_no|alpha_num|unique:swap_deals,imei',
       'serial_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('swap_deals')->ignore($this->route('swap_deal')->serial_no)] : 'required_without_all:imei,model_no|alpha_dash|unique:swap_deals,serial_no',
       'model_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('swap_deals')->ignore($this->route('swap_deal')->model_no)] : 'required_without_all:imei,serial_no|alpha_dash|unique:swap_deals,model_no',
