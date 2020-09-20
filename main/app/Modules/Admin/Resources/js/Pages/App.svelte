@@ -25,9 +25,3 @@
     </div>
   </div>
 </main>
-
-{#if name}
-  <script src="/js/hello.js">
-
-  </script>
-{/if}
