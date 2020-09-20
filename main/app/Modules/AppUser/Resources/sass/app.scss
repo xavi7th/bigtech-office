@@ -1,12 +1,12 @@
 @import '@public-assets/sass/vendor/nprogress';
 @import './vendor/bootstrap-custom';
-@import './vendor/OverlayScrollbars';
+// @import './vendor/OverlayScrollbars';
 @import './vendor/yaybar';
 @import './vendor/jquery.fancybox';
-@import './vendor/emojionearea';
 @import './vendor/swiper.min';
-@import './vendor/chartist';
+// @import './vendor/chartist';
 @import './vendor/rootui';
+// @import './vendor/datatables';
 
 html.rui-nightmode {
 	@import './vendor/rootui-night';

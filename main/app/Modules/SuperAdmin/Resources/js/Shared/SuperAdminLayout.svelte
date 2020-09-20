@@ -1,7 +1,7 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import { afterUpdate, onDestroy, onMount } from "svelte";
+  import { afterUpdate, onMount, tick } from "svelte";
   import { fly } from "svelte/transition";
   import route from "ziggy";
   import Sidebar from "@superadmin-shared/Partials/Sidebar";
@@ -9,6 +9,7 @@
   import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
   import PageTitle from "@superadmin-shared/Partials/PageTitle";
   import Footer from "@superadmin-shared/Partials/Footer";
+  import { lang } from "moment";
 
   $: ({ app, routes } = $page);
 
@@ -18,20 +19,40 @@
     isMounted = false;
   export let title;
 
-  onMount(() => {
+  onMount(async () => {
     isMounted = true;
+
+    await tick();
+    jQuery(".rui-datatable").DataTable({
+       destroy: true,
+      order: [[2, "desc"]],
+      dom: "<lfB<t><ip>>",
+      buttons: ["excel", "pdf"]
+      // responsive: true
+    });
+    objectFitImages();
   });
 
   afterUpdate(() => {
     document.querySelector("#app").removeAttribute("data-page");
     isLoaded = true;
   });
-
 </script>
 
-<style>
+<style lang="scss">
   .rui-page {
     position: relative;
+  }
+
+  :global(.dataTables_paginate) {
+    @media (max-width: 767px) {
+      margin-top: 20px;
+      position: relative;
+    }
+      :global(.paginate_button) {
+        margin: 5px;
+        padding: 0;
+      }
   }
 </style>
 
@@ -39,7 +60,8 @@
   data-spy="scroll"
   data-target=".rui-page-sidebar"
   data-offset="140"
-  class="rui-no-transition rui-navbar-autohide rui-section-lines main-page-wrap yay-hide">
+  class="rui-no-transition rui-navbar-autohide rui-section-lines main-page-wrap
+  yay-hide">
 
   <Header />
   <MobileHeader />

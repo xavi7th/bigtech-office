@@ -6,6 +6,7 @@
   import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
+  import { onMount, tick } from "svelte";
 
   $: ({ app } = $page);
 
@@ -16,6 +17,7 @@
     salesChannel = [];
 
   let productToMarkAsPaid, productToMarkAsSold, productToGiveReseller;
+
 </script>
 
 <Layout title="Stock List">
@@ -23,8 +25,7 @@
     <div class="col-lg-12 col-xl-12">
       <div class="table-responsive-md">
         <table
-          class="rui-datatable table table-striped table-bordered table-sm"
-          data-datatable-order="0:asc">
+          class="rui-datatable table table-striped table-bordered table-sm">
           <thead class="thead-dark">
             <tr>
               <th scope="col">
@@ -45,7 +46,6 @@
               </th>
               <th scope="col">
                 Selling Price
-                <Icon />
               </th>
               <th scope="col">Action</th>
             </tr>
