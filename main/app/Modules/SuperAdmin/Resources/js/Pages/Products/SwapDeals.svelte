@@ -6,12 +6,16 @@
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
   import route from "ziggy";
   import MarkSwapDealAsSoldModal from "@usershared/MarkSwapDealAsSoldModal.svelte";
+  import MarkSwapDealAsPaidModal from "@usershared/MarkSwapDealAsPaidModal.svelte";
 
   $: ({ app } = $page);
 
-  export let swapDeals = [], salesChannel = [], onlineReps=[];
+  export let swapDeals = [],
+    salesChannel = [],
+    onlineReps = [],
+    companyAccounts = [];
 
-  let productToMarkAsSold;
+  let productToMarkAsSold, productToMarkAsPaid;
 </script>
 
 <Layout title="Awoof Deals">
@@ -56,12 +60,6 @@
                     class="btn btn-primary btn-xs">
                     Details
                   </InertiaLink>
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.view_product_details', 1)}
-                    class="btn btn-brand btn-xs">
-                    Paid
-                  </InertiaLink>
 
                   {#if product.status == 'in stock'}
                     <button
@@ -86,6 +84,17 @@
                       Give Reseller
                     </button> -->
                   {/if}
+                  {#if product.status == 'sold'}
+                    <button
+                      on:click={() => {
+                        productToMarkAsPaid = product.uuid;
+                      }}
+                      data-toggle="modal"
+                      data-target="#enterProductPaymentDetails"
+                      class="btn btn-brand btn-xs btn-sm">
+                      Mark Paid
+                    </button>
+                  {/if}
                 </td>
               </tr>
             {/each}
@@ -100,5 +109,7 @@
       {salesChannel}
       {onlineReps}
       {productToMarkAsSold} />
+
+    <MarkSwapDealAsPaidModal {companyAccounts} {productToMarkAsPaid} />
   </div>
 </Layout>

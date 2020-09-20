@@ -18,11 +18,13 @@ use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
+use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductStatusTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateSwapDealValidation;
+use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 
@@ -204,12 +206,13 @@ class SwapDeal extends BaseModel
      *! Accountant will see the ones that are sold
      *! Qa will see the ones that are untested
      */
-    $swapDeals = (new SwapDealTransformer)->collectionTransformer(self::untested()->orWhere->inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic');
+    $swapDeals = (new SwapDealTransformer)->collectionTransformer(self::untested()->orWhere->sold()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic');
     $onlineReps = fn () => Cache::rememberForever('onlineReps', fn () => (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic'));
     $salesChannel = fn () => Cache::rememberForever('salesChannel', fn () => (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic'));
+    $companyAccounts = fn () => Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
 
     if ($request->isApi()) return response()->json($swapDeals, 200);
-    return Inertia::render('SuperAdmin,Products/SwapDeals', compact('swapDeals', 'onlineReps', 'salesChannel'));
+    return Inertia::render('SuperAdmin,Products/SwapDeals', compact('swapDeals', 'onlineReps', 'salesChannel', 'companyAccounts'));
   }
 
   public function getSwapDealDetails(Request $request, self $swapDeal)
@@ -239,7 +242,6 @@ class SwapDeal extends BaseModel
     }
   }
 
-
   public function editSwapDeal(CreateSwapDealValidation $request, self $swapDeal)
   {
     try {
@@ -257,7 +259,6 @@ class SwapDeal extends BaseModel
     }
   }
 
-
   public function commentOnSwapDeal(CreateProductCommentValidation $request, self $swapDeal)
   {
     $comment =  $request->user()->comments()->create([
@@ -269,7 +270,6 @@ class SwapDeal extends BaseModel
     if ($request->isApi()) return response()->json($comment, 201);
     return back()->withSuccess('Comment created. ');
   }
-
 
   public function markSwapDealAsSold(MarkProductAsSoldValidation $request, self $swapDeal)
   {
@@ -377,19 +377,15 @@ class SwapDeal extends BaseModel
       }
     }
 
-    $product_sales_record = $product->product_sales_record;
+    // $product_sales_record = $swapDeal->product_sales_record;
 
-    /**
-     * Check if the product has been marked as sold.
-     * @throws JsonResponse
-     */
-    if (is_null($product_sales_record)) {
-      return generate_422_error('This product has not being sold');
-    }
+    // if (is_null($product_sales_record)) {
+    //   return generate_422_error('This product has not being sold');
+    // }
 
     $status_id = ProductStatus::saleConfirmedId();
 
-    if ($product->product_status_id === $status_id) {
+    if ($swapDeal->product_status_id === $status_id) {
       return generate_422_error('This product has being confirmed sold already');
     }
     DB::beginTransaction();
@@ -397,24 +393,20 @@ class SwapDeal extends BaseModel
     /**
      * Update the product's status to confirmed sold
      */
-    $product->product_status_id = $status_id;
-    $product->save();
+    $swapDeal->product_status_id = $status_id;
+    $swapDeal->save();
 
     /**
      * Mark the product's sales record as confirmed
      */
-    $product_sales_record->sale_confirmed_by = $request->user()->id;
-    $product_sales_record->sale_confirmer_type = get_class($request->user());
-    $product_sales_record->save();
+    // $product_sales_record->sale_confirmed_by = $request->user()->id;
+    // $product_sales_record->sale_confirmer_type = get_class($request->user());
+    // $product_sales_record->save();
 
     /**
      * Record the bank account payments breakdown for this transaction
      */
-    $product_sales_record->bank_account_payments()->sync($paymentRecords);
-
-    /**
-     * add an entry for the product trail that it's status changed in the static updating boot method
-     */
+    // $product_sales_record->bank_account_payments()->sync($paymentRecords);
 
 
     /**
@@ -423,7 +415,7 @@ class SwapDeal extends BaseModel
      * ? this receipt will still carry this his current records
      */
     try {
-      $receipt = $product->generate_receipt();
+      $receipt = $swapDeal->generate_receipt();
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
@@ -436,7 +428,7 @@ class SwapDeal extends BaseModel
 
     try {
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
+      ErrLog::notifyAdmin($request->user(), $th, 'Failed to send receipt to user', $swapDeal->app_user->email);
       // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
       // return back()->withError('Failed to send receipt to user  ' . $product->app_user->emai);
     }
@@ -445,18 +437,14 @@ class SwapDeal extends BaseModel
     /**
      * Notify Admin that a product was sold
      */
-    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with ' . $product->primary_identifier() . ' as confirmed sold.');
+    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with ' . $swapDeal->primary_identifier() . ' as confirmed sold.');
 
     /**
      * Notify Accountant that a product was marked as sold
      */
-    ActivityLog::notifyAccountants($request->user()->email . ' marked product with ' . $product->primary_identifier() . ' as confirmed sold.');
+    ActivityLog::notifyAccountants($request->user()->email . ' marked product with ' . $swapDeal->primary_identifier() . ' as confirmed sold.');
 
     DB::commit();
-
-
-    Cache::forget($product->office_branch->city . 'officeBranchProducts');
-    Cache::forget('products');
 
     if ($request->isApi()) return response()->json([], 204);
     return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
