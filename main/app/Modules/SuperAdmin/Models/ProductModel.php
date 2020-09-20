@@ -91,6 +91,11 @@ class ProductModel extends BaseModel
     return $this->hasOne(ProductDescriptionSummary::class);
   }
 
+  public function primary_identifier(): string
+  {
+    return 'product model: ' . $this->name;
+  }
+
   public static function routes()
   {
     Route::group(['prefix' => 'product-models'], function () {

@@ -1,5 +1,5 @@
 <script>
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { InertiaLink } from "@inertiajs/inertia-svelte";
   import route from "ziggy";
 
   export let routes;

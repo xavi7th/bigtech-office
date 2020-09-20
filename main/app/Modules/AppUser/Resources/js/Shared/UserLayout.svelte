@@ -3,7 +3,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import { afterUpdate } from "svelte";
   import route from "ziggy";
-  import Sidebar from "@superadmin-shared/Partials/Sidebar";
+  import Sidebar from "@superadmin-shared/Partials/Sidebar.svelte";
   import Header from "@superadmin-shared/Partials/Header";
   import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
   import PageTitle from "@superadmin-shared/Partials/PageTitle";

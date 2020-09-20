@@ -82,7 +82,7 @@ a("html")
 	.addClass(o ? "is-mobile" : "is-desktop");
 		var r = a(window),
 			s = a(document),
-			l = a("body"),
+			l = a(".main-page-wrap"),
 			u = 0,
 			c = 0,
 			d = 0;
@@ -509,13 +509,21 @@ h(), r.on("resize load orientationchange", h);
 					o()
 				})), s.on("change", "input.rui-spotlightmode-toggle", (function() {
 					l.hasClass("rui-spotlightmode") && o()
-				})), s.on("click", ".rui-yaybar-bg", (function() {
-					o()
 				})), s.on("change", "input.rui-darkSidebar-toggle", (function() {
 					t.toggleClass("rui-yaybar-dark")
 				})), c(), s.on("change", "input.rui-staticSidebar-toggle", (function() {
 					t.toggleClass("yay-static"), c()
-				}))
+				}));
+				$('.rui-yaybar-toggle ')
+					.on('click', function() {
+						$('.main-page-wrap')
+							.toggleClass('yay-hide')
+					});
+				$('.rui-yaybar-bg ')
+					.on('click', function() {
+						$('.main-page-wrap')
+							.addClass('yay-hide')
+					});
 			}
 
 			function o() {

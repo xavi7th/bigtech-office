@@ -1,7 +1,7 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import { afterUpdate, onMount } from "svelte";
+  import { afterUpdate, onDestroy, onMount } from "svelte";
   import { fly } from "svelte/transition";
   import route from "ziggy";
   import Sidebar from "@superadmin-shared/Partials/Sidebar";
@@ -26,6 +26,7 @@
     document.querySelector("#app").removeAttribute("data-page");
     isLoaded = true;
   });
+
 </script>
 
 <style>
@@ -34,25 +35,32 @@
   }
 </style>
 
-<Sidebar {routes} />
-<Header />
-<MobileHeader />
-{#if isMounted}
-  <div
-    class="rui-page content-wrap"
-    in:fly={{ x: -300, duration: 700, delay: 400 }}
-    out:fly={{ y: 30, duration: 400, delay: 0 }}>
-    <PageTitle {title} appName={app.name} />
-    <div class="rui-page-content">
-      <div class="container-fluid">
-        <slot />
-      </div>
-    </div>
-    <Footer />
-  </div>
+<div
+  data-spy="scroll"
+  data-target=".rui-page-sidebar"
+  data-offset="140"
+  class="rui-no-transition rui-navbar-autohide rui-section-lines main-page-wrap yay-hide">
 
-  <slot name="modals" />
-{/if}
+  <Header />
+  <MobileHeader />
+  <Sidebar {routes} />
+  {#if isMounted}
+    <div
+      class="rui-page content-wrap"
+      in:fly={{ x: -300, duration: 700, delay: 400 }}
+      out:fly={{ y: 30, duration: 400, delay: 0 }}>
+      <PageTitle {title} appName={app.name} />
+      <div class="rui-page-content">
+        <div class="container-fluid">
+          <slot />
+        </div>
+      </div>
+      <Footer />
+    </div>
+
+    <slot name="modals" />
+  {/if}
+</div>
 
 {#if isMounted}
   <script src="/js/user-dashboard-init.js">

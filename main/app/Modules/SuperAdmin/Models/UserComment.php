@@ -74,9 +74,7 @@ class UserComment extends Model
   {
     $userComments = ((new UserCommentTransformer)->adminViewAllComments(self::with('user', 'subject')->get(), 'detailed'));
 
-    if ($request->isApi())
-      return response()->json($userComments, 200);
-
+    if ($request->isApi()) return response()->json($userComments, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ViewUsersComments', compact('userComments'));
   }
 
