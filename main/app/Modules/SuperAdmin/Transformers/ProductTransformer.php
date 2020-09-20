@@ -63,6 +63,7 @@ class ProductTransformer
   {
     return [
       'uuid' => (string)$product->product_uuid,
+      'product_status_id' => (int)$product->product_status_id,
       'product_model' => (string)$product->product_model->name,
       'identifier' => (string)$product->primary_identifier(),
       'qa_tests' => (new QATestTransformer)->collectionTransformer($product->qa_tests, 'transformWithTestResult'),

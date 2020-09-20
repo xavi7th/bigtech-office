@@ -53,12 +53,12 @@
             }
           );
           return Inertia.post(
-            route("superadmin.products.mark_as_sold", productToMarkAsSold),
+            route("superadmin.products.mark_swap_as_sold", productToMarkAsSold),
             formData,
             {
               preserveState: true,
               preserveScroll: true,
-              only: ["flash", "errors", "officeBranch"]
+              only: ["flash", "errors", "swapDeals"]
             }
           )
             .then(() => {
@@ -90,7 +90,7 @@
   };
 </script>
 
-<Modal modalId="enterSalesDetails" modalTitle="Enter Sales Details">
+<Modal modalId="enterSwapSalesDetails" modalTitle="Enter Sales Details">
 
   <FlashMessage />
 

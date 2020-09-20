@@ -56,6 +56,7 @@ use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductGradeTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductStatusTransformer;
 use App\Modules\SuperAdmin\Transformers\ProcessorSpeedTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
@@ -499,12 +500,19 @@ class Product extends BaseModel
 
   public function updateProductStatus(Request $request, self $product)
   {
+
+    if ($product->product_status_id == $request->product_status_id) {
+      return generate_422_error('Nothing changed');
+    }
+
     DB::beginTransaction();
 
-    $product_status = ProductStatus::find($request->product_status_id);
-    if (is_null($product_status)) {
+    try {
+      $product_status = ProductStatus::findOrFail($request->product_status_id);
+    } catch (\Throwable $th) {
       return generate_422_error('Invalid product status selected');
     }
+
     //notify admin that someone updated a product status
     ActivityLog::notifySuperAdmins($request->user()->email . ' changed product with ' . $product->primary_identifier() . ' to status:  "' . $product_status->status . '"');
 
@@ -515,19 +523,24 @@ class Product extends BaseModel
       return generate_422_error('Mark this product as sold instead');
     } elseif ($product_status->id === ProductStatus::saleConfirmedId()) {
       return generate_422_error('Confirm this product as sold instead');
+    } elseif ($product_status->id === ProductStatus::soldByResellerId()) {
+      return generate_422_error('Confirm this product as sold instead');
     } else {
       $product->product_status_id = $request->product_status_id;
       $product->save();
     }
 
     DB::commit();
-    return response()->json([], 204);
+
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Status updated');
+
   }
 
   public function markProductAsSold(MarkProductAsSoldValidation $request, self $product)
   {
 
-    dd($product);
+    // dd($product);
 
     DB::beginTransaction();
 
@@ -535,6 +548,7 @@ class Product extends BaseModel
      * Update product status to sold
      */
     $product->product_status_id = $status_id = ProductStatus::soldId();
+    $product->sold_at = now();
 
     /**
      * Create a sales record for the product
@@ -590,14 +604,9 @@ class Product extends BaseModel
     if (filter_var($request->is_swap_deal, FILTER_VALIDATE_BOOLEAN)) {
       // return $request->validated();
       list($id_url, $receipt_url) = SwapDeal::store_documents($request);
-      if (SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url)) {
-        if ($request->isApi()) return response()->json([], 201);
-        return back()->withSuccess('Swap deal created');
-      } else {
-        //  abort(500, 'Swap Deal not created', ['Content-Type' => 'application/json']);
-
-        if ($request->isApi()) return response()->json(['err' => 'Swap Deal not created'], 500);
-        return back()->withError('Swap Deal not created');
+      if (!SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url)) {
+        if ($request->isApi()) return response()->json(['err' => 'Transaction not completed. The swap details could not be created'], 500);
+        return back()->withError('Transaction not completed. The swap details could not be created');
       }
     }
 
@@ -612,9 +621,6 @@ class Product extends BaseModel
     ActivityLog::notifyAccountants($request->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
 
     DB::commit();
-
-    Cache::forget($product->office_branch->city . 'officeBranchProducts');
-    Cache::forget('products');
 
     if ($request->isApi()) return response()->json([], 204);
     return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
@@ -743,16 +749,13 @@ class Product extends BaseModel
   {
     $productQATestResults = fn () => (new ProductTransformer)->transformWithTestResults($product->load('qa_tests', 'product_model.qa_tests'));
     $productQATestResultsComments = fn () => (new UserCommentTransformer)->collectionTransformer($product->test_result_comments, 'detailed');
+    $productStatuses = Cache::rememberForever('productStatuses', fn () => (new ProductStatusTransformer)->collectionTransformer(ProductStatus::notSaleStatus()->get(), 'basic'));
 
-    if ($request->isApi()) {
-      return response()->json([
-        'product' => $productQATestResults,
-        'comments' => $productQATestResultsComments,
-      ], 200);
-    }
+    if ($request->isApi()) return response()->json(['product' => $productQATestResults, 'comments' => $productQATestResultsComments,], 200);
     return Inertia::render('SuperAdmin,Products/QATestResults', [
       'product' => $productQATestResults,
       'comments' => $productQATestResultsComments,
+      'product_statuses' => $productStatuses,
     ]);
   }
 
@@ -803,7 +806,8 @@ class Product extends BaseModel
     });
 
     static::saved(function ($product) {
-    	Cache::forget('products');
+      Cache::forget($product->office_branch->city . 'officeBranchProducts');
+      Cache::forget('products');
     });
 
     static::updating(function ($product) {

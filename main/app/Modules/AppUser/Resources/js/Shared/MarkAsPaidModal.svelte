@@ -3,6 +3,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import FlashMessage from "@usershared/FlashMessage.svelte";
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
+import { getErrorString } from "@public-assets/js/bootstrap";
 
   $: ({ flash, errors } = $page);
 

@@ -22,6 +22,7 @@ class SwapDealTransformer
       'identifier' => (string)$swapDeal->primary_identifier(),
       'selling_price' => (float)$swapDeal->selling_price,
       'uuid' => $swapDeal->product_uuid,
+      'status' => $swapDeal->product_status->status,
     ];
   }
 
@@ -39,6 +40,7 @@ class SwapDealTransformer
       'selling_price' => (float)$swapDeal->selling_price,
       'sold_at' => (float)$swapDeal->sold_at,
       'swapped_with' => $swapDeal->swapped_with,
+      'product_status_id' => $swapDeal->product_status_id,
       'status' => $swapDeal->product_status->status,
       'uuid' => $swapDeal->product_uuid,
       'comments' => (new UserCommentTransformer)->collectionTransformer($swapDeal->comments, 'commentDetails'),

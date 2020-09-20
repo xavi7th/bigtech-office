@@ -11,6 +11,7 @@ use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
 class MarkProductAsSoldValidation extends FormRequest
 {
+  private $product;
   /**
    * Get the validation rules that apply to the request.
    *
@@ -48,6 +49,7 @@ class MarkProductAsSoldValidation extends FormRequest
    */
   public function authorize()
   {
+    $this->product = $this->route('product') ?? $this->route('swapDeal');
     /**
      * Only sales reps can mark products as sold
      */
@@ -84,7 +86,7 @@ class MarkProductAsSoldValidation extends FormRequest
       /**
        * Check if the product has been sold already or confirmed
        */
-      if ($this->route('product')->is_sold()) {
+      if ($this->product->is_sold()) {
         $validator->errors()->add('Invalid transaction', 'This product has been sold already');
         return;
       }
@@ -92,7 +94,7 @@ class MarkProductAsSoldValidation extends FormRequest
       /**
        * Check if the product has been QA tested and put in tock
        */
-      if (!$this->route('product')->in_stock()) {
+      if (!$this->product->in_stock()) {
         $validator->errors()->add('Invalid transaction', 'This product has not being tested');
         return;
       }
@@ -122,7 +124,7 @@ class MarkProductAsSoldValidation extends FormRequest
      */
 
     return array_merge(collect(parent::validated())->all(), [
-      'swapped_with' => $this->route('product')->id
+      'swapped_with' => $this->product->id
     ]);
   }
 

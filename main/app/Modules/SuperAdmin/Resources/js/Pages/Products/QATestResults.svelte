@@ -5,13 +5,19 @@
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
-import { afterUpdate, onMount } from "svelte";
+  import { afterUpdate, onMount } from "svelte";
+  import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
+  import UpdateProductStatus from "@superadmin-shared/Partials/UpdateProductStatus.svelte";
 
-  $: ({ app, errors, flash } = $page);
+  $: ({ errors, flash } = $page);
 
-  export let product = {},comments =[];
+  export let product = {},
+    comments = [],
+    product_statuses = [];
 
-  let results = [], comment;
+  let results = [],
+    comment,
+    testResultUpdated = false;
 
   let updateQATestResults = () => {
     /** ! Make sure the form was properly filled **/
@@ -63,30 +69,32 @@ import { afterUpdate, onMount } from "svelte";
   };
 
   afterUpdate(() => {
-   if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-        delete flash.success
-        comment = null
-
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-        delete flash.error
-        errors = null
-      }
-  })
+    if (flash.success) {
+      ToastLarge.fire({
+        title: "Successful!",
+        html: flash.success
+      });
+      delete flash.success;
+      comment = null;
+    } else if (flash.error || _.size(errors) > 0) {
+      ToastLarge.fire({
+        title: "Oops!",
+        html: flash.error || getErrorString(errors),
+        timer: 10000,
+        icon: "error"
+      });
+      delete flash.error;
+      errors = null;
+    } else {
+      swal.close();
+    }
+  });
 </script>
 
 <style>
   select {
     min-width: 150px;
+    text-transform: capitalize;
   }
 </style>
 
@@ -126,12 +134,8 @@ import { afterUpdate, onMount } from "svelte";
           role="tabpanel"
           aria-labelledby="homePillsSliding-tab">
           <div class="row vertical-gap">
-            <div class="col-12">
-              <p class="lead">
-                Select the results of each test type
-              </p>
-              <p class="lead text-danger">
-              </p>
+            <p class="lead col-12">Select the results of each test type</p>
+            <div class="col-9">
               <table class="table table-striped">
                 <thead class="thead-dark">
                   <tr>
@@ -152,6 +156,9 @@ import { afterUpdate, onMount } from "svelte";
 
                         <select
                           class="custom-select "
+                          on:blur={() => {
+                            testResultUpdated = true;
+                          }}
                           bind:value={results[test.id]}>
                           <option
                             selected={testResult(test.name) == null}
@@ -174,20 +181,26 @@ import { afterUpdate, onMount } from "svelte";
 
                       </td>
                       <td>
-                        <span class="fas {testResult(test.name) === true ? 'fa-check text-success' :'fas fa-exclamation text-warning' }" />
+                        <span
+                          class="fas {testResult(test.name) === true ? 'fa-check text-success' : 'fas fa-exclamation text-warning'}" />
                       </td>
                     </tr>
                   {/each}
                 </tbody>
               </table>
             </div>
-            <div class="col-12">
+            <div class="col-3">
 
-              <button
-                on:click={updateQATestResults}
-                class="btn btn-success btn-long">
-                <span class="text">Update Results</span>
-              </button>
+              <UpdateProductStatus {product} {product_statuses} />
+
+              {#if testResultUpdated}
+                <button
+                  on:click={updateQATestResults}
+                  class="btn btn-success btn-long">
+                  <span class="text">Update Results</span>
+                </button>
+              {/if}
+
             </div>
           </div>
         </div>
@@ -203,42 +216,28 @@ import { afterUpdate, onMount } from "svelte";
                   <input
                     type="text"
                     class="form-control"
-                    bind:value="{comment}"
+                    bind:value={comment}
                     placeholder="Enter Comment" />
 
-                  <InertiaLink class="btn btn-brand ml-20 {!comment ? 'disabled' : ''}" aria-disabled="true" tabindex="-1" role="button" href="{route('superadmin.products.comment_on_qa_test', product.uuid)}" only="{['comments', 'flash', 'errors']}" preserveScroll data="{ {comment} }" preserveState replace  method="post" >Comment</InertiaLink>`
+                  <InertiaLink
+                    class="btn btn-brand ml-20 {!comment ? 'disabled' : ''}"
+                    aria-disabled="true"
+                    tabindex="-1"
+                    role="button"
+                    href={route('superadmin.products.comment_on_qa_test', product.uuid)}
+                    only={['comments', 'flash', 'errors']}
+                    preserveScroll
+                    data={{ comment }}
+                    preserveState
+                    replace
+                    method="post">
+                    Comment
+                  </InertiaLink>
+                  `
                 </div>
               </div>
               <hr />
-              <div
-                class="tab-pane fade show active"
-                id="activity"
-                role="tabpanel"
-                aria-labelledby="activity-tab">
-                <ul
-                  class="list-group list-group-flush rui-profile-activity-list">
-
-                {#each comments as comment}
-                    <li class="list-group-item">
-                    <div class="media media-success media-retiring">
-
-                      <a href class="media-link">
-                        <span class="media-body">
-                          <span class="media-title">
-                            {comment.comment}
-                          </span>
-                          <small class="media-subtitle">
-                            {comment.full_name} &nbsp; ({comment.department})
-                            <span class="media-time">{comment.time}  &nbsp; ({comment.human_date})</span>
-                          </small>
-                        </span>
-                      </a>
-                    </div>
-                  </li>
-                {/each}
-
-                </ul>
-              </div>
+              <DisplayUserComments {comments} />
             </div>
           </div>
         </div>

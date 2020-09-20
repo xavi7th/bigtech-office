@@ -4,43 +4,45 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
-import { __dirname } from "lodash/_freeGlobal";
-import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
+  import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
 
-  $: ({ flash,errors } = $page);
+  $: ({ flash, errors } = $page);
 
-  export let swapDeal = {}, userComment;
+  export let swapDeal = {},
+    userComment,
+    product_statuses = [];
 
   let updateSwapDetails = () => {
     BlockToast.fire({
       text: "Updating Swap deal details ..."
     });
 
-    Inertia.put(route("superadmin.products.edit_swap_deal", swapDeal.uuid), swapDeal, {
-      preserveState: true,
-      preserveScroll: true,
-      only: ["flash", "errors", "swapDeal"]
-    }).then(() => {
+    Inertia.put(
+      route("superadmin.products.edit_swap_deal", swapDeal.uuid),
+      swapDeal,
+      {
+        preserveState: true,
+        preserveScroll: true,
+        only: ["flash", "errors", "swapDeal"]
+      }
+    ).then(() => {
       if (flash.success) {
         ToastLarge.fire({
           title: "Successful!",
           html: flash.success
         });
-
-      } else if(flash.error || _.size(errors) > 0) {
+      } else if (flash.error || _.size(errors) > 0) {
         ToastLarge.fire({
           title: "Oops!",
           html: flash.error || getErrorString(errors),
           timer: 10000,
           icon: "error"
         });
-      }
-      else{
-        swal.close()
+      } else {
+        swal.close();
       }
     });
   };
-
 
   let commentOnSwapDeal = uuid => {
     BlockToast.fire({
@@ -72,6 +74,42 @@ import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments
         });
       }
     });
+  };
+
+  let updateSwapDealStatus = () => {
+    BlockToast.fire({
+      text: "Updating swap deal status ..."
+    });
+
+    Inertia.put(
+      route("superadmin.products.update_swap_status", swapDeal.uuid),
+      { product_status_id: swapDeal.product_status_id },
+      {
+        preserveState: true,
+        preserveScroll: true,
+        only: ["flash", "errors", "swapDeal"]
+      }
+    ).then(()=>{
+          if (flash.success) {
+      ToastLarge.fire({
+        title: "Successful!",
+        html: flash.success
+      });
+      delete flash.success;
+      comment = null;
+    } else if (flash.error || _.size(errors) > 0) {
+      ToastLarge.fire({
+        title: "Oops!",
+        html: flash.error || getErrorString(errors),
+        timer: 10000,
+        icon: "error"
+      });
+      delete flash.error;
+      errors = null;
+    } else {
+      swal.close();
+    }
+    })
   };
 </script>
 
@@ -222,6 +260,21 @@ import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments
       </table>
     </div>
     <div class="col-lg-4">
+      <div class="col-12 mb-50">
+
+        <label for="productGrade">Update Swap Deal Status</label>
+        <div class="input-group">
+          <select class="custom-select" bind:value={swapDeal.product_status_id}>
+            <option value={null}>Select</option>
+            {#each product_statuses as status}
+              <option value={status.id}>{status.status}</option>
+            {/each}
+          </select>
+          <button on:click={updateSwapDealStatus} class="btn btn-dark btn-long">
+            <span class="text">Update</span>
+          </button>
+        </div>
+      </div>
       <div class="col-12">
         <label for="makeComment">Comment on this device</label>
         <div class="a" style="display: flex;">
@@ -243,7 +296,7 @@ import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments
         </div>
       </div>
       <hr />
-      <DisplayUserComments comments={swapDeal.comments}/>
+      <DisplayUserComments comments={swapDeal.comments} />
     </div>
   </div>
 

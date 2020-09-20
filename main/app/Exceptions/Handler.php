@@ -153,6 +153,6 @@ class Handler extends ExceptionHandler
 
     $message = '404: ' . $error['url'];
 
-    Log::debug($message, $error);
+    // Log::debug($message, $error);
   }
 }

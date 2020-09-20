@@ -190,4 +190,9 @@ class ProductStatus extends BaseModel
       return back()->withError('Status creation failed');
     }
   }
+
+  public function scopeNotSaleStatus($query)
+  {
+    return $query->whereNotIn('id', [self::soldId(), self::saleConfirmedId(), self::soldByResellerId()]);
+  }
 }

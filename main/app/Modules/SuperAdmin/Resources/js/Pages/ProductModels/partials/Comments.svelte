@@ -67,15 +67,10 @@
           class="rui-icon rui-icon-stroke-1_5" />
       </div>
       <div class="rui-timeline-content">
-        <h3>Fifth moveth, void second.</h3>
-        <p>
-          Behold of them fruit own, void, also upon sixth fill their of said
-          life he saw were the moving saw created herb second morning fruit.
-          Doesn't second place gathering forth.
-        </p>
-        <button type="button" class="btn btn-brand">Read More</button>
+        <h3>NO COMMENTS AVAILABLE.</h3>
+
       </div>
-      <div class="rui-timeline-date">Jan 14</div>
+      <div class="rui-timeline-date"></div>
     </div>
   {/each}
   <button
