@@ -32,6 +32,7 @@ class ProductExpenseTransformer
       'product' => (new ProductTransformer)->basic($product_expense->product),
       'amount' => (string)to_naira($product_expense->amount),
       'reason' => (string)$product_expense->reason,
+      'date' => (string)$product_expense->created_at,
     ];
   }
 }

@@ -70,12 +70,9 @@ class ProductExpense extends BaseModel
 
   public function getDailyProductExpenses(Request $request, $date)
   {
-    $expenses = (new ProductExpenseTransformer)->collectionTransformer(self::whereDate('created_at', Carbon::parse($date))->get(), 'basic');
+    $expenses = (new ProductExpenseTransformer)->collectionTransformer(self::whereDate('created_at', Carbon::parse($date))->get(), 'transformWithProduct');
 
-    if ($request->isApi()) {
-      return response()->json($expenses, 200);
-    }
-
+    if ($request->isApi()) return response()->json($expenses, 200);
     return Inertia::render('SuperAdmin,Products/DailyProductExpenses', compact('date', 'expenses'));
   }
 
