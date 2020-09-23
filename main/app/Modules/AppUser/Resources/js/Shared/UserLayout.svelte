@@ -38,7 +38,7 @@
             src="/img/the-elects-logo.png"
             alt={$page.app.name}
             class="logo-img"
-            width="200" />
+            width="100" />
         </InertiaLink>
       </div>
       <slot />

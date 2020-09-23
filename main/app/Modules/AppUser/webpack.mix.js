@@ -13,7 +13,7 @@ mix.webpackConfig({
 
 mix.scripts([
         __dirname + '/Resources/js/vendor/jquery.min.js',
-        // __dirname + '/Resources/js/vendor/popper.min.js',
+        __dirname + '/Resources/js/vendor/popper.min.js',
         __dirname + '/Resources/js/vendor/bootstrap.min.js',
         __dirname + '/Resources/js/vendor/feather.min.js',
         // __dirname + '/Resources/js/vendor/jquery.overlayScrollbars.min.js',

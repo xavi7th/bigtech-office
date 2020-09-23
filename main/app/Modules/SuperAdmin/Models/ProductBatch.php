@@ -180,4 +180,27 @@ class ProductBatch extends BaseModel
     if ($request->isApi()) return response()->json($productBatchWithPriceDetails, 200);
     return Inertia::render('SuperAdmin,Products/Prices', compact('productBatchWithPriceDetails', 'productBatch'));
   }
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::creating(function ($product) {
+      // $product->product_uuid = (string)Str::uuid();
+    });
+
+    static::saved(function ($product) {
+      Cache::forget('batches');
+    });
+
+    static::updating(function ($product) {
+      /**
+       * add an entry for the product trail that it's status changed
+       */
+      request()->user()->product_histories()->create([
+        'product_id' => $product->id,
+        'product_status_id' => $product->product_status_id,
+      ]);
+    });
+  }
 }
