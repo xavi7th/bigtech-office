@@ -73,6 +73,18 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWith($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read string $id_thumb_url
+ * @property-read string $receipt_thumb_url
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal backFromRepairs()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal inStock()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal outForRepairs()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal saleConfirmed()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal sold()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal soldByReseller()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal untested()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
  */
 class SwapDeal extends BaseModel
 {

@@ -14,13 +14,15 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 
+$orange: orangered;
+
 :root {
 	--blue: #007bff;
 	--indigo: #6610f2;
 	--purple: #6f42c1;
 	--pink: #e83e8c;
 	--red: #dc3545;
-	--orange: #fd7e14;
+	--orange:orangered;
 	--yellow: #ffc107;
 	--green: #28a745;
 	--teal: #20c997;
@@ -3100,6 +3102,46 @@ fieldset:disabled a.btn {
 .btn-danger:not(:disabled):not(.disabled):active:focus,
 .show>.btn-danger.dropdown-toggle:focus {
 	box-shadow: 0 0 0 .2rem rgba(241, 107, 123, .5)
+}
+
+.btn-orange {
+	color: #fff;
+	background-color: var(--orange);
+	border-color: var(--orange)
+}
+
+.btn-orange.focus,
+.btn-orange:focus,
+.btn-orange:hover {
+	color: #fff;
+	background-color: darken($orange, 5%);
+	border-color: darken($orange, 8%)
+}
+
+.btn-orange.focus,
+.btn-orange:focus {
+	box-shadow: 0 0 0 .2rem rgba($orange, .5)
+}
+
+.btn-orange.disabled,
+.btn-orange:disabled {
+	color: #fff;
+	background-color: var(--orange);
+	border-color: var(--orange)
+}
+
+.btn-orange:not(:disabled):not(.disabled).active,
+.btn-orange:not(:disabled):not(.disabled):active,
+.show>.btn-orange.dropdown-toggle {
+	color: #fff;
+	background-color: darken($orange, 5%);
+	border-color: darken($orange, 8%)
+}
+
+.btn-orange:not(:disabled):not(.disabled).active:focus,
+.btn-orange:not(:disabled):not(.disabled):active:focus,
+.show>.btn-orange.dropdown-toggle:focus {
+	box-shadow: 0 0 0 .2rem rgba($orange, .5)
 }
 
 .btn-light {

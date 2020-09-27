@@ -31,6 +31,7 @@ use Cache;
  * @method static \Illuminate\Database\Query\Builder|StorageSize withTrashed()
  * @method static \Illuminate\Database\Query\Builder|StorageSize withoutTrashed()
  * @mixin \Eloquent
+ * @property-read string $human_size
  */
 class StorageSize extends BaseModel
 {

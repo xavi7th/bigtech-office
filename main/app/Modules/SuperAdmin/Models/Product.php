@@ -252,7 +252,14 @@ class Product extends BaseModel
     /**
      * Check if the product has been sold already or confirmed
      */
-    return $this->product_status_id === ProductStatus::soldId() || $this->product_status_id === ProductStatus::saleConfirmedId();
+    return $this->product_status_id === ProductStatus::soldId()
+      || $this->product_status_id === ProductStatus::saleConfirmedId()
+      || $this->product_status_id === ProductStatus::soldByResellerId();
+  }
+
+  public function out_for_delivery(): bool
+  {
+    return $this->product_status_id === ProductStatus::scheduledDeliveryId();
   }
 
   public function in_stock(): bool
@@ -298,6 +305,8 @@ class Product extends BaseModel
       Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true));
+      Route::post('{product:product_uuid}/schedule-delivery', [self::class, 'scheduleProductForDelivery'])->name($p('schedule_delivery'))->defaults('ex', __e('ss', null, true));
+      Route::post('{product:product_uuid}/return-to-stock', [self::class, 'returnProductToStock'])->name($p('return_to_stock'))->defaults('ex', __e('ss', null, true));
       Route::put('{product:product_uuid}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
       Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss', null, true));
@@ -496,6 +505,45 @@ class Product extends BaseModel
       ErrLog::notifyAdmin($request->user(), $th, 'Product not updated');
       return response()->json(['err' => 'Product not updated'], 500);
     }
+  }
+
+  public function scheduleProductForDelivery(Request $request, self $product)
+  {
+
+    DB::beginTransaction();
+
+    /**
+     * Update the status
+     */
+    if (!$product->in_stock()) {
+      return generate_422_error('This product is sold already');
+    } else {
+      $product->product_status_id = ProductStatus::scheduledDeliveryId();
+      $product->save();
+    }
+
+    DB::commit();
+
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Product removed from stock list and scheduled for delivery');
+  }
+
+  public function returnProductToStock(Request $request, self $product)
+  {
+
+    DB::beginTransaction();
+
+    if (!$product->out_for_delivery()) {
+      return generate_422_error('This product is bot scheduled for delivery');
+    } else {
+      $product->product_status_id = ProductStatus::inStockId();
+      $product->save();
+    }
+
+    DB::commit();
+
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Product returned back to the stock list');
   }
 
   public function updateProductStatus(Request $request, self $product)

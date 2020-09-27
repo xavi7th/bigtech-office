@@ -123,9 +123,17 @@ let mediaHandler = () => {
 	/**
 	 * To set up a watcher
 	 */
-	// window.matchMedia( '(min-width: 992px)' ).addEventListener( "change", () => {
-	// 	console.log( 'changed' )
-	// } )
+	// window.matchMedia('(min-width: 992px)')
+	// 	.addEventListener("change", () => {
+	// 		if (window.matchMedia('(max-width: 767px)')
+	// 			.matches) {
+	// 			isMobile = true;
+	// 			isDesktop = false;
+	// 		} else {
+	// 			isMobile = false;
+	// 			isDesktop = true;
+	// 		}
+	// 	})
 }
 mediaHandler();
 
@@ -141,13 +149,13 @@ new InertiaApp({
 					/* webpackPrefetch: true */
 					`../../../${section}/Resources/js/Pages/${module}.svelte`)
 				.then(module => module.default)
+		},
+		transformProps: props => {
+			return {
+				...props,
+				isMobile,
+				isDesktop
+			}
 		}
 	},
-	transformProps: props => {
-		return {
-			...props,
-			isMobile,
-			isDesktop
-		}
-	}
 })

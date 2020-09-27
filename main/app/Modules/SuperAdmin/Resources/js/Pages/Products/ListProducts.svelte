@@ -1,4 +1,5 @@
 <script>
+import { Inertia } from "@inertiajs/inertia";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
@@ -6,9 +7,9 @@
   import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
-  import { onMount, tick } from "svelte";
+import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ app } = $page);
+  $: ({ flash,errors } = $page);
 
   export let products = [],
     resellers = [],
@@ -17,6 +18,98 @@
     salesChannel = [];
 
   let productToMarkAsPaid, productToMarkAsSold, productToGiveReseller;
+
+  let scheduleProductForDelivery = product =>{
+    swalPreconfirm
+      .fire({
+        text:
+          "This will mark this product as out for delivery and remove it from the stock list",
+        confirmButtonText: "Mark for Delivery",
+        preConfirm: () => {
+
+          return Inertia.post(
+            route("superadmin.products.schedule_delivery", product),
+            {},
+            {
+              preserveState: true,
+              preserveScroll: true,
+              only: ["flash", "errors", "products"]
+            }
+          )
+            .then(() => {
+              if (flash.success) {
+                return true;
+              } else {
+                throw new Error(flash.error || getErrorString(errors));
+              }
+            })
+            .catch(error => {
+              swal.showValidationMessage(`Request failed: ${error}`);
+            });
+        }
+      })
+      .then(result => {
+        if (result.dismiss && result.dismiss == "cancel") {
+          swal.fire(
+            "Canceled!",
+            "You canceled the action. Nothing was changed",
+            "info"
+          );
+        } else if (flash.success) {
+          ToastLarge.fire({
+            title: "Successful!",
+            html: flash.success
+          });
+        }
+      });
+
+  }
+
+  let returnToStock = product =>{
+    swalPreconfirm
+      .fire({
+        text:
+          "This will return this product to the stock list",
+        confirmButtonText: "Return to Stock",
+        preConfirm: () => {
+
+          return Inertia.post(
+            route("superadmin.products.return_to_stock", product),
+            {},
+            {
+              preserveState: true,
+              preserveScroll: true,
+              only: ["flash", "errors", "products"]
+            }
+          )
+            .then(() => {
+              if (flash.success) {
+                return true;
+              } else {
+                throw new Error(flash.error || getErrorString(errors));
+              }
+            })
+            .catch(error => {
+              swal.showValidationMessage(`Request failed: ${error}`);
+            });
+        }
+      })
+      .then(result => {
+        if (result.dismiss && result.dismiss == "cancel") {
+          swal.fire(
+            "Canceled!",
+            "You canceled the action. Nothing was changed",
+            "info"
+          );
+        } else if (flash.success) {
+          ToastLarge.fire({
+            title: "Successful!",
+            html: flash.success
+          });
+        }
+      });
+
+  }
 
 </script>
 
@@ -68,7 +161,8 @@
                     class="btn btn-primary btn-xs btn-sm">
                     Details
                   </InertiaLink>
-                  {#if product.status == 'in stock'}
+                  {#if product.status == 'out for delivery' || product.status == 'in stock' }
+
                     <button
                       type="button"
                       on:click={() => {
@@ -79,6 +173,31 @@
                       class="btn btn-success btn-xs btn-sm">
                       Mark Sold
                     </button>
+                  {/if}
+                  {#if product.status == 'out for delivery' }
+
+                     <button
+                      type="button"
+                      on:click={() => {
+                        returnToStock(product.uuid)
+                      }}
+
+                      class="btn btn-orange btn-xs btn-sm">
+                      Return to Stock
+                    </button>
+
+                  {/if}
+                  {#if product.status == 'in stock'}
+                    <button
+                      type="button"
+                      on:click={() => {
+                        scheduleProductForDelivery(product.uuid)
+                      }}
+
+                      class="btn btn-orange btn-xs btn-sm">
+                      Schedule Delivery
+                    </button>
+
 
                     <button
                       type="button"

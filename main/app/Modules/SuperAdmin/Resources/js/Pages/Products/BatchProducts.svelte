@@ -34,6 +34,7 @@
                   <span class="badge badge-dark">{product.status}</span>
                   <br />
                   {product.identifier}
+                  <span class="d-none">{product.supplier}</span>
                 </td>
                 <td>{product.product_expenses_sum}</td>
                 <td>{product.cost_price}</td>

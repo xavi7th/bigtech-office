@@ -16,6 +16,7 @@ class CreateProductStatusesTable extends Migration
 		Schema::create('product_statuses', function (Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->string('status');
+      $table->string('status-slug');
 
 			$table->timestamps();
 			$table->softDeletes();

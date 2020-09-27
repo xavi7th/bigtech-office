@@ -34,6 +34,9 @@ use Cache;
  * @method static \Illuminate\Database\Query\Builder|ProductStatus withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductStatus withoutTrashed()
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus notSaleStatus()
+ * @property string $status-slug
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereStatusSlug($value)
  */
 class ProductStatus extends BaseModel
 {
@@ -84,6 +87,10 @@ class ProductStatus extends BaseModel
   static function inStockId(): int
   {
     return self::where('status', 'in stock')->first()->id;
+  }
+  static function scheduledDeliveryId(): int
+  {
+    return self::where('status-slug', 'out-for-delivery')->first()->id;
   }
 
   /**

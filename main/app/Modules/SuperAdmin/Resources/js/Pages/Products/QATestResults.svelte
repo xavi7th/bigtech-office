@@ -135,7 +135,7 @@
           aria-labelledby="homePillsSliding-tab">
           <div class="row vertical-gap">
             <p class="lead col-12">Select the results of each test type</p>
-            <div class="col-9">
+            <div class="col-lg-9">
               <table class="table table-striped">
                 <thead class="thead-dark">
                   <tr>
@@ -189,7 +189,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3">
 
               <UpdateProductStatus {product} {product_statuses} />
 
