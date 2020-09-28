@@ -161,7 +161,6 @@ class Product extends BaseModel
   public function product_histories()
   {
     return $this->morphMany(ProductHistory::class, 'product')->latest();
-    // return $this->hasMany(ProductHistory::class);
   }
 
   public function reseller_histories()
@@ -176,7 +175,7 @@ class Product extends BaseModel
 
   public function product_expenses()
   {
-    return $this->hasMany(ProductExpense::class);
+    return $this->morphMany(ProductExpense::class, 'product');
   }
 
   public function product_expenses_amount()

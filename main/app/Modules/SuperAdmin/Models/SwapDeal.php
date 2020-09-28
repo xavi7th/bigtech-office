@@ -29,64 +29,6 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 
-/**
- * App\Modules\SuperAdmin\Models\SwapDeal
- *
- * @property int $id
- * @property int|null $app_user_id
- * @property string $description
- * @property string $owner_details
- * @property string|null $id_url
- * @property string|null $receipt_url
- * @property string|null $imei
- * @property string|null $serial_no
- * @property string|null $model_no
- * @property float $swap_value
- * @property float|null $selling_price
- * @property string|null $sold_at
- * @property Product $swapped_with
- * @property int $product_status_id
- * @property string $product_uuid
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read AppUser|null $app_user
- * @property-read ProductStatus $product_status
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal query()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereAppUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereIdUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereImei($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereModelNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereOwnerDetails($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductStatusId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductUuid($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereReceiptUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSellingPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSerialNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSoldAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwapValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWith($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
- * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read string $id_thumb_url
- * @property-read string $receipt_thumb_url
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal backFromRepairs()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal inStock()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal outForRepairs()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal saleConfirmed()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal sold()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal soldByReseller()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal untested()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
- */
 class SwapDeal extends BaseModel
 {
   use Commentable;
@@ -120,6 +62,11 @@ class SwapDeal extends BaseModel
     return $this->morphMany(ProductHistory::class, 'product')->latest();
   }
 
+  public function product_expenses()
+  {
+    return $this->morphMany(ProductExpense::class, 'product')->latest();
+  }
+
   public function swapped_with()
   {
     return $this->belongsTo(Product::class);
@@ -133,6 +80,11 @@ class SwapDeal extends BaseModel
   public function app_user()
   {
     return $this->belongsTo(AppUser::class);
+  }
+
+  public function total_product_expenses(): float
+  {
+    return $this->product_expenses()->sum('amount');
   }
 
   public function is_sold(): bool
@@ -235,7 +187,7 @@ class SwapDeal extends BaseModel
 
   public function getSwapDealDetails(Request $request, self $swapDeal)
   {
-    $swapDeal = (new SwapDealTransformer)->detailed($swapDeal->load('swapped_with', 'product_status', 'app_user', 'comments'));
+    $swapDeal = (new SwapDealTransformer)->detailed($swapDeal->load('swapped_with', 'product_status', 'app_user', 'comments', 'product_expenses'));
     $product_statuses = Cache::rememberForever('productStatuses', fn () => (new ProductStatusTransformer)->collectionTransformer(ProductStatus::notSaleStatus()->get(), 'basic'));
 
     return Inertia::render('SuperAdmin,Products/SwapDealDetails', compact('swapDeal', 'product_statuses'));

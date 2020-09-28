@@ -8,15 +8,16 @@
   $: ({ app, flash, errors } = $page);
 
   let details = {};
-  export let productWithExpenses, product;
+  export let productWithExpenses, product, isSwapDeal = false;
 
   let createExpense = () => {
     BlockToast.fire({
       title: "Creating expense...."
     });
 
+      let url = isSwapDeal ? route("superadmin.products.create_swap_expense", product.uuid) : route("superadmin.products.create_product_expense", product.uuid)
     Inertia.post(
-      route("superadmin.products.create_product_expense", product.uuid),
+      url,
       details,
       {
         preserveState: true,

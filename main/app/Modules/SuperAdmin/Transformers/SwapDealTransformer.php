@@ -38,6 +38,7 @@ class SwapDealTransformer
       'receipt_thumb_url' => (string)$swapDeal->receipt_thumb_url,
       'swap_value' => (float)$swapDeal->swap_value,
       'selling_price' => (float)$swapDeal->selling_price,
+      'total_product_expenses' => (float)$swapDeal->total_product_expenses(),
       'sold_at' => (float)$swapDeal->sold_at,
       'swapped_with' => $swapDeal->swapped_with,
       'product_status_id' => $swapDeal->product_status_id,

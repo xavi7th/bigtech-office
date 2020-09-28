@@ -214,6 +214,14 @@
           </tr>
           <tr>
             <td class="text-primary">
+              <strong>Total Expenses</strong>
+            </td>
+            <th scope="row">
+              <strong>{swapDeal.total_product_expenses}</strong>
+            </th>
+          </tr>
+          <tr>
+            <td class="text-primary">
               <strong>Selling Price</strong>
             </td>
             <th scope="row">

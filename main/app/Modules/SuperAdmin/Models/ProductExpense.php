@@ -32,6 +32,8 @@ use App\Modules\SuperAdmin\Transformers\ProductTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereReason($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $product_type
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereProductType($value)
  */
 class ProductExpense extends BaseModel
 {
@@ -40,14 +42,9 @@ class ProductExpense extends BaseModel
     'reason',
   ];
 
-  // public function __construct()
-  // {
-  //   Inertia::setRootView('superadmin::app');
-  // }
-
   public function product()
   {
-    return $this->belongsTo(Product::class);
+    return $this->morphTo();
   }
 
   public static function routes()
@@ -59,7 +56,9 @@ class ProductExpense extends BaseModel
       // Route::get('', [self::class, 'getAllProductExpenses'])->name($p('create_expense'))->defaults('ex', __e('ss', 'credit-card', true));
       Route::get('{date}', [self::class, 'getDailyProductExpenses'])->name($p('daily_expenses'))->defaults('ex', __e('ss', 'credit-card', true));
       Route::get('product/{product:product_uuid}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss', null, true));
+      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealExpenses'])->name($p('swap_expenses'))->defaults('ex', __e('ss', null, true));
       Route::post('product/{product:product_uuid}/create', [self::class, 'createProductExpense'])->name($p('create_product_expense'))->defaults('ex', __e('ss', null, true));
+      Route::post('swap-deal/{swapDeal:product_uuid}/create', [self::class, 'createSwapExpense'])->name($p('create_swap_expense'))->defaults('ex', __e('ss', null, true));
     });
   }
 
@@ -94,6 +93,17 @@ class ProductExpense extends BaseModel
     return Inertia::render('SuperAdmin,Products/Expenses', compact('productWithExpenses', 'product'));
   }
 
+
+  public function getSwapDealExpenses(Request $request, SwapDeal $swapDeal)
+  {
+    $productWithExpenses = (new ProductExpenseTransformer)->collectionTransformer($swapDeal->product_expenses, 'basic');
+    $product = ['uuid' => $swapDeal->product_uuid, 'identifier' => $swapDeal->primary_identifier()];
+    $isSwapDeal = true;
+
+    if ($request->isApi()) return response()->json($productWithExpenses, 200);
+    return Inertia::render('SuperAdmin,Products/Expenses', compact('productWithExpenses', 'product', 'isSwapDeal'));
+  }
+
   public function createProductExpense(Request $request, Product $product)
   {
     if (!$request->amount || !$request->reason) {
@@ -113,5 +123,38 @@ class ProductExpense extends BaseModel
       ErrLog::notifyAdmin($request->user(), $th, 'ProductExpense not created');
       return response()->json(['err' => 'ProductExpense not created'], 500);
     }
+  }
+
+  public function createSwapExpense(Request $request, SwapDeal $swapDeal)
+  {
+    if (!$request->amount || !$request->reason) {
+      return generate_422_error('Amount and reason for expense required');
+    }
+
+    if (!is_numeric($request->amount)) {
+      return generate_422_error('Amount must be numeric');
+    }
+
+    try {
+      $swapDeal_expense = $swapDeal->product_expenses()->create($request->only(['amount', 'reason']));
+
+      if ($request->isApi()) return response()->json((new ProductExpenseTransformer)->basic($swapDeal_expense), 201);
+      return back()->withSuccess('Expense created');
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdmin($request->user(), $th, 'ProductExpense not created');
+      return response()->json(['err' => 'ProductExpense not created'], 500);
+    }
+  }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::creating(function (self $productExpense) {
+      request()->user()->activities()->create([
+        'activity' => 'Recorded an expense for ' . $productExpense->product->primary_identifier() . ' of ' . to_naira($productExpense->amount),
+      ]);
+    });
   }
 }
