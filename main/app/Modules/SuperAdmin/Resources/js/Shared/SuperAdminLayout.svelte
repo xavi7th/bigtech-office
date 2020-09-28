@@ -60,8 +60,9 @@
   data-spy="scroll"
   data-target=".rui-page-sidebar"
   data-offset="140"
-  class="rui-no-transition rui-navbar-autohide rui-section-lines main-page-wrap
-  yay-hide">
+  class="rui-no-transition rui-navbar-autohide rui-section-lines main-page-wrap"
+  class:yay-hide={$page.isMobile}
+  >
 
   <Header />
   <MobileHeader />
