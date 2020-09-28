@@ -160,7 +160,8 @@ class Product extends BaseModel
 
   public function product_histories()
   {
-    return $this->hasMany(ProductHistory::class);
+    return $this->morphMany(ProductHistory::class, 'product')->latest();
+    // return $this->hasMany(ProductHistory::class);
   }
 
   public function reseller_histories()
@@ -510,8 +511,6 @@ class Product extends BaseModel
   public function scheduleProductForDelivery(Request $request, self $product)
   {
 
-    DB::beginTransaction();
-
     /**
      * Update the status
      */
@@ -521,8 +520,6 @@ class Product extends BaseModel
       $product->product_status_id = ProductStatus::scheduledDeliveryId();
       $product->save();
     }
-
-    DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
     return back()->withSuccess('Product removed from stock list and scheduled for delivery');
@@ -864,6 +861,7 @@ class Product extends BaseModel
        */
       request()->user()->product_histories()->create([
         'product_id' => $product->id,
+        'product_type' => get_class($product),
         'product_status_id' => $product->product_status_id,
       ]);
     });

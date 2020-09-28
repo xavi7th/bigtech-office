@@ -60,6 +60,12 @@
                     class="btn btn-primary btn-xs">
                     Details
                   </InertiaLink>
+                  <InertiaLink
+                    type="button"
+                    href={route('superadmin.miscellaneous.view_swap_history', product.uuid)}
+                    class="btn btn-info btn-xs btn-sm">
+                    History
+                  </InertiaLink>
 
                   {#if product.status == 'in stock'}
                     <button

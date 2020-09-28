@@ -57,4 +57,18 @@ class SwapDealTransformer
       'comments' => (new UserCommentTransformer)->collectionTransformer($swapDeal->comments, 'commentDetails'),
     ];
   }
+
+  public function transformWithStatusHistory(SwapDeal $swapDeal)
+  {
+    return [
+      'id' => (int)$swapDeal->id,
+      'model' => (string)$swapDeal->description . ' swap deal',
+      'identifier' => (string)$swapDeal->primary_identifier(),
+      'status' => (string)$swapDeal->product_status->status,
+      'uuid' => (string)$swapDeal->product_uuid,
+      'cost_price' => $swapDeal->swap_value,
+      'selling_price' => $swapDeal->selling_price,
+      'product_histories' => (new ProductHistoryTransformer)->collectionTransformer($swapDeal->product_histories, 'detailedSwapDealHistory'),
+    ];
+  }
 }

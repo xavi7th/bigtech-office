@@ -18,6 +18,7 @@ use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
+use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
@@ -112,6 +113,11 @@ class SwapDeal extends BaseModel
       default:
         return '';
     }
+  }
+
+  public function product_histories()
+  {
+    return $this->morphMany(ProductHistory::class, 'product')->latest();
   }
 
   public function swapped_with()
@@ -218,7 +224,7 @@ class SwapDeal extends BaseModel
      *! Accountant will see the ones that are sold
      *! Qa will see the ones that are untested
      */
-    $swapDeals = (new SwapDealTransformer)->collectionTransformer(self::untested()->orWhere->sold()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic');
+    $swapDeals = (new SwapDealTransformer)->collectionTransformer(self::untested()->orWhere->sold()->orWhere->inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic');
     $onlineReps = fn () => Cache::rememberForever('onlineReps', fn () => (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic'));
     $salesChannel = fn () => Cache::rememberForever('salesChannel', fn () => (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic'));
     $companyAccounts = fn () => Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
@@ -548,15 +554,28 @@ class SwapDeal extends BaseModel
       $swapDeal->product_uuid = (string)Str::uuid();
     });
 
+    static::saved(function ($swapDeal) {
+      if ($swapDeal->isDirty('product_status_id')) {
+        request()->user()->product_histories()->create([
+          'product_id' => $swapDeal->id,
+          'product_type' => get_class($swapDeal),
+          'product_status_id' => $swapDeal->product_status_id,
+        ]);
+      }
+    });
+
     static::updated(function ($swapDeal) {
       // dd('fire an event to report this change');
-      $changes = $swapDeal->getChanges();
-      Arr::forget($changes, 'updated_at');
-      request()->user()->comments()->create([
-        'subject_id' => $swapDeal->id,
-        'subject_type' => get_class($swapDeal),
-        'comment' => 'Changed ' . http_build_query($changes) . ' because ' . request()->comment
-    ]);
+
+      if (!$swapDeal->isDirty('product_status_id')) {
+        $changes = $swapDeal->getChanges();
+        Arr::forget($changes, 'updated_at');
+        request()->user()->comments()->create([
+          'subject_id' => $swapDeal->id,
+          'subject_type' => get_class($swapDeal),
+          'comment' => 'Changed ' . http_build_query($changes) . ' because ' . request()->comment
+        ]);
+      }
     });
   }
 }

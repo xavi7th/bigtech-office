@@ -96,7 +96,6 @@
         html: flash.success
       });
       delete flash.success;
-      comment = null;
     } else if (flash.error || _.size(errors) > 0) {
       ToastLarge.fire({
         title: "Oops!",
