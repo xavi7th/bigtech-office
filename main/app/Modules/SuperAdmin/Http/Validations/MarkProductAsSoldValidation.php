@@ -23,7 +23,7 @@ class MarkProductAsSoldValidation extends FormRequest
       'selling_price' => 'required|numeric',
       'first_name' => 'required|string',
       'last_name' => 'nullable|string',
-      'phone' => 'required|regex:/^[\+]?[0-9\Q()\E\s-]+$/i|unique:app_users,phone',
+      'phone' => 'required|regex:/^[\+]?[0-9\Q()\E\s-]+$/i',
       'email' => 'required|email',
       'address' => 'required|string',
       'city' => 'required|string',
@@ -94,7 +94,7 @@ class MarkProductAsSoldValidation extends FormRequest
       /**
        * Check if the product has been QA tested and put in tock
        */
-      if (!$this->product->in_stock()) {
+      if (!($this->product->in_stock() || $this->product->out_for_delivery())) {
         $validator->errors()->add('Invalid transaction', 'This product has not being tested');
         return;
       }

@@ -42,8 +42,8 @@ class CreateProductsTable extends Migration
 			$table->string('imei')->unique()->nullable();
 			$table->string('serial_no')->unique()->nullable();
 			$table->string('model_no')->unique()->nullable();
-			$table->unsignedBigInteger('product_status_id')->default(1);
-			$table->foreign('product_status_id')->references('id')->on('product_statuses')->onDelete('cascade');
+      $table->foreignId('product_status_id')->constrained('product_statuses')->onDelete('cascade')->default(1);
+      $table->timestamp('sold_at')->nullable();
 			$table->uuid('product_uuid');
 			$table->unsignedBigInteger('stocked_by');
 			$table->string('stocker_type');

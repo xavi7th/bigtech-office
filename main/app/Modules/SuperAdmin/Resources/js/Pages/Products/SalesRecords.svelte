@@ -35,6 +35,7 @@
                 <th scope="row">{record.id}</th>
                 <td>
                   {record.product_model}
+                  <span class="d-none">{record.product_supplier}</span>
                   {#if record.is_swap_deal}
                     <span class="badge badge-danger">SWAP</span>
                   {/if}
@@ -63,7 +64,7 @@
                   {:else}
                     <button
                       on:click={() => {
-                        productToMarkAsPaid = record.product_uuid;
+                        productToMarkAsPaid = record.id;
                       }}
                       data-toggle="modal"
                       data-target="#enterProductPaymentDetails"

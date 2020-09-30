@@ -4,7 +4,6 @@ import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
   import route from "ziggy";
-  import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
 import { getErrorString } from "@public-assets/js/bootstrap";
@@ -14,10 +13,9 @@ import { getErrorString } from "@public-assets/js/bootstrap";
   export let products = [],
     resellers = [],
     onlineReps = [],
-    companyAccounts = [],
     salesChannel = [];
 
-  let productToMarkAsPaid, productToMarkAsSold, productToGiveReseller;
+  let productToMarkAsSold, productToGiveReseller;
 
   let scheduleProductForDelivery = product =>{
     swalPreconfirm
@@ -210,17 +208,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                       Give Reseller
                     </button>
                   {/if}
-                  {#if product.status == 'sold'}
-                    <button
-                      on:click={() => {
-                        productToMarkAsPaid = product.uuid;
-                      }}
-                      data-toggle="modal"
-                      data-target="#enterProductPaymentDetails"
-                      class="btn btn-brand btn-xs btn-sm">
-                      Mark Paid
-                    </button>
-                  {/if}
+
                   <InertiaLink
                     type="button"
                     href={route('superadmin.miscellaneous.view_product_history', product.uuid)}
@@ -237,8 +225,6 @@ import { getErrorString } from "@public-assets/js/bootstrap";
     </div>
   </div>
   <div slot="modals">
-
-    <MarkAsPaidModal {companyAccounts} {productToMarkAsPaid} />
 
     <MarkAsSoldModal {salesChannel} {onlineReps} {productToMarkAsSold} />
 

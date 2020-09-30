@@ -2,6 +2,7 @@
 namespace App\Modules\SuperAdmin\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Modules\SuperAdmin\Models\Product;
 
 class ProductSaleRecordsTableSeeder extends Seeder
 {
@@ -21,6 +22,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       0 =>
       array(
         'product_id' => 22,
+        'product_type' => Product::class,
         'selling_price' => 70000.0,
         'sales_channel_id' => 2,
         'online_rep_id' => 1,
@@ -35,6 +37,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       1 =>
       array(
         'product_id' => 15,
+        'product_type' => Product::class,
         'selling_price' => 20000.0,
         'sales_channel_id' => 2,
         'online_rep_id' => 1,
@@ -49,6 +52,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       2 =>
       array(
         'product_id' => 43,
+        'product_type' => Product::class,
         'selling_price' => 190000.0,
         'sales_channel_id' => 4,
         'online_rep_id' => 1,
@@ -63,6 +67,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       3 =>
       array(
         'product_id' => 3,
+        'product_type' => Product::class,
         'selling_price' => 10000.0,
         'sales_channel_id' => 6,
         'online_rep_id' => 1,
@@ -77,6 +82,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       4 =>
       array(
         'product_id' => 14,
+        'product_type' => Product::class,
         'selling_price' => 30000.0,
         'sales_channel_id' => 6,
         'online_rep_id' => 1,
@@ -91,6 +97,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       5 =>
       array(
         'product_id' => 29,
+        'product_type' => Product::class,
         'selling_price' => 120000.0,
         'sales_channel_id' => 3,
         'online_rep_id' => 1,
@@ -105,6 +112,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       6 =>
       array(
         'product_id' => 16,
+        'product_type' => Product::class,
         'selling_price' => 90000.0,
         'sales_channel_id' => 3,
         'online_rep_id' => 1,
@@ -119,6 +127,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       7 =>
       array(
         'product_id' => 46,
+        'product_type' => Product::class,
         'selling_price' => 280000.0,
         'sales_channel_id' => 1,
         'online_rep_id' => 1,
@@ -133,6 +142,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       8 =>
       array(
         'product_id' => 18,
+        'product_type' => Product::class,
         'selling_price' => 90000.0,
         'sales_channel_id' => 7,
         'online_rep_id' => 1,
@@ -147,6 +157,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       9 =>
       array(
         'product_id' => 47,
+        'product_type' => Product::class,
         'selling_price' => 140000.0,
         'sales_channel_id' => 2,
         'online_rep_id' => 1,
@@ -161,6 +172,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       10 =>
       array(
         'product_id' => 31,
+        'product_type' => Product::class,
         'selling_price' => 20000.0,
         'sales_channel_id' => 2,
         'online_rep_id' => 1,
@@ -175,6 +187,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       11 =>
       array(
         'product_id' => 24,
+        'product_type' => Product::class,
         'selling_price' => 60000.0,
         'sales_channel_id' => 4,
         'online_rep_id' => 1,
@@ -189,6 +202,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       12 =>
       array(
         'product_id' => 30,
+        'product_type' => Product::class,
         'selling_price' => 120000.0,
         'sales_channel_id' => 6,
         'online_rep_id' => 1,
@@ -203,6 +217,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       13 =>
       array(
         'product_id' => 6,
+        'product_type' => Product::class,
         'selling_price' => 80000.0,
         'sales_channel_id' => 4,
         'online_rep_id' => 1,
@@ -217,6 +232,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       14 =>
       array(
         'product_id' => 28,
+        'product_type' => Product::class,
         'selling_price' => 220000.0,
         'sales_channel_id' => 4,
         'online_rep_id' => 1,
@@ -231,6 +247,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       15 =>
       array(
         'product_id' => 5,
+        'product_type' => Product::class,
         'selling_price' => 220000.0,
         'sales_channel_id' => 5,
         'online_rep_id' => 1,
@@ -245,6 +262,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       16 =>
       array(
         'product_id' => 13,
+        'product_type' => Product::class,
         'selling_price' => 100000.0,
         'sales_channel_id' => 7,
         'online_rep_id' => 1,
@@ -259,6 +277,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       17 =>
       array(
         'product_id' => 9,
+        'product_type' => Product::class,
         'selling_price' => 200000.0,
         'sales_channel_id' => 1,
         'online_rep_id' => 1,
@@ -273,6 +292,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       18 =>
       array(
         'product_id' => 17,
+        'product_type' => Product::class,
         'selling_price' => 40000.0,
         'sales_channel_id' => 5,
         'online_rep_id' => 1,
@@ -287,6 +307,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       19 =>
       array(
         'product_id' => 21,
+        'product_type' => Product::class,
         'selling_price' => 140000.0,
         'sales_channel_id' => 8,
         'online_rep_id' => 1,
@@ -301,6 +322,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       20 =>
       array(
         'product_id' => 7,
+        'product_type' => Product::class,
         'selling_price' => 260000.0,
         'sales_channel_id' => 8,
         'online_rep_id' => 1,
@@ -315,6 +337,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       21 =>
       array(
         'product_id' => 20,
+        'product_type' => Product::class,
         'selling_price' => 50000.0,
         'sales_channel_id' => 7,
         'online_rep_id' => 1,
@@ -329,6 +352,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       22 =>
       array(
         'product_id' => 11,
+        'product_type' => Product::class,
         'selling_price' => 160000.0,
         'sales_channel_id' => 8,
         'online_rep_id' => 1,
@@ -343,6 +367,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       23 =>
       array(
         'product_id' => 36,
+        'product_type' => Product::class,
         'selling_price' => 180000.0,
         'sales_channel_id' => 5,
         'online_rep_id' => 1,
@@ -357,6 +382,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       24 =>
       array(
         'product_id' => 32,
+        'product_type' => Product::class,
         'selling_price' => 100000.0,
         'sales_channel_id' => 7,
         'online_rep_id' => 1,
@@ -371,6 +397,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       25 =>
       array(
         'product_id' => 4,
+        'product_type' => Product::class,
         'selling_price' => 300000.0,
         'sales_channel_id' => 6,
         'online_rep_id' => 1,
@@ -385,6 +412,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       26 =>
       array(
         'product_id' => 23,
+        'product_type' => Product::class,
         'selling_price' => 190000.0,
         'sales_channel_id' => 2,
         'online_rep_id' => 1,
@@ -399,6 +427,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       27 =>
       array(
         'product_id' => 19,
+        'product_type' => Product::class,
         'selling_price' => 170000.0,
         'sales_channel_id' => 3,
         'online_rep_id' => 1,
@@ -413,6 +442,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       28 =>
       array(
         'product_id' => 48,
+        'product_type' => Product::class,
         'selling_price' => 260000.0,
         'sales_channel_id' => 7,
         'online_rep_id' => 1,
@@ -427,6 +457,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       29 =>
       array(
         'product_id' => 49,
+        'product_type' => Product::class,
         'selling_price' => 210000.0,
         'sales_channel_id' => 2,
         'online_rep_id' => 1,
@@ -441,6 +472,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       30 =>
       array(
         'product_id' => 1,
+        'product_type' => Product::class,
         'selling_price' => 170000.0,
         'sales_channel_id' => 8,
         'online_rep_id' => 1,
@@ -455,6 +487,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       31 =>
       array(
         'product_id' => 41,
+        'product_type' => Product::class,
         'selling_price' => 260000.0,
         'sales_channel_id' => 8,
         'online_rep_id' => 1,
@@ -469,6 +502,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       32 =>
       array(
         'product_id' => 8,
+        'product_type' => Product::class,
         'selling_price' => 170000.0,
         'sales_channel_id' => 2,
         'online_rep_id' => 1,
@@ -483,6 +517,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       33 =>
       array(
         'product_id' => 12,
+        'product_type' => Product::class,
         'selling_price' => 60000.0,
         'sales_channel_id' => 8,
         'online_rep_id' => 1,
@@ -497,6 +532,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       34 =>
       array(
         'product_id' => 33,
+        'product_type' => Product::class,
         'selling_price' => 90000.0,
         'sales_channel_id' => 6,
         'online_rep_id' => 1,
@@ -511,6 +547,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       35 =>
       array(
         'product_id' => 40,
+        'product_type' => Product::class,
         'selling_price' => 50000.0,
         'sales_channel_id' => 6,
         'online_rep_id' => 1,
@@ -525,6 +562,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       36 =>
       array(
         'product_id' => 34,
+        'product_type' => Product::class,
         'selling_price' => 120000.0,
         'sales_channel_id' => 3,
         'online_rep_id' => 1,
@@ -539,6 +577,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
       37 =>
       array(
         'product_id' => 27,
+        'product_type' => Product::class,
         'selling_price' => 40000.0,
         'sales_channel_id' => 5,
         'online_rep_id' => 1,

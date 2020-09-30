@@ -125,10 +125,9 @@ class Reseller extends BaseModel
   public function getProductsWithReseller(Request $request, self $reseller)
   {
     $resellerWithProducts = fn () => (new ResellerTransformer)->fullDetailsWithTenuredProducts($reseller->load('products_in_possession'));
-    $companyAccounts = fn () => Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
 
     if ($request->isApi())  return response()->json($resellerWithProducts, 200);
-    return Inertia::render('SuperAdmin,Resellers/ViewProductsWithReseller', compact('resellerWithProducts', 'companyAccounts'));
+    return Inertia::render('SuperAdmin,Resellers/ViewProductsWithReseller', compact('resellerWithProducts'));
   }
 
   public function createReseller(CreateResellerValidation $request)

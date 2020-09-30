@@ -19,6 +19,7 @@ use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ProductHistory;
+use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
@@ -60,6 +61,11 @@ class SwapDeal extends BaseModel
   public function product_histories()
   {
     return $this->morphMany(ProductHistory::class, 'product')->latest();
+  }
+
+  public function product_sales_record()
+  {
+    return $this->morphMany(ProductSaleRecord::class, 'product');
   }
 
   public function product_expenses()
@@ -179,10 +185,9 @@ class SwapDeal extends BaseModel
     $swapDeals = (new SwapDealTransformer)->collectionTransformer(self::untested()->orWhere->sold()->orWhere->inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic');
     $onlineReps = fn () => Cache::rememberForever('onlineReps', fn () => (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic'));
     $salesChannel = fn () => Cache::rememberForever('salesChannel', fn () => (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic'));
-    $companyAccounts = fn () => Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
 
     if ($request->isApi()) return response()->json($swapDeals, 200);
-    return Inertia::render('SuperAdmin,Products/SwapDeals', compact('swapDeals', 'onlineReps', 'salesChannel', 'companyAccounts'));
+    return Inertia::render('SuperAdmin,Products/SwapDeals', compact('swapDeals', 'onlineReps', 'salesChannel'));
   }
 
   public function getSwapDealDetails(Request $request, self $swapDeal)
@@ -257,19 +262,19 @@ class SwapDeal extends BaseModel
     /**
      * Create a sales record for the product
      */
-    // try {
-    //   $swapDeal->product_sales_record()->create([
-    //     'selling_price' => $request->selling_price,
-    //     'online_rep_id' => $request->online_rep_id,
-    //     'sales_rep_id' => auth()->id(),
-    //     'sales_channel_id' => $request->sales_channel_id,
-    //     'is_swap_deal' => filter_var($request->is_swap_deal, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
-    //   ]);
-    // } catch (\Throwable $th) {
-    //   ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
-    //   if ($request->isApi()) return response()->json(['err' => 'Could not create product sales record ' . $request->email], 500);
-    //   return back()->withError('Could not create product sales record. Try again');
-    // }
+    try {
+      $swapDeal->product_sales_record()->create([
+        'selling_price' => $request->selling_price,
+        'online_rep_id' => $request->online_rep_id,
+        'sales_rep_id' => auth()->id(),
+        'sales_channel_id' => $request->sales_channel_id,
+        'is_swap_deal' => filter_var($request->is_swap_deal, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+      ]);
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
+      if ($request->isApi()) return response()->json(['err' => 'Could not create product sales record ' . $request->email], 500);
+      return back()->withError('Could not create product sales record. Try again');
+    }
 
     /**
      * Create or update the buyer's user profile using the email
@@ -278,9 +283,9 @@ class SwapDeal extends BaseModel
       $app_user = AppUser::updateOrCreate(
         [
           'email' => $request->email,
+          'phone' => $request->phone,
         ],
         [
-          'phone' => $request->phone,
           'first_name' => $request->first_name,
           'last_name' => $request->last_name,
           'address' => $request->address,

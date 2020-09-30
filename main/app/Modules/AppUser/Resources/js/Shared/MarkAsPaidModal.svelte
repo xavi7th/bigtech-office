@@ -69,8 +69,8 @@ import { getErrorString } from "@public-assets/js/bootstrap";
       payment_records[bankRecords[key]] = { amount: paymentRecords[key] };
     });
 
-    Inertia.put(
-      route("superadmin.products.confirm_sale", productToMarkAsPaid),
+    Inertia.post(
+      route("superadmin.product_sales_records.confirm_sale", productToMarkAsPaid),
       { payment_records },
       {
         preserveState: true,

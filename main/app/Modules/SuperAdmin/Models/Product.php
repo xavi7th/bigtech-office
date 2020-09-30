@@ -155,7 +155,7 @@ class Product extends BaseModel
 
   public function product_sales_record()
   {
-    return $this->hasOne(ProductSaleRecord::class);
+    return $this->morphMany(ProductSaleRecord::class, 'product');
   }
 
   public function product_histories()
@@ -307,7 +307,6 @@ class Product extends BaseModel
       Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/schedule-delivery', [self::class, 'scheduleProductForDelivery'])->name($p('schedule_delivery'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/return-to-stock', [self::class, 'returnProductToStock'])->name($p('return_to_stock'))->defaults('ex', __e('ss', null, true));
-      Route::put('{product:product_uuid}/confirm-sale', [self::class, 'confirmProductSale'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
       Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss', null, true));
       Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss', null, true));
       Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name($p('applicable_qa_tests'))->defaults('ex', __e('ss', null, true));
@@ -335,11 +334,10 @@ class Product extends BaseModel
     $products = fn () => Cache::rememberForever('products', fn () => (new ProductTransformer)->collectionTransformer(self::with(['product_color', 'storage_size', 'product_status', 'product_model', 'product_price', 'product_expenses_amount'])->get(), 'basic'));
     $onlineReps = fn () => Cache::rememberForever('onlineReps', fn () => (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic'));
     $salesChannel = fn () => Cache::rememberForever('salesChannel', fn () => (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic'));
-    $companyAccounts = fn () => Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
     $resellers = fn () => Cache::rememberForever('resellers', fn () => (new ResellerTransformer)->collectionTransformer(Reseller::all(), 'basic'));
 
     if ($request->isApi()) return  response()->json($products, 200);
-    return Inertia::render('SuperAdmin,Products/ListProducts', compact('products', 'onlineReps', 'salesChannel', 'companyAccounts', 'resellers'));
+    return Inertia::render('SuperAdmin,Products/ListProducts', compact('products', 'onlineReps', 'salesChannel', 'resellers'));
   }
 
   public function getProductDetails(Request $request, Product $product)
@@ -584,8 +582,6 @@ class Product extends BaseModel
   public function markProductAsSold(MarkProductAsSoldValidation $request, self $product)
   {
 
-    // dd($product);
-
     DB::beginTransaction();
 
     /**
@@ -617,6 +613,7 @@ class Product extends BaseModel
     try {
       $app_user = AppUser::updateOrCreate(
         [
+          'email' => $request->email,
           'email' => $request->email,
         ],
         [
@@ -670,107 +667,6 @@ class Product extends BaseModel
     return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
   }
 
-  /**
-   * !This belongs to accountants only
-   * @param Product $product The product to mark as sold
-   */
-  public function confirmProductSale(Request $request, self $product)
-  {
-    $paymentRecords = $request->payment_records;
-
-    /**
-     * !Remove any empty fields from input
-     */
-    foreach ($paymentRecords as $key => $value) {
-      if (!is_numeric($key)) {
-        unset($paymentRecords[$key]);
-      }
-    }
-
-    $product_sales_record = $product->product_sales_record;
-
-    /**
-     * Check if the product has been marked as sold.
-     * @throws JsonResponse
-     */
-    if (is_null($product_sales_record)) {
-      return generate_422_error('This product has not being sold');
-    }
-
-    $status_id = ProductStatus::saleConfirmedId();
-
-    if ($product->product_status_id === $status_id) {
-      return generate_422_error('This product has being confirmed sold already');
-    }
-    DB::beginTransaction();
-
-    /**
-     * Update the product's status to confirmed sold
-     */
-    $product->product_status_id = $status_id;
-    $product->save();
-
-    /**
-     * Mark the product's sales record as confirmed
-     */
-    $product_sales_record->sale_confirmed_by = $request->user()->id;
-    $product_sales_record->sale_confirmer_type = get_class($request->user());
-    $product_sales_record->save();
-
-    /**
-     * Record the bank account payments breakdown for this transaction
-     */
-    $product_sales_record->bank_account_payments()->sync($paymentRecords);
-
-    /**
-     * add an entry for the product trail that it's status changed in the static updating boot method
-     */
-
-
-    /**
-     * // generate the receipt and save it in the DB.
-     * ? This is so that even if the user should change his details in the future,
-     * ? this receipt will still carry this his current records
-     */
-    try {
-      $receipt = $product->generate_receipt();
-    } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Receipt generation failed');
-      // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
-      // return back()->withError('Receipt generation failed');
-    }
-
-    /**
-     * Send the user an email containing his receipt
-     */
-
-    try {
-    } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
-      // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
-      // return back()->withError('Failed to send receipt to user  ' . $product->app_user->emai);
-    }
-
-
-    /**
-     * Notify Admin that a product was sold
-     */
-    ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with ' . $product->primary_identifier() . ' as confirmed sold.');
-
-    /**
-     * Notify Accountant that a product was marked as sold
-     */
-    ActivityLog::notifyAccountants($request->user()->email . ' marked product with ' . $product->primary_identifier() . ' as confirmed sold.');
-
-    DB::commit();
-
-
-    Cache::forget($product->office_branch->city . 'officeBranchProducts');
-    Cache::forget('products');
-
-    if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
-  }
 
   public function commentOnProduct(CreateProductCommentValidation $request, self $product)
   {

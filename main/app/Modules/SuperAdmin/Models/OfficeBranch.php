@@ -225,12 +225,8 @@ class OfficeBranch extends BaseModel
       return (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic');
     });
 
-    $companyAccounts = Cache::rememberForever('companyAccounts', function () {
-      return (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic');
-    });
-
     if ($request->isApi()) return response()->json($officeBranch, 200);
-    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranchProducts', compact('officeBranch', 'onlineReps', 'salesChannel', 'companyAccounts'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranchProducts', compact('officeBranch', 'onlineReps', 'salesChannel'));
   }
 
   public function getBranchProductExpenses(self $office_branch)

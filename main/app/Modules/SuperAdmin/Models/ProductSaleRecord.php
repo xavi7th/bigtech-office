@@ -23,55 +23,6 @@ use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Transformers\ProductSaleRecordTransformer;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductSaleRecord
- *
- * @property int $id
- * @property int $product_id
- * @property float $selling_price
- * @property int|null $sales_channel_id
- * @property int|null $online_rep_id
- * @property int|null $sales_rep_id
- * @property int|null $sale_confirmed_by
- * @property string|null $sale_confirmer_type
- * @property int $is_swap_deal
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|CompanyBankAccount[] $bank_account_payments
- * @property-read int|null $bank_account_payments_count
- * @property-read mixed $is_payment_complete
- * @property-read float $total_bank_payments_amount
- * @property-read SalesRep|null $online_rep
- * @property-read Product $product
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $sale_confirmer
- * @property-read SalesChannel|null $sales_channel
- * @property-read SalesRep|null $sales_rep
- * @property-read SwapDeal|null $swap_deal
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord confirmed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord today()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord unconfirmed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereIsSwapDeal($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereOnlineRepId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSaleConfirmedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSaleConfirmerType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSalesChannelId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSalesRepId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSellingPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord withoutTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord yesterday()
- * @mixin \Eloquent
- */
 class ProductSaleRecord extends BaseModel
 {
   use SoftDeletes;
@@ -89,7 +40,7 @@ class ProductSaleRecord extends BaseModel
 
   public function product()
   {
-    return $this->belongsTo(Product::class);
+    return $this->morphTo();
   }
 
   public function swap_deal()
@@ -147,7 +98,7 @@ class ProductSaleRecord extends BaseModel
       // Route::get('', [self::class, 'getProductSaleRecords'])->name($p('view_sales_records'))->defaults('ex', __e('ss', null, true));
       Route::get('/{date}', [self::class, 'getDailyProductSaleRecords'])->name($p('daily'))->defaults('ex', __e('ss', null, true));
       Route::get('{product}/transactions', [self::class, 'getSaleRecordTransactions'])->name($p('view_sales_record_transactions'))->defaults('ex', __e('ss', null, true));
-      Route::post('{product}/confirm', [self::class, 'confirmSaleRecord'])->name($p('confirm_sales_record'))->defaults('ex', __e('ss', null, true));
+      Route::post('{productSaleRecord}/confirm', [self::class, 'confirmSaleRecord'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
       Route::get('{product}/swap-deal', [self::class, 'getSaleRecordSwapDeal'])->name($p('view_sales_record_swap_deal'))->defaults('ex', __e('ss', null, true));
     });
   }
@@ -170,8 +121,9 @@ class ProductSaleRecord extends BaseModel
 
   public function getDailyProductSaleRecords(Request $request, $date)
   {
-    $salesRecords =  self::with(
+    $salesRecords =  self::products()->with(
       'product',
+      'product.product_supplier',
       'product.product_price',
       'product.product_model:id,name',
       'sales_rep:id,full_name,email',
@@ -181,28 +133,48 @@ class ProductSaleRecord extends BaseModel
       'bank_account_payments'
     )->whereDate('created_at', Carbon::parse($date))->get();
 
+    $swapSalesRecords =  self::swapDeals()->with(
+      'product'
+    )->whereDate('created_at', Carbon::parse($date))->get();
+
+    $salesRecords = (new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic')->merge((new ProductSaleRecordTransformer)->collectionTransformer($swapSalesRecords, 'basicSwapTransaction'));
+
     $companyAccounts = Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
 
-    if ($request->isApi()) {
-      return response()->json((new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic'), 200);
-    } else {
-      return Inertia::render('SuperAdmin,Products/SalesRecords', [
-        'salesRecords' => (new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic'),
-        'date' => $date,
-        'companyAccounts' => $companyAccounts
-      ]);
-    }
+    if ($request->isApi()) return response()->json($salesRecords, 200);
+    return Inertia::render('SuperAdmin,Products/SalesRecords', [
+      'salesRecords' => $salesRecords,
+      'date' => $date,
+      'companyAccounts' => $companyAccounts
+    ]);
   }
 
-  public function confirmSaleRecord(Request $request, self $sales_record)
+  /**
+   * !This belongs to accountants only
+   * @param Product $product The product to mark as sold
+   */
+  public function confirmSaleRecord(Request $request, self $productSaleRecord)
   {
 
-    $product = $sales_record->product;
+    $paymentRecords = $request->payment_records;
+
+    /**
+     * !Remove any empty fields from input
+     */
+    foreach ($paymentRecords as $key => $value) {
+      if (!is_numeric($key)) {
+        unset($paymentRecords[$key]);
+      }
+    }
+
+    $product = $productSaleRecord->product;
+
     $status_id = ProductStatus::saleConfirmedId();
 
     if ($product->product_status_id === $status_id) {
       return generate_422_error('This product has being confirmed sold already');
     }
+
     DB::beginTransaction();
 
     /**
@@ -215,15 +187,15 @@ class ProductSaleRecord extends BaseModel
      * Mark the product's sales record as confirmed
      */
 
-    $sales_record->sale_confirmed_by = auth()->id();
-    $sales_record->sale_confirmer_type = get_class(auth()->user());
-    $sales_record->save();
+    $productSaleRecord->sale_confirmed_by = auth()->id();
+    $productSaleRecord->sale_confirmer_type = get_class($request->user());
+    $productSaleRecord->save();
 
     /**
      * Record the bank account payments breakdown for this transaction
      */
 
-    $sales_record->bank_account_payments()->sync($request->payment_records);
+    $productSaleRecord->bank_account_payments()->sync($paymentRecords);
 
     /**
      * // generate the receipt and save it in the DB.
@@ -234,6 +206,8 @@ class ProductSaleRecord extends BaseModel
       $receipt = $product->generate_receipt();
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin(auth()->user(), $th, 'Receipt generation failed');
+       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
+      // return back()->withError('Receipt generation failed');
     }
 
     /**
@@ -244,6 +218,8 @@ class ProductSaleRecord extends BaseModel
       $product->app_user->notify(new SendProductReceipt($receipt));
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
+        // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
+      // return back()->withError('Failed to send receipt to user  ' . $product->app_user->emai);
     }
 
 
@@ -258,7 +234,9 @@ class ProductSaleRecord extends BaseModel
     ActivityLog::notifyAccountants(auth()->user()->email . ' confirmed the sale of product with ' . $product->primary_identifier() . '.');
 
     DB::commit();
-    return response()->json([], 204);
+
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
   }
 
   public function getSaleRecordTransactions(self $sales_record)
@@ -271,7 +249,6 @@ class ProductSaleRecord extends BaseModel
   {
     return (new ProductSaleRecordTransformer)->transformWithSwapDeal($sales_record->load('swap_deal'));
   }
-
 
   /**
    * Scope a query to only today's records.
@@ -297,5 +274,15 @@ class ProductSaleRecord extends BaseModel
   public function scopeUnconfirmed($query)
   {
     return $query->where('sale_confirmed_by', null);
+  }
+
+  public function scopeProducts($query)
+  {
+    return $query->where('product_type', Product::class);
+  }
+
+  public function scopeSwapDeals($query)
+  {
+    return $query->where('product_type', SwapDeal::class);
   }
 }

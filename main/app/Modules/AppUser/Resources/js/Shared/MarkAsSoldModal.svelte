@@ -58,7 +58,7 @@
             {
               preserveState: true,
               preserveScroll: true,
-              only: ["flash", "errors", "officeBranch"]
+              only: ["flash", "errors", "officeBranch", 'products']
             }
           )
             .then(() => {

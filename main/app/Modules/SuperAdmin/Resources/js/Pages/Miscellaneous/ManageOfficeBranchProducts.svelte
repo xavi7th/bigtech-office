@@ -1,26 +1,20 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
-  import FlashMessage from "@usershared/FlashMessage.svelte";
   import Icon from "@superadmin-shared/Partials/TableSortIcon.svelte";
-  import Modal from "@superadmin-shared/Partials/Modal.svelte";
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
   import { onMount } from "svelte";
-  import { lang } from "moment";
-  import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
 
   $: ({ app, flash, errors } = $page);
   export let onlineReps = [],
-    companyAccounts = [],
     salesChannel = [],
     officeBranch = {
       branchProducts: []
     };
 
-  let productToMarkAsPaid, productToMarkAsSold;
+  let  productToMarkAsSold;
 
   onMount(() => {
     if (flash.success) {
@@ -100,17 +94,7 @@
                       Mark Sold
                     </button>
                   {/if}
-                  {#if product.status == 'sold'}
-                    <button
-                      on:click={() => {
-                        productToMarkAsPaid = product.uuid;
-                      }}
-                      data-toggle="modal"
-                      data-target="#enterProductPaymentDetails"
-                      class="btn btn-brand btn-xs btn-sm">
-                      Mark Paid
-                    </button>
-                  {/if}
+
                   <InertiaLink
                     type="button"
                     preserve-scroll
@@ -132,8 +116,6 @@
     </div>
   </div>
   <div slot="modals">
-    <MarkAsPaidModal {companyAccounts} {productToMarkAsPaid} />
-
     <MarkAsSoldModal {salesChannel} {onlineReps} {productToMarkAsSold} />
   </div>
 </Layout>

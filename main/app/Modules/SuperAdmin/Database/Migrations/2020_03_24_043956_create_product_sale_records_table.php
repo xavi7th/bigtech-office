@@ -14,16 +14,14 @@ class CreateProductSaleRecordsTable extends Migration
 	public function up()
 	{
 		Schema::create('product_sale_records', function (Blueprint $table) {
-			$table->bigIncrements('id');
-			$table->unsignedBigInteger('product_id')->unique();
-			$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+      $table->id();
+      $table->unsignedBigInteger('product_id');
+      $table->string('product_type');
+      $table->unique(['product_id', 'product_type'], 'unique_product_sale_record');
 			$table->double('selling_price');
-			$table->unsignedBigInteger('sales_channel_id')->nullable();
-			$table->foreign('sales_channel_id')->references('id')->on('sales_channels')->onDelete('cascade');
-			$table->unsignedBigInteger('online_rep_id')->nullable();
-			$table->foreign('online_rep_id')->references('id')->on('sales_reps')->onDelete('cascade');
-			$table->unsignedBigInteger('sales_rep_id')->nullable();
-			$table->foreign('sales_rep_id')->references('id')->on('sales_reps')->onDelete('cascade');
+      $table->foreignId('sales_channel_id')->constrained('sales_channels')->onDelete('cascade')->nullable();
+      $table->foreignId('online_rep_id')->constrained('sales_reps')->onDelete('cascade')->nullable();
+      $table->foreignId('sales_rep_id')->constrained('sales_reps')->onDelete('cascade')->nullable();
 			$table->unsignedBigInteger('sale_confirmed_by')->nullable();
 			$table->string('sale_confirmer_type')->nullable();
 			$table->boolean('is_swap_deal')->default(false);

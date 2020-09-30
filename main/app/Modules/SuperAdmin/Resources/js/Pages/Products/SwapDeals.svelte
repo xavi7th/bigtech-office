@@ -1,21 +1,17 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import FlashMessage from "@usershared/FlashMessage";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
   import route from "ziggy";
   import MarkSwapDealAsSoldModal from "@usershared/MarkSwapDealAsSoldModal.svelte";
-  import MarkSwapDealAsPaidModal from "@usershared/MarkSwapDealAsPaidModal.svelte";
 
   $: ({ app } = $page);
 
   export let swapDeals = [],
     salesChannel = [],
-    onlineReps = [],
-    companyAccounts = [];
+    onlineReps = [];
 
-  let productToMarkAsSold, productToMarkAsPaid;
+  let productToMarkAsSold;
 </script>
 
 <Layout title="Awoof Deals">
@@ -90,17 +86,7 @@
                       Give Reseller
                     </button> -->
                   {/if}
-                  {#if product.status == 'sold'}
-                    <button
-                      on:click={() => {
-                        productToMarkAsPaid = product.uuid;
-                      }}
-                      data-toggle="modal"
-                      data-target="#enterProductPaymentDetails"
-                      class="btn btn-brand btn-xs btn-sm">
-                      Mark Paid
-                    </button>
-                  {/if}
+
                 </td>
               </tr>
             {/each}
@@ -115,7 +101,5 @@
       {salesChannel}
       {onlineReps}
       {productToMarkAsSold} />
-
-    <MarkSwapDealAsPaidModal {companyAccounts} {productToMarkAsPaid} />
   </div>
 </Layout>
