@@ -15,10 +15,9 @@ class CreateResellerHistoriesTable extends Migration
 	{
 		Schema::create('reseller_histories', function (Blueprint $table) {
 			$table->bigIncrements('id');
-			$table->unsignedBigInteger('reseller_id');
-			$table->foreign('reseller_id')->references('id')->on('resellers')->onDelete('cascade');
+      $table->foreignId('reseller_id')->constrained('resellers')->onDelete('cascade');;
 			$table->unsignedBigInteger('product_id');
-			$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+      $table->string('product_type');
 			$table->enum('product_status', ['returned', 'sold', 'tenured'])->default('tenured');
 			$table->bigInteger('handled_by');
 			$table->string('handler_type');

@@ -19,7 +19,6 @@ use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
-use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
@@ -60,6 +59,8 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
  * @method static \Illuminate\Database\Query\Builder|Reseller withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Reseller withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\SwapDeal[] $swap_deals
+ * @property-read int|null $swap_deals_count
  */
 class Reseller extends BaseModel
 {
@@ -77,11 +78,24 @@ class Reseller extends BaseModel
 
   public function products()
   {
-    return $this->belongsToMany(Product::class, $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
+    return $this->morphedByMany(Product::class, 'product', $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
+    // return $this->belongsToMany(Product::class, $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
   }
+
   public function products_in_possession()
   {
     return $this->products()->wherePivot('status', 'tenured')->withPivot('status');
+  }
+
+  public function swap_deals()
+  {
+    return $this->morphedByMany(SwapDeal::class, 'product', $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
+    // return $this->belongsToMany(Product::class, $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
+  }
+
+  public function swap_deals_in_possession()
+  {
+    return $this->swap_deals()->wherePivot('status', 'tenured')->withPivot('status');
   }
 
   public function reseller_histories()
@@ -102,7 +116,7 @@ class Reseller extends BaseModel
       Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::post('{reseller}/give-product/{product_uuid}', [self::class, 'giveProductToReseller'])->name($others('resellers.give_product'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::post('{reseller}/{product:product_uuid}/return', [self::class, 'resellerReturnProduct'])->name($others('resellers.return_product'))->defaults('ex', __e('ss', 'at-sign', true));
-      Route::post('{reseller}/{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($others('resellers.mark_as_sold'))->defaults('ex', __e('ss', 'at-sign', true));
+      Route::post('{reseller}/{product_uuid}/sold', [self::class, 'markProductAsSold'])->name($others('resellers.mark_as_sold'))->defaults('ex', __e('ss', 'at-sign', true));
     });
   }
 
@@ -116,7 +130,10 @@ class Reseller extends BaseModel
 
   public function getResellersWithProducts(Request $request)
   {
-    $resellersWithProducts = (new ResellerTransformer)->collectionTransformer(self::has('products_in_possession')->with('products_in_possession')->get(), 'transformWithTenuredProducts');
+    $resellersWithProducts = (new ResellerTransformer)->collectionTransformer(self::has('products_in_possession')->orHas('swap_deals_in_possession')->with('products_in_possession', 'swap_deals_in_possession')->get(), 'transformWithTenuredProducts');
+    // $resellersWithSwapDeals = (new ResellerTransformer)->collectionTransformer(self::has('')->with('')->get(), 'transformWithTenuredSwapDeals');
+
+    // $resellersWithProducts = $resellersWithProducts->merge($resellersWithSwapDeals);
 
     if ($request->isApi()) return response()->json($resellersWithProducts, 200);
     return Inertia::render('SuperAdmin,Resellers/ViewResellersWithProducts', compact('resellersWithProducts'));
@@ -177,7 +194,7 @@ class Reseller extends BaseModel
   public function giveProductToReseller(Request $request, self $reseller,  $product_uuid)
   {
     try {
-      $product =  Product::where('product_uuid', $product_uuid)->firstOrFail();
+      $product =  Product::where('product_uuid', $product_uuid)->firstOr(fn () => SwapDeal::where('product_uuid', $product_uuid)->firstOrFail());
     } catch (ModelNotFoundException $th) {
       return generate_422_error('Invalid product selected');
     }
@@ -214,6 +231,7 @@ class Reseller extends BaseModel
 
       $reseller->reseller_histories()->create([
         'product_id' => $product->id,
+        'product_type' => get_class($product),
         'handled_by' => $request->user()->id,
         'handler_type' => get_class($request->user()),
       ]);
@@ -222,7 +240,12 @@ class Reseller extends BaseModel
        * Create an entry in the product reseller table
        * ! syncwithoutdetach()
        */
-      $reseller->products()->save($product);
+      if ($product instanceof Product) {
+        $reseller->products()->save($product);
+      } elseif ($product instanceof SwapDeal) {
+        $reseller->swap_deals()->save($product);
+      }
+
     } catch (QueryException $th) {
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Error giving product to reseller');
       if ($th->errorInfo[1] == 1062) {
@@ -249,8 +272,6 @@ class Reseller extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Reseller notification failed');
     }
-
-    Cache::forget('products');
 
     DB::commit();
 
@@ -317,8 +338,14 @@ class Reseller extends BaseModel
     return back()->withSuccess('The product has been marked as returned and is back in the stock list');
   }
 
-  public function markProductAsSold(Request $request, self $reseller, Product $product)
+  public function markProductAsSold(Request $request, self $reseller, $product_uuid)
   {
+    try {
+      $product = Product::whereProductUuid($product_uuid)->firstOr(fn () => SwapDeal::whereProductUuid($product_uuid)->firstOrFail());
+    } catch (ModelNotFoundException $th) {
+      return generate_422_error('Invalid product selected');
+    }
+
 
     if (!$request->selling_price) {
       return generate_422_error('Specify selling price');
@@ -341,7 +368,6 @@ class Reseller extends BaseModel
       return generate_422_error('This product is not supposed to be with a reseller');
     }
 
-
     DB::beginTransaction();
     /**
      * create a reseller history for selling this device
@@ -350,6 +376,7 @@ class Reseller extends BaseModel
 
       $reseller->reseller_histories()->create([
         'product_id' => $product->id,
+        'product_type' => get_class($product),
         'handled_by' => $request->user()->id,
         'handler_type' => get_class($request->user()),
         'product_status' => 'sold'
@@ -358,9 +385,15 @@ class Reseller extends BaseModel
       /**
        * Update the entry in the product reseller table to reflect returned
        */
-      $reseller->products()->where('product_id', $product->id)->update([
-        'status' => 'sold'
-      ]);
+      if ($product instanceof Product) {
+        $reseller->products()->where('product_id', $product->id)->update([
+          'status' => 'sold'
+        ]);
+      } elseif ($product instanceof SwapDeal) {
+        $reseller->swap_deals()->where('product_id', $product->id)->update([
+          'status' => 'sold'
+        ]);
+      }
     } catch (QueryException $th) {
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Error trying to mark product from a reseller as sold.');
       if ($th->errorInfo[1] == 1062) {
@@ -381,6 +414,7 @@ class Reseller extends BaseModel
     $product->product_sales_record()->create([
       'selling_price' => $request->selling_price,
       'sales_rep_id' => SalesRep::defaultSystemAccountId(),
+      'online_rep_id' => SalesRep::defaultSystemAccountId(),
       'sales_channel_id' => SalesChannel::resellerId(),
     ]);
 

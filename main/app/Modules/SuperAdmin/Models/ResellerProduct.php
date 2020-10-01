@@ -3,6 +3,7 @@
 namespace App\Modules\SuperAdmin\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Relations\MorphPivot;
 
 /**
  * App\Modules\SuperAdmin\Models\ResellerProduct
@@ -23,8 +24,10 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerProduct whereResellerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerProduct whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerProduct whereUpdatedAt($value)
+ * @property string $product_type
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerProduct whereProductType($value)
  */
-class ResellerProduct extends Pivot
+class ResellerProduct extends MorphPivot
 {
   protected $fillable = [];
 

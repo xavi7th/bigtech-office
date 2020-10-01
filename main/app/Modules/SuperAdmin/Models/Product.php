@@ -42,11 +42,11 @@ use App\Modules\SuperAdmin\Models\ProductSupplier;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
-use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\QATestTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
+use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
 use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
 use App\Modules\SuperAdmin\Transformers\StorageTypeTransformer;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
@@ -61,7 +61,6 @@ use App\Modules\SuperAdmin\Transformers\ProcessorSpeedTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductValidation;
-use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateLocalSupplierProductValidation;
@@ -165,12 +164,13 @@ class Product extends BaseModel
 
   public function reseller_histories()
   {
-    return $this->hasMany(ResellerHistory::class);
+    return $this->morphMany(ResellerHistory::class, 'product')->latest();
   }
 
   public function with_resellers()
   {
-    return $this->belongsToMany(Reseller::class, $table = 'reseller_product')->using(ResellerProduct::class)->wherePivot('status', 'tenured')->withPivot('status')->withTimestamps()->as('tenure_record');
+    return $this->morphToMany(Reseller::class, 'product',  $table = 'reseller_product')->using(ResellerProduct::class)->wherePivot('status', 'tenured')->withPivot('status')->withTimestamps()->as('tenure_record');
+    // return $this->belongsToMany(Reseller::class, $table = 'reseller_product')->using(ResellerProduct::class)->wherePivot('status', 'tenured')->withPivot('status')->withTimestamps()->as('tenure_record');
   }
 
   public function product_expenses()
@@ -382,6 +382,10 @@ class Product extends BaseModel
   public function getProductsWithResellers(Request $request)
   {
     $productsWithResellers = (new ProductTransformer)->collectionTransformer(self::has('with_resellers')->with('with_resellers', 'product_color', 'product_model')->get(), 'transformWithResellerDetails');
+    $swapDealsWithResellers = (new SwapDealTransformer)->collectionTransformer(SwapDeal::has('with_resellers')->with('with_resellers')->get(), 'transformWithResellerDetails');
+
+    $productsWithResellers = $productsWithResellers->merge($swapDealsWithResellers);
+
     if ($request->isApi())  return response()->json($productsWithResellers, 200);
     return Inertia::render('SuperAdmin,Products/ProductsWithResellers', compact('productsWithResellers'));
   }
@@ -666,7 +670,6 @@ class Product extends BaseModel
     if ($request->isApi()) return response()->json([], 204);
     return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
   }
-
 
   public function commentOnProduct(CreateProductCommentValidation $request, self $product)
   {

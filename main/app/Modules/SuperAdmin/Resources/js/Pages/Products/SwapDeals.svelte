@@ -4,14 +4,16 @@
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
   import route from "ziggy";
   import MarkSwapDealAsSoldModal from "@usershared/MarkSwapDealAsSoldModal.svelte";
+  import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
 
   $: ({ app } = $page);
 
   export let swapDeals = [],
+  resellers=[],
     salesChannel = [],
     onlineReps = [];
 
-  let productToMarkAsSold;
+  let productToMarkAsSold, productToGiveReseller;
 </script>
 
 <Layout title="Awoof Deals">
@@ -75,7 +77,7 @@
                       Mark Sold
                     </button>
 
-                    <!-- <button
+                    <button
                       type="button"
                       on:click={() => {
                         productToGiveReseller = product.uuid;
@@ -84,7 +86,7 @@
                       data-target="#giveProductToReseller"
                       class="btn btn-warning btn-xs btn-sm">
                       Give Reseller
-                    </button> -->
+                    </button>
                   {/if}
 
                 </td>
@@ -101,5 +103,7 @@
       {salesChannel}
       {onlineReps}
       {productToMarkAsSold} />
+
+      <GiveProductToReseller {resellers} {productToGiveReseller} />
   </div>
 </Layout>

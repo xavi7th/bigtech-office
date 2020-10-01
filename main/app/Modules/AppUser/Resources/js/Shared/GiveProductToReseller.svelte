@@ -26,7 +26,7 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "products"]
+        only: ["flash", "errors", "products", 'swapDeals']
       }
     ).then(() => {
       if (flash.success) {
@@ -58,7 +58,6 @@
   <div class="row vertical-gap sm-gap">
 
     <div class="col-12">
-
       <select class="custom-select " bind:value={resellerToGiveProduct}>
         <option value={null} selected>Select Reseller</option>
 
@@ -67,7 +66,6 @@
         {/each}
       </select>
     </div>
-
   </div>
 
   <button

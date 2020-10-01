@@ -40,12 +40,21 @@
                 <td>{product.identifier}</td>
                 <td>{product.date_collected}</td>
                 <td>
+                {#if product.is_swap_deal}
+                  <InertiaLink
+                    type="button"
+                    href={route('superadmin.products.swap_deal_details', product.uuid)}
+                    class="btn btn-primary btn-xs btn-sm">
+                    Details
+                  </InertiaLink>
+                {:else}
                   <InertiaLink
                     type="button"
                     href={route('superadmin.products.view_product_details', product.uuid)}
                     class="btn btn-primary btn-xs btn-sm">
                     Details
                   </InertiaLink>
+                {/if}
                 </td>
               </tr>
             {/each}

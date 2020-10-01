@@ -195,12 +195,22 @@
                     Mark Sold
                   </button>
 
+
+                   {#if product.is_swap_deal}
+                  <InertiaLink
+                    type="button"
+                    href={route('superadmin.products.swap_deal_details', product.uuid)}
+                    class="btn btn-primary btn-xs btn-sm">
+                    View Product
+                  </InertiaLink>
+                {:else}
                   <InertiaLink
                     type="button"
                     href={route('superadmin.products.view_product_details', product.uuid)}
                     class="btn btn-primary btn-xs btn-sm">
                     View Product
                   </InertiaLink>
+                {/if}
                 </td>
               </tr>
             {/each}

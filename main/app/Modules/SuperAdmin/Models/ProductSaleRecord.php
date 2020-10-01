@@ -23,6 +23,59 @@ use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Transformers\ProductSaleRecordTransformer;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 
+/**
+ * App\Modules\SuperAdmin\Models\ProductSaleRecord
+ *
+ * @property int $id
+ * @property int $product_id
+ * @property string $product_type
+ * @property float $selling_price
+ * @property int $sales_channel_id
+ * @property int $online_rep_id
+ * @property int $sales_rep_id
+ * @property int|null $sale_confirmed_by
+ * @property string|null $sale_confirmer_type
+ * @property int $is_swap_deal
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|CompanyBankAccount[] $bank_account_payments
+ * @property-read int|null $bank_account_payments_count
+ * @property-read mixed $is_payment_complete
+ * @property-read float $total_bank_payments_amount
+ * @property-read SalesRep $online_rep
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $product
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $sale_confirmer
+ * @property-read SalesChannel $sales_channel
+ * @property-read SalesRep $sales_rep
+ * @property-read SwapDeal|null $swap_deal
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord confirmed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord products()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord swapDeals()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord today()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord unconfirmed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereIsSwapDeal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereOnlineRepId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereProductType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSaleConfirmedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSaleConfirmerType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSalesChannelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSalesRepId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSellingPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord yesterday()
+ * @mixin \Eloquent
+ */
 class ProductSaleRecord extends BaseModel
 {
   use SoftDeletes;

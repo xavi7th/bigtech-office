@@ -72,4 +72,38 @@ class SwapDealTransformer
       'product_histories' => (new ProductHistoryTransformer)->collectionTransformer($swapDeal->product_histories, 'detailedSwapDealHistory'),
     ];
   }
+
+
+  public function transformWithTenureDetails(SwapDeal $swapDeal)
+  {
+    return [
+      'id' => (int)$swapDeal->id,
+      'uuid' => (string)$swapDeal->product_uuid,
+      'model' => (string)$swapDeal->description,
+      'identifier' => (string)$swapDeal->primary_identifier(),
+      'collection_date' => (string)$swapDeal->tenure_record->created_at,
+      'is_swap_deal' => (bool)true,
+      // 'status' => (string)$swapDeal->tenure_record->status,
+      // 'cost_price' => $swapDeal->product_price->cost_price,
+      // 'selling_price' => $swapDeal->product_price->proposed_selling_price,
+    ];
+  }
+
+  public function transformWithResellerDetails(SwapDeal $swapDeal)
+  {
+    return [
+      'id' => (int)$swapDeal->id,
+      'model' => (string)$swapDeal->description,
+      'identifier' => (string)$swapDeal->primary_identifier(),
+      'reseller' => (string)$swapDeal->with_resellers[0]->business_name,
+      'reseller_phone' => (string)$swapDeal->with_resellers[0]->phone,
+      'date_collected' => (string)$swapDeal->with_resellers[0]->tenure_record->created_at,
+      'uuid' => $swapDeal->product_uuid,
+      'is_swap_deal' => (bool)true,
+      // 'cost_price' => $swapDeal->product_price->cost_price,
+      // 'selling_price' => $swapDeal->product_price->proposed_selling_price,
+      // 'collection_date' => (string)$swapDeal->tenure_record->created_at,
+      // 'status' => (string)$swapDeal->tenure_record->status,
+    ];
+  }
 }

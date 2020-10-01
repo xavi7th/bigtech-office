@@ -6,39 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\ActivityLog;
-use Illuminate\Http\Request;
 
-/**
- * App\Modules\SuperAdmin\Models\ResellerHistory
- *
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $handler
- * @property-read \App\Modules\SuperAdmin\Models\Product $product
- * @property-read \App\Modules\SuperAdmin\Models\Reseller $reseller
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory query()
- * @mixin \Eloquent
- * @property int $id
- * @property int $reseller_id
- * @property int $product_id
- * @property string $product_status
- * @property int $handled_by
- * @property string $handler_type
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory whereHandledBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory whereHandlerType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory whereProductStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory whereResellerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ResellerHistory whereUpdatedAt($value)
- */
 class ResellerHistory extends Model
 {
   protected $fillable = [
     'product_id',
+    'product_type',
     'handled_by',
     'handler_type',
     'product_status'
@@ -51,7 +24,7 @@ class ResellerHistory extends Model
 
   public function product()
   {
-    return $this->belongsTo(Product::class);
+    return $this->morphTo();
   }
 
   public function reseller()
@@ -63,12 +36,12 @@ class ResellerHistory extends Model
   {
     parent::boot();
 
-    static::creating(function (self $reseller_history) {
+    static::created(function (self $reseller_history) {
       $reseller_history->load('product', 'reseller');
       if (is_null($reseller_history->product_status)) {
-        ActivityLog::notifySuperAdmins(request()->user()->email . ' gave product with UUID: ' . $reseller_history->product->product_uuid . ' to reseller:  "' . $reseller_history->reseller->business_name . '"');
+        ActivityLog::notifySuperAdmins(request()->user()->email . ' gave product with ' . $reseller_history->product->primary_identifier() . ' to reseller:  "' . $reseller_history->reseller->business_name . '"');
       } else {
-        ActivityLog::notifySuperAdmins($reseller_history->reseller->business_name . ' has ' . $reseller_history->product_status . ' product with UUID: ' . $reseller_history->product->product_uuid . '. Handler: ' . auth(auth()->getDefaultDriver())->user()->email);
+        ActivityLog::notifySuperAdmins($reseller_history->reseller->business_name . ' has ' . $reseller_history->product_status . ' product with ' . $reseller_history->product->primary_identifier() . '. Handler: ' . request()->user()->email);
       }
     });
 

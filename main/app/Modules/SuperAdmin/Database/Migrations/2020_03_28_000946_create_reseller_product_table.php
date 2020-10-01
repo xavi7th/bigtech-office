@@ -15,12 +15,11 @@ class CreateResellerProductTable extends Migration
 	{
 		Schema::create('reseller_product', function (Blueprint $table) {
 			$table->bigIncrements('id');
-			$table->unsignedBigInteger('reseller_id');
-			$table->foreign('reseller_id')->references('id')->on('resellers')->onDelete('cascade');
+      $table->foreignId('reseller_id')->constrained('resellers')->onDelete('cascade');
 			$table->unsignedBigInteger('product_id');
-			$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+      $table->string('product_type');
 			$table->enum('status', ['sold', 'returned', 'tenured'])->default('tenured');
-			$table->unique(['product_id', 'reseller_id'], 'unique_reseller_product');
+      $table->unique(['product_id', 'reseller_id', 'product_type'], 'unique_reseller_product');
 
 			$table->timestamps();
 		});
