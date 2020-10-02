@@ -64,6 +64,8 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
  * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $product_sales_record
  * @property-read int|null $product_sales_record_count
  * @property-read ProductStatus $product_status
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
+ * @property-read int|null $reseller_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Reseller[] $with_resellers
  * @property-read int|null $with_resellers_count
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal backFromRepairs()
@@ -96,8 +98,6 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
- * @property-read int|null $reseller_histories_count
  */
 class SwapDeal extends BaseModel
 {

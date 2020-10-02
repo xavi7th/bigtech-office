@@ -17,29 +17,29 @@ use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
  *
  * @property int $id
  * @property int $product_id
+ * @property string $product_type
  * @property int $product_status_id
  * @property int $user_id
  * @property string $user_type
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
- * @property-read \App\Modules\SuperAdmin\Models\Product $product
- * @property-read \App\Modules\SuperAdmin\Models\ProductStatus $product_status
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $product
+ * @property-read ProductStatus $product_status
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereProductStatusId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductHistory whereUserType($value)
- * @mixin \Eloquent
- * @property string $product_type
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereProductStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereProductType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereUserType($value)
+ * @mixin \Eloquent
  */
 class ProductHistory extends BaseModel
 {

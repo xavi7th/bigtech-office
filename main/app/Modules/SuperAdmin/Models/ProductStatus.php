@@ -17,6 +17,7 @@ use Cache;
  *
  * @property int $id
  * @property string $status
+ * @property string $status-slug
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -24,19 +25,18 @@ use Cache;
  * @property-read int|null $products_count
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus notSaleStatus()
  * @method static \Illuminate\Database\Query\Builder|ProductStatus onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus query()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereStatusSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|ProductStatus withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductStatus withoutTrashed()
  * @mixin \Eloquent
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus notSaleStatus()
- * @property string $status-slug
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereStatusSlug($value)
  */
 class ProductStatus extends BaseModel
 {

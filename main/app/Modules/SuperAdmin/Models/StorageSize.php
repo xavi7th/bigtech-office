@@ -15,10 +15,11 @@ use Cache;
  * App\Modules\SuperAdmin\Models\StorageSize
  *
  * @property int $id
- * @property string $size
+ * @property float $size
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read string $human_size
  * @method static \Illuminate\Database\Eloquent\Builder|StorageSize newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StorageSize newQuery()
  * @method static \Illuminate\Database\Query\Builder|StorageSize onlyTrashed()
@@ -31,7 +32,6 @@ use Cache;
  * @method static \Illuminate\Database\Query\Builder|StorageSize withTrashed()
  * @method static \Illuminate\Database\Query\Builder|StorageSize withoutTrashed()
  * @mixin \Eloquent
- * @property-read string $human_size
  */
 class StorageSize extends BaseModel
 {

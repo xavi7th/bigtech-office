@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
-use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 
 /**
  * App\Modules\SuperAdmin\Models\Reseller
@@ -43,6 +42,8 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
  * @property-read int|null $products_count
  * @property-read \Illuminate\Database\Eloquent\Collection|ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\SwapDeal[] $swap_deals
+ * @property-read int|null $swap_deals_count
  * @method static \Illuminate\Database\Eloquent\Builder|Reseller newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Reseller newQuery()
  * @method static \Illuminate\Database\Query\Builder|Reseller onlyTrashed()
@@ -59,8 +60,6 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
  * @method static \Illuminate\Database\Query\Builder|Reseller withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Reseller withoutTrashed()
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\SwapDeal[] $swap_deals
- * @property-read int|null $swap_deals_count
  */
 class Reseller extends BaseModel
 {

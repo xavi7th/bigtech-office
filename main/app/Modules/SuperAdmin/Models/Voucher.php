@@ -12,13 +12,13 @@ use App\Modules\SuperAdmin\Models\ActivityLog;
 /**
  * App\Modules\SuperAdmin\Models\Voucher
  *
- * @property-read \App\Modules\AppUser\Models\AppUser $app_user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Voucher newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Voucher newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Voucher onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\Voucher query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Voucher withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\Voucher withoutTrashed()
+ * @property-read AppUser $app_user
+ * @method static \Illuminate\Database\Eloquent\Builder|Voucher newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Voucher newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Voucher onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Voucher query()
+ * @method static \Illuminate\Database\Query\Builder|Voucher withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Voucher withoutTrashed()
  * @mixin \Eloquent
  */
 class Voucher extends Model

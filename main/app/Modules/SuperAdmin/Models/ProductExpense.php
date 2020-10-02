@@ -7,21 +7,20 @@ use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Transformers\ProductExpenseTransformer;
-use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductExpense
  *
  * @property int $id
  * @property int $product_id
+ * @property string $product_type
  * @property float $amount
  * @property string $reason
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Product $product
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $product
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense query()
@@ -29,11 +28,10 @@ use App\Modules\SuperAdmin\Transformers\ProductTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereProductType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereReason($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property string $product_type
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereProductType($value)
  */
 class ProductExpense extends BaseModel
 {

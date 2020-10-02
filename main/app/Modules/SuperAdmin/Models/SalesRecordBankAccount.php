@@ -9,14 +9,6 @@ use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 /**
  * App\Modules\SuperAdmin\Models\SalesRecordBankAccount
  *
- * @property-read \App\Modules\SuperAdmin\Models\CompanyBankAccount $company_bank_account
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount withoutTrashed()
- * @mixin \Eloquent
  * @property int $id
  * @property int $product_sale_record_id
  * @property int $company_bank_account_id
@@ -24,13 +16,21 @@ use App\Modules\SuperAdmin\Models\CompanyBankAccount;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount whereCompanyBankAccountId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount whereProductSaleRecordId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\SalesRecordBankAccount whereUpdatedAt($value)
+ * @property-read CompanyBankAccount $company_bank_account
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount newQuery()
+ * @method static \Illuminate\Database\Query\Builder|SalesRecordBankAccount onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount whereCompanyBankAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount whereProductSaleRecordId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRecordBankAccount whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|SalesRecordBankAccount withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|SalesRecordBankAccount withoutTrashed()
+ * @mixin \Eloquent
  */
 class SalesRecordBankAccount extends Pivot
 {

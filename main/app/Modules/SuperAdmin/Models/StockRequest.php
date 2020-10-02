@@ -11,10 +11,10 @@ use App\Modules\SuperAdmin\Transformers\AdminStockRequestTransformer;
 /**
  * App\Modules\SuperAdmin\Models\StockRequest
  *
- * @property-read \App\Modules\SalesRep\Models\SalesRep $sales_rep
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StockRequest newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StockRequest newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\StockRequest query()
+ * @property-read SalesRep $sales_rep
+ * @method static \Illuminate\Database\Eloquent\Builder|StockRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|StockRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|StockRequest query()
  * @mixin \Eloquent
  */
 class StockRequest extends Model

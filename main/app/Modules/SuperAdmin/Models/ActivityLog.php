@@ -5,7 +5,6 @@ namespace App\Modules\SuperAdmin\Models;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
-use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Transformers\AdminActivityLogTransformer;
 
 /**
@@ -17,16 +16,16 @@ use App\Modules\SuperAdmin\Transformers\AdminActivityLogTransformer;
  * @property string $activity
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ActivityLog newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ActivityLog newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ActivityLog query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ActivityLog whereActivity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ActivityLog whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ActivityLog whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ActivityLog whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ActivityLog whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ActivityLog whereUserType($value)
+ * @property-read Model|\Eloquent $user
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereActivity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereUserType($value)
  * @mixin \Eloquent
  */
 class ActivityLog extends Model
@@ -47,7 +46,7 @@ class ActivityLog extends Model
 
   static function notifySuperAdmins(string $activity)
   {
-    ActivityLog::create([
+    self::create([
       'activity' => $activity,
       'user_id' => 1,
       'user_type' => SuperAdmin::class,
@@ -56,7 +55,7 @@ class ActivityLog extends Model
 
   static function notifyAccountants(string $activity)
   {
-    ActivityLog::create([
+    self::create([
       'activity' => $activity,
       'user_id' => 1,
       'user_type' => SuperAdmin::class,

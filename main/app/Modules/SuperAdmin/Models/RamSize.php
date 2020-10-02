@@ -8,23 +8,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * App\Modules\SuperAdmin\Models\RamSize
  *
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\RamSize newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\RamSize newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\RamSize onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\RamSize query()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\RamSize withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\RamSize withoutTrashed()
- * @mixin \Eloquent
  * @property int $id
  * @property string $size
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\RamSize whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\RamSize whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\RamSize whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\RamSize whereSize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\RamSize whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RamSize newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RamSize newQuery()
+ * @method static \Illuminate\Database\Query\Builder|RamSize onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|RamSize query()
+ * @method static \Illuminate\Database\Eloquent\Builder|RamSize whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RamSize whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RamSize whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RamSize whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RamSize whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|RamSize withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|RamSize withoutTrashed()
+ * @mixin \Eloquent
  */
 class RamSize extends Model
 {

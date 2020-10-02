@@ -23,6 +23,7 @@ use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Transformers\ProductSaleRecordTransformer;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 
+
 /**
  * App\Modules\SuperAdmin\Models\ProductSaleRecord
  *

@@ -7,29 +7,28 @@ use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\QATest;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
-use App\Modules\SuperAdmin\Transformers\ProductQATestResultTransformer;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductQATestResult
  *
- * @property-read \App\Modules\SuperAdmin\Models\Product $product
- * @property-read \App\Modules\SuperAdmin\Models\QATest $qa_test
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductQATestResult newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductQATestResult newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductQATestResult query()
- * @mixin \Eloquent
  * @property int $id
  * @property int $product_id
  * @property int $qa_test_id
  * @property int $is_qa_certified
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductQATestResult whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductQATestResult whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductQATestResult whereIsQaCertified($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductQATestResult whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductQATestResult whereQaTestId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductQATestResult whereUpdatedAt($value)
+ * @property-read Product $product
+ * @property-read QATest $qa_test
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductQATestResult newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductQATestResult newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductQATestResult query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductQATestResult whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductQATestResult whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductQATestResult whereIsQaCertified($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductQATestResult whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductQATestResult whereQaTestId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductQATestResult whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class ProductQATestResult extends Model
 {

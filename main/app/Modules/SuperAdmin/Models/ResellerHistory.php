@@ -3,10 +3,38 @@
 namespace App\Modules\SuperAdmin\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 
+/**
+ * App\Modules\SuperAdmin\Models\ResellerHistory
+ *
+ * @property int $id
+ * @property int $reseller_id
+ * @property int $product_id
+ * @property string $product_type
+ * @property string $product_status
+ * @property int $handled_by
+ * @property string $handler_type
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Model|\Eloquent $handler
+ * @property-read Model|\Eloquent $product
+ * @property-read Reseller $reseller
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory whereHandledBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory whereHandlerType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory whereProductStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory whereProductType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory whereResellerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResellerHistory whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class ResellerHistory extends Model
 {
   protected $fillable = [

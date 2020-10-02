@@ -19,17 +19,17 @@ use Cache;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductGrade newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductGrade newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductGrade onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductGrade query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductGrade whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductGrade whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductGrade whereGrade($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductGrade whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductGrade whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductGrade withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductGrade withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductGrade onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereGrade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductGrade withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductGrade withoutTrashed()
  * @mixin \Eloquent
  */
 class ProductGrade extends BaseModel

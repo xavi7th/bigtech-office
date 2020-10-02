@@ -20,7 +20,6 @@ use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
-use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Transformers\OfficeBranchTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 

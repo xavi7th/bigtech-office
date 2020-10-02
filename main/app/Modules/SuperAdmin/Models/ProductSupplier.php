@@ -18,17 +18,17 @@ use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Modules\SuperAdmin\Models\ProductSupplier withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductSupplier onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductSupplier withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductSupplier withoutTrashed()
  * @mixin \Eloquent
  */
 class ProductSupplier extends BaseModel
