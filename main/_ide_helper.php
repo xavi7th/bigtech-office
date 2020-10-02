@@ -2121,9 +2121,27 @@
          *
          * @static 
          */ 
+        public static function accountant()
+        {
+                        return \Illuminate\Auth\SessionGuard::accountant();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function admin()
         {
                         return \Illuminate\Auth\SessionGuard::admin();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function stockkeeper()
+        {
+                        return \Illuminate\Auth\SessionGuard::stockkeeper();
         }
          
     }
@@ -16351,9 +16369,27 @@
          *
          * @static 
          */ 
+        public static function accountant()
+        {
+                        return \Illuminate\Auth\SessionGuard::accountant();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function admin()
         {
                         return \Illuminate\Auth\SessionGuard::admin();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function stockkeeper()
+        {
+                        return \Illuminate\Auth\SessionGuard::stockkeeper();
         }
          
     }

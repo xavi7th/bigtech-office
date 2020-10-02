@@ -1,0 +1,13 @@
+{
+	"name": "StockKeeper",
+	"alias": "stock-keeper",
+	"description": "",
+	"keywords": [],
+	"order": 0,
+	"providers": [
+        "App\\Modules\\StockKeeper\\Providers\\StockKeeperServiceProvider"
+    ],
+	"aliases": {},
+	"files": [],
+	"requires": []
+}

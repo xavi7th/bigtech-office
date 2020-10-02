@@ -122,6 +122,51 @@ class User extends Authenticatable implements JWTSubject
     return $this instanceof SuperAdmin;
   }
 
+  public function isSalesRep(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
+
+  public function isSocialMediaRep(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
+
+  public function isWalkInRep(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
+
+  public function isCallCenterRep(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
+
+  public function isStock(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
+
+  public function isAccountant(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
+
+  public function isQA(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
+
+  public function isDispatch(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
+
+  public function isWebAdmin(): bool
+  {
+    return $this instanceof SuperAdmin;
+  }
+
   public function get_navigation_routes(): array
   {
     if ($this->isAppUser()) {

@@ -3,5 +3,7 @@
     "AppUser": true,
     "SuperAdmin": true,
     "Admin": true,
-    "SalesRep": true
+    "SalesRep": true,
+    "StockKeeper": true,
+    "Accountant": true
 }

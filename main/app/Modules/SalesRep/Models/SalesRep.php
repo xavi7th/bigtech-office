@@ -73,7 +73,6 @@ class SalesRep extends User
   protected $dates = ['dob'];
   const DASHBOARD_ROUTE_PREFIX = 'sales-reps';
 
-
   public function stock_request()
   {
     return $this->hasOne(StockRequest::class);
@@ -89,18 +88,12 @@ class SalesRep extends User
     return 1;
   }
 
-
-
   static function adminRoutes()
   {
     Route::group(['namespace' => '\App\Modules\SalesRep\Models'], function () {
       Route::get('sales-reps', 'SalesRep@getAllSalesReps')->middleware('auth:admin');
 
       Route::post('sales-rep/create', 'SalesRep@createSalesRep')->middleware('auth:admin');
-
-      Route::get('sales-rep/{sales_rep}/permissions', 'SalesRep@getSalesRepPermissions')->middleware('auth:admin');
-
-      Route::put('sales-rep/{sales_rep}/permissions', 'SalesRep@editSalesRepPermissions')->middleware('auth:admin');
 
       Route::put('sales-rep/{sales_rep}/suspend', 'SalesRep@suspendSalesRep')->middleware('auth:admin');
 
@@ -113,14 +106,9 @@ class SalesRep extends User
   static function salesRepRoutes()
   {
     Route::group(['middleware' => ['auth:sales_rep', 'sales_reps'], 'namespace' => '\App\Modules\SalesRep\Models'], function () {
-
       Route::group(['prefix' => 'api'], function () {
-        Route::post('test-route-permission', 'SalesRep@testRoutePermission');
-
         Route::get('statistics', 'SalesRep@getDashboardStatistics')->middleware('auth:sales_rep');
       });
-
-      Route::get('/{subcat?}', 'SalesRep@loadSalesRepApplication')->name('salesrep.dashboard')->where('subcat', '^((?!(api)).)*');
     });
   }
 
@@ -162,6 +150,7 @@ class SalesRep extends User
       return response()->json(['rsp' => 'error occurred'], 500);
     }
   }
+
   public function suspendSalesRep(self $sales_rep)
   {
     ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $sales_rep->email);
