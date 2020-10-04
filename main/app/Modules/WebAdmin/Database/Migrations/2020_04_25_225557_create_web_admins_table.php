@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDispatchAdminsTable extends Migration
+class CreateWebAdminsTable extends Migration
 {
   /**
    * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDispatchAdminsTable extends Migration
    */
   public function up()
   {
-    Schema::create('dispatch_admins', function (Blueprint $table) {
+    Schema::create('web_admins', function (Blueprint $table) {
       $table->id();
       $table->string('full_name');
       $table->string('email')->unique();
@@ -32,6 +32,6 @@ class CreateDispatchAdminsTable extends Migration
    */
   public function down()
   {
-    Schema::dropIfExists('dispatch_admins');
+    Schema::dropIfExists('web_admins');
   }
 }

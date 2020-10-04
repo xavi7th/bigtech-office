@@ -6,5 +6,7 @@
     "SalesRep": true,
     "StockKeeper": true,
     "Accountant": true,
-    "DispatchConte": true
+    "DispatchConte": true,
+    "DispatchAdmin": true,
+    "QualityControl": true
 }

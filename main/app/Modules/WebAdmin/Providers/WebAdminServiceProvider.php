@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Modules\QualityControl\Providers;
+namespace App\Modules\WebAdmin\Providers;
 
 use Illuminate\Auth\SessionGuard;
-use App\Modules\QualityControl\Models\QualityControl;
+use App\Modules\WebAdmin\Models\WebAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
-class QualityControlServiceProvider extends ServiceProvider
+class WebAdminServiceProvider extends ServiceProvider
 {
   /**
    * @var string $moduleName
    */
-  protected $moduleName = 'QualityControl';
+  protected $moduleName = 'WebAdmin';
 
   /**
    * @var string $moduleNameLower
    */
-  protected $moduleNameLower = 'qualitycontrol';
+  protected $moduleNameLower = 'webadmin';
 
   /**
    * Boot the application events.
@@ -33,8 +33,8 @@ class QualityControlServiceProvider extends ServiceProvider
     $this->registerFactories();
     $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
-    // app()->make('router')->aliasMiddleware('quality_controls', OnlyQualityControls::class);
-    // app()->make('router')->aliasMiddleware('verified', VerifiedQualityControls::class);
+    // app()->make('router')->aliasMiddleware('web_admins', OnlyWebAdmins::class);
+    // app()->make('router')->aliasMiddleware('verified', VerifiedWebAdmins::class);
   }
 
   /**
@@ -45,8 +45,8 @@ class QualityControlServiceProvider extends ServiceProvider
   public function register()
   {
     $this->app->register(RouteServiceProvider::class);
-    SessionGuard::macro('quality_control', function () {
-      return QualityControl::find(Auth::guard('quality_control')->id());
+    SessionGuard::macro('webAdmin', function () {
+      return WebAdmin::find(Auth::guard('admin')->id());
     });
   }
 

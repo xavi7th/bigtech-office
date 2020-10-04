@@ -2139,6 +2139,24 @@
          *
          * @static 
          */ 
+        public static function dispatchAdmin()
+        {
+                        return \Illuminate\Auth\SessionGuard::dispatchAdmin();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function quality_control()
+        {
+                        return \Illuminate\Auth\SessionGuard::quality_control();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function stockkeeper()
         {
                         return \Illuminate\Auth\SessionGuard::stockkeeper();
@@ -16381,6 +16399,24 @@
         public static function admin()
         {
                         return \Illuminate\Auth\SessionGuard::admin();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function dispatchAdmin()
+        {
+                        return \Illuminate\Auth\SessionGuard::dispatchAdmin();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function quality_control()
+        {
+                        return \Illuminate\Auth\SessionGuard::quality_control();
         }
                     /**
          * 
