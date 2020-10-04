@@ -72,7 +72,7 @@ class Product extends BaseModel
   protected $fillable = [
     'product_category_id', 'product_model_id', 'product_brand_id', 'product_batch_id', 'product_color_id', 'product_grade_id',
     'product_supplier_id', 'storage_size_id', 'imei', 'serial_no', 'model_no', 'product_uuid', 'processor_speed_id', 'ram_size_id',
-    'storage_type_id', 'stocked_by', 'stocker_type', 'office_branch_id'
+    'storage_type_id', 'stocked_by', 'stocker_type', 'office_branch_id', 'product_status_id'
   ];
 
   protected $casts = [
@@ -412,7 +412,8 @@ class Product extends BaseModel
       $product = self::create(collect($request->validated())->merge([
         'stocked_by' => auth()->id(),
         'stocker_type' => get_class(auth()->user()),
-        'office_branch_id' => OfficeBranch::head_office_id()
+        'office_branch_id' => OfficeBranch::head_office_id(),
+        'product_status_id' => ProductStatus::justArrivedId()
       ])->all());
 
       if ($request->isApi()) return response()->json($product, 201);
