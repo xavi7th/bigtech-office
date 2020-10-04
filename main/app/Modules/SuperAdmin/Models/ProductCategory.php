@@ -88,7 +88,7 @@ class ProductCategory extends BaseModel
     try {
       $product_category = self::create([
         'name' => $request->name,
-        'img_url' => compress_image_upload('img', 'product_models_images/', null, 400)['img_url'],
+        'img_url' => compress_image_upload('img', 'product_models_images/', null, true, 400)['img_url'],
       ]);
 
       Cache::forget('productCategories');
