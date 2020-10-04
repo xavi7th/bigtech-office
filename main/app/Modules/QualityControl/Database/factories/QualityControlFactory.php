@@ -2,7 +2,6 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 use App\Modules\QualityControl\Models\QualityControl;
 
@@ -20,10 +19,10 @@ use App\Modules\QualityControl\Models\QualityControl;
 
 
 $factory->define(QualityControl::class, function (Faker $faker) {
+  dump('quality-control' . strtolower(str_replace("-", "", config('app.name'))));
   return [
-    'full_name' => $faker->name('female'),
-    'email' => $faker->unique()->safeEmail,
-    'password' => 'password',
-    'remember_token' => Str::random(10),
+    'full_name' => 'SysDef Quality Control',
+    'email' => 'qualitycontrol@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+    'password' => 'quality-control' . strtolower(str_replace("-", "", config('app.name'))),
   ];
 });

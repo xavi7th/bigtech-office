@@ -20,10 +20,10 @@ use App\Modules\Accountant\Models\Accountant;
 
 
 $factory->define(Accountant::class, function (Faker $faker) {
+  dump('accounts' . strtolower(str_replace("-", "", config('app.name'))));
   return [
-    'full_name' => $faker->name('female'),
-    'email' => $faker->unique()->safeEmail,
-    'password' => 'password',
-    'remember_token' => Str::random(10),
+    'full_name' => 'SysDef Accountant',
+    'email' => 'accounts@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+    'password' => 'accounts' . strtolower(str_replace("-", "", config('app.name'))),
   ];
 });

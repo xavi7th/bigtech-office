@@ -39,6 +39,12 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereOfficeBranchId($value)
  */
 class DispatchAdmin extends User
 {

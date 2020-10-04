@@ -3,7 +3,7 @@
 	"alias": "accountant",
 	"description": "",
 	"keywords": [],
-	"order": 0,
+	"order": 2,
 	"providers": [
         "App\\Modules\\Accountant\\Providers\\AccountantServiceProvider"
     ],

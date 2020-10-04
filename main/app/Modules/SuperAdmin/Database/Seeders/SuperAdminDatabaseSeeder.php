@@ -42,32 +42,34 @@ class SuperAdminDatabaseSeeder extends Seeder
   {
     Model::unguard();
 
-    factory(SuperAdmin::class, 1)->create();
-    factory(OtherExpense::class, 50)->create();
+    $this->call(OfficeBranchesTableSeeder::class);
 
-    $this->call(ProductBatchesTableSeeder::class);
-    $this->call(ProductBrandsTableSeeder::class);
-    $this->call(ProductCategoriesTableSeeder::class);
-    $this->call(ProductColorsTableSeeder::class);
-    $this->call(ProductGradesTableSeeder::class);
-    $this->call(ProductModelsTableSeeder::class);
-    $this->call(ProductSuppliersTableSeeder::class);
-    $this->call(ResellersTableSeeder::class);
+    factory(SuperAdmin::class, 1)->create();
+
+    // factory(OtherExpense::class, 50)->create();
+    // $this->call(ProductBatchesTableSeeder::class);
+    // $this->call(ProductBrandsTableSeeder::class);
+    // $this->call(ProductCategoriesTableSeeder::class);
+    // $this->call(ProductColorsTableSeeder::class);
+    // $this->call(ProductGradesTableSeeder::class);
+    // $this->call(ProductModelsTableSeeder::class);
+    // $this->call(ProductSuppliersTableSeeder::class);
+    // $this->call(ResellersTableSeeder::class);
     $this->call(StorageSizesTableSeeder::class);
     $this->call(StorageTypesTableSeeder::class);
     $this->call(ProcessorSpeedsTableSeeder::class);
-    $this->call(ProductPricesTableSeeder::class);
-    $this->call(ProductDescriptionSummariesTableSeeder::class);
+    // $this->call(ProductPricesTableSeeder::class);
+    // $this->call(ProductDescriptionSummariesTableSeeder::class);
     $this->call(ProductStatusesTableSeeder::class);
-    $this->call(ProductsTableSeeder::class);
-    $this->call(UserCommentsTableSeeder::class);
+    // $this->call(ProductsTableSeeder::class);
+    // $this->call(UserCommentsTableSeeder::class);
     $this->call(QaTestsTableSeeder::class);
-    $this->call(ProductModelQaTestTableSeeder::class);
-    $this->call(ProductQaTestResultsTableSeeder::class);
-    $this->call(ProductModelImagesTableSeeder::class);
-    $this->call(ProductExpensesTableSeeder::class);
+    // $this->call(ProductModelQaTestTableSeeder::class);
+    // $this->call(ProductQaTestResultsTableSeeder::class);
+    // $this->call(ProductModelImagesTableSeeder::class);
+    // $this->call(ProductExpensesTableSeeder::class);
     $this->call(SalesChannelsTableSeeder::class);
-    $this->call(ProductSaleRecordsTableSeeder::class);
-    $this->call(CompanyBankAccountsTableSeeder::class);
+    // $this->call(ProductSaleRecordsTableSeeder::class);
+    // $this->call(CompanyBankAccountsTableSeeder::class);
   }
 }

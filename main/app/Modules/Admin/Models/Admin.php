@@ -39,6 +39,12 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereOfficeBranchId($value)
  */
 class Admin extends User
 {

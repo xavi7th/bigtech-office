@@ -18,8 +18,11 @@ class CreateStockKeepersTable extends Migration
       $table->string('full_name');
       $table->string('email')->unique();
       $table->string('password');
-      $table->rememberToken();
+      $table->string('gender')->enum(['male', 'female'])->nullable();
+      $table->foreignId('office_branch_id')->default(1)->constrained()->onDelete('cascade');
+      $table->boolean('is_active')->nullable();
 
+      $table->rememberToken();
       $table->timestamps();
       $table->softDeletes();
     });

@@ -39,6 +39,12 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereOfficeBranchId($value)
  */
 class QualityControl extends User
 {

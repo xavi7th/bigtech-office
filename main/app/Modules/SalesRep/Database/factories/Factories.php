@@ -4,18 +4,10 @@ use Faker\Generator as Faker;
 use App\Modules\SalesRep\Models\SalesRep;
 
 $factory->define(SalesRep::class, function (Faker $faker) {
-  if (!File::isDirectory(storage_path('app/public/admins/'))) {
-    File::makeDirectory(storage_path('app/public/admins/'), 0755);
-  }
-
+  dump('sales-rep' . strtolower(str_replace("-", "", config('app.name'))));
   return [
-    'full_name' => 'SalesRep',
-    'email' => 'grant@itsefintech.com',
-    'password' => 'pass',
-    'phone' => '08034444444444',
-    'avatar' => '/storage/' . $faker->file(public_path('img/'), storage_path('app/public/admins/'), false),
-    'gender' => 'male',
-    'address' => '211 56789ygfhbffgh876545c 97564y',
-    'verified_at' => now()->subDays(45),
+    'full_name' => 'SysDef Sales Rep',
+    'email' => 'salesrep@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+    'password' => 'sales-rep' . strtolower(str_replace("-", "", config('app.name'))),
   ];
 });

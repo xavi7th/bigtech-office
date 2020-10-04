@@ -39,6 +39,12 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $is_active
+ * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereIsActive($value)
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereOfficeBranchId($value)
  */
 class Accountant extends User
 {

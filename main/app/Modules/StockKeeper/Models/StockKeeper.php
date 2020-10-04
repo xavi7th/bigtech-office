@@ -39,6 +39,12 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereUpdatedAt($value)
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereOfficeBranchId($value)
  */
 class StockKeeper extends User
 {

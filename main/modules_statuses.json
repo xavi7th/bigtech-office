@@ -8,5 +8,6 @@
     "Accountant": true,
     "DispatchConte": true,
     "DispatchAdmin": true,
-    "QualityControl": true
+    "QualityControl": true,
+    "WebAdmin": true
 }

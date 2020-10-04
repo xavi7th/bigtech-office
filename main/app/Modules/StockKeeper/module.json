@@ -3,7 +3,7 @@
 	"alias": "stock-keeper",
 	"description": "",
 	"keywords": [],
-	"order": 0,
+	"order": 5,
 	"providers": [
         "App\\Modules\\StockKeeper\\Providers\\StockKeeperServiceProvider"
     ],

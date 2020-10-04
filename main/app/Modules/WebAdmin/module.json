@@ -3,7 +3,7 @@
 	"alias": "webadmin",
 	"description": "",
 	"keywords": [],
-	"order": 0,
+	"order": 4,
 	"providers": [
         "App\\Modules\\WebAdmin\\Providers\\WebAdminServiceProvider"
     ],

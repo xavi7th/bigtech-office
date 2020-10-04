@@ -2121,6 +2121,15 @@
          *
          * @static 
          */ 
+        public static function admin()
+        {
+                        return \Illuminate\Auth\SessionGuard::admin();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function accountant()
         {
                         return \Illuminate\Auth\SessionGuard::accountant();
@@ -2130,9 +2139,18 @@
          *
          * @static 
          */ 
-        public static function admin()
+        public static function webAdmin()
         {
-                        return \Illuminate\Auth\SessionGuard::admin();
+                        return \Illuminate\Auth\SessionGuard::webAdmin();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function stockkeeper()
+        {
+                        return \Illuminate\Auth\SessionGuard::stockkeeper();
         }
                     /**
          * 
@@ -2151,15 +2169,6 @@
         public static function quality_control()
         {
                         return \Illuminate\Auth\SessionGuard::quality_control();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function stockkeeper()
-        {
-                        return \Illuminate\Auth\SessionGuard::stockkeeper();
         }
          
     }
@@ -16387,6 +16396,15 @@
          *
          * @static 
          */ 
+        public static function admin()
+        {
+                        return \Illuminate\Auth\SessionGuard::admin();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function accountant()
         {
                         return \Illuminate\Auth\SessionGuard::accountant();
@@ -16396,9 +16414,18 @@
          *
          * @static 
          */ 
-        public static function admin()
+        public static function webAdmin()
         {
-                        return \Illuminate\Auth\SessionGuard::admin();
+                        return \Illuminate\Auth\SessionGuard::webAdmin();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function stockkeeper()
+        {
+                        return \Illuminate\Auth\SessionGuard::stockkeeper();
         }
                     /**
          * 
@@ -16417,15 +16444,6 @@
         public static function quality_control()
         {
                         return \Illuminate\Auth\SessionGuard::quality_control();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function stockkeeper()
-        {
-                        return \Illuminate\Auth\SessionGuard::stockkeeper();
         }
          
     }

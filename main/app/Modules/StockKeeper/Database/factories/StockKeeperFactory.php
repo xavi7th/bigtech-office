@@ -20,10 +20,10 @@ use App\Modules\StockKeeper\Models\StockKeeper;
 
 
 $factory->define(StockKeeper::class, function (Faker $faker) {
+  dump('stock-keeper' . strtolower(str_replace("-", "", config('app.name'))));
   return [
-    'full_name' => $faker->name('female'),
-    'email' => $faker->unique()->safeEmail,
-    'password' => 'password',
-    'remember_token' => Str::random(10),
+    'full_name' => 'SysDef Accountant',
+    'email' => 'stockkeeper@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+    'password' => 'stock-keeper' . strtolower(str_replace("-", "", config('app.name'))),
   ];
 });

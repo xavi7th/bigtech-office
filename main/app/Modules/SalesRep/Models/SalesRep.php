@@ -64,6 +64,8 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereVerifiedAt($value)
  * @mixin \Eloquent
+ * @property int|null $is_active
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereIsActive($value)
  */
 class SalesRep extends User
 {

@@ -20,11 +20,11 @@ class CreateSalesRepsTable extends Migration
       $table->string('password');
       $table->string('phone')->unique()->nullable();
       $table->string('avatar')->nullable();
-      $table->string('gender')->enum(['male', 'female'])->nullable();
       $table->string('address')->nullable();
-      $table->string('unit')->default('social-media'); // walk-in,social-media,call-center
+      $table->string('unit')->default('sys-default'); // walk-in,social-media,call-center
+      $table->string('gender')->enum(['male', 'female'])->nullable();
       $table->foreignId('office_branch_id')->default(1)->constrained()->onDelete('cascade');
-      $table->timestamp('verified_at')->nullable();
+      $table->boolean('is_active')->nullable();
 
 
       $table->rememberToken();
