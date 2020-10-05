@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\Route;
 class StockKeeperController extends Controller
 {
 
-  public function __construct()
-  {
-    Inertia::setRootView('admin::app');
-  }
-
   static function routes()
   {
     Route::group(['middleware' => ['web', 'auth:admin'], 'namespace' => '\App\Modules\StockKeeper\Http\Controllers'], function () {

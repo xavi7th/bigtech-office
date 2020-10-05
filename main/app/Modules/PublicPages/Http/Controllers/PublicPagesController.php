@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Route;
 
 class PublicPagesController extends Controller
 {
-  public function __construct()
-  {
-    Inertia::setRootView('publicpages::app');
-  }
 
   static function routes()
   {

@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use Inertia\Inertia;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Schema\Builder;
 use Illuminate\Support\ServiceProvider;
 

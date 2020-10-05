@@ -39,11 +39,6 @@ use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
 class SuperAdminController extends Controller
 {
 
-  public function __construct()
-  {
-    Inertia::setRootView('superadmin::app');
-  }
-
   static function routes()
   {
     Route::group(['middleware' => ['web', 'auth:super_admin'], 'prefix' => SuperAdmin::DASHBOARD_ROUTE_PREFIX], function () {

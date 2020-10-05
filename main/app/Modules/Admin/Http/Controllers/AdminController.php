@@ -5,18 +5,12 @@ namespace App\Modules\Admin\Http\Controllers;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
 use App\Modules\Admin\Models\Admin;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 class AdminController extends Controller
 {
-
-  public function __construct()
-  {
-    Inertia::setRootView('admin::app');
-  }
-
   static function routes()
   {
     Route::group(['middleware' => ['web', 'auth:admin'], 'namespace' => '\App\Modules\Admin\Http\Controllers'], function () {

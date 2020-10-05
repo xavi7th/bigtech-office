@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\Route;
 class QualityControlController extends Controller
 {
 
-  public function __construct()
-  {
-    Inertia::setRootView('quality_control::app');
-  }
-
   static function routes()
   {
     Route::group(['middleware' => ['web', 'auth:quality_control'], 'namespace' => '\App\Modules\QualityControl\Http\Controllers'], function () {

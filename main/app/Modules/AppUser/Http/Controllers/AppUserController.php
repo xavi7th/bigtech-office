@@ -14,12 +14,6 @@ use App\Modules\AppUser\Http\Controllers\Auth\RegisterController;
 
 class AppUserController extends Controller
 {
-  public function __construct()
-  {
-    Inertia::setRootView('appuser::app');
-  }
-
-
   static function routes()
   {
     LoginController::routes();

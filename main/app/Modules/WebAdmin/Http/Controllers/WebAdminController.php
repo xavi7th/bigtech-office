@@ -6,16 +6,11 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Modules\WebAdmin\Models\WebAdmin;
 use Illuminate\Support\Facades\Route;
+use App\Modules\WebAdmin\Models\WebAdmin;
 
 class WebAdminController extends Controller
 {
-
-  public function __construct()
-  {
-    Inertia::setRootView('webadmin::app');
-  }
 
   static function routes()
   {

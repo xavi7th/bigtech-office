@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\Route;
 class DispatchAdminController extends Controller
 {
 
-  public function __construct()
-  {
-    Inertia::setRootView('dispatch_admin::app');
-  }
-
   static function routes()
   {
     Route::group(['middleware' => ['web', 'auth:dispatch_admin'], 'namespace' => '\App\Modules\DispatchAdmin\Http\Controllers'], function () {

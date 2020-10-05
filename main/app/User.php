@@ -12,9 +12,9 @@ use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\OtherExpense;
+use App\Modules\SuperAdmin\Traits\MakesComments;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
-use App\Modules\SuperAdmin\Traits\MakesComments;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -71,16 +71,6 @@ class User extends Authenticatable implements JWTSubject
   protected $casts = [
     'email_verified_at' => 'datetime',
   ];
-
-  // public function __construct(array $attributes = [])
-  // {
-  //   parent::__construct($attributes);
-  //   if (routeHasRootNamespace('appuser.')) {
-  //     Inertia::setRootView('appuser::app');
-  //   } elseif (routeHasRootNamespace('superadmin.')) {
-  //     Inertia::setRootView('superadmin::app');
-  //   }
-  // }
 
   public function expenses()
   {

@@ -48,7 +48,6 @@ class LoginController extends Controller
   public function __construct()
   {
     $this->middleware('guest:' . collect(config('auth.guards'))->keys()->implode(','))->except('logout');
-    Inertia::setRootView('appuser::app');
   }
 
   static function routes()
