@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Models;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
@@ -15,7 +16,9 @@ use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductModelImage;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
 
 /**
@@ -116,7 +119,7 @@ class ProductModel extends BaseModel
 
   public function getProductModels(Request $request)
   {
-    $productModels =  cache()->remember('models', config('cache.product_models_cache_duration'), function () {
+    $productModels =  Cache::rememberForever('modelsWithCount', function () {
       return (new ProductModelTransformer)->collectionTransformer(self::withCount('products')->with('product_category', 'product_brand')->get(), 'transformWithCategoryAndBrand');
     });
 
@@ -125,9 +128,8 @@ class ProductModel extends BaseModel
     }
     return Inertia::render('SuperAdmin,ProductModels/List', [
       'productModels' => $productModels,
-      'productBrands' => ProductBrand::get(['id', 'name']),
-      'productCategories' => ProductCategory::get(['id', 'name']),
-
+      'productBrands' => Cache::rememberForever('brandsWithProductCount', fn () => (new ProductBrandTransformer)->collectionTransformer(ProductBrand::withCount('products')->get(), 'basic')),
+      'productCategories' => Cache::rememberForever('productCategories', fn () => (new ProductCategoryTransformer)->collectionTransformer(ProductCategory::withCount('products')->get(), 'basic')),
     ]);
   }
 
@@ -280,5 +282,16 @@ class ProductModel extends BaseModel
     if ($request->isApi())
       return response()->json((new UserCommentTransformer)->detailed($comment), 201);
     return back()->withSuccess('Created');
+  }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function () {
+      Cache::forget('modelsWithCount');
+      Cache::forget('models');
+    });
   }
 }

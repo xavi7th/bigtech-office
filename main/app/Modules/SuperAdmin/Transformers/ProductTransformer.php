@@ -41,6 +41,7 @@ class ProductTransformer
       'identifier' => (string)$product->primary_identifier(),
       'selling_price' => $product->proposed_selling_price,
       'color' => (string)$product->product_color->name,
+      'status' => $product->product_status->status,
       'storage_size' => (string)$product->storage_size->human_size,
       'supplier' => (string)$product->product_supplier->name
     ];

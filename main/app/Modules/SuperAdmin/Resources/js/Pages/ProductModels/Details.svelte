@@ -6,7 +6,7 @@
   import FlashMessage from "@usershared/FlashMessage";
   import Images, { addImage } from "./partials/Images";
   import Comments, { createModelComment } from "./partials/Comments";
-  import QaTests from "./partials/QATests";
+  import QaTests from "./partials/QATests.svelte";
   import DescriptionSummary, {
     createModelDescription,
     updateModelDescription

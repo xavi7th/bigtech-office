@@ -2,7 +2,6 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
@@ -15,13 +14,11 @@
     BlockToast.fire({
       text: "Creating color ..."
     });
-    let formData = new FormData();
 
-    formData.append("name", colorName);
 
     Inertia.post(
       route("superadmin.miscellaneous.create_product_color"),
-      formData,
+      {name:colorName},
       {
         preserveState: true,
         preserveScroll: true,
@@ -144,19 +141,11 @@
   export let productColors = [];
 </script>
 
-<style>
-  img {
-    max-height: 50px;
-  }
-</style>
-
 <Layout title="Manage Product Colors">
   <div class="row vertical-gap">
     <div class="col-lg-4 col-xl-4">
 
       <form class="#" on:submit|preventDefault={createProductColor}>
-        <FlashMessage />
-
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
             <label for="name">Enter New Product Color</label>
@@ -171,8 +160,7 @@
           <div class="col-12">
             <button
               type="submit"
-              class="btn btn-success btn-long"
-              disabled={!colorName}>
+              class="btn btn-success btn-long">
               <span class="text">Create</span>
             </button>
           </div>
@@ -235,8 +223,6 @@
   <div slot="modals">
     <Modal modalId="updateColor" modalTitle="Update Product Color">
       <form class="#" on:submit|preventDefault={updateProductColor}>
-        <FlashMessage />
-
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
             <label for="name">Change Product Color</label>

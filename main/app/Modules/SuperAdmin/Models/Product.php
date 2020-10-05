@@ -331,7 +331,7 @@ class Product extends BaseModel
      * ! Filter list based on logged in user.
      */
 
-    $products = fn () => Cache::rememberForever('products', fn () => (new ProductTransformer)->collectionTransformer(self::with(['product_color', 'storage_size', 'product_model', 'product_price', 'supplier'])->get(), 'productsListing'));
+    $products = fn () => Cache::rememberForever('products', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->orWhere->sold()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     $onlineReps = fn () => Cache::rememberForever('onlineReps', fn () => (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic'));
     $salesChannel = fn () => Cache::rememberForever('salesChannel', fn () => (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic'));
     $resellers = fn () => Cache::rememberForever('resellers', fn () => (new ResellerTransformer)->collectionTransformer(Reseller::all(), 'basic'));
@@ -734,6 +734,11 @@ class Product extends BaseModel
   public function scopeInStock($query)
   {
     return $query->where('product_status_id', ProductStatus::inStockId());
+  }
+
+  public function scopeSold($query)
+  {
+    return $query->where('product_status_id', ProductStatus::soldId())->orWhere('product_status_id', ProductStatus::soldByResellerId());
   }
 
   public function scopeJustArrived($query)

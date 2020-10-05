@@ -88,6 +88,20 @@
               </select>
             </div>
           </div>
+           <div class="col-4">
+            <label for="productBrand">Product Brand</label>
+            <div class="input-group">
+              <select
+                class="custom-select"
+                bind:value={details.product_brand_id}>
+                <option value={null}>Select</option>
+                {#each brands as brand}
+                  <option value={brand.id}>{brand.name}</option>
+                {/each}
+              </select>
+            </div>
+          </div>
+
           <div class="col-4">
             <label for="productModel">Product Model</label>
             <div class="input-group">
@@ -101,19 +115,7 @@
               </select>
             </div>
           </div>
-          <div class="col-4">
-            <label for="productBrand">Product Brand</label>
-            <div class="input-group">
-              <select
-                class="custom-select"
-                bind:value={details.product_brand_id}>
-                <option value={null}>Select</option>
-                {#each brands as brand}
-                  <option value={brand.id}>{brand.name}</option>
-                {/each}
-              </select>
-            </div>
-          </div>
+
           <div class="col-4">
             <label for="productColor">Product Color</label>
             <div class="input-group">

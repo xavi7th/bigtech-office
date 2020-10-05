@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Cache;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -73,7 +74,7 @@ class ProductBrand extends BaseModel
 
   public function getProductBrands(Request $request)
   {
-    $productBrands = (new ProductBrandTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic');
+    $productBrands = Cache::rememberForever('brandsWithProductCount', fn () => (new ProductBrandTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic'));
     if ($request->isApi())
       return response()->json($productBrands, 200);
 
@@ -155,5 +156,16 @@ class ProductBrand extends BaseModel
     if ($request->isApi())
       return response()->json([], 204);
     return back()->withSuccess('Deleted');
+  }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function ($product) {
+      Cache::forget('brands');
+      Cache::forget('brandsWithProductCount');
+    });
   }
 }

@@ -77,6 +77,9 @@
                   <span>Create Product Model</span>
                 </InertiaLink>
               </th>
+                <th class="d-none">
+                  NOSIGN
+                </th>
             </tr>
           </thead>
           <tbody class="list-group list-group-flush">
@@ -111,6 +114,9 @@
                     </InertiaLink>
                   </div>
                 </td>
+                <td class="d-none">
+                  NOSIGN
+                </td>
               </tr>
             {:else}
               <tr class="list-group-item p-0">
@@ -122,6 +128,9 @@
                       <small class="media-subtitle">N/A</small>
                     </span>
                   </a>
+                </td>
+                 <td class="d-none">
+                  NOSIGN
                 </td>
               </tr>
             {/each}

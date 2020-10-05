@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Models;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\QueryException;
 use App\Modules\SuperAdmin\Models\ErrLog;
@@ -61,7 +62,7 @@ class ProductColor extends BaseModel
 
   public function getProductColors(Request $request)
   {
-    $productColors = (new ProductColorTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic');
+    $productColors = Cache::rememberForever('colorsWithProductCount', fn () => (new ProductColorTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic'));
     if ($request->isApi())
       return response()->json($productColors, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageColors', compact('productColors'));
@@ -122,5 +123,16 @@ class ProductColor extends BaseModel
         return response()->json(['err' => 'Color not updated'], 500);
       return back()->withError('Color update failed');
     }
+  }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function () {
+      Cache::forget('colors');
+      Cache::forget('colorsWithProductCount');
+    });
   }
 }

@@ -55,7 +55,9 @@
               preserveScroll: true,
               only: ["flash", "errors", "productModel"]
             }
-          );
+          ).then(() => {
+            isQaTestsModified = false;
+          })
         }
       })
       .then(result => {

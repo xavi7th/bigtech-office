@@ -69,13 +69,9 @@ class ProductCategory extends BaseModel
 
   public function getProductCategories(Request $request)
   {
-    $productCategories = Cache::rememberForever('productCategories', function () {
-      return (new ProductCategoryTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic');
-    });
+    $productCategories = Cache::rememberForever('productCategories', fn () => (new ProductCategoryTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic'));
 
-    if ($request->isApi()) {
-      return response()->json($productCategories, 200);
-    }
+    if ($request->isApi()) return response()->json($productCategories, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageProductCategories', compact('productCategories'));
   }
 
@@ -136,6 +132,7 @@ class ProductCategory extends BaseModel
 
     static::saved(function () {
       Cache::forget('productCategories');
+      Cache::forget('categories');
     });
   }
 }

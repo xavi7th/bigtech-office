@@ -163,8 +163,6 @@
     <div class="col-lg-4 col-xl-4">
 
       <form class="#" on:submit|preventDefault={createProductBrand}>
-        <FlashMessage />
-
         <div
           class="d-flex align-items-center justify-content-between flex-column
           mb-25">
@@ -267,8 +265,6 @@
   <div slot="modals">
     <Modal modalId="updateBrand" modalTitle="Add Image to Product Model">
       <form class="#" on:submit|preventDefault={updateProductBrand}>
-        <FlashMessage />
-
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
             <label for="name">Enter New Product Brand</label>
