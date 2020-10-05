@@ -169,8 +169,6 @@ class ProductPrice extends BaseModel
 
       if ($request->isApi()) return response()->json(['err' => 'Product price not created'], 500);
       return back()->withError('Product price not created');
-
-
     }
   }
 
@@ -207,5 +205,16 @@ class ProductPrice extends BaseModel
       if ($request->isApi()) return response()->json(['err' => 'Batch price not updated'], 500);
       return back()->withError('Batch Price not updated');
     }
+  }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function ($product) {
+      Cache::forget('products');
+      Cache::forget('batches');
+    });
   }
 }
