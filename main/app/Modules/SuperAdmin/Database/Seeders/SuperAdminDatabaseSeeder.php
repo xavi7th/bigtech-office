@@ -47,7 +47,7 @@ class SuperAdminDatabaseSeeder extends Seeder
     factory(SuperAdmin::class, 1)->create();
 
     // factory(OtherExpense::class, 50)->create();
-    // $this->call(ProductBatchesTableSeeder::class);
+    $this->call(ProductBatchesTableSeeder::class);
     // $this->call(ProductBrandsTableSeeder::class);
     // $this->call(ProductCategoriesTableSeeder::class);
     // $this->call(ProductColorsTableSeeder::class);

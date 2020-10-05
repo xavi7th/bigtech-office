@@ -1,25 +1,33 @@
 <script>
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import { Inertia } from "@inertiajs/inertia";
-  import { afterUpdate, onMount, tick } from "svelte";
+  import { afterUpdate, beforeUpdate, onMount, tick } from "svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import { fly } from "svelte/transition";
-  import route from "ziggy";
   import Sidebar from "@superadmin-shared/Partials/Sidebar";
   import Header from "@superadmin-shared/Partials/Header";
   import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
   import PageTitle from "@superadmin-shared/Partials/PageTitle";
   import Footer from "@superadmin-shared/Partials/Footer";
-  import { lang } from "moment";
+  import PageLoader from "@public-shared/PageLoader.svelte";
 
-  $: ({ app, routes } = $page);
+  $: ({ app, routes, flash } = $page);
 
   console.log($page);
 
-  let isLoaded = false,
+  let routesInitialized = false,
     isMounted = false;
   export let title;
 
+  beforeUpdate(() => {
+    if (flash.success == 202) {
+      location.reload();
+    }
+    else{
+      routesInitialized = true;
+    }
+  })
+
   onMount(async () => {
+
     isMounted = true;
 
     await tick();
@@ -35,7 +43,6 @@
 
   afterUpdate(() => {
     document.querySelector("#app").removeAttribute("data-page");
-    isLoaded = true;
   });
 </script>
 
@@ -56,6 +63,7 @@
   }
 </style>
 
+{#if routesInitialized}
 <div
   data-spy="scroll"
   data-target=".rui-page-sidebar"
@@ -85,8 +93,10 @@
   {/if}
 </div>
 
-{#if isMounted}
-  <script src="/js/user-dashboard-init.js">
+{:else}
+  <PageLoader />
+{/if}
 
-  </script>
+{#if isMounted}
+  <script src="/js/user-dashboard-init.js"></script>
 {/if}

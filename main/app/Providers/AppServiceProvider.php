@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Inertia\Inertia;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Schema\Builder;
@@ -28,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    //
     // URL::forceRootUrl(Config::get('app.url'));
   }
 }

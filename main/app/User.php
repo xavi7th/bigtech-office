@@ -72,15 +72,15 @@ class User extends Authenticatable implements JWTSubject
     'email_verified_at' => 'datetime',
   ];
 
-  public function __construct(array $attributes = [])
-  {
-    parent::__construct($attributes);
-    if (routeHasRootNamespace('appuser.')) {
-      Inertia::setRootView('appuser::app');
-    } elseif (routeHasRootNamespace('superadmin.')) {
-      Inertia::setRootView('superadmin::app');
-    }
-  }
+  // public function __construct(array $attributes = [])
+  // {
+  //   parent::__construct($attributes);
+  //   if (routeHasRootNamespace('appuser.')) {
+  //     Inertia::setRootView('appuser::app');
+  //   } elseif (routeHasRootNamespace('superadmin.')) {
+  //     Inertia::setRootView('superadmin::app');
+  //   }
+  // }
 
   public function expenses()
   {

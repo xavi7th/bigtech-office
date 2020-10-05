@@ -4,10 +4,12 @@
     import Layout from "@superadmin-shared/SuperAdminLayout";
     import FlashMessage from "@usershared/FlashMessage";
     import route from "ziggy";
+import { onMount } from "svelte";
 
-    $: ({ app } = $page);
+    $: ({ flash } = $page);
+
 </script>
 
 <Layout title="Super Admin Dashboard">
-    <div class="mt-20">Don't you have an account?</div>
+    <div class="mt-20">UNDER CONSTRUCTION?</div>
 </Layout>

@@ -17,10 +17,7 @@ class NotificationEventSubscriber
    */
   public function subscribe($events)
   {
-    $events->listen(
-      NotificationEvents::LOGGED_IN,
-      [self::class, 'onLoggedIn']
-    );
+    $events->listen(NotificationEvents::LOGGED_IN, [self::class, 'onLoggedIn']);
   }
 
 

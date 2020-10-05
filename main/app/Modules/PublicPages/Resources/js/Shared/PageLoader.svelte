@@ -1,6 +1,5 @@
 <script>
   import { fade } from "svelte/transition";
-  export let transparent;
 </script>
 
 <style lang="scss">
@@ -104,22 +103,10 @@
   }
 </style>
 
-{#if transparent}
-  <div
-    id="preloader"
-    transition:fade={{ duration: 300 }}
-    class="is-transparent">
-    <div id="loader" />
-    <div class="loader-section loader-top" />
-    <div class="loader-section loader-bottom" />
+<div id="page-loader" out:fade={{ duration: 600, delay: 400 }}>
+  <div id="loader">
+    <div id="shadow" />
+    <div id="box" />
   </div>
-{:else}
-
-  <div id="page-loader" out:fade={{ duration: 600, delay: 400 }}>
-    <div id="loader">
-      <div id="shadow" />
-      <div id="box" />
-    </div>
-    <h4>loading...</h4>
-  </div>
-{/if}
+  <h4>loading...</h4>
+</div>

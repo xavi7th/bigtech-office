@@ -6,15 +6,16 @@ use App\User;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Auth\SessionGuard;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Modules\SuperAdmin\Events\NotificationEvent;
 use App\Modules\SuperAdmin\Events\NotificationEvents;
-use Illuminate\Auth\SessionGuard;
+use Tymon\JWTAuth\JWTGuard;
 
 class LoginController extends Controller
 {
@@ -165,9 +166,7 @@ class LoginController extends Controller
       return $response;
     }
 
-    return $request->isApi()
-      ? new Response('', 204)
-      : redirect()->intended(route($this->authenticatedGuard()->user()->dashboardRoute()));
+    return $request->isApi() ? new Response('', 204) : redirect()->intended(route($this->authenticatedGuard()->user()->dashboardRoute()));
   }
 
   /**
@@ -185,19 +184,19 @@ class LoginController extends Controller
       redirect()->intended(route($user->dashboardRoute()));
     } else {
       if ($user->is_verified()) {
-        if ($request->isApi()) {
-          return response()->json($this->respondWithToken(), 202);
-        }
-        return redirect()->intended(route($user->dashboardRoute()));
+        if ($request->isApi()) return response()->json($this->respondWithToken(), 202);
+        return redirect()->intended(route($user->dashboardRoute()))->withSuccess(202);
+
       } else {
         $this->logout($request);
-        if ($request->isApi()) {
-          return response()->json(['unverified' => 'Unverified user'], 401);
-        }
-        return back()->withError('Unverified user');
+        if ($request->isApi()) return response()->json(['unverified' => 'Unverified user'], 401);
+
+        /**
+         * ?Watch out for this 401 on the client side and trigger a password reset
+         */
+        return back()->withError(401);
       }
     }
-    return redirect()->route(Admin::dashboardRoute());
   }
 
   /**
@@ -220,7 +219,7 @@ class LoginController extends Controller
     return Auth::guard('app_user');
   }
 
-  protected function apiGuard()
+  protected function apiGuard(): JWTGuard
   {
     return Auth::guard('api');
   }

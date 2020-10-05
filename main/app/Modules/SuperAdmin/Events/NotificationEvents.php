@@ -3,7 +3,6 @@
 namespace App\Modules\SuperAdmin\Events;
 
 use Illuminate\Queue\SerializesModels;
-use App\Modules\CardUser\Models\CardUser;
 
 class NotificationEvents
 {

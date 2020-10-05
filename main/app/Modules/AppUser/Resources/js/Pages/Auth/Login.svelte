@@ -3,10 +3,11 @@
   import FlashMessage from "@usershared/FlashMessage.svelte";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-
   import route from "ziggy";
 
-  $: ({ errors, auth } = $page);
+
+  $: ({ errors } = $page);
+
   let details = {
       remember: true
     },
@@ -28,7 +29,9 @@
       return;
     } else {
       BlockToast.fire({ text: "Accessing your dashboard..." });
+
       e.target.classList.remove("was-validated");
+
       Inertia.post(route("app.login"), details).then(() => {
         swal.close();
         if (_.size(errors) !== 0) {

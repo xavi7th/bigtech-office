@@ -21,6 +21,7 @@ class CreateWebAdminsTable extends Migration
       $table->string('gender')->enum(['male', 'female'])->nullable();
       $table->foreignId('office_branch_id')->default(1)->constrained()->onDelete('cascade');
       $table->boolean('is_active')->nullable();
+      $table->timestamp('verified_at')->nullable();
 
       $table->rememberToken();
       $table->timestamps();
