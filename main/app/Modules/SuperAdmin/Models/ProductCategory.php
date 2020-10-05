@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Cache;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -10,7 +11,6 @@ use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
-use Cache;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductCategory
@@ -69,7 +69,7 @@ class ProductCategory extends BaseModel
 
   public function getProductCategories(Request $request)
   {
-    $productCategories = Cache::remember('productCategories', config('cache.product_models_cache_duration'), function () {
+    $productCategories = Cache::rememberForever('productCategories', function () {
       return (new ProductCategoryTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic');
     });
 
@@ -90,8 +90,6 @@ class ProductCategory extends BaseModel
         'name' => $request->name,
         'img_url' => compress_image_upload('img', 'product_models_images/', null, true, 400)['img_url'],
       ]);
-
-      Cache::forget('productCategories');
 
       if ($request->isApi())
         return response()->json((new ProductCategoryTransformer)->basic($product_category), 201);
@@ -119,8 +117,6 @@ class ProductCategory extends BaseModel
       }
       $productCategory->save();
 
-      Cache::forget('productCategories');
-
       if ($request->isApi()) {
         return response()->json([], 204);
       }
@@ -131,5 +127,15 @@ class ProductCategory extends BaseModel
         return response()->json(['err' => 'Category not updated'], 500);
       return back()->withError('Category update failed');
     }
+  }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function () {
+      Cache::forget('productCategories');
+    });
   }
 }
