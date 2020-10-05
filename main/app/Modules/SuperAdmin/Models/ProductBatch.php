@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Cache;
 use App\BaseModel;
 use Carbon\Carbon;
 use Inertia\Inertia;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Models\ProductPrice;
+use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
 use App\Modules\SuperAdmin\Transformers\UserCommentTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductBatchTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
@@ -20,8 +22,6 @@ use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductGradeTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
-use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
-use Cache;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductBatch
@@ -181,13 +181,14 @@ class ProductBatch extends BaseModel
     return Inertia::render('SuperAdmin,Products/Prices', compact('productBatchWithPriceDetails', 'productBatch'));
   }
 
+  public function scopeForeign($query)
+  {
+    return $query->where('batch_number', '<>', 'LOCAL-SUPPLIER');
+  }
+
   protected static function boot()
   {
     parent::boot();
-
-    static::creating(function ($product) {
-      // $product->product_uuid = (string)Str::uuid();
-    });
 
     static::saved(function ($product) {
       Cache::forget('batches');

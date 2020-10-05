@@ -393,7 +393,7 @@ class Product extends BaseModel
   public function showCreateProductForm()
   {
     return Inertia::render('SuperAdmin,Products/CreateProduct', [
-      'batches' => fn () => Cache::remember('batches', (15 * 60 * 60), fn () => (new ProductBatchTransformer)->collectionTransformer(ProductBatch::latest()->take(10)->get(), 'basic')),
+      'batches' => fn () => Cache::remember('batches', (15 * 60 * 60), fn () => (new ProductBatchTransformer)->collectionTransformer(ProductBatch::foreign()->latest()->take(2)->get(), 'basic')),
       'categories' => fn () => Cache::rememberForever('categories', fn () => (new ProductCategoryTransformer)->collectionTransformer(ProductCategory::all(), 'basic')),
       'models' => fn () => Cache::rememberForever('models', fn () => (new ProductModelTransformer)->collectionTransformer(ProductModel::all(), 'basic')),
       'brands' => fn () => Cache::rememberForever('brands', fn () => (new ProductBrandTransformer)->collectionTransformer(ProductBrand::all(), 'basic')),
