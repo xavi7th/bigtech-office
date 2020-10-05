@@ -18,6 +18,7 @@ class CompanyBankAccountTransformer
   {
     return [
       'id' => (int)$account->id,
+      'account_name' => (string)$account->account_name,
       'account_number' => (string)$account->account_number,
       'bank' => (string)$account->bank,
     ];

@@ -317,7 +317,6 @@
               <th scope="col">#</th>
               <th scope="col">Name/Logo</th>
               <th scope="col">Acc Number</th>
-              <th scope="col">Acc Description</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -329,11 +328,10 @@
                   <img
                     class="img-responsive img-fluid"
                     src={bankAccount.img_url}
-                    alt="{bankAccount.bank}'s logo'" />
+                    alt="" />
                   <span>{bankAccount.account_name}</span>
                 </td>
                 <td>{bankAccount.account_number}</td>
-                <td>{bankAccount.account_description}</td>
                 <td class="d-flex justify-content-between align-content-center">
                   {#if bankAccount.is_suspended}
                     <button

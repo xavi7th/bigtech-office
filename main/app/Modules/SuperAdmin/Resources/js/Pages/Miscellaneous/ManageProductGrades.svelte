@@ -2,12 +2,11 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ errors, auth, flash } = $page);
+  $: ({ errors, flash } = $page);
 
   let productGradeName, productGradeId;
 
@@ -140,8 +139,6 @@
     <div class="col-lg-4 col-xl-4">
 
       <form class="#" on:submit|preventDefault={createProductGrade}>
-        <FlashMessage />
-
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
             <label for="name">Enter New Product Grade</label>
@@ -156,8 +153,7 @@
           <div class="col-12">
             <button
               type="submit"
-              class="btn btn-success btn-long"
-              disabled={!productGradeName}>
+              class="btn btn-success btn-long">
               <span class="text">Create</span>
             </button>
           </div>
@@ -218,8 +214,6 @@
   <div slot="modals">
     <Modal modalId="updateProductGrade" modalTitle="Update Product Grade">
       <form class="#" on:submit|preventDefault={updateProductGrade}>
-        <FlashMessage />
-
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
             <label for="name">Chenge Product Grade</label>

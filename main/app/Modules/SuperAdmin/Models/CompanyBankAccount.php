@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Cache;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -12,42 +13,7 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateBankAccountValidation;
-use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\CompanyBankAccount
- *
- * @property int $id
- * @property string $bank
- * @property string $account_name
- * @property string $account_number
- * @property string $account_type
- * @property string|null $img_url
- * @property string|null $account_description
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $sales_records
- * @property-read int|null $sales_records_count
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount cashTransactions()
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount newQuery()
- * @method static \Illuminate\Database\Query\Builder|CompanyBankAccount onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount query()
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereBank($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|CompanyBankAccount withTrashed()
- * @method static \Illuminate\Database\Query\Builder|CompanyBankAccount withoutTrashed()
- * @mixin \Eloquent
- */
 class CompanyBankAccount extends BaseModel
 {
 
@@ -72,7 +38,6 @@ class CompanyBankAccount extends BaseModel
   {
     return optional(self::where('bank', 'Cash')->first())->id ?? 0;
   }
-
 
   public static function routes()
   {
@@ -111,8 +76,6 @@ class CompanyBankAccount extends BaseModel
         'img_url' => compress_image_upload('img', 'bank-logos/', null, 200)['img_url'],
       ]);
 
-      Cache::forget('bankAccounts');
-
       if ($request->isApi()) return response()->json((new CompanyBankAccountTransformer)->basic($account), 201);
       return back()->withSuccess('Bank Account created. <br/> Payments can now be created under this bank account');
     } catch (\Throwable $th) {
@@ -122,7 +85,6 @@ class CompanyBankAccount extends BaseModel
       return back()->withError('Account creation failed');
     }
   }
-
 
   public function editCompanyBankAccount(CreateBankAccountValidation $request, self $companyBankAccount)
   {
@@ -135,8 +97,6 @@ class CompanyBankAccount extends BaseModel
       }
 
       $companyBankAccount->save();
-
-      Cache::forget('bankAccounts');
 
       if ($request->isApi())  return response()->json([], 204);
       return back()->withSuccess('Bank Account updated. <br/> Payments can now be created under this bank account');
@@ -152,13 +112,9 @@ class CompanyBankAccount extends BaseModel
   {
     $companyBankAccount->delete();
 
-    Cache::forget('bankAccounts');
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Account suspended and will no longer be available to users as a payment option');
 
-    if ($request->isApi()) {
-      return response()->json([], 204);
-    } else {
-      return back()->withSuccess('Account suspended and will no longer be available to users as a payment option');
-    }
   }
 
   public function restoreCompanyBankAccount(Request $request, $id)
@@ -167,7 +123,7 @@ class CompanyBankAccount extends BaseModel
       ->where('id', $id)
       ->restore();
 
-    Cache::forget('bankAccounts');
+
 
     if ($request->isApi()) {
       return response()->json([], 204);
@@ -175,7 +131,6 @@ class CompanyBankAccount extends BaseModel
       return back()->withSuccess('Account restored and has become available to users as a payment option');
     }
   }
-
 
   /**
    * Scope a query to only cash transactions
@@ -186,5 +141,15 @@ class CompanyBankAccount extends BaseModel
   public function scopeCash_transactions($query)
   {
     return $query->where('id', self::cash_transaction_id());
+  }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function ($product) {
+      Cache::forget('bankAccounts');
+    });
   }
 }
