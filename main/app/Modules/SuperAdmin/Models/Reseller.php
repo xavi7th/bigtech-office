@@ -299,6 +299,7 @@ class Reseller extends BaseModel
 
       $reseller->reseller_histories()->create([
         'product_id' => $product->id,
+        'product_type' => get_class($product),
         'handled_by' => $request->user()->id,
         'handler_type' => get_class($request->user()),
         'product_status' => 'returned'
