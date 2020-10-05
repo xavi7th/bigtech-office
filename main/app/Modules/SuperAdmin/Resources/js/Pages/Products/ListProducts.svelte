@@ -132,10 +132,6 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                 <Icon />
               </th>
               <th scope="col">
-                Cost Price
-                <Icon />
-              </th>
-              <th scope="col">
                 Selling Price
               </th>
               <th scope="col">Action</th>
@@ -150,7 +146,6 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                   {product.model} {product.storage_size}
                 </td>
                 <td>{product.identifier}</td>
-                <td>{product.cost_price}</td>
                 <td>{product.selling_price}</td>
                 <td>
                   <InertiaLink
