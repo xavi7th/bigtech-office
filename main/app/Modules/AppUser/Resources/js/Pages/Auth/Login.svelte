@@ -5,7 +5,6 @@
   import { Inertia } from "@inertiajs/inertia";
   import route from "ziggy";
 
-
   $: ({ errors } = $page);
 
   let details = {

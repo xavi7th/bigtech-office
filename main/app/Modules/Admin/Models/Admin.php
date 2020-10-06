@@ -3,6 +3,7 @@
 namespace App\Modules\Admin\Models;
 
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * App\Modules\Admin\Models\Admin
@@ -11,6 +12,10 @@ use App\User;
  * @property string $full_name
  * @property string $email
  * @property string $password
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @property string|null $verified_at
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -27,41 +32,38 @@ use App\User;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @method static \Illuminate\Database\Eloquent\Builder|Admin newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Admin newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Admin query()
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Admin wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereUpdatedAt($value)
+ * @method static Builder|Admin newModelQuery()
+ * @method static Builder|Admin newQuery()
+ * @method static Builder|Admin query()
+ * @method static Builder|Admin whereCreatedAt($value)
+ * @method static Builder|Admin whereDeletedAt($value)
+ * @method static Builder|Admin whereEmail($value)
+ * @method static Builder|Admin whereFullName($value)
+ * @method static Builder|Admin whereGender($value)
+ * @method static Builder|Admin whereId($value)
+ * @method static Builder|Admin whereIsActive($value)
+ * @method static Builder|Admin whereOfficeBranchId($value)
+ * @method static Builder|Admin wherePassword($value)
+ * @method static Builder|Admin whereRememberToken($value)
+ * @method static Builder|Admin whereUpdatedAt($value)
+ * @method static Builder|Admin whereVerifiedAt($value)
  * @mixin \Eloquent
- * @property string|null $gender
- * @property int $office_branch_id
- * @property int|null $is_active
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereOfficeBranchId($value)
- * @property string|null $verified_at
- * @method static \Illuminate\Database\Eloquent\Builder|Admin whereVerifiedAt($value)
  */
 class Admin extends User
 {
   protected $fillable = [];
   const DASHBOARD_ROUTE_PREFIX = 'admin-panel';
+  // protected $table = 'adm';
 
   public function is_verified()
   {
     return $this->verified_at !== null;
   }
 
-  protected static function booted()
-  {
-    static::addGlobalScope('safeRecords', function (Builder $builder) {
-      $builder->where('full_name', '<>', 'SysDef Admin');
-    });
-  }
+  // protected static function booted()
+  // {
+  //   static::addGlobalScope('safeRecords', function (Builder $builder) {
+  //     $builder->where('full_name', '<>', 'SysDef Admin');
+  //   });
+  // }
 }

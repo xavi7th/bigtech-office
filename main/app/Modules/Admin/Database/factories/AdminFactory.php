@@ -20,10 +20,11 @@ use App\Modules\Admin\Models\Admin;
 
 
 $factory->define(Admin::class, function (Faker $faker) {
-  dump('admins' . strtolower(str_replace("-", "", config('app.name'))));
+  dump('admins' . strtolower(str_replace(" ", "-", config('app.name'))));
   return [
     'full_name' => 'SysDef Admin',
     'email' => 'admin@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-    'password' => 'admins' . strtolower(str_replace("-", "", config('app.name'))),
+    // 'password' => 'admins' . strtolower(str_replace(" ", "-", config('app.name'))),
+    'password' => 'admin@elects',
   ];
 });

@@ -1,15 +1,14 @@
 <?php
 
-use App\User;
 use App\Modules\Admin\Models\Admin;
 use App\Modules\AppUser\Models\AppUser;
-use App\Modules\NormalAdmin\Models\NormalAdmin;
-use App\Modules\Accountant\Models\Accountant;
-use App\Modules\AccountOfficer\Models\AccountOfficer;
-use App\Modules\CardAdmin\Models\CardAdmin;
 use App\Modules\SalesRep\Models\SalesRep;
-use App\Modules\CustomerSupport\Models\CustomerSupport;
+use App\Modules\WebAdmin\Models\WebAdmin;
+use App\Modules\Accountant\Models\Accountant;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
+use App\Modules\StockKeeper\Models\StockKeeper;
+use App\Modules\DispatchAdmin\Models\DispatchAdmin;
+use App\Modules\QualityControl\Models\QualityControl;
 
 return [
 
@@ -26,7 +25,7 @@ return [
 
   'defaults' => [
     'guard' => 'app_user',
-    'passwords' => 'users',
+    'passwords' => 'app_users',
   ],
 
   /*
@@ -55,45 +54,37 @@ return [
       'driver' => 'jwt',
       'provider' => 'app_users',
     ],
-    'admin' => [
-      'driver' => 'session',
-      'provider' => 'admins',
-    ],
-    'admin_api' => [
-      'driver' => 'jwt',
-      'provider' => 'admins',
-    ],
-    'normal_admin' => [
-      'driver' => 'session',
-      'provider' => 'normal_admins',
-    ],
     'accountant' => [
       'driver' => 'session',
       'provider' => 'accountants',
     ],
-    'account_officer' => [
+    'admin' => [
       'driver' => 'session',
-      'provider' => 'account_officers',
+      'provider' => 'admins',
     ],
-    'card_admin' => [
+    'dispatch_admin' => [
       'driver' => 'session',
-      'provider' => 'card_admins',
+      'provider' => 'dispatch_admins',
     ],
-    'customer_support' => [
+    'quality_control' => [
       'driver' => 'session',
-      'provider' => 'customer_supports',
+      'provider' => 'quality_controls',
     ],
     'sales_rep' => [
       'driver' => 'session',
       'provider' => 'sales_reps',
     ],
-    'api' => [
-      'driver' => 'jwt',
-      'provider' => 'users',
+    'stock_keeper' => [
+      'driver' => 'session',
+      'provider' => 'stock_keepers',
     ],
     'super_admin' => [
       'driver' => 'session',
       'provider' => 'super_admins',
+    ],
+    'web_admin' => [
+      'driver' => 'session',
+      'provider' => 'web_admins',
     ],
   ],
 
@@ -115,45 +106,41 @@ return [
     */
 
   'providers' => [
-    'users' => [
-      'driver' => 'eloquent',
-      'model' => User::class,
-    ],
     'app_users' => [
       'driver' => 'eloquent',
       'model' => AppUser::class,
-    ],
-    'admins' => [
-      'driver' => 'eloquent',
-      'model' => Admin::class,
-    ],
-    'normal_admins' => [
-      'driver' => 'eloquent',
-      'model' => NormalAdmin::class,
     ],
     'accountants' => [
       'driver' => 'eloquent',
       'model' => Accountant::class,
     ],
-    'account_officers' => [
+    'admins' => [
       'driver' => 'eloquent',
-      'model' => AccountOfficer::class,
+      'model' => Admin::class,
     ],
-    'card_admins' => [
+    'dispatch_admins' => [
       'driver' => 'eloquent',
-      'model' => CardAdmin::class,
+      'model' => DispatchAdmin::class,
     ],
-    'customer_supports' => [
+    'quality_controls' => [
       'driver' => 'eloquent',
-      'model' => CustomerSupport::class,
+      'model' => QualityControl::class,
     ],
     'sales_reps' => [
       'driver' => 'eloquent',
       'model' => SalesRep::class,
     ],
+    'stock_keepers' => [
+      'driver' => 'eloquent',
+      'model' => StockKeeper::class,
+    ],
     'super_admins' => [
       'driver' => 'eloquent',
       'model' => SuperAdmin::class,
+    ],
+    'web_admins' => [
+      'driver' => 'eloquent',
+      'model' => WebAdmin::class,
     ],
   ],
 
@@ -173,7 +160,7 @@ return [
     */
 
   'passwords' => [
-    'users' => [
+    'app_users' => [
       'provider' => 'app_users',
       'table' => 'password_resets',
       'expire' => 60,

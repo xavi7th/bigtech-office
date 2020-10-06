@@ -11,6 +11,10 @@ use App\User;
  * @property string $full_name
  * @property string $email
  * @property string $password
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @property string|null $verified_at
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -34,19 +38,15 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereFullName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereOfficeBranchId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereUpdatedAt($value)
- * @mixin \Eloquent
- * @property string|null $gender
- * @property int $office_branch_id
- * @property int|null $is_active
- * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereOfficeBranchId($value)
- * @property string|null $verified_at
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereVerifiedAt($value)
+ * @mixin \Eloquent
  */
 class DispatchAdmin extends User
 {

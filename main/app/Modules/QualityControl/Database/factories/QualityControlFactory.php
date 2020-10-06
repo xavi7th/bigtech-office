@@ -19,10 +19,10 @@ use App\Modules\QualityControl\Models\QualityControl;
 
 
 $factory->define(QualityControl::class, function (Faker $faker) {
-  dump('quality-control' . strtolower(str_replace("-", "", config('app.name'))));
+  dump('quality-control' . strtolower(str_replace(" ", "-", config('app.name'))));
   return [
     'full_name' => 'SysDef Quality Control',
     'email' => 'qualitycontrol@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-    'password' => 'quality-control' . strtolower(str_replace("-", "", config('app.name'))),
+    'password' => 'quality-control' . strtolower(str_replace(" ", "-", config('app.name'))),
   ];
 });

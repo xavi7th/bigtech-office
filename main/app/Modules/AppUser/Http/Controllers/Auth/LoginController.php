@@ -5,6 +5,7 @@ namespace App\Modules\AppUser\Http\Controllers\Auth;
 use App\User;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
+use Tymon\JWTAuth\JWTGuard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Auth\SessionGuard;
@@ -12,10 +13,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Providers\RouteServiceProvider;
+use App\Modules\SuperAdmin\Models\ErrLog;
+use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Modules\SuperAdmin\Events\NotificationEvent;
 use App\Modules\SuperAdmin\Events\NotificationEvents;
-use Tymon\JWTAuth\JWTGuard;
 
 class LoginController extends Controller
 {
@@ -39,6 +41,8 @@ class LoginController extends Controller
    */
   protected $redirectTo = RouteServiceProvider::HOME;
   private $apiToken;
+  private $authSuccess = false;
+  private $authGuard;
 
   /**
    * Create a new controller instance.
@@ -61,11 +65,8 @@ class LoginController extends Controller
 
   public function showLoginForm(Request $request)
   {
-    if ($request->isApi()) {
-      return 'Welcome to ' . config('app.name') . ' API';
-    } else {
-      return Inertia::render('AppUser,Auth/Login');
-    }
+    if ($request->isApi())  return 'Welcome to ' . config('app.name') . ' API';
+    return Inertia::render('AppUser,Auth/Login');
   }
 
   /**
@@ -91,7 +92,6 @@ class LoginController extends Controller
 
     if ($this->attemptLogin($request)) {
       event(NotificationEvents::LOGGED_IN, new NotificationEvent($this->authenticatedGuard()->user()));
-
       return $this->sendLoginResponse($request);
     }
 
@@ -117,13 +117,9 @@ class LoginController extends Controller
     });
     $request->session()->invalidate();
 
-    if ($request->isApi()) {
-      return response()->json(['LOGGED_OUT' => true], 200);
-    }
-
+    if ($request->isApi()) return response()->json(['LOGGED_OUT' => true], 200);
     return redirect()->route('app.login.show');
   }
-
 
 
   /**
@@ -132,12 +128,19 @@ class LoginController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return bool
    */
-  protected function attemptLogin(Request $request)
+  protected function attemptLogin()
   {
-    return $this->attemptGuardLogin('app_user')
-      ?? $this->attemptGuardLogin('admin')
-      ?? $this->attemptGuardLogin('super_admin')
-      ?? false;
+    collect(config('auth.guards'))->each(function ($details, $guard) {
+      try {
+        if ($this->attemptGuardLogin($guard)) {
+          $this->authSuccess = true;
+        }
+      } catch (\Throwable $th) {
+        ErrLog::notifyAdminAndFail(SuperAdmin::find(1), $th, 'Login Error');
+        abort(500, 'Sorry there was an error logging you in.');
+      }
+    });
+    return $this->authSuccess;
   }
 
   private function attemptGuardLogin(string $guard)
@@ -177,17 +180,14 @@ class LoginController extends Controller
    */
   protected function authenticated(Request $request, User $user)
   {
-    // dd($user);
-
     if ($user->isAppUser()) {
       redirect()->intended(route($user->dashboardRoute()));
     } else {
       if ($user->is_verified()) {
         if ($request->isApi()) return response()->json($this->respondWithToken(), 202);
         return redirect()->intended(route($user->dashboardRoute()))->withSuccess(202);
-
       } else {
-        $this->logout($request);
+        // $this->logout($request);
         if ($request->isApi()) return response()->json(['unverified' => 'Unverified user'], 401);
 
         /**
@@ -225,15 +225,13 @@ class LoginController extends Controller
 
   protected function authenticatedGuard(): ?SessionGuard
   {
-    if (Auth('app_user')->check()) {
-      return Auth::guard('app_user');
-    } elseif (Auth('admin')->check()) {
-      return Auth::guard('admin');
-    } elseif (Auth('super_admin')->check()) {
-      return Auth::guard('super_admin');
-    } else {
-      return null;
-    }
+    collect(config('auth.guards'))->each(function ($details, $guard) {
+      if (Auth($guard)->check()) {
+        $this->authGuard = Auth::guard($guard);
+        return false;
+      }
+    });
+    return $this->authGuard;
   }
 
   /**

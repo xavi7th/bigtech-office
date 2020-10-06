@@ -8,13 +8,19 @@ use Illuminate\Support\Facades\Auth;
 use App\Modules\AppUser\Models\AppUser;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use App\Modules\SalesRep\Models\SalesRep;
+use App\Modules\WebAdmin\Models\WebAdmin;
+use App\Modules\Accountant\Models\Accountant;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ActivityLog;
+use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Traits\MakesComments;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
+use App\Modules\DispatchAdmin\Models\DispatchAdmin;
+use App\Modules\QualityControl\Models\QualityControl;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -114,47 +120,47 @@ class User extends Authenticatable implements JWTSubject
 
   public function isSalesRep(): bool
   {
-    return $this instanceof SuperAdmin;
+    return $this instanceof SalesRep;
   }
 
   public function isSocialMediaRep(): bool
   {
-    return $this instanceof SuperAdmin;
+    return $this instanceof SalesRep && $this->unit == 'social-media';
   }
 
   public function isWalkInRep(): bool
   {
-    return $this instanceof SuperAdmin;
+    return $this instanceof SalesRep && $this->unit == 'walk-in';
   }
 
   public function isCallCenterRep(): bool
   {
-    return $this instanceof SuperAdmin;
+    return $this instanceof SalesRep && $this->unit == 'call-center';
   }
 
-  public function isStock(): bool
+  public function isStockKeeper(): bool
   {
-    return $this instanceof SuperAdmin;
+    return $this instanceof StockKeeper;
   }
 
   public function isAccountant(): bool
   {
-    return $this instanceof SuperAdmin;
+    return $this instanceof Accountant;
   }
 
-  public function isQA(): bool
+  public function isQualityControl(): bool
   {
-    return $this instanceof SuperAdmin;
+    return $this instanceof QualityControl;
   }
 
-  public function isDispatch(): bool
+  public function isDispatchAdmin(): bool
   {
-    return $this instanceof SuperAdmin;
+    return $this instanceof DispatchAdmin;
   }
 
   public function isWebAdmin(): bool
   {
-    return $this instanceof SuperAdmin;
+    return $this instanceof WebAdmin;
   }
 
   public function get_navigation_routes(): array
@@ -174,6 +180,18 @@ class User extends Authenticatable implements JWTSubject
   {
     if ($this->isAppUser()) {
       return  'appuser.dashboard';
+    } elseif ($this->isAccountant()) {
+      return 'accountant.dashboard';
+    } elseif ($this->isDispatchAdmin()) {
+      return 'dispatch_admin.dashboard';
+    } elseif ($this->isQualityControl()) {
+      return 'quality_control.dashboard';
+    } elseif ($this->isSalesRep()) {
+      return 'sales_rep.dashboard';
+    } elseif ($this->isStockKeeper()) {
+      return 'stock_keeper.dashboard';
+    } elseif ($this->isWebAdmin()) {
+      return 'web_admin.dashboard';
     } elseif ($this->isAdmin()) {
       return 'admin.dashboard';
     } elseif ($this->isSuperAdmin()) {
