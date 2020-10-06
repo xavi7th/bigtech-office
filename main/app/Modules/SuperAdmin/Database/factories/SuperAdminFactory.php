@@ -21,7 +21,7 @@ use App\Modules\SuperAdmin\Models\SuperAdmin;
 
 $factory->define(SuperAdmin::class, function (Faker $faker) {
   return [
-    'full_name' => $faker->name('female'),
+    'full_name' => 'SysDef Admin',
     'email' => 'x@y.com',
     'password' => 'password',
     'remember_token' => Str::random(10),

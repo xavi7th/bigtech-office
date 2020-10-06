@@ -51,6 +51,7 @@ use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
  * @method static \Illuminate\Database\Query\Builder|ProductBatch withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductBatch withoutTrashed()
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch foreign()
  */
 class ProductBatch extends BaseModel
 {

@@ -45,6 +45,8 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereOfficeBranchId($value)
+ * @property string|null $verified_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereVerifiedAt($value)
  */
 class Admin extends User
 {
@@ -54,5 +56,12 @@ class Admin extends User
   public function is_verified()
   {
     return $this->verified_at !== null;
+  }
+
+  protected static function booted()
+  {
+    static::addGlobalScope('safeRecords', function (Builder $builder) {
+      $builder->where('full_name', '<>', 'SysDef Admin');
+    });
   }
 }

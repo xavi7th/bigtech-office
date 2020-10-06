@@ -80,7 +80,7 @@ class OfficeBranchTransformer
       'total_confirmed_sales' => $office_branch->sales_records->where('is_confirmed', true)->count(),
       'total_selling_price' => $office_branch->sales_records->sum('selling_price'),
       'total_bank_payments' => $office_branch->sales_records->sum('total_bank_payments_amount'),
-      'total_swap_deals' => $office_branch->sales_records->where('is_swap_deal', true)->count(),
+      'total_swap_deals' => $office_branch->sales_records->where('is_swap_transaction', true)->count(),
       'channels_statistics' => $office_branch->sales_records->countBy(function ($record) {
         return $record->sales_channel->channel_name;
       }),

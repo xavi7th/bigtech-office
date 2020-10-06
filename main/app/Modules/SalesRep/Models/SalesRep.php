@@ -7,6 +7,7 @@ use Throwable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\StockRequest;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
@@ -195,5 +196,12 @@ class SalesRep extends User
   public function scopeCallCenter($query)
   {
     return $query->where('unit', 'call-center');
+  }
+
+  protected static function booted()
+  {
+    static::addGlobalScope('safeRecords', function (Builder $builder) {
+      $builder->where('unit', '<>', 'sys-default');
+    });
   }
 }

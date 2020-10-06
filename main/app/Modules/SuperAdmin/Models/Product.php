@@ -604,7 +604,7 @@ class Product extends BaseModel
         'online_rep_id' => $request->online_rep_id,
         'sales_rep_id' => auth()->id(),
         'sales_channel_id' => $request->sales_channel_id,
-        'is_swap_deal' => filter_var($request->is_swap_deal, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+        'is_swap_transaction' => filter_var($request->is_swap_transaction, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
       ]);
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
@@ -647,7 +647,7 @@ class Product extends BaseModel
     /**
      * ! If swap deal, process the swap device
      */
-    if (filter_var($request->is_swap_deal, FILTER_VALIDATE_BOOLEAN)) {
+    if (filter_var($request->is_swap_transaction, FILTER_VALIDATE_BOOLEAN)) {
       // return $request->validated();
       list($id_url, $receipt_url) = SwapDeal::store_documents($request);
       if (!SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url)) {

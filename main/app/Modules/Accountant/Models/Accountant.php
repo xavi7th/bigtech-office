@@ -45,6 +45,8 @@ use App\User;
  * @property int $office_branch_id
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereOfficeBranchId($value)
+ * @property string|null $verified_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereVerifiedAt($value)
  */
 class Accountant extends User
 {

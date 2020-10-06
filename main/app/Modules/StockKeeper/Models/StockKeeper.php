@@ -45,6 +45,8 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereOfficeBranchId($value)
+ * @property string|null $verified_at
+ * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereVerifiedAt($value)
  */
 class StockKeeper extends User
 {

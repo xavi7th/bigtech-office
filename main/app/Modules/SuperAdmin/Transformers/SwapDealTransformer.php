@@ -82,7 +82,7 @@ class SwapDealTransformer
       'model' => (string)$swapDeal->description,
       'identifier' => (string)$swapDeal->primary_identifier(),
       'collection_date' => (string)$swapDeal->tenure_record->created_at,
-      'is_swap_deal' => (bool)true,
+      'is_swap_transaction' => (bool)true,
       // 'status' => (string)$swapDeal->tenure_record->status,
       // 'cost_price' => $swapDeal->product_price->cost_price,
       // 'selling_price' => $swapDeal->product_price->proposed_selling_price,

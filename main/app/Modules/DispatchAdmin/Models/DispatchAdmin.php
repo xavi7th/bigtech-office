@@ -45,6 +45,8 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereOfficeBranchId($value)
+ * @property string|null $verified_at
+ * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereVerifiedAt($value)
  */
 class DispatchAdmin extends User
 {

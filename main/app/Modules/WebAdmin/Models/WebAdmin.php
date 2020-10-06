@@ -45,6 +45,8 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereOfficeBranchId($value)
+ * @property string|null $verified_at
+ * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereVerifiedAt($value)
  */
 class WebAdmin extends User
 {

@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
+use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Database\Seeders\QaTestsTableSeeder;
 use App\Modules\SuperAdmin\Database\Seeders\ProductsTableSeeder;
 use App\Modules\SuperAdmin\Database\Seeders\ResellersTableSeeder;
@@ -29,7 +30,6 @@ use App\Modules\SuperAdmin\Database\Seeders\ProductSaleRecordsTableSeeder;
 use App\Modules\SuperAdmin\Database\Seeders\CompanyBankAccountsTableSeeder;
 use App\Modules\SuperAdmin\Database\Seeders\ProductQaTestResultsTableSeeder;
 use App\Modules\SuperAdmin\Database\Seeders\ProductDescriptionSummariesTableSeeder;
-use App\Modules\SuperAdmin\Models\OtherExpense;
 
 class SuperAdminDatabaseSeeder extends Seeder
 {
@@ -48,13 +48,13 @@ class SuperAdminDatabaseSeeder extends Seeder
 
     // factory(OtherExpense::class, 50)->create();
     $this->call(ProductBatchesTableSeeder::class);
-    // $this->call(ProductBrandsTableSeeder::class);
-    // $this->call(ProductCategoriesTableSeeder::class);
-    // $this->call(ProductColorsTableSeeder::class);
-    // $this->call(ProductGradesTableSeeder::class);
-    // $this->call(ProductModelsTableSeeder::class);
-    // $this->call(ProductSuppliersTableSeeder::class);
-    // $this->call(ResellersTableSeeder::class);
+    $this->call(ProductBrandsTableSeeder::class);
+    $this->call(ProductCategoriesTableSeeder::class);
+    $this->call(ProductColorsTableSeeder::class);
+    $this->call(ProductGradesTableSeeder::class);
+    $this->call(ProductModelsTableSeeder::class);
+    $this->call(ProductSuppliersTableSeeder::class);
+    $this->call(ResellersTableSeeder::class);
     $this->call(StorageSizesTableSeeder::class);
     $this->call(StorageTypesTableSeeder::class);
     $this->call(ProcessorSpeedsTableSeeder::class);
@@ -70,6 +70,6 @@ class SuperAdminDatabaseSeeder extends Seeder
     // $this->call(ProductExpensesTableSeeder::class);
     $this->call(SalesChannelsTableSeeder::class);
     // $this->call(ProductSaleRecordsTableSeeder::class);
-    // $this->call(CompanyBankAccountsTableSeeder::class);
+    $this->call(CompanyBankAccountsTableSeeder::class);
   }
 }

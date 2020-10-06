@@ -24,7 +24,7 @@ class CreateProductSaleRecordsTable extends Migration
       $table->foreignId('sales_rep_id')->constrained('sales_reps')->onDelete('cascade')->nullable();
 			$table->unsignedBigInteger('sale_confirmed_by')->nullable();
 			$table->string('sale_confirmer_type')->nullable();
-			$table->boolean('is_swap_deal')->default(false);
+      $table->boolean('is_swap_transaction')->default(false);
 
 
 			$table->timestamps();

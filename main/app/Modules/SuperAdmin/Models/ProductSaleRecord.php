@@ -36,7 +36,7 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
  * @property int $sales_rep_id
  * @property int|null $sale_confirmed_by
  * @property string|null $sale_confirmer_type
- * @property int $is_swap_deal
+ * @property int $is_swap_transaction
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -62,7 +62,7 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereIsSwapDeal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereIsSwapTransaction($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereOnlineRepId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereProductType($value)
@@ -83,7 +83,7 @@ class ProductSaleRecord extends BaseModel
   use Compoships;
 
   protected $fillable = [
-    'selling_price', 'online_rep_id', 'sales_rep_id', 'sales_channel_id', 'is_swap_deal'
+    'selling_price', 'online_rep_id', 'sales_rep_id', 'sales_channel_id', 'is_swap_transaction'
   ];
 
   protected $casts = ['selling_price' => 'float'];

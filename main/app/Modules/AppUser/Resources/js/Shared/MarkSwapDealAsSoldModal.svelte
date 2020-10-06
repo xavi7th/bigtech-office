@@ -15,7 +15,7 @@
     files;
 
   let toggleSwap = () => {
-    if (!details.is_swap_deal) {
+    if (!details.is_swap_transaction) {
       delete details.description;
       delete details.owner_details;
       delete details.id_card;
@@ -185,7 +185,7 @@
           type="checkbox"
           class="custom-control-input"
           id="is-swap-deal"
-          bind:checked={details.is_swap_deal}
+          bind:checked={details.is_swap_transaction}
           on:change={toggleSwap} />
         <label class="custom-control-label" for="is-swap-deal">
           Is this a Swap Deal?
@@ -194,7 +194,7 @@
 
     </div>
 
-    {#if details.is_swap_deal}
+    {#if details.is_swap_transaction}
       <div class="col-12">
         <input
           type="text"

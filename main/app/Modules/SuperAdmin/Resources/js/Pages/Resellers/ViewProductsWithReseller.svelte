@@ -196,7 +196,7 @@
                   </button>
 
 
-                   {#if product.is_swap_deal}
+                   {#if product.is_swap_transaction}
                   <InertiaLink
                     type="button"
                     href={route('superadmin.products.swap_deal_details', product.uuid)}

@@ -21,7 +21,6 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Model</th>
-              <th scope="col">Product ID</th>
               <th scope="col">Sales Rep</th>
               <th scope="col">Ideal Price</th>
               <th scope="col">Sale Price</th>
@@ -36,16 +35,13 @@
                 <td>
                   {record.product_model}
                   <span class="d-none">{record.product_supplier}</span>
-                  {#if record.is_swap_deal}
+                  {#if record.is_swap_transaction}
                     <span class="badge badge-danger">SWAP</span>
                   {/if}
-                </td>
-                <td>{record.primary_identifier}</td>
-                <td>
-                  {record.sales_rep}
                   <br />
-                  {record.online_rep}
+                  {record.primary_identifier}
                 </td>
+                <td>{record.sales_rep} <br /> {record.online_rep}</td>
                 <td>{record.proposed_selling_price}</td>
                 <td>{record.selling_price}</td>
                 <td>{record.sales_channel}</td>
@@ -72,11 +68,24 @@
                       Mark Paid
                     </button>
                   {/if}
-                  &nbsp;
+                  {#if record.is_swap_deal}
+                    <InertiaLink
+                      type="button"
+                      href={route('superadmin.products.swap_deal_details', record.product_uuid)}
+                      class="btn btn-primary btn-xs btn-sm">
+                      Product Details
+                    </InertiaLink>
+                  {:else}
+                    <InertiaLink
+                      type="button"
+                      href={route('superadmin.products.view_product_details', record.product_uuid)}
+                      class="btn btn-primary btn-xs btn-sm">
+                      Product Details
+                    </InertiaLink>
+                  {/if}
                 </td>
               </tr>
             {/each}
-
           </tbody>
         </table>
       </div>

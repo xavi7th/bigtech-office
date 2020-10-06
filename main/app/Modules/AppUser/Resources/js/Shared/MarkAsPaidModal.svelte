@@ -16,7 +16,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
     bankRecords = [];
 
   let toggleSwap = () => {
-    if (!details.is_swap_deal) {
+    if (!details.is_swap_transaction) {
       delete details.description;
       delete details.owner_details;
       delete details.id_card;

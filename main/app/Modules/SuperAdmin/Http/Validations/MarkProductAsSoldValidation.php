@@ -30,12 +30,12 @@ class MarkProductAsSoldValidation extends FormRequest
       'sales_channel_id' => 'required|exists:sales_channels,id',
       'ig_handle' => 'nullable|string',
       'online_rep_id' => 'nullable|exists:sales_reps,id',
-      'is_swap_deal' => 'nullable',
-      'description' => 'required_if:is_swap_deal,true|string',
-      'owner_details' => 'required_if:is_swap_deal,true|string',
-      'id_card' => 'required_if:is_swap_deal,true|file|mimes:jpeg,bmp,png',
-      'receipt' => 'required_if:is_swap_deal,true|file|mimes:jpeg,bmp,png',
-      'swap_value' => 'required_if:is_swap_deal,true|numeric',
+      'is_swap_transaction' => 'nullable',
+      'description' => 'required_if:is_swap_transaction,true|string',
+      'owner_details' => 'required_if:is_swap_transaction,true|string',
+      'id_card' => 'required_if:is_swap_transaction,true|file|mimes:jpeg,bmp,png',
+      'receipt' => 'required_if:is_swap_transaction,true|file|mimes:jpeg,bmp,png',
+      'swap_value' => 'required_if:is_swap_transaction,true|numeric',
       'imei' => 'nullable|alpha_num|unique:swap_deals,imei',
       'serial_no' =>  'nullable|alpha_dash|unique:swap_deals,serial_no',
       'model_no' =>  'nullable|alpha_dash|unique:swap_deals,model_no'
@@ -100,16 +100,16 @@ class MarkProductAsSoldValidation extends FormRequest
       }
 
       /**
-       * Check if the is_swap_deal field is a boolean
+       * Check if the is_swap_transaction field is a boolean
        */
-      if ($this->is_swap_deal && !is_bool(filter_var($this->is_swap_deal, FILTER_VALIDATE_BOOLEAN))) {
+      if ($this->is_swap_transaction && !is_bool(filter_var($this->is_swap_transaction, FILTER_VALIDATE_BOOLEAN))) {
         $validator->errors()->add('Err', 'The is swap deal field must be a boolean');
         return;
       }
 
 
 
-      if (filter_var($this->is_swap_deal, FILTER_VALIDATE_BOOLEAN) && (!$this->imei && !$this->serial_no && !$this->model_no)) {
+      if (filter_var($this->is_swap_transaction, FILTER_VALIDATE_BOOLEAN) && (!$this->imei && !$this->serial_no && !$this->model_no)) {
         $validator->errors()->add('Err', 'The imei or serial no or model no field is required when it is a swap deal');
         return;
       }

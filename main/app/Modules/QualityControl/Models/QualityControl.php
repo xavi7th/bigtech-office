@@ -45,6 +45,8 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereOfficeBranchId($value)
+ * @property string|null $verified_at
+ * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereVerifiedAt($value)
  */
 class QualityControl extends User
 {

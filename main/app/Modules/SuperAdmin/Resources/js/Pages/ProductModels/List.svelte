@@ -77,9 +77,9 @@
                   <span>Create Product Model</span>
                 </InertiaLink>
               </th>
-                <th class="d-none">
-                  NOSIGN
-                </th>
+              <th col-span="2" class="d-none">
+                NOSIGN
+              </th>
             </tr>
           </thead>
           <tbody class="list-group list-group-flush">
@@ -114,7 +114,7 @@
                     </InertiaLink>
                   </div>
                 </td>
-                <td class="d-none">
+                <td col-span="2" class="d-none">
                   NOSIGN
                 </td>
               </tr>
@@ -129,7 +129,7 @@
                     </span>
                   </a>
                 </td>
-                 <td class="d-none">
+                 <td  col-span="2" class="d-none">
                   NOSIGN
                 </td>
               </tr>
