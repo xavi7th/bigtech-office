@@ -286,7 +286,7 @@ class Product extends BaseModel
     return is_numeric($this->product_price->proposed_selling_price) ? to_naira($this->product_price->proposed_selling_price) : $this->product_price->proposed_selling_price;
   }
 
-  static function routes()
+  static function superAdminRoutes()
   {
     Route::group(['prefix' => 'products'], function () {
 
@@ -294,13 +294,24 @@ class Product extends BaseModel
         return 'superadmin.products.' . $name;
       };
 
+      Route::get('local-supplier/create', [self::class, 'showCreateLocalProductForm'])->name($p('create_local_product'))->defaults('ex', __e('ss', 'archive'));
+      Route::post('local-supplier/create', [self::class, 'createLocalSupplierProduct'])->name($p('create_local'))->defaults('ex', __e('ss', 'archive'));
+    });
+  }
+
+  static function multiAccessRoutes()
+  {
+    Route::group(['prefix' => 'products'], function () {
+
+      $p = function ($name) {
+        return 'multiaccess.products.' . $name;
+      };
+
       Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss', 'archive'));
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name($p('daily_records'))->defaults('ex', __e('ss', 'archive'));
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('ss', 'archive'));
       Route::get('create', [self::class, 'showCreateProductForm'])->name($p('create_product'))->defaults('ex', __e('ss', 'archive'));
       Route::post('create', [self::class, 'createProduct'])->name($p('create'))->defaults('ex', __e('ss', 'archive'));
-      Route::get('local-supplier/create', [self::class, 'showCreateLocalProductForm'])->name($p('create_local_product'))->defaults('ex', __e('ss', 'archive'));
-      Route::post('local-supplier/create', [self::class, 'createLocalSupplierProduct'])->name($p('create_local'))->defaults('ex', __e('ss', 'archive'));
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss', 'archive', true));
       Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true));
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true));

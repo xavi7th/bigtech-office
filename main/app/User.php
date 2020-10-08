@@ -165,62 +165,17 @@ class User extends Authenticatable implements JWTSubject
 
   public function get_navigation_routes(): array
   {
-    if ($this->isAppUser()) {
-      return get_related_routes('appuser.', ['GET'], $isHeirarchical = true);
-    } elseif ($this->isAdmin()) {
-      return get_related_routes('admin.', ['GET'], $isHeirarchical = true);
-    } elseif ($this->isSuperAdmin()) {
-      return get_related_routes('superadmin.', ['GET'], $isHeirarchical = true);
-    } else {
-      return [];
-    }
+    return get_related_routes(strtolower($this->getType()), ['GET'], $isHeirarchical = true);
   }
 
   public function dashboardRoute(): string
   {
-    if ($this->isAppUser()) {
-      return  'appuser.dashboard';
-    } elseif ($this->isAccountant()) {
-      return 'accountant.dashboard';
-    } elseif ($this->isDispatchAdmin()) {
-      return 'dispatch_admin.dashboard';
-    } elseif ($this->isQualityControl()) {
-      return 'quality_control.dashboard';
-    } elseif ($this->isSalesRep()) {
-      return 'sales_rep.dashboard';
-    } elseif ($this->isStockKeeper()) {
-      return 'stock_keeper.dashboard';
-    } elseif ($this->isWebAdmin()) {
-      return 'web_admin.dashboard';
-    } elseif ($this->isAdmin()) {
-      return 'admin.dashboard';
-    } elseif ($this->isSuperAdmin()) {
-      return 'superadmin.dashboard';
-    } else {
-      abort(403, 'Invalid user');
-    }
+    return strtolower($this->getType()) . '.dashboard';
   }
 
   public function getType(): string
   {
     return class_basename(get_class($this));
-    if ($this->isAppUser()) {
-      return  'Normal User';
-    } elseif ($this->isAdmin()) {
-      return 'Admin';
-    } elseif ($this->isSuperAdmin()) {
-      return 'Super Admin';
-    } else if (Auth::accountant()) {
-      return 'Accountant';
-    } else if (Auth::accountOfficer()) {
-      return 'Account Officer';
-    } else if (Auth::salesRep()) {
-      return 'Sales Rep';
-    } else if (Auth::customerSupport()) {
-      return 'Customer Support';
-    } else {
-      return 'Invalid user';
-    }
   }
 
   public function toFlare(): array

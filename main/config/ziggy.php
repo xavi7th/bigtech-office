@@ -25,5 +25,14 @@ return [
     'public' => [
       'app.*',
     ],
+    'multiaccess' => [
+      'multiaccess.*',
+    ],
+    'auth' => [
+      'app.login',
+      'app.logout',
+      'app.login.show'
+    ],
+
   ],
 ];

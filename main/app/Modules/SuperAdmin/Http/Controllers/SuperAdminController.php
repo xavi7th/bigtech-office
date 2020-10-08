@@ -47,7 +47,9 @@ class SuperAdminController extends Controller
 
       AppUser::routes();
 
-      Product::routes();
+      Product::multiAccessRoutes();
+
+      Product::superAdminRoutes();
 
       ProductPrice::routes();
 

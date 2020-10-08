@@ -491,7 +491,7 @@ if (!function_exists('get_related_routes')) {
     }
 
     $routes = collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName())->filter(function ($value, $key) use ($methods, $namespace) {
-      return \Str::startsWith($key, $namespace) && \Str::of(implode('|', $value->methods()))->contains($methods);
+      return (\Str::startsWith($key, $namespace) || \Str::startsWith($key, 'multiaccess')) && \Str::of(implode('|', $value->methods()))->contains($methods);
     })->map(function (\Illuminate\Routing\Route $route) use ($namespace) {
       return (object)[
         // 'uri' => $route->uri(),
@@ -505,7 +505,12 @@ if (!function_exists('get_related_routes')) {
       $allUserTypes = [
         'a' => 'Admin',
         'ss' => 'SuperAdmin',
-        'ap' => 'AppUser',
+        'ac' => 'Accountant',
+        'd' => 'DispatchAdmin',
+        'q' => 'QualityControl',
+        's' => 'SalesRep',
+        'sk' => 'StockKeeper',
+        'w' => 'WebAdmin',
       ];
       $permittedUser = false;
       Str::of($val->permitted_users)->explode(',')->each(function ($v) use ($allUserTypes, &$permittedUser) {
