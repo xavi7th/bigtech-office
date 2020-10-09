@@ -484,15 +484,38 @@ if (!function_exists('get_related_routes')) {
     {
       $tmp = $routes;
       $routes = [];
+      /**
+       * * Group them based on the route names into arrays
+       * eg all products.* get lumped into one array
+       */
       collect($tmp)->map(function ($route, $key) use (&$routes) {
         return $routes[Str::of($key)->after('.')->before('.')->title()->__toString()][] = $route;
       });
       return $routes;
     }
 
-    $routes = collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName())->filter(function ($value, $key) use ($methods, $namespace) {
+    /**
+     * * Get the dashboard route seperately if there is a logged in user
+     * * Then get all other routes and merge it to that.
+     * ? This is so that the user's dashiard route is always the first on the list
+     * ! We have to add nav_skip to dashboard routes to prevent duplication of dashboard route in the generated route list
+     */
+    $routes = rescue(function () {
+      return collect([request()->user()->getDashboardRoute() => collect(tap(\Illuminate\Support\Facades\Route::getRoutes()->getByName(request()->user()->getDashboardRoute()), fn ($instance) => $instance->defaults['ex']['navSkip'] = false))])->merge(collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName()));
+    }, function () {
+      return collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName());
+    })
+      /**
+     * * Remove any route that does not start with the user's type or multiaccess
+     * * Remove any route that does not start with the specified method
+     */
+      ->filter(function ($value, $key) use ($methods, $namespace) {
       return (\Str::startsWith($key, $namespace) || \Str::startsWith($key, 'multiaccess')) && \Str::of(implode('|', $value->methods()))->contains($methods);
-    })->map(function (\Illuminate\Routing\Route $route) use ($namespace) {
+      })
+      /**
+     * * Format the data
+     */
+      ->map(function (\Illuminate\Routing\Route $route) use ($namespace) {
       return (object)[
         // 'uri' => $route->uri(),
         'name' => $route->getName(),
@@ -501,7 +524,11 @@ if (!function_exists('get_related_routes')) {
         'permitted_users' => $route->defaults['ex']['permittedUsers'] ?? null,
         'menu_name' => \Str::of($route->getName())->afterLast('.')->replaceMatches('/[^A-Za-z0-9]++/', ' ')->after($namespace)->title()->trim()->__toString()
       ];
-    })->reject(function ($val) {
+      })
+      /**
+     * Remove any routes that the user has no access to
+     */
+      ->reject(function ($val) {
       $allUserTypes = [
         'a' => 'Admin',
         'ss' => 'SuperAdmin',
@@ -525,7 +552,16 @@ if (!function_exists('get_related_routes')) {
       // ->transform(function ($v) {
       //   return collect($v)->forget('nav_skip');
       // })
+
+    /**
+     * Convert to array
+     */
       ->toArray();
+
+    // dd($routes);
+    /**
+     * If a heirichical structure is required eg for drop down menus, format the data to multi-level array
+     */
     return $isHeirarchical ? getHeirachicalRoutes($routes) : $routes;
   }
 }

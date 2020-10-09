@@ -43,7 +43,7 @@ class SuperAdminController extends Controller
   {
     Route::group(['middleware' => ['web', 'auth:super_admin'], 'prefix' => SuperAdmin::DASHBOARD_ROUTE_PREFIX], function () {
 
-      Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss,a', 'home'));
+      Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss,a', 'home', true));
 
       AppUser::routes();
 

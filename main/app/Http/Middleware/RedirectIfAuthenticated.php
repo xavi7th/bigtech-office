@@ -20,15 +20,16 @@ class RedirectIfAuthenticated
   {
     /**
      * ? If no guard specified, authenticate agaings the default guard
+     * ! Why are we nit using redirect()->route($request->user()->getDashboardRoute()) ?
      */
     if (is_null($guards)) {
       if (Auth::check()) {
-        return redirect()->route(Auth::user()->dashboardRoute());
+        return redirect()->route(Auth::user()->getDashboardRoute());
       }
     } else {
       foreach ($guards as $guard) {
         if (Auth::guard($guard)->check()) {
-          return redirect()->route(Auth::guard($guard)->user()->dashboardRoute());
+          return redirect()->route(Auth::guard($guard)->user()->getDashboardRoute());
         }
       }
     }

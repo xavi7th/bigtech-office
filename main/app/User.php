@@ -168,7 +168,7 @@ class User extends Authenticatable implements JWTSubject
     return get_related_routes(strtolower($this->getType()), ['GET'], $isHeirarchical = true);
   }
 
-  public function dashboardRoute(): string
+  public function getDashboardRoute(): string
   {
     return strtolower($this->getType()) . '.dashboard';
   }

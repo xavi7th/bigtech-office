@@ -168,7 +168,7 @@ class LoginController extends Controller
       return $response;
     }
 
-    return $request->isApi() ? new Response('', 204) : redirect()->intended(route($this->authenticatedGuard()->user()->dashboardRoute()));
+    return $request->isApi() ? new Response('', 204) : redirect()->intended(route($this->authenticatedGuard()->user()->getDashboardRoute()));
   }
 
   /**
@@ -180,12 +180,13 @@ class LoginController extends Controller
    */
   protected function authenticated(Request $request, User $user)
   {
+    // dd($user->getDashboardRoute());
     if ($user->isAppUser()) {
-      redirect()->intended(route($user->dashboardRoute()));
+      redirect()->intended(route($user->getDashboardRoute()));
     } else {
       if ($user->is_verified()) {
         if ($request->isApi()) return response()->json($this->respondWithToken(), 202);
-        return redirect()->intended(route($user->dashboardRoute()))->withSuccess(202);
+        return redirect()->intended(route($user->getDashboardRoute()))->withSuccess(202);
       } else {
         // $this->logout($request);
         if ($request->isApi()) return response()->json(['unverified' => 'Unverified user'], 401);
