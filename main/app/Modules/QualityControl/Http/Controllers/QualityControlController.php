@@ -16,7 +16,7 @@ class QualityControlController extends Controller
   {
     Route::group(['middleware' => ['web', 'auth:quality_control'], 'namespace' => '\App\Modules\QualityControl\Http\Controllers'], function () {
       Route::prefix(QualityControl::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', 'QualityControlController@index')->name('quality-control.dashboard');
+        Route::get('/', [self::class, 'index'])->name('qualitycontrol.dashboard')->defaults('ex', __e('a', 'home', true));
       });
     });
   }
@@ -28,13 +28,6 @@ class QualityControlController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('QualityControl,App', [
-      'event' => $request->only(
-        'id',
-        'title',
-        'start_date',
-        'description'
-      ),
-    ]);
+    return Inertia::render('QualityControl,App');
   }
 }

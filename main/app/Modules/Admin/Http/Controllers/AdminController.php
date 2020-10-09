@@ -8,14 +8,17 @@ use Illuminate\Http\Response;
 use App\Modules\Admin\Models\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
+use App\Modules\SuperAdmin\Models\Product;
 
 class AdminController extends Controller
 {
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:admin'], 'namespace' => '\App\Modules\Admin\Http\Controllers'], function () {
+    Route::group(['middleware' => ['web', 'auth:admin']], function () {
       Route::prefix(Admin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', 'AdminController@index')->name('admin.dashboard');
+        Route::get('/', [self::class, 'index'])->name('admin.dashboard')->defaults('ex', __e('a', 'home', true));
+
+        Product::multiAccessRoutes();
       });
     });
   }
@@ -27,13 +30,6 @@ class AdminController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('Admin,App', [
-      'event' => $request->only(
-        'id',
-        'title',
-        'start_date',
-        'description'
-      ),
-    ]);
+    return Inertia::render('Admin,AdminDashboard');
   }
 }

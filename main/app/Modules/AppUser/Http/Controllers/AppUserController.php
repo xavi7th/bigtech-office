@@ -28,7 +28,7 @@ class AppUserController extends Controller
       Route::get('/preview-product-in-quickview', [self::class, 'previewProduct']);
 
       Route::prefix(AppUser::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', 'AppUserController@index')->name('appuser.dashboard');
+        Route::get('/', 'AppUserController@index')->name('appuser.dashboard')->defaults('ex', __e('a', 'home', true));
       });
     });
   }

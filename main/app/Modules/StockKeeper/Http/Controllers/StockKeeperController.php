@@ -6,17 +6,17 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Modules\StockKeeper\Models\StockKeeper;
 use Illuminate\Support\Facades\Route;
+use App\Modules\StockKeeper\Models\StockKeeper;
 
 class StockKeeperController extends Controller
 {
 
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:admin'], 'namespace' => '\App\Modules\StockKeeper\Http\Controllers'], function () {
+    Route::group(['middleware' => ['web', 'auth:stock_keeper']], function () {
       Route::prefix(StockKeeper::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', 'StockKeeperController@index')->name('admin.dashboard');
+        Route::get('/', [self::class, 'index'])->name('stockkeeper.dashboard')->defaults('ex', __e('a', 'home', true));
       });
     });
   }
@@ -28,13 +28,6 @@ class StockKeeperController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('StockKeeper,App', [
-      'event' => $request->only(
-        'id',
-        'title',
-        'start_date',
-        'description'
-      ),
-    ]);
+    return Inertia::render('StockKeeper,App');
   }
 }

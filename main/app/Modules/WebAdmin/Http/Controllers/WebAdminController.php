@@ -14,9 +14,9 @@ class WebAdminController extends Controller
 
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:web_admin'], 'namespace' => '\App\Modules\WebAdmin\Http\Controllers'], function () {
+    Route::group(['middleware' => ['web', 'auth:web_admin']], function () {
       Route::prefix(WebAdmin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', 'WebAdminController@index')->name('web-admin.dashboard');
+        Route::get('/', [self::class, 'index'])->name('webadmin.dashboard')->defaults('ex', __e('a', 'home', true));
       });
     });
   }
@@ -28,13 +28,6 @@ class WebAdminController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('WebAdmin,App', [
-      'event' => $request->only(
-        'id',
-        'title',
-        'start_date',
-        'description'
-      ),
-    ]);
+    return Inertia::render('WebAdmin,App');
   }
 }

@@ -1,11 +1,10 @@
-const dotenvExpand = require('dotenv-expand');
-dotenvExpand(require('dotenv')
-	.config({
-		path: __dirname + '/../../../.env',
-	}));
+// const dotenvExpand = require('dotenv-expand');
+// dotenvExpand(require('dotenv')
+// 	.config({
+// 		path: __dirname + '/../../../.env',
+// 	}));
 
 const mix = require('laravel-mix');
-require('laravel-mix-merge-manifest');
 
 mix.webpackConfig({
 	resolve: {

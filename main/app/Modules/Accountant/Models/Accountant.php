@@ -11,6 +11,10 @@ use App\User;
  * @property string $full_name
  * @property string $email
  * @property string $password
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @property string|null $verified_at
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -34,19 +38,15 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereFullName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereOfficeBranchId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereUpdatedAt($value)
- * @mixin \Eloquent
- * @property int $is_active
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereIsActive($value)
- * @property string|null $gender
- * @property int $office_branch_id
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereOfficeBranchId($value)
- * @property string|null $verified_at
  * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereVerifiedAt($value)
+ * @mixin \Eloquent
  */
 class Accountant extends User
 {

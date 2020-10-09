@@ -11,6 +11,10 @@ use App\User;
  * @property string $full_name
  * @property string $email
  * @property string $password
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @property string|null $verified_at
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -34,19 +38,15 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereFullName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereOfficeBranchId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereUpdatedAt($value)
- * @mixin \Eloquent
- * @property string|null $gender
- * @property int $office_branch_id
- * @property int|null $is_active
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereOfficeBranchId($value)
- * @property string|null $verified_at
  * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereVerifiedAt($value)
+ * @mixin \Eloquent
  */
 class WebAdmin extends User
 {

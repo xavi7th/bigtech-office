@@ -14,9 +14,9 @@ class DispatchAdminController extends Controller
 
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:dispatch_admin'], 'namespace' => '\App\Modules\DispatchAdmin\Http\Controllers'], function () {
+    Route::group(['middleware' => ['web', 'auth:dispatch_admin']], function () {
       Route::prefix(DispatchAdmin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', 'DispatchAdminController@index')->name('dispatch_admin.dashboard');
+        Route::get('/', [self::class, 'index'])->name('dispatchadmin.dashboard')->defaults('ex', __e('a', 'home', true));
       });
     });
   }
@@ -28,13 +28,6 @@ class DispatchAdminController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('DispatchAdmin,App', [
-      'event' => $request->only(
-        'id',
-        'title',
-        'start_date',
-        'description'
-      ),
-    ]);
+    return Inertia::render('DispatchAdmin,App');
   }
 }

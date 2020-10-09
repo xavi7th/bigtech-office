@@ -22,11 +22,12 @@ return [
     'appuser' => [
       'appuser.*'
     ],
-    'public' => [
-      'app.*',
-    ],
+
     'multiaccess' => [
       'multiaccess.*',
+    ],
+     'public' => [
+      'app.*',
     ],
     'auth' => [
       'app.login',

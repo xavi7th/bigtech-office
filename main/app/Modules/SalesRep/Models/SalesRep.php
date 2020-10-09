@@ -21,10 +21,11 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property string $password
  * @property string|null $phone
  * @property string|null $avatar
- * @property string|null $gender
  * @property string|null $address
  * @property string $unit
+ * @property string|null $gender
  * @property int $office_branch_id
+ * @property int|null $is_active
  * @property string|null $verified_at
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -43,30 +44,29 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
  * @property-read StockRequest|null $stock_request
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep callCenter()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep query()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep socialMedia()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep walkIn()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereAvatar($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereOfficeBranchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereUnit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereVerifiedAt($value)
+ * @method static Builder|SalesRep callCenter()
+ * @method static Builder|SalesRep newModelQuery()
+ * @method static Builder|SalesRep newQuery()
+ * @method static Builder|SalesRep query()
+ * @method static Builder|SalesRep socialMedia()
+ * @method static Builder|SalesRep walkIn()
+ * @method static Builder|SalesRep whereAddress($value)
+ * @method static Builder|SalesRep whereAvatar($value)
+ * @method static Builder|SalesRep whereCreatedAt($value)
+ * @method static Builder|SalesRep whereDeletedAt($value)
+ * @method static Builder|SalesRep whereEmail($value)
+ * @method static Builder|SalesRep whereFullName($value)
+ * @method static Builder|SalesRep whereGender($value)
+ * @method static Builder|SalesRep whereId($value)
+ * @method static Builder|SalesRep whereIsActive($value)
+ * @method static Builder|SalesRep whereOfficeBranchId($value)
+ * @method static Builder|SalesRep wherePassword($value)
+ * @method static Builder|SalesRep wherePhone($value)
+ * @method static Builder|SalesRep whereRememberToken($value)
+ * @method static Builder|SalesRep whereUnit($value)
+ * @method static Builder|SalesRep whereUpdatedAt($value)
+ * @method static Builder|SalesRep whereVerifiedAt($value)
  * @mixin \Eloquent
- * @property int|null $is_active
- * @method static \Illuminate\Database\Eloquent\Builder|SalesRep whereIsActive($value)
  */
 class SalesRep extends User
 {
@@ -113,11 +113,6 @@ class SalesRep extends User
         Route::get('statistics', 'SalesRep@getDashboardStatistics')->middleware('auth:sales_rep');
       });
     });
-  }
-
-  public function loadSalesRepApplication()
-  {
-    return view('salesrep::index');
   }
 
   public function getDashboardStatistics()
