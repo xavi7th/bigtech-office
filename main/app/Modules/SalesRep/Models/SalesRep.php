@@ -43,7 +43,6 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @property-read StockRequest|null $stock_request
  * @method static Builder|SalesRep callCenter()
  * @method static Builder|SalesRep newModelQuery()
  * @method static Builder|SalesRep newQuery()
@@ -75,11 +74,6 @@ class SalesRep extends User
   ];
   protected $dates = ['dob'];
   const DASHBOARD_ROUTE_PREFIX = 'sales-reps';
-
-  public function stock_request()
-  {
-    return $this->hasOne(StockRequest::class);
-  }
 
   public function is_verified(): bool
   {

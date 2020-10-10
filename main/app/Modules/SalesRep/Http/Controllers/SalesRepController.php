@@ -8,15 +8,17 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SalesRep\Models\SalesRep;
+use App\Modules\SuperAdmin\Models\Product;
 
 class SalesRepController extends Controller
 {
-
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:sales_rep']], function () {
+    Route::group(['middleware' => ['web', 'auth:salesrep']], function () {
       Route::prefix(SalesRep::DASHBOARD_ROUTE_PREFIX)->group(function () {
         Route::get('/', [self::class, 'index'])->name('salesrep.dashboard')->defaults('ex', __e('a', 'home', true));
+
+        Product::multiAccessRoutes();
       });
     });
   }
@@ -28,6 +30,6 @@ class SalesRepController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('SalesRep,App');
+    return Inertia::render('SalesRep,SalesRepDashboard');
   }
 }

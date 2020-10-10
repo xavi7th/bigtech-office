@@ -2,7 +2,10 @@
 
 namespace App\Modules\SalesRep\Providers;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
+use App\Modules\SalesRep\Models\SalesRep;
 use Illuminate\Database\Eloquent\Factory;
 
 class SalesRepServiceProvider extends ServiceProvider
@@ -24,12 +27,14 @@ class SalesRepServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+    if ((Str::contains(request()->url(), SalesRep::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
-    }
+      }
+  }
 
     /**
      * Register the service provider.
@@ -38,8 +43,10 @@ class SalesRepServiceProvider extends ServiceProvider
      */
     public function register()
     {
+    if ((Str::contains(request()->url(), SalesRep::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login')) {
         $this->app->register(RouteServiceProvider::class);
-    }
+      }
+  }
 
     /**
      * Register config.

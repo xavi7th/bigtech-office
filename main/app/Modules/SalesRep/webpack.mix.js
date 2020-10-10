@@ -1,4 +1,14 @@
-// const mix = require('laravel-mix');
+const mix = require('laravel-mix');
 
-// mix.js(__dirname + '/Resources/js/app.js', 'js/salesrep.js')
-//     .sass( __dirname + '/Resources/sass/app.scss', 'css/salesrep.css');
+mix.webpackConfig({
+	resolve: {
+		extensions: ['.js', '.svelte', '.json'],
+		alias: {
+			'@admin-pages': __dirname + '/Resources/js/Pages',
+			'@admin-shared': __dirname + '/Resources/js/Shared',
+				'@admin-assets': __dirname + '/Resources',
+		},
+	},
+})
+
+mix.js(__dirname + '/Resources/js/app.js', 'js/admin.js')
