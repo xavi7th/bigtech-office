@@ -14,7 +14,7 @@ class CreateOfficeBranchesTable extends Migration
 	public function up()
 	{
 		Schema::create('office_branches', function (Blueprint $table) {
-			$table->bigIncrements('id');
+      $table->id();
 			$table->string('city');
 			$table->string('country')->default('Nigeria');
 

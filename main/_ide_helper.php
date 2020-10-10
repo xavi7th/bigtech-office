@@ -2121,15 +2121,6 @@
          *
          * @static 
          */ 
-        public static function admin()
-        {
-                        return \Illuminate\Auth\SessionGuard::admin();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
         public static function webAdmin()
         {
                         return \Illuminate\Auth\SessionGuard::webAdmin();
@@ -16382,15 +16373,6 @@
      *
      */ 
         class SessionGuard {
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function admin()
-        {
-                        return \Illuminate\Auth\SessionGuard::admin();
-        }
                     /**
          * 
          *

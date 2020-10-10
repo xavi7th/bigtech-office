@@ -8,18 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * App\Modules\Admin\Models\Admin
  *
- * @property int $id
- * @property string $full_name
- * @property string $email
- * @property string $password
- * @property string|null $gender
- * @property int $office_branch_id
- * @property int|null $is_active
- * @property string|null $verified_at
- * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ActivityLog[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
@@ -32,9 +20,22 @@ use Illuminate\Database\Eloquent\Builder;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
+ * @property-write mixed $password
  * @method static Builder|Admin newModelQuery()
  * @method static Builder|Admin newQuery()
  * @method static Builder|Admin query()
+ * @mixin \Eloquent
+ * @property int $id
+ * @property string $full_name
+ * @property string $email
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @property string|null $verified_at
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static Builder|Admin whereCreatedAt($value)
  * @method static Builder|Admin whereDeletedAt($value)
  * @method static Builder|Admin whereEmail($value)
@@ -47,7 +48,6 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static Builder|Admin whereRememberToken($value)
  * @method static Builder|Admin whereUpdatedAt($value)
  * @method static Builder|Admin whereVerifiedAt($value)
- * @mixin \Eloquent
  */
 class Admin extends User
 {

@@ -24,6 +24,6 @@ $factory->define(DispatchAdmin::class, function (Faker $faker) {
   return [
     'full_name' => 'SysDef Dispatch',
     'email' => 'dispatch_admin@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-    'password' => 'dispatch-admin' . strtolower(str_replace(" ", "-", config('app.name'))),
+    'password' => 'dispatch-admins',
   ];
 });

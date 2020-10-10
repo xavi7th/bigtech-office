@@ -2,10 +2,11 @@
 
 namespace App\Modules\SuperAdmin\Providers;
 
-use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use App\Modules\SuperAdmin\Models\SuperAdmin;
 
 class SuperAdminServiceProvider extends ServiceProvider
 {
@@ -26,7 +27,7 @@ class SuperAdminServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    if (Str::contains(request()->url(), SuperAdmin::DASHBOARD_ROUTE_PREFIX) || Str::contains(request()->url(), 'login')) {
+    if (Str::contains(request()->url(), SuperAdmin::DASHBOARD_ROUTE_PREFIX) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
       $this->registerTranslations();
       $this->registerConfig();
       $this->registerViews();

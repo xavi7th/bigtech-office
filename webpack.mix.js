@@ -91,34 +91,33 @@ mix
 		}
 	})
 	.extract()
-	.imagemin(
-
-		[
-			{
-				from: '**/img/**/**.*',
-				to: 'img/[folder]/[name].[ext]',
-				toType: 'template',
-	   },
-			{
-				from: '**/img/**.*',
-				to: 'img/[name].[ext]',
-				toType: 'template',
-	   }
-	  ], {
-			context: './main/app/Modules',
-		}, {
-			optipng: {
-				optimizationLevel: 7
-			},
-			jpegtran: null,
-			plugins: [
-	              require('imagemin-mozjpeg')({
-					quality: 75,
-					progressive: true,
-				}),
-	          ],
-		}
-	)
+	// .imagemin(
+	// 	[
+	// 		{
+	// 			from: '**/img/**/**.*',
+	// 			to: 'img/[folder]/[name].[ext]',
+	// 			toType: 'template',
+	//    },
+	// 		{
+	// 			from: '**/img/**.*',
+	// 			to: 'img/[name].[ext]',
+	// 			toType: 'template',
+	//    }
+	//   ], {
+	// 		context: './main/app/Modules',
+	// 	}, {
+	// 		optipng: {
+	// 			optimizationLevel: 7
+	// 		},
+	// 		jpegtran: null,
+	// 		plugins: [
+	//               require('imagemin-mozjpeg')({
+	// 				quality: 75,
+	// 				progressive: true,
+	// 			}),
+	//           ],
+	// 	}
+	// )
 	.then(() => {
 		const _ = require('lodash');
 

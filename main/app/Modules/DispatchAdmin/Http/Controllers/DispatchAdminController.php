@@ -6,8 +6,9 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use Illuminate\Support\Facades\Route;
+use App\Modules\SuperAdmin\Models\Product;
+use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 
 class DispatchAdminController extends Controller
 {
@@ -16,7 +17,9 @@ class DispatchAdminController extends Controller
   {
     Route::group(['middleware' => ['web', 'auth:dispatch_admin']], function () {
       Route::prefix(DispatchAdmin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', [self::class, 'index'])->name('dispatchadmin.dashboard')->defaults('ex', __e('a', 'home', true));
+        Route::get('/', [self::class, 'index'])->name('dispatchadmin.dashboard')->defaults('ex', __e('d', 'home', true));
+
+        Product::multiAccessRoutes();
       });
     });
   }

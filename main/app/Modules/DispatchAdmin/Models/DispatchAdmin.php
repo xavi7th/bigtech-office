@@ -7,18 +7,6 @@ use App\User;
 /**
  * App\Modules\DispatchAdmin\Models\DispatchAdmin
  *
- * @property int $id
- * @property string $full_name
- * @property string $email
- * @property string $password
- * @property string|null $gender
- * @property int $office_branch_id
- * @property int|null $is_active
- * @property string|null $verified_at
- * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ActivityLog[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
@@ -31,9 +19,22 @@ use App\User;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
+ * @property-write mixed $password
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin query()
+ * @mixin \Eloquent
+ * @property int $id
+ * @property string $full_name
+ * @property string $email
+ * @property string|null $gender
+ * @property int $office_branch_id
+ * @property int|null $is_active
+ * @property string|null $verified_at
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereEmail($value)
@@ -46,7 +47,6 @@ use App\User;
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DispatchAdmin whereVerifiedAt($value)
- * @mixin \Eloquent
  */
 class DispatchAdmin extends User
 {

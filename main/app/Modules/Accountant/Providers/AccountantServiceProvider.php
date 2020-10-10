@@ -4,6 +4,7 @@ namespace App\Modules\Accountant\Providers;
 
 use Illuminate\Support\Str;
 use Illuminate\Auth\SessionGuard;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
@@ -28,7 +29,7 @@ class AccountantServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    if ((Str::contains(request()->url(), Accountant::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login')) {
+    if ((Str::contains(request()->url(), Accountant::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
       $this->registerTranslations();
       $this->registerConfig();
       $this->registerViews();
