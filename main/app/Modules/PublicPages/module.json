@@ -3,7 +3,7 @@
     "alias": "publicpages",
     "description": "",
     "keywords": [],
-    "order": 0,
+    "order": 1000,
     "providers": [
         "App\\Modules\\PublicPages\\Providers\\PublicPagesServiceProvider"
     ],

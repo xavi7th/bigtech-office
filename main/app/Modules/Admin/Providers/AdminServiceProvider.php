@@ -2,6 +2,7 @@
 
 namespace App\Modules\Admin\Providers;
 
+use Illuminate\Support\Str;
 use Illuminate\Auth\SessionGuard;
 use App\Modules\Admin\Models\Admin;
 use Illuminate\Support\Facades\Auth;
@@ -27,15 +28,17 @@ class AdminServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		$this->registerTranslations();
-		$this->registerConfig();
-		$this->registerViews();
-		$this->registerFactories();
-		$this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+    if ((Str::contains(request()->url(), Admin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login')) {
+      $this->registerTranslations();
+      $this->registerConfig();
+      $this->registerViews();
+      $this->registerFactories();
+      $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
-		// app()->make('router')->aliasMiddleware('admins', OnlyAdmins::class);
-		// app()->make('router')->aliasMiddleware('verified', VerifiedAdmins::class);
-	}
+      // app()->make('router')->aliasMiddleware('admins', OnlyAdmins::class);
+      // app()->make('router')->aliasMiddleware('verified', VerifiedAdmins::class);
+    }
+  }
 
 	/**
 	 * Register the service provider.
@@ -44,11 +47,13 @@ class AdminServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->app->register(RouteServiceProvider::class);
-		SessionGuard::macro('admin', function () {
-			return Admin::find(Auth::guard('admin')->id());
-		});
-	}
+    if ((Str::contains(request()->url(), Admin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login')) {
+      $this->app->register(RouteServiceProvider::class);
+      SessionGuard::macro('admin', function () {
+      	return Admin::find(Auth::guard('admin')->id());
+      });
+    }
+  }
 
 	/**
 	 * Register config.

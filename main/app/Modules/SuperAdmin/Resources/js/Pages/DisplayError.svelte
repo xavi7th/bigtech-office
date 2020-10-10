@@ -1,5 +1,5 @@
 <script>
-  import DisplayError from "@public-pages/DisplayError";
+  import DisplayError from "@public-pages/DisplayError.svelte";
   export let status;
 </script>
 

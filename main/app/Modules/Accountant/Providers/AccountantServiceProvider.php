@@ -2,11 +2,12 @@
 
 namespace App\Modules\Accountant\Providers;
 
+use Illuminate\Support\Str;
 use Illuminate\Auth\SessionGuard;
-use App\Modules\Accountant\Models\Accountant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use App\Modules\Accountant\Models\Accountant;
 
 class AccountantServiceProvider extends ServiceProvider
 {
@@ -27,14 +28,16 @@ class AccountantServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    $this->registerTranslations();
-    $this->registerConfig();
-    $this->registerViews();
-    $this->registerFactories();
-    $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+    if ((Str::contains(request()->url(), Accountant::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login')) {
+      $this->registerTranslations();
+      $this->registerConfig();
+      $this->registerViews();
+      $this->registerFactories();
+      $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
-    // app()->make('router')->aliasMiddleware('accountants', OnlyAccountants::class);
-    // app()->make('router')->aliasMiddleware('verified', VerifiedAccountants::class);
+      // app()->make('router')->aliasMiddleware('accountants', OnlyAccountants::class);
+      // app()->make('router')->aliasMiddleware('verified', VerifiedAccountants::class);
+    }
   }
 
   /**
@@ -44,10 +47,13 @@ class AccountantServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    $this->app->register(RouteServiceProvider::class);
-    SessionGuard::macro('accountant', function () {
-      return Accountant::find(Auth::guard('accountant')->id());
-    });
+    if (Str::contains(request()->url(), Accountant::DASHBOARD_ROUTE_PREFIX) || Str::contains(request()->url(), 'login')) {
+
+      $this->app->register(RouteServiceProvider::class);
+      SessionGuard::macro('accountant', function () {
+        return Accountant::find(Auth::guard('accountant')->id());
+      });
+    }
   }
 
   /**

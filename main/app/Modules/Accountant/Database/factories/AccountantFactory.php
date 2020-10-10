@@ -24,6 +24,6 @@ $factory->define(Accountant::class, function (Faker $faker) {
   return [
     'full_name' => 'SysDef Accountant',
     'email' => 'accounts@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-    'password' => 'accounts' . strtolower(str_replace(" ", "-", config('app.name'))),
+    'password' => 'accounts',
   ];
 });

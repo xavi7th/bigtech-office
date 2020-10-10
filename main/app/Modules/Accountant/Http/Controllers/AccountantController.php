@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Modules\Accountant\Models\Accountant;
+use App\Modules\SuperAdmin\Models\Product;
 
 class AccountantController extends Controller
 {
@@ -16,7 +17,9 @@ class AccountantController extends Controller
   {
     Route::group(['middleware' => ['web', 'auth:accountant']], function () {
       Route::prefix(Accountant::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', [self::class, 'index'])->name('accountant.dashboard')->defaults('ex', __e('a', 'home', true));
+        Route::get('/', [self::class, 'index'])->name('accountant.dashboard')->defaults('ex', __e('ac', 'home', true));
+
+        Product::multiAccessRoutes();
       });
     });
   }
@@ -28,6 +31,7 @@ class AccountantController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('Accountant,App');
+    // dd($request->user());
+    return Inertia::render('Accountant,AccountantDashboard');
   }
 }

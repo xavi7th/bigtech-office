@@ -1,6 +1,19 @@
 <script>
+import { Inertia } from "@inertiajs/inertia";
+
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+import { location } from "lodash/_freeGlobal";
   import route from "ziggy";
+
+  let logoutUser = () =>{
+    BlockToast.fire('Securing your dashboard ...')
+
+    Inertia.post(route('app.logout')).then(() => {
+      location.reload();
+    })
+  }
+
+
 </script>
 
 <nav class="rui-navbar rui-navbar-top rui-navbar-sticky">
@@ -60,7 +73,14 @@
               </a>
             </li> -->
             <li>
-              <InertiaLink
+              <button class="nav-link btn btn-link" on:click="{logoutUser}">
+                <span
+                  data-feather="log-out"
+                  class="rui-icon rui-icon-stroke-1_5" />
+                <span>Logout</span>
+                <span class="rui-nav-circle" />
+              </button>
+              <!-- <InertiaLink
                 method="post"
                 href={route('app.logout')}
                 class="nav-link">
@@ -69,7 +89,7 @@
                   class="rui-icon rui-icon-stroke-1_5" />
                 <span>Logout</span>
                 <span class="rui-nav-circle" />
-              </InertiaLink>
+              </InertiaLink> -->
             </li>
           </ul>
         </li>

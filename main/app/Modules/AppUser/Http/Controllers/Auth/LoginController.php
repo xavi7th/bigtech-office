@@ -5,6 +5,7 @@ namespace App\Modules\AppUser\Http\Controllers\Auth;
 use App\User;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Tymon\JWTAuth\JWTGuard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -186,7 +187,8 @@ class LoginController extends Controller
     } else {
       if ($user->is_verified()) {
         if ($request->isApi()) return response()->json($this->respondWithToken(), 202);
-        return redirect()->intended(route($user->getDashboardRoute()))->withSuccess(202);
+        return redirect()->route($user->getDashboardRoute())->withSuccess(202);
+        // return redirect()->intended(route($user->getDashboardRoute()))->withSuccess(202);
       } else {
         // $this->logout($request);
         if ($request->isApi()) return response()->json(['unverified' => 'Unverified user'], 401);

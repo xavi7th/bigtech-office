@@ -2130,15 +2130,6 @@
          *
          * @static 
          */ 
-        public static function accountant()
-        {
-                        return \Illuminate\Auth\SessionGuard::accountant();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
         public static function webAdmin()
         {
                         return \Illuminate\Auth\SessionGuard::webAdmin();
@@ -16399,15 +16390,6 @@
         public static function admin()
         {
                         return \Illuminate\Auth\SessionGuard::admin();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function accountant()
-        {
-                        return \Illuminate\Auth\SessionGuard::accountant();
         }
                     /**
          * 

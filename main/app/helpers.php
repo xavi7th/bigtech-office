@@ -504,7 +504,7 @@ if (!function_exists('get_related_routes')) {
       return collect([request()->user()->getDashboardRoute() => collect(tap(\Illuminate\Support\Facades\Route::getRoutes()->getByName(request()->user()->getDashboardRoute()), fn ($instance) => $instance->defaults['ex']['navSkip'] = false))])->merge(collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName()));
     }, function () {
       return collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName());
-    })
+    }, true)
       /**
      * * Remove any route that does not start with the user's type or multiaccess
      * * Remove any route that does not start with the specified method
@@ -559,6 +559,7 @@ if (!function_exists('get_related_routes')) {
       ->toArray();
 
     // dd($routes);
+    // dd(collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName()));
     /**
      * If a heirichical structure is required eg for drop down menus, format the data to multi-level array
      */

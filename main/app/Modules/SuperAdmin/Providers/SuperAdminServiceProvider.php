@@ -2,6 +2,8 @@
 
 namespace App\Modules\SuperAdmin\Providers;
 
+use App\Modules\SuperAdmin\Models\SuperAdmin;
+use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
@@ -24,11 +26,13 @@ class SuperAdminServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    $this->registerTranslations();
-    $this->registerConfig();
-    $this->registerViews();
-    $this->registerFactories();
-    $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+    if (Str::contains(request()->url(), SuperAdmin::DASHBOARD_ROUTE_PREFIX) || Str::contains(request()->url(), 'login')) {
+      $this->registerTranslations();
+      $this->registerConfig();
+      $this->registerViews();
+      $this->registerFactories();
+      $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+    }
   }
 
   /**
@@ -38,8 +42,10 @@ class SuperAdminServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    $this->app->register(RouteServiceProvider::class);
-    $this->app->register(AdminEventServiceProvider::class);
+    if (Str::contains(request()->url(), SuperAdmin::DASHBOARD_ROUTE_PREFIX) || Str::contains(request()->url(), 'login')) {
+      $this->app->register(RouteServiceProvider::class);
+      $this->app->register(AdminEventServiceProvider::class);
+    }
   }
 
   /**

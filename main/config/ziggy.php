@@ -13,6 +13,24 @@ return [
     'admin' => [
       'admin.*'
     ],
+    'accountant' => [
+      'accountant.*'
+    ],
+    'dispatchadmin' => [
+      'dispatchadmin.*'
+    ],
+    'qualitycontrol' => [
+      'qualitycontrol.*'
+    ],
+    'salesrep' => [
+      'salesrep.*'
+    ],
+    'stockkeeper' => [
+      'stockkeeper.*'
+    ],
+    'webadmin' => [
+      'webadmin.*'
+    ],
     'superadmin' => [
       'superadmin.*',
       'admin.*',

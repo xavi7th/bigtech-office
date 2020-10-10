@@ -307,7 +307,7 @@ class Product extends BaseModel
         return 'multiaccess.products.' . $name;
       };
 
-      Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss,a', 'archive'));
+      Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss,a,ac', 'archive'));
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name($p('daily_records'))->defaults('ex', __e('ss', 'archive'));
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('ss', 'archive'));
       Route::get('create', [self::class, 'showCreateProductForm'])->name($p('create_product'))->defaults('ex', __e('ss', 'archive'));
