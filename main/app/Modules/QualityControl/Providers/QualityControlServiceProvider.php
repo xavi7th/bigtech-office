@@ -2,11 +2,13 @@
 
 namespace App\Modules\QualityControl\Providers;
 
+use Illuminate\Support\Str;
 use Illuminate\Auth\SessionGuard;
-use App\Modules\QualityControl\Models\QualityControl;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use App\Modules\QualityControl\Models\QualityControl;
 
 class QualityControlServiceProvider extends ServiceProvider
 {
@@ -27,14 +29,16 @@ class QualityControlServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    $this->registerTranslations();
-    $this->registerConfig();
-    $this->registerViews();
-    $this->registerFactories();
-    $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+    if ((Str::contains(request()->url(), QualityControl::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
+      $this->registerTranslations();
+      $this->registerConfig();
+      $this->registerViews();
+      $this->registerFactories();
+      $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
-    // app()->make('router')->aliasMiddleware('quality_controls', OnlyQualityControls::class);
-    // app()->make('router')->aliasMiddleware('verified', VerifiedQualityControls::class);
+      // app()->make('router')->aliasMiddleware('quality_controls', OnlyQualityControls::class);
+      // app()->make('router')->aliasMiddleware('verified', VerifiedQualityControls::class);
+    }
   }
 
   /**
@@ -44,10 +48,12 @@ class QualityControlServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    $this->app->register(RouteServiceProvider::class);
-    SessionGuard::macro('quality_control', function () {
-      return QualityControl::find(Auth::guard('quality_control')->id());
-    });
+    if ((Str::contains(request()->url(), QualityControl::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
+      $this->app->register(RouteServiceProvider::class);
+      SessionGuard::macro('quality_control', function () {
+        return QualityControl::find(Auth::guard('quality_control')->id());
+      });
+    }
   }
 
   /**

@@ -23,6 +23,6 @@ $factory->define(QualityControl::class, function (Faker $faker) {
   return [
     'full_name' => 'SysDef Quality Control',
     'email' => 'qualitycontrol@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-    'password' => 'quality-control' . strtolower(str_replace(" ", "-", config('app.name'))),
+    'password' => 'quality-controls',
   ];
 });
