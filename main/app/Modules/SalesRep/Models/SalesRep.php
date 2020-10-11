@@ -85,6 +85,11 @@ class SalesRep extends User
     return 1;
   }
 
+  static function findByEmail(string $email)
+  {
+    return self::whereEmail($email)->first();
+  }
+
   static function adminRoutes()
   {
     Route::group(['namespace' => '\App\Modules\SalesRep\Models'], function () {

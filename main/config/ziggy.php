@@ -40,7 +40,6 @@ return [
     'appuser' => [
       'appuser.*'
     ],
-
     'multiaccess' => [
       'multiaccess.*',
     ],

@@ -21,6 +21,7 @@ use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use App\Modules\QualityControl\Models\QualityControl;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -171,6 +172,18 @@ class User extends Authenticatable implements JWTSubject
   public function getDashboardRoute(): string
   {
     return strtolower($this->getType()) . '.dashboard';
+  }
+
+  /**
+   * Find a user from the different user types using an email
+   *
+   * @param string $email
+   *
+   * @return \App\User
+   */
+  static function findUserByEmail(string $email): self
+  {
+    return SalesRep::findByEmail($email) ?? StockKeeper::findByEmail($email) ??  DispatchAdmin::findByEmail($email) ?? QualityControl::findByEmail($email) ?? WebAdmin::findByEmail($email) ?? Accountant::findByEmail($email) ?? Admin::findByEmail($email);
   }
 
   public function getType(): string

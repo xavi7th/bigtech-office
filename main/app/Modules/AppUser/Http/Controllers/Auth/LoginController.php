@@ -60,6 +60,7 @@ class LoginController extends Controller
     Route::group(['middleware' => 'web', 'namespace' => '\App\Modules\AppUser\Http\Controllers\Auth'], function () {
       Route::get('/login', [LoginController::class, 'showLoginForm'])->name('app.login.show');
       Route::post('login', [LoginController::class, 'login'])->name('app.login');
+      Route::post('initialize-login-account', [LoginController::class, 'adminSetNewPassword'])->name('app.password.new');
       Route::post('logout', [LoginController::class, 'logout'])->name('app.logout');
     });
   }
@@ -99,6 +100,21 @@ class LoginController extends Controller
     $this->incrementLoginAttempts($request);
 
     return $this->sendFailedLoginResponse($request);
+  }
+
+  public function adminSetNewPassword()
+  {
+    $user = User::findUserByEmail(request('email')) ?? back()->withError('Not Found');
+
+    if ($user && !$user->is_verified()) {
+
+      $user->password = request('pw');
+      $user->verified_at = now();
+      $user->save();
+
+      return back()->withSuccess(204);
+    }
+    return back()->withError('Unauthorised');
   }
 
   /**
@@ -181,7 +197,6 @@ class LoginController extends Controller
    */
   protected function authenticated(Request $request, User $user)
   {
-    // dd($user->getDashboardRoute());
     if ($user->isAppUser()) {
       redirect()->intended(route($user->getDashboardRoute()));
     } else {
@@ -190,7 +205,7 @@ class LoginController extends Controller
         return redirect()->route($user->getDashboardRoute())->withSuccess(202);
         // return redirect()->intended(route($user->getDashboardRoute()))->withSuccess(202);
       } else {
-        // $this->logout($request);
+        $this->logout($request);
         if ($request->isApi()) return response()->json(['unverified' => 'Unverified user'], 401);
 
         /**

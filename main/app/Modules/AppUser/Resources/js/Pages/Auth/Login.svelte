@@ -4,8 +4,8 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import route from "ziggy";
-
-  $: ({ errors } = $page);
+  import axios from "axios";
+  $: ({ errors, flash } = $page);
 
   let details = {
       remember: true
@@ -13,20 +13,12 @@
     formSubmitted = false;
 
   let handleLogin = e => {
-    formSubmitted = true;
-    let emailField = e.target.getElementsByTagName("input")[0];
-    let passwordField = e.target.getElementsByTagName("input")[1];
-    emailField.setCustomValidity("");
-
     if (e.target.checkValidity() === false) {
       e.stopPropagation();
-      // e.target.classList.add("was-validated");
-      errors = {
-        email: [emailField.validationMessage],
-        password: [passwordField.validationMessage]
-      };
+      e.target.classList.add("was-validated");
       return;
     } else {
+      formSubmitted = true;
       BlockToast.fire({ text: "Accessing your dashboard..." });
 
       e.target.classList.remove("was-validated");
@@ -34,8 +26,56 @@
       Inertia.post(route("app.login"), details).then(() => {
         swal.close();
         if (_.size(errors) !== 0) {
-          // e.target.classList.add("was-validated");
-          emailField.setCustomValidity("There are errors on your form");
+          e.target.classList.remove("was-validated");
+          // emailField.setCustomValidity("There are errors on your form");
+        } else if (flash.error == 401) {
+          swal
+            .fire({
+              title: "One more thing!",
+              text: `This seems to be your first login. You need to supply a password`,
+              icon: "info"
+            })
+            .then(() => {
+              swal
+                .fire({
+                  title: "Enter a password",
+                  input: "text",
+                  inputAttributes: {
+                    autocapitalize: "off"
+                  },
+                  showCancelButton: true,
+                  confirmButtonText: "Set Password",
+                  showLoaderOnConfirm: true,
+                  preConfirm: pw => {
+                    return Inertia.post(route("app.password.new"), {
+                      pw,
+                      email: details.email
+                    }).then(() => {
+                      swal.close();
+                      return { rsp: true };
+                    });
+                  },
+                  allowOutsideClick: () => !swal.isLoading()
+                })
+                .then(result => {
+                  console.log(result);
+
+                  if (flash.success == 204) {
+
+                    swal.fire({
+                      title: `Success`,
+                      text: "Password set successfully! Login using your new credentials",
+                      icon: "success"
+                    });
+                  } else if (result.dismiss) {
+                    swal.fire({
+                      title: "Cancelled",
+                      text: "You can´t login without setting a password",
+                      icon: "info"
+                    });
+                  }
+                });
+            });
         }
       });
     }
@@ -71,12 +111,9 @@
       </div>
 
       <div class="col-12">
-        <FlashMessage />
-      </div>
-
-      <div class="col-12">
         <input
           type="email"
+          required
           class="form-control"
           class:is-invalid={errors.email}
           class:is-valid={formSubmitted && !errors.email}
@@ -90,9 +127,9 @@
       <div class="col-12">
         <input
           type="password"
+          required
           class="form-control"
           class:is-invalid={errors.password}
-          class:is-valid={formSubmitted && !errors.password}
           id="password"
           bind:value={details.password}
           placeholder="Password" />
@@ -128,25 +165,21 @@
         <ul class="rui-social-links">
           <li>
             <a href class="rui-social-github">
-              <span class="fab fa-github" />
-              Github
+              <span class="fab fa-github" /> Github
             </a>
           </li>
           <li>
             <a href class="rui-social-facebook">
-              <span class="fab fa-facebook-f" />
-              Facebook
+              <span class="fab fa-facebook-f" /> Facebook
             </a>
           </li>
           <li>
             <a href class="rui-social-google">
-              <span class="fab fa-google" />
-              Google
+              <span class="fab fa-google" /> Google
             </a>
           </li>
         </ul>
       </div>
-
     </div>
   </form>
   <div class="mt-20 text-grey-6">
