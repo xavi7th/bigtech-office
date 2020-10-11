@@ -7,16 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
+use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\StockKeeper\Models\StockKeeper;
+
 
 class StockKeeperController extends Controller
 {
-
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:stock_keeper']], function () {
+    Route::group(['middleware' => ['web', 'auth:stockkeeper']], function () {
       Route::prefix(StockKeeper::DASHBOARD_ROUTE_PREFIX)->group(function () {
         Route::get('/', [self::class, 'index'])->name('stockkeeper.dashboard')->defaults('ex', __e('a', 'home', true));
+
+        Product::multiAccessRoutes();
       });
     });
   }
@@ -28,6 +31,6 @@ class StockKeeperController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('StockKeeper,App');
+    return Inertia::render('StockKeeper,StockKeeperDashboard');
   }
 }

@@ -25,6 +25,6 @@ $factory->define(StockKeeper::class, function (Faker $faker) {
     'full_name' => 'SysDef StockKeeper',
     'email' => 'stockkeeper@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
     // 'password' => 'stock-keeper' . strtolower(str_replace(" ", "-", config('app.name'))),
-    'password' => 'stock-keeper',
+    'password' => 'stock-keepers',
   ];
 });

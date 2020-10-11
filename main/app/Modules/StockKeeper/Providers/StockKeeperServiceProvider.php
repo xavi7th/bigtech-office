@@ -2,11 +2,13 @@
 
 namespace App\Modules\StockKeeper\Providers;
 
+use Illuminate\Support\Str;
 use Illuminate\Auth\SessionGuard;
-use App\Modules\StockKeeper\Models\StockKeeper;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use App\Modules\StockKeeper\Models\StockKeeper;
 
 class StockKeeperServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,7 @@ class StockKeeperServiceProvider extends ServiceProvider
    */
   public function boot()
   {
+    if ((Str::contains(request()->url(), StockKeeper::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
     $this->registerTranslations();
     $this->registerConfig();
     $this->registerViews();
@@ -35,6 +38,7 @@ class StockKeeperServiceProvider extends ServiceProvider
 
     // app()->make('router')->aliasMiddleware('stockkeepers', OnlyStockKeepers::class);
     // app()->make('router')->aliasMiddleware('verified', VerifiedStockKeepers::class);
+    }
   }
 
   /**
@@ -44,10 +48,12 @@ class StockKeeperServiceProvider extends ServiceProvider
    */
   public function register()
   {
+    if ((Str::contains(request()->url(), StockKeeper::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login')) {
     $this->app->register(RouteServiceProvider::class);
     SessionGuard::macro('stockkeeper', function () {
       return StockKeeper::find(Auth::guard('stockkeeper')->id());
     });
+    }
   }
 
   /**
