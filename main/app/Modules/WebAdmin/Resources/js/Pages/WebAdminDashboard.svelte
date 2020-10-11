@@ -1,7 +1,7 @@
 <script>
     import { page, InertiaLink } from "@inertiajs/inertia-svelte";
     import { Inertia } from "@inertiajs/inertia";
-    import Layout from "@admin-shared/AdminLayout";
+    import Layout from "@webadmin-shared/WebAdminLayout.svelte";
     import FlashMessage from "@usershared/FlashMessage";
     import route from "ziggy";
 import { onMount } from "svelte";
@@ -10,6 +10,6 @@ import { onMount } from "svelte";
 
 </script>
 
-<Layout title="Admin Dashboard">
+<Layout title="Web Admin Dashboard">
     <div class="mt-20">UNDER CONSTRUCTION</div>
 </Layout>

@@ -15,9 +15,9 @@ class StockKeeperController extends Controller
 {
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:stockkeeper']], function () {
+    Route::group(['middleware' => ['web', 'auth:stock_keeper']], function () {
       Route::prefix(StockKeeper::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', [self::class, 'index'])->name('stockkeeper.dashboard')->defaults('ex', __e('a', 'home', true));
+        Route::get('/', [self::class, 'index'])->name('stockkeeper.dashboard')->defaults('ex', __e('sk', 'home', true));
 
         Product::multiAccessRoutes();
       });

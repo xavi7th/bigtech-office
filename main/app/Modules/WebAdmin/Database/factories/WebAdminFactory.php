@@ -24,6 +24,6 @@ $factory->define(WebAdmin::class, function (Faker $faker) {
   return [
     'full_name' => 'SysDef Accountant',
     'email' => 'webadmins@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-    'password' => 'web-admins' . strtolower(str_replace(" ", "-", config('app.name'))),
+    'password' => 'web-admins',
   ];
 });

@@ -2121,24 +2121,6 @@
          *
          * @static 
          */ 
-        public static function webAdmin()
-        {
-                        return \Illuminate\Auth\SessionGuard::webAdmin();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function stockkeeper()
-        {
-                        return \Illuminate\Auth\SessionGuard::stockkeeper();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
         public static function dispatchAdmin()
         {
                         return \Illuminate\Auth\SessionGuard::dispatchAdmin();
@@ -16373,24 +16355,6 @@
      *
      */ 
         class SessionGuard {
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function webAdmin()
-        {
-                        return \Illuminate\Auth\SessionGuard::webAdmin();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function stockkeeper()
-        {
-                        return \Illuminate\Auth\SessionGuard::stockkeeper();
-        }
                     /**
          * 
          *

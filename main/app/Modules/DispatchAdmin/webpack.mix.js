@@ -11,4 +11,4 @@ mix.webpackConfig({
 	},
 })
 
-mix.js(__dirname + '/Resources/js/app.js', 'js/admin.js')
+mix.js(__dirname + '/Resources/js/app.js', 'js/dispatchadmin.js')

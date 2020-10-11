@@ -31,6 +31,6 @@ class DispatchAdminController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('DispatchAdmin,AdminDashboard');
+    return Inertia::render('DispatchAdmin,DispatchAdminDashboard');
   }
 }

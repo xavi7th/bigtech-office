@@ -4,11 +4,11 @@ mix.webpackConfig({
 	resolve: {
 		extensions: ['.js', '.svelte', '.json'],
 		alias: {
-			'@admin-pages': __dirname + '/Resources/js/Pages',
-			'@admin-shared': __dirname + '/Resources/js/Shared',
-				'@admin-assets': __dirname + '/Resources',
+			'@salesrep-pages': __dirname + '/Resources/js/Pages',
+				'@salesrep-shared': __dirname + '/Resources/js/Shared',
+				'@salesrep-assets': __dirname + '/Resources',
 		},
 	},
 })
 
-mix.js(__dirname + '/Resources/js/app.js', 'js/admin.js')
+mix.js(__dirname + '/Resources/js/app.js', 'js/salesrep.js')

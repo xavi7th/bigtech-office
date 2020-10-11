@@ -7,16 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
+use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\WebAdmin\Models\WebAdmin;
+
 
 class WebAdminController extends Controller
 {
-
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:web_admin']], function () {
+    Route::group(['middleware' => ['web', 'auth:webadmin']], function () {
       Route::prefix(WebAdmin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', [self::class, 'index'])->name('webadmin.dashboard')->defaults('ex', __e('a', 'home', true));
+        Route::get('/', [self::class, 'index'])->name('webadmin.dashboard')->defaults('ex', __e('w', 'home', true));
+
+        Product::multiAccessRoutes();
       });
     });
   }
@@ -28,6 +31,6 @@ class WebAdminController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('WebAdmin,App');
+    return Inertia::render('WebAdmin,WebAdminDashboard');
   }
 }

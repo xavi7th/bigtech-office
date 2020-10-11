@@ -97,10 +97,6 @@
       transform: scale(1.2, 1);
     }
   }
-
-  .is-transparent {
-    opacity: 0.4;
-  }
 </style>
 
 <div id="page-loader" out:fade={{ duration: 600, delay: 400 }}>
