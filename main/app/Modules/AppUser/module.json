@@ -3,7 +3,7 @@
     "alias": "appuser",
     "description": "",
     "keywords": [],
-    "order": 10,
+    "order": 0,
     "providers": [
         "App\\Modules\\AppUser\\Providers\\AppUserServiceProvider"
     ],

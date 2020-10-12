@@ -5,7 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
 
-  $: ({ app } = $page);
+  $: ({ auth } = $page);
 
   export let productsWithResellers;
 </script>
@@ -32,33 +32,30 @@
               <tr>
                 <th scope="row">{idx + 1}</th>
                 <td>{product.color} {product.model}</td>
-                <td>
-                  {product.reseller}
-                  <br />
-                  {product.reseller_phone}
-                </td>
+                <td>{product.reseller} <br /> {product.reseller_phone}</td>
                 <td>{product.identifier}</td>
                 <td>{product.date_collected}</td>
                 <td>
-                {#if product.is_swap_deal}
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.swap_deal_details', product.uuid)}
-                    class="btn btn-primary btn-xs btn-sm">
-                    Details
-                  </InertiaLink>
-                {:else}
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.view_product_details', product.uuid)}
-                    class="btn btn-primary btn-xs btn-sm">
-                    Details
-                  </InertiaLink>
-                {/if}
+                  {#if auth.user.isSuperAdmin}
+                    {#if product.is_swap_deal}
+                      <InertiaLink
+                        type="button"
+                        href={route('superadmin.products.swap_deal_details', product.uuid)}
+                        class="btn btn-primary btn-xs btn-sm">
+                        Details
+                      </InertiaLink>
+                    {:else}
+                      <InertiaLink
+                        type="button"
+                        href={route('superadmin.products.view_product_details', product.uuid)}
+                        class="btn btn-primary btn-xs btn-sm">
+                        Details
+                      </InertiaLink>
+                    {/if}
+                  {/if}
                 </td>
               </tr>
             {/each}
-
           </tbody>
         </table>
       </div>

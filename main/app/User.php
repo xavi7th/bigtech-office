@@ -164,6 +164,31 @@ class User extends Authenticatable implements JWTSubject
     return $this instanceof WebAdmin;
   }
 
+  public function getUserType()
+  {
+    if ($this->isAccountant()) {
+      return ['isAccountant' => true];
+    } elseif ($this->isAdmin()) {
+      return ['isAdmin' => true];
+    } elseif ($this->isSuperAdmin()) {
+      return ['isSuperAdmin' => true];
+    } elseif ($this->isSocialMediaRep()) {
+      return ['isSocialMediaRep' => true];
+    } elseif ($this->isWalkInRep()) {
+      return ['isWalkInRep' => true];
+    } elseif ($this->isCallCenterRep()) {
+      return ['isCallCenterRep' => true];
+    } elseif ($this->isStockKeeper()) {
+      return ['isStockKeeper' => true];
+    } elseif ($this->isQualityControl()) {
+      return ['isQualityControl' => true];
+    } elseif ($this->isDispatchAdmin()) {
+      return ['isDispatchAdmin' => true];
+    } elseif ($this->isWebAdmin()) {
+      return ['isWebAdmin' => true];
+    }
+  }
+
   public function get_navigation_routes(): array
   {
     return get_related_routes(strtolower($this->getType()), ['GET'], $isHeirarchical = true);

@@ -21,7 +21,7 @@
       formData.append(key, val);
     });
 
-    Inertia.post(route("superadmin.products.create_swap_deal"), formData, {
+    Inertia.post(route("stockkeeper.products.create_swap_deal"), formData, {
       preserveState: true,
       preserveScroll: true,
       only: ["flash", "errors"],

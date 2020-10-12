@@ -5,7 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
 
-  $: ({ errors, auth } = $page);
+  $: ({ auth } = $page);
 
   export let resellersWithProducts = [];
 </script>
@@ -49,11 +49,13 @@
                     </ul>
                     <ul class="list-unstyled">
                       <li>
+                      {#if auth.user.isStockKeeper}
                         <InertiaLink
-                          href={route('superadmin.resellers.products', resellersWithProduct.id)}
+                          href={route('multiaccess.resellers.products', resellersWithProduct.id)}
                           class="btn btn-brand btn-sm">
                           Details
                         </InertiaLink>
+                      {/if}
                       </li>
                     </ul>
                   </td>

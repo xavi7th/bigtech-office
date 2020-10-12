@@ -1,14 +1,14 @@
 <script>
-import { Inertia } from "@inertiajs/inertia";
+  import { Inertia } from "@inertiajs/inertia";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
   import route from "ziggy";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
-import { getErrorString } from "@public-assets/js/bootstrap";
+  import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ flash,errors } = $page);
+  $: ({ auth, flash, errors } = $page);
 
   export let products = [],
     resellers = [],
@@ -17,14 +17,13 @@ import { getErrorString } from "@public-assets/js/bootstrap";
 
   let productToMarkAsSold, productToGiveReseller;
 
-  let scheduleProductForDelivery = product =>{
+  let scheduleProductForDelivery = product => {
     swalPreconfirm
       .fire({
         text:
           "This will mark this product as out for delivery and remove it from the stock list",
         confirmButtonText: "Mark for Delivery",
         preConfirm: () => {
-
           return Inertia.post(
             route("superadmin.products.schedule_delivery", product),
             {},
@@ -60,17 +59,14 @@ import { getErrorString } from "@public-assets/js/bootstrap";
           });
         }
       });
+  };
 
-  }
-
-  let returnToStock = product =>{
+  let returnToStock = product => {
     swalPreconfirm
       .fire({
-        text:
-          "This will return this product to the stock list",
+        text: "This will return this product to the stock list",
         confirmButtonText: "Return to Stock",
         preConfirm: () => {
-
           return Inertia.post(
             route("superadmin.products.return_to_stock", product),
             {},
@@ -106,9 +102,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
           });
         }
       });
-
-  }
-
+  };
 </script>
 
 <Layout title="Stock List">
@@ -131,9 +125,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                 Product ID
                 <Icon />
               </th>
-              <th scope="col">
-                Selling Price
-              </th>
+              <th scope="col">Selling Price</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -143,84 +135,100 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                 <th scope="row">{idx + 1}</th>
                 <td>
                   <span class="text-capitalize">{product.color}</span>
-                  {product.model} {product.storage_size}
+                  {product.model}
+                  {product.storage_size}
                 </td>
                 <td>{product.identifier}</td>
                 <td>{product.selling_price}</td>
                 <td>
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.view_product_details', product.uuid)}
-                    class="btn btn-primary btn-xs btn-sm">
-                    Details
-                  </InertiaLink>
-                  {#if product.status == 'out for delivery' || product.status == 'in stock' }
-
-                    <button
+                  {#if auth.user.isSuperAdmin}
+                    <InertiaLink
                       type="button"
-                      on:click={() => {
-                        productToMarkAsSold = product.uuid;
-                      }}
-                      data-toggle="modal"
-                      data-target="#enterSalesDetails"
-                      class="btn btn-success btn-xs btn-sm">
-                      Mark Sold
-                    </button>
-                  {/if}
-                  {#if product.status == 'out for delivery' }
+                      href={route('superadmin.products.view_product_details', product.uuid)}
+                      class="btn btn-primary btn-xs btn-sm">
+                      Details
+                    </InertiaLink>
 
-                     <button
+                    <InertiaLink
                       type="button"
-                      on:click={() => {
-                        returnToStock(product.uuid)
-                      }}
-
-                      class="btn btn-orange btn-xs btn-sm">
-                      Return to Stock
-                    </button>
-
-                  {/if}
-                  {#if product.status == 'in stock'}
-                    <button
-                      type="button"
-                      on:click={() => {
-                        scheduleProductForDelivery(product.uuid)
-                      }}
-
-                      class="btn btn-orange btn-xs btn-sm">
-                      Schedule Delivery
-                    </button>
-
-
-                    <button
-                      type="button"
-                      on:click={() => {
-                        productToGiveReseller = product.uuid;
-                      }}
-                      data-toggle="modal"
-                      data-target="#giveProductToReseller"
-                      class="btn btn-warning btn-xs btn-sm">
-                      Give Reseller
-                    </button>
+                      href={route('superadmin.miscellaneous.view_product_history', product.uuid)}
+                      class="btn btn-info btn-xs btn-sm">
+                      History
+                    </InertiaLink>
                   {/if}
 
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.miscellaneous.view_product_history', product.uuid)}
-                    class="btn btn-info btn-xs btn-sm">
-                    History
-                  </InertiaLink>
+                  {#if auth.user.isWalkInRep}
+                    {#if product.status == 'in stock'}
+                      <button
+                        type="button"
+                        on:click={() => {
+                          productToMarkAsSold = product.uuid;
+                        }}
+                        data-toggle="modal"
+                        data-target="#enterSalesDetails"
+                        class="btn btn-success btn-xs btn-sm">
+                        Mark Sold
+                      </button>
+                    {/if}
+                  {/if}
+
+                  {#if auth.user.isStockKeeper}
+                    {#if product.status == 'in stock'}
+                      <button
+                        type="button"
+                        on:click={() => {
+                          productToGiveReseller = product.uuid;
+                        }}
+                        data-toggle="modal"
+                        data-target="#giveProductToReseller"
+                        class="btn btn-warning btn-xs btn-sm">
+                        Give Reseller
+                      </button>
+                    {/if}
+                  {/if}
+
+
+                  {#if auth.user.isDispatchAdmin}
+                    {#if product.status == 'in stock'}
+                      <button
+                        type="button"
+                        on:click={() => {
+                          scheduleProductForDelivery(product.uuid);
+                        }}
+                        class="btn btn-orange btn-xs btn-sm">
+                        Schedule Delivery
+                      </button>
+                    {/if}
+                    {#if product.status == 'out for delivery'}
+                      <button
+                        type="button"
+                        on:click={() => {
+                          productToMarkAsSold = product.uuid;
+                        }}
+                        data-toggle="modal"
+                        data-target="#enterSalesDetails"
+                        class="btn btn-success btn-xs btn-sm">
+                        Mark Sold
+                      </button>
+                      <button
+                        type="button"
+                        on:click={() => {
+                          returnToStock(product.uuid);
+                        }}
+                        class="btn btn-orange btn-xs btn-sm">
+                        Return to Stock
+                      </button>
+                    {/if}
+                  {/if}
                 </td>
               </tr>
             {/each}
-
           </tbody>
         </table>
       </div>
     </div>
   </div>
   <div slot="modals">
-
     <MarkAsSoldModal {salesChannel} {onlineReps} {productToMarkAsSold} />
 
     <GiveProductToReseller {resellers} {productToGiveReseller} />

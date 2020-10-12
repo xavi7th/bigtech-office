@@ -14,11 +14,11 @@
 
   let giveProductToReseller = () => {
     BlockToast.fire({
-      text: "Allocating product to reseller ..."
+      text: "Marking product as out to reseller ..."
     });
 
     Inertia.post(
-      route("superadmin.resellers.give_product", [
+      route("multiaccess.resellers.give_product", [
         resellerToGiveProduct,
         productToGiveReseller
       ]),

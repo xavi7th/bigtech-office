@@ -42,8 +42,6 @@ class SuperAdminDatabaseSeeder extends Seeder
   {
     Model::unguard();
 
-    $this->call(OfficeBranchesTableSeeder::class);
-
     factory(SuperAdmin::class, 1)->create();
 
     // factory(OtherExpense::class, 50)->create();
@@ -61,7 +59,7 @@ class SuperAdminDatabaseSeeder extends Seeder
     // $this->call(ProductPricesTableSeeder::class);
     // $this->call(ProductDescriptionSummariesTableSeeder::class);
     $this->call(ProductStatusesTableSeeder::class);
-    // $this->call(ProductsTableSeeder::class);
+    $this->call(ProductsTableSeeder::class);
     // $this->call(UserCommentsTableSeeder::class);
     $this->call(QaTestsTableSeeder::class);
     // $this->call(ProductModelQaTestTableSeeder::class);

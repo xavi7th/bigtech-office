@@ -5,7 +5,7 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
   import route from "ziggy";
 
-  $: ({ app , flash, errors} = $page);
+  $: ({ auth, flash, errors } = $page);
 
   export let batches = [];
   let batch_number, auto_generate, order_date;
@@ -17,11 +17,11 @@
 
     Inertia.post(
       route("superadmin.products.create_batch"),
-      {batch_number, auto_generate, order_date},
+      { batch_number, auto_generate, order_date },
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", 'batches']
+        only: ["flash", "errors", "batches"]
       }
     ).then(() => {
       if (flash.success) {
@@ -29,7 +29,6 @@
           title: "Successful!",
           html: flash.success
         });
-
       } else if (flash.error || _.size(errors) > 0) {
         ToastLarge.fire({
           title: "Oops!",
@@ -46,55 +45,55 @@
 
 <Layout title="Manage Product Batches">
   <div class="row vertical-gap">
-    <div class="col-lg-4 offset-lg-4 order-1">
-      <form class="#" on:submit|preventDefault="{createNewBatch}">
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="orderDate">
-              Date of Order
-            </label>
-            <input
-              type="date"
-              class="form-control"
-              id="orderDate"
-              bind:value="{order_date}"
-              placeholder="Enter Order Date." />
-          </div>
-          <div class="col-12">
-            <label for="batchNumber">
-              Batch No.(Show for only stock keeper)
-            </label>
-            <input
-              type="text"
-              id="batchNumber"
-              class="form-control"
-              bind:value="{batch_number}"
-              placeholder="Enter Batch No." />
-          </div>
-          <div class="col-12">
-            <div class="custom-control custom-checkbox">
+    {#if auth.user.isAccountant}
+      <div class="col-lg-4 offset-lg-4 order-1">
+        <form class="#" on:submit|preventDefault={createNewBatch}>
+          <div class="row vertical-gap sm-gap">
+            <div class="col-12">
+              <label for="orderDate"> Date of Order </label>
               <input
-                type="checkbox"
-                class="custom-control-input"
-                bind:checked="{auto_generate}"
-                id="autoGenerate" />
-              <label class="custom-control-label" for="autoGenerate">
-                Auto-generate batch no.
-              </label>
+                type="date"
+                class="form-control"
+                id="orderDate"
+                bind:value={order_date}
+                placeholder="Enter Order Date." />
             </div>
-            <br />
-            <button class="btn btn-brand btn-long">
-              <span class="text">Create New Batch</span>
-              <span class="icon">
-                <span
-                  data-feather="check-circle"
-                  class="rui-icon rui-icon-stroke-1_5" />
-              </span>
-            </button>
+            <div class="col-12">
+              <label for="batchNumber">
+                Batch No.(Show for only stock keeper)
+              </label>
+              <input
+                type="text"
+                id="batchNumber"
+                class="form-control"
+                bind:value={batch_number}
+                placeholder="Enter Batch No." />
+            </div>
+            <div class="col-12">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  bind:checked={auto_generate}
+                  id="autoGenerate" />
+                <label class="custom-control-label" for="autoGenerate">
+                  Auto-generate batch no.
+                </label>
+              </div>
+              <br />
+              <button class="btn btn-brand btn-long">
+                <span class="text">Create New Batch</span>
+                <span class="icon">
+                  <span
+                    data-feather="check-circle"
+                    class="rui-icon rui-icon-stroke-1_5" />
+                </span>
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    {/if}
     <div class="col-lg-12 order-0">
       <div class="table-responsive-md">
         <table class="rui-datatable table table-striped">
@@ -107,7 +106,6 @@
             </tr>
           </thead>
           <tbody>
-
             {#each batches as batch, idx}
               <tr>
                 <th scope="row">{idx + 1}</th>
@@ -121,32 +119,32 @@
                   {new Date(batch.order_date).toDateString()}
                 </td>
                 <td class="d-flex">
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.by_batch', batch.batch_number)}
-                    class="btn btn-brand mr-5 btn-xs">
-                    Devices
-                  </InertiaLink>
-                  <InertiaLink
-                    href={route('superadmin.products.prices_by_batch', batch.batch_number)}
-                    class="btn btn-dark mr-5 btn-xs">
-                    Prices
-                  </InertiaLink>
-                  <InertiaLink
-                    href={route('superadmin.products.create_batch_price', batch.batch_number)}
-                    class="btn btn-info mr-5 btn-xs text-nowrap">
-                    Create Price
-                  </InertiaLink>
-                  &nbsp;
+                  {#if auth.user.isStockKeeper}
+                    <InertiaLink
+                      type="button"
+                      href={route('multiaccess.products.by_batch', batch.batch_number)}
+                      class="btn btn-brand mr-5 btn-xs">
+                      Devices
+                    </InertiaLink>
+                  {/if}
+                  {#if auth.user.isSuperAdmin || auth.user.isAccountant}
+                    <InertiaLink
+                      href={route('superadmin.products.prices_by_batch', batch.batch_number)}
+                      class="btn btn-dark mr-5 btn-xs">
+                      Prices
+                    </InertiaLink>
+                    <InertiaLink
+                      href={route('superadmin.products.create_batch_price', batch.batch_number)}
+                      class="btn btn-info mr-5 btn-xs text-nowrap">
+                      Create Price
+                    </InertiaLink>
+                  {/if}
                 </td>
               </tr>
             {/each}
-
           </tbody>
         </table>
       </div>
     </div>
-
   </div>
-
 </Layout>

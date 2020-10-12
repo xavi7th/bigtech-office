@@ -5,7 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
 
-  $: ({ app } = $page);
+  $: ({ auth } = $page);
 
   export let batchWithProducts;
 </script>
@@ -20,8 +20,10 @@
               <th scope="col">#</th>
               <th scope="col">Model</th>
               <th scope="col">Expenses</th>
-              <th scope="col">Cost</th>
-              <th scope="col">Selling</th>
+              {#if auth.user.isSuperAdmin}
+                <th scope="col">Cost</th>
+                <th scope="col">Selling</th>
+              {/if}
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -30,29 +32,34 @@
               <tr>
                 <th scope="row">{idx + 1}</th>
                 <td>
-                  {product.color} {product.model} {product.storage_size}
+                  {product.color}
+                  {product.model}
+                  {product.storage_size}
                   <span class="badge badge-dark">{product.status}</span>
                   <br />
                   {product.identifier}
                   <span class="d-none">{product.supplier}</span>
                 </td>
                 <td>{product.product_expenses_sum}</td>
-                <td>{product.cost_price}</td>
-                <td>{product.selling_price}</td>
+                {#if auth.user.isSuperAdmin}
+                  <td>{product.cost_price}</td>
+                  <td>{product.selling_price}</td>
+                {/if}
                 <td>
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.qa_test_results', product.uuid)}
-                    class="btn btn-dark btn-xs">
-                    Test/Result
-                  </InertiaLink>
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.expenses', product.uuid)}
-                    class="btn btn-warning btn-xs">
-                    Record Expense
-                  </InertiaLink>
-                  &nbsp;
+                  {#if auth.user.isQualityControl}
+                    <InertiaLink
+                      type="button"
+                      href={route('multiaccess.products.qa_test_results', product.uuid)}
+                      class="btn btn-dark btn-xs">
+                      Test/Result
+                    </InertiaLink>
+                    <InertiaLink
+                      type="button"
+                      href={route('multiaccess.products.expenses', product.uuid)}
+                      class="btn btn-warning btn-xs">
+                      Record Expense
+                    </InertiaLink>
+                  {/if}
                 </td>
               </tr>
             {/each}

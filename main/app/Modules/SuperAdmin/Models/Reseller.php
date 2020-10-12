@@ -102,6 +102,26 @@ class Reseller extends BaseModel
     return $this->hasMany(ResellerHistory::class);
   }
 
+  public static function stockKeeperRoutes()
+  {
+    Route::group(['prefix' => 'resellers'], function () {
+      Route::name('stockkeeper.resellers.')->group(function () {
+        Route::post('{reseller}/{product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('sk', 'at-sign', true));
+      });
+    });
+  }
+  public static function multiAccessRoutes()
+  {
+    Route::group(['prefix' => 'resellers'], function () {
+      Route::name('multiaccess.resellers.')->group(function () {
+        Route::post('{reseller}/give-product/{product_uuid}', [self::class, 'giveProductToReseller'])->name('give_product')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
+        Route::get('products', [self::class, 'getResellersWithProducts'])->name('resellers_with_products')->defaults('ex', __e('ss,sk', 'at-sign', false))->middleware('auth:stock_keeper');
+        Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name('products')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
+        Route::post('{reseller}/{product:product_uuid}/return', [self::class, 'resellerReturnProduct'])->name('return_product')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
+      });
+    });
+  }
+
   public static function routes()
   {
     Route::group(['prefix' => 'resellers'], function () {
@@ -109,13 +129,8 @@ class Reseller extends BaseModel
         return 'superadmin.' . $name;
       };
       Route::get('', [self::class, 'getResellers'])->name($others('resellers'))->defaults('ex', __e('ss', 'at-sign', false));
-      Route::get('products', [self::class, 'getResellersWithProducts'])->name($others('resellers.resellers_with_products', null))->defaults('ex', __e('ss', 'at-sign', false));
-      Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name($others('resellers.products', null))->defaults('ex', __e('ss', 'at-sign', true));
       Route::post('create', [self::class, 'createReseller'])->name($others('resellers.create_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
-      Route::post('{reseller}/give-product/{product_uuid}', [self::class, 'giveProductToReseller'])->name($others('resellers.give_product'))->defaults('ex', __e('ss', 'at-sign', true));
-      Route::post('{reseller}/{product:product_uuid}/return', [self::class, 'resellerReturnProduct'])->name($others('resellers.return_product'))->defaults('ex', __e('ss', 'at-sign', true));
-      Route::post('{reseller}/{product_uuid}/sold', [self::class, 'markProductAsSold'])->name($others('resellers.mark_as_sold'))->defaults('ex', __e('ss', 'at-sign', true));
     });
   }
 
@@ -244,7 +259,6 @@ class Reseller extends BaseModel
       } elseif ($product instanceof SwapDeal) {
         $reseller->swap_deals()->save($product);
       }
-
     } catch (QueryException $th) {
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Error giving product to reseller');
       if ($th->errorInfo[1] == 1062) {

@@ -9,7 +9,7 @@
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
   import UpdateProductStatus from "@superadmin-shared/Partials/UpdateProductStatus.svelte";
 
-  $: ({ errors, flash } = $page);
+  $: ({ auth, errors, flash } = $page);
 
   export let product = {},
     comments = [],
@@ -149,13 +149,10 @@
                   {#each product.valid_tests as test, idx}
                     <tr>
                       <th scope="row">{idx + 1}</th>
+                      <td><strong>{test.name}</strong></td>
                       <td>
-                        <strong>{test.name}</strong>
-                      </td>
-                      <td>
-
                         <select
-                          class="custom-select "
+                          class="custom-select"
                           on:blur={() => {
                             testResultUpdated = true;
                           }}
@@ -176,9 +173,7 @@
                             value={true}>
                             Passed
                           </option>
-
                         </select>
-
                       </td>
                       <td>
                         <span
@@ -190,17 +185,17 @@
               </table>
             </div>
             <div class="col-lg-3">
+              {#if auth.user.isQualityControl}
+                <UpdateProductStatus {product} {product_statuses} />
 
-              <UpdateProductStatus {product} {product_statuses} />
-
-              {#if testResultUpdated}
-                <button
-                  on:click={updateQATestResults}
-                  class="btn btn-success btn-long">
-                  <span class="text">Update Results</span>
-                </button>
+                {#if testResultUpdated}
+                  <button
+                    on:click={updateQATestResults}
+                    class="btn btn-success btn-long">
+                    <span class="text">Update Results</span>
+                  </button>
+                {/if}
               {/if}
-
             </div>
           </div>
         </div>
@@ -224,7 +219,7 @@
                     aria-disabled="true"
                     tabindex="-1"
                     role="button"
-                    href={route('superadmin.products.comment_on_qa_test', product.uuid)}
+                    href={route('multiaccess.products.comment_on_qa_test', product.uuid)}
                     only={['comments', 'flash', 'errors']}
                     preserveScroll
                     data={{ comment }}

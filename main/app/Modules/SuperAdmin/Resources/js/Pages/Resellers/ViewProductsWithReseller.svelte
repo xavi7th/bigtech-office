@@ -31,7 +31,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.post(
-            route("superadmin.resellers.mark_as_sold", [
+            route("stockkeeper.resellers.mark_as_sold", [
               resellerWithProducts.id,
               productToMarkAsSold
             ]),
@@ -164,7 +164,6 @@
             </tr>
           </thead>
           <tbody>
-
             {#each resellerWithProducts.products_in_possession as product, idx}
               <tr>
                 <td>{idx + 1}</td>
@@ -172,45 +171,47 @@
                 <td>{product.identifier}</td>
                 <td>{product.collection_date}</td>
                 <td>
-                  <InertiaLink
-                    href={route('superadmin.resellers.return_product', [
-                      resellerWithProducts.id,
-                      product.uuid
-                    ])}
-                    method="post"
-                    preserve-scroll
-                    preserve-state
-                    only={['flash', 'errors', 'resellerWithProducts']}
-                    class="btn btn-info btn-xs">
-                    Return
-                  </InertiaLink>
+                  {#if auth.user.isStockKeeper}
+                    <InertiaLink
+                      href={route('multiaccess.resellers.return_product', [
+                        resellerWithProducts.id,
+                        product.uuid
+                      ])}
+                      method="post"
+                      preserve-scroll
+                      preserve-state
+                      only={['flash', 'errors', 'resellerWithProducts']}
+                      class="btn btn-info btn-xs">
+                      Return
+                    </InertiaLink>
+                    <button
+                      on:click={() => {
+                        productToMarkAsSold = product.uuid;
+                      }}
+                      data-toggle="modal"
+                      data-target="#enterProductSellingPrice"
+                      class="btn btn-success btn-xs btn-sm">
+                      Mark Sold
+                    </button>
+                  {/if}
 
-                  <button
-                    on:click={() => {
-                      productToMarkAsSold = product.uuid;
-                    }}
-                    data-toggle="modal"
-                    data-target="#enterProductSellingPrice"
-                    class="btn btn-success btn-xs btn-sm">
-                    Mark Sold
-                  </button>
-
-
-                   {#if product.is_swap_transaction}
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.swap_deal_details', product.uuid)}
-                    class="btn btn-primary btn-xs btn-sm">
-                    View Product
-                  </InertiaLink>
-                {:else}
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.view_product_details', product.uuid)}
-                    class="btn btn-primary btn-xs btn-sm">
-                    View Product
-                  </InertiaLink>
-                {/if}
+                  {#if auth.user.isSuperAdmin || auth.user.isAccountant}
+                    {#if product.is_swap_transaction}
+                      <InertiaLink
+                        type="button"
+                        href={route('multiaccess.products.swap_deal_details', product.uuid)}
+                        class="btn btn-primary btn-xs btn-sm">
+                        View Product
+                      </InertiaLink>
+                    {:else}
+                      <InertiaLink
+                        type="button"
+                        href={route('multiaccess.products.view_product_details', product.uuid)}
+                        class="btn btn-primary btn-xs btn-sm">
+                        View Product
+                      </InertiaLink>
+                    {/if}
+                  {/if}
                 </td>
               </tr>
             {/each}
@@ -218,17 +219,14 @@
         </table>
       </div>
     </div>
-
   </div>
 
   <div slot="modals">
-
-    <Modal modalId="enterProductSellingPrice" modalTitle="Enter Selling Price">
-
+    {#if auth.user.isStockKeeper}
+      <Modal modalId="enterProductSellingPrice" modalTitle="Enter Selling Price">
       <FlashMessage />
 
       <div class="row vertical-gap sm-gap">
-
         <div class="col-12">
           <input
             type="number"
@@ -237,7 +235,6 @@
             placeholder="Selling Price"
             bind:value={sellingPrice} />
         </div>
-
       </div>
       <button
         on:click={markProductAsSold}
@@ -247,7 +244,6 @@
         <span class="text">Mark As Sold</span>
       </button>
     </Modal>
-
+    {/if}
   </div>
-
 </Layout>

@@ -6,10 +6,10 @@
   import MarkSwapDealAsSoldModal from "@usershared/MarkSwapDealAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
 
-  $: ({ app } = $page);
+  $: ({ auth } = $page);
 
   export let swapDeals = [],
-  resellers=[],
+    resellers = [],
     salesChannel = [],
     onlineReps = [];
 
@@ -54,19 +54,23 @@
                 <td class="nowrap">
                   <InertiaLink
                     type="button"
-                    href={route('superadmin.products.swap_deal_details', product.uuid)}
+                    href={route('multiaccess.products.swap_deal_details', product.uuid)}
                     class="btn btn-primary btn-xs">
                     Details
                   </InertiaLink>
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.miscellaneous.view_swap_history', product.uuid)}
-                    class="btn btn-info btn-xs btn-sm">
-                    History
-                  </InertiaLink>
+
+                  {#if auth.user.isSuperAdmin}
+                    <InertiaLink
+                      type="button"
+                      href={route('superadmin.miscellaneous.view_swap_history', product.uuid)}
+                      class="btn btn-info btn-xs btn-sm">
+                      History
+                    </InertiaLink>
+                  {/if}
 
                   {#if product.status == 'in stock'}
-                    <button
+                   {#if auth.user.isWalkInRep}
+                      <button
                       type="button"
                       on:click={() => {
                         productToMarkAsSold = product.uuid;
@@ -76,8 +80,10 @@
                       class="btn btn-success btn-xs btn-sm">
                       Mark Sold
                     </button>
+                   {/if}
 
-                    <button
+                    {#if auth.user.isStockKeeper}
+                      <button
                       type="button"
                       on:click={() => {
                         productToGiveReseller = product.uuid;
@@ -87,8 +93,8 @@
                       class="btn btn-warning btn-xs btn-sm">
                       Give Reseller
                     </button>
+                    {/if}
                   {/if}
-
                 </td>
               </tr>
             {/each}
@@ -104,6 +110,6 @@
       {onlineReps}
       {productToMarkAsSold} />
 
-      <GiveProductToReseller {resellers} {productToGiveReseller} />
+    <GiveProductToReseller {resellers} {productToGiveReseller} />
   </div>
 </Layout>

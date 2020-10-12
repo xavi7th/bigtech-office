@@ -8,18 +8,33 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\Product;
+use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\StockKeeper\Models\StockKeeper;
-
+use App\Modules\SuperAdmin\Models\ProductBatch;
+use App\Modules\SuperAdmin\Models\ProductExpense;
+use App\Modules\SuperAdmin\Models\SwapDeal;
 
 class StockKeeperController extends Controller
 {
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:stock_keeper']], function () {
+    Route::group(['middleware' => ['web']], function () {
+
       Route::prefix(StockKeeper::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', [self::class, 'index'])->name('stockkeeper.dashboard')->defaults('ex', __e('sk', 'home', true));
+        Route::group(['middleware' => ['auth:stock_keeper']], function () {
+
+          Route::get('/', [self::class, 'index'])->name('stockkeeper.dashboard')->defaults('ex', __e('sk', 'home', true));
+          ProductExpense::stockKeeperRoutes();
+          Reseller::stockKeeperRoutes();
+          Product::stockKeeperRoutes();
+          SwapDeal::stockKeeperRoutes();
+        });
 
         Product::multiAccessRoutes();
+        SwapDeal::multiAccessRoutes();
+        ProductBatch::multiAccessRoutes();
+        ProductExpense::multiAccessRoutes();
+        Reseller::multiAccessRoutes();
       });
     });
   }

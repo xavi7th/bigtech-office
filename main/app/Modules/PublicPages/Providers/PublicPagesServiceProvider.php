@@ -75,7 +75,9 @@ class PublicPagesServiceProvider extends ServiceProvider
       'isInertiaRequest' => !!request()->header('X-Inertia'),
       'auth' => function () {
         return [
-          'user' => Auth::user() ? Auth::user() : (object)[],
+          'user' => Auth::user()
+            ? collect(Auth::user())->merge(request()->user()->getUserType())
+            : (object)[],
         ];
       },
       'flash' => function () {

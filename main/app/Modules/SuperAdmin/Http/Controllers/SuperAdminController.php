@@ -41,67 +41,67 @@ class SuperAdminController extends Controller
 
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:super_admin'], 'prefix' => SuperAdmin::DASHBOARD_ROUTE_PREFIX], function () {
+    Route::group(['middleware' => ['web'], 'prefix' => SuperAdmin::DASHBOARD_ROUTE_PREFIX], function () {
+      Route::group(['middleware' => ['auth:super_admin']], function () {
 
-      Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss,a', 'home', true));
+        Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss,a', 'home', true));
 
-      AppUser::routes();
+        AppUser::routes();
+
+        ProductPrice::routes();
+
+        ProductModel::routes();
+
+        ProductBrand::routes();
+
+        ProductSupplier::routes();
+
+        UserComment::routes();
+
+        Reseller::routes();
+
+        ProductColor::routes();
+
+        ProductCategory::routes();
+
+        ProductQATestResult::routes();
+
+        ProcessorSpeed::routes();
+
+        ProductGrade::routes();
+
+        StorageSize::routes();
+
+        StorageType::routes();
+
+        ProductStatus::routes();
+
+        ProductHistory::routes();
+
+        ProductSaleRecord::routes();
+
+        ProductDescriptionSummary::routes();
+
+        QATest::routes();
+
+        SalesChannel::routes();
+
+        SwapDeal::routes();
+
+        CompanyBankAccount::routes();
+
+        OfficeBranch::routes();
+
+        OtherExpense::routes();
+
+        ErrLog::routes();
+      });
+
+      ProductExpense::multiAccessRoutes();
+
+      ProductBatch::multiAccessRoutes();
 
       Product::multiAccessRoutes();
-
-      Product::superAdminRoutes();
-
-      ProductPrice::routes();
-
-      ProductModel::routes();
-
-      ProductBrand::routes();
-
-      ProductSupplier::routes();
-
-      UserComment::routes();
-
-      Reseller::routes();
-
-      ProductBatch::routes();
-
-      ProductColor::routes();
-
-      ProductCategory::routes();
-
-      ProductQATestResult::routes();
-
-      ProcessorSpeed::routes();
-
-      ProductGrade::routes();
-
-      StorageSize::routes();
-
-      StorageType::routes();
-
-      ProductStatus::routes();
-
-      ProductHistory::routes();
-
-      ProductExpense::routes();
-
-      ProductSaleRecord::routes();
-
-      ProductDescriptionSummary::routes();
-
-      QATest::routes();
-
-      SalesChannel::routes();
-
-      SwapDeal::routes();
-
-      CompanyBankAccount::routes();
-
-      OfficeBranch::routes();
-
-      OtherExpense::routes();
-
-      ErrLog::routes();
     });
   }
 

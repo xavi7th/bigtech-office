@@ -10,29 +10,6 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Transformers\ProductExpenseTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductExpense
- *
- * @property int $id
- * @property int $product_id
- * @property string $product_type
- * @property float $amount
- * @property string $reason
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $product
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereProductType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereReason($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereUpdatedAt($value)
- * @mixin \Eloquent
- */
 class ProductExpense extends BaseModel
 {
   protected $fillable = [
@@ -45,18 +22,23 @@ class ProductExpense extends BaseModel
     return $this->morphTo();
   }
 
-  public static function routes()
+  public static function stockKeeperRoutes()
+  {
+    Route::name('stockkeeper.products.')->group(function () {
+      Route::post('product/{product:product_uuid}/create', [self::class, 'createProductExpense'])->name('create_product_expense')->defaults('ex', __e('ss', null, true));
+      Route::post('swap-deal/{swapDeal:product_uuid}/create', [self::class, 'createSwapExpense'])->name('create_swap_expense')->defaults('ex', __e('ss', null, true));
+    });
+  }
+  public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'product-expenses'], function () {
       $p = function ($name) {
-        return 'superadmin.products.' . $name;
+        return 'multiaccess.products.' . $name;
       };
       // Route::get('', [self::class, 'getAllProductExpenses'])->name($p('create_expense'))->defaults('ex', __e('ss', 'credit-card', true));
-      Route::get('{date}', [self::class, 'getDailyProductExpenses'])->name($p('daily_expenses'))->defaults('ex', __e('ss', 'credit-card', true));
-      Route::get('product/{product:product_uuid}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss', null, true));
-      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealExpenses'])->name($p('swap_expenses'))->defaults('ex', __e('ss', null, true));
-      Route::post('product/{product:product_uuid}/create', [self::class, 'createProductExpense'])->name($p('create_product_expense'))->defaults('ex', __e('ss', null, true));
-      Route::post('swap-deal/{swapDeal:product_uuid}/create', [self::class, 'createSwapExpense'])->name($p('create_swap_expense'))->defaults('ex', __e('ss', null, true));
+      Route::get('{date}', [self::class, 'getDailyProductExpenses'])->name($p('daily_expenses'))->defaults('ex', __e('ss', 'credit-card', true))->middleware('auth:super_admin');
+      Route::get('product/{product:product_uuid}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss,sk', null, true))->middleware('auth:super_admin,stock_keeper');
+      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealExpenses'])->name($p('swap_expenses'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
     });
   }
 
