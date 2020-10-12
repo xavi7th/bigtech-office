@@ -11,7 +11,10 @@
     salesChannel = [],
     productToMarkAsSold;
 
-  let details = {},
+  let details = {
+      online_rep_id: null,
+      sales_channel_id: null
+    },
     files;
 
   let toggleSwap = () => {
@@ -53,19 +56,19 @@
             }
           );
           return Inertia.post(
-            route("superadmin.products.mark_as_sold", productToMarkAsSold),
+            route("multiaccess.products.mark_as_sold", productToMarkAsSold),
             formData,
             {
               preserveState: true,
               preserveScroll: true,
-              only: ["flash", "errors", "officeBranch", 'products']
+              only: ["flash", "errors", "officeBranch", "products"]
             }
           )
             .then(() => {
-              if (flash.success) {
+              if ($page.flash.success) {
                 return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
+              } else if ($page.flash.error || _.size(errors) > 0) {
+                throw new Error($page.flash.error || getErrorString(errors));
               }
             })
             .catch(error => {
@@ -80,10 +83,14 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
+        } else if ($page.flash.success) {
+          details = {
+            online_rep_id: null,
+            sales_channel_id: null
+          };
           ToastLarge.fire({
             title: "Successful!",
-            html: flash.success
+            html: $page.flash.success
           });
         }
       });
@@ -91,7 +98,6 @@
 </script>
 
 <Modal modalId="enterSalesDetails" modalTitle="Enter Sales Details">
-
   <FlashMessage />
 
   <div class="row vertical-gap sm-gap">
@@ -152,9 +158,8 @@
     </div>
 
     <div class="col-12">
-
-      <select class="custom-select " bind:value={details.sales_channel_id}>
-        <option selected>How did buyer come?</option>
+      <select class="custom-select" bind:value={details.sales_channel_id}>
+        <option value={null}>How did buyer come?</option>
         {#each salesChannel as channel}
           <option value={channel.id}>{channel.channel_name}</option>
         {/each}
@@ -170,9 +175,8 @@
     </div>
 
     <div class="col-12">
-
       <select class="custom-select" bind:value={details.online_rep_id}>
-        <option selected>Select Online Rep</option>
+        <option value={null}>Select Online Rep</option>
         {#each onlineReps as rep}
           <option value={rep.id}>{rep.full_name}</option>
         {/each}
@@ -191,7 +195,6 @@
           Is this a Swap Deal?
         </label>
       </div>
-
     </div>
 
     {#if details.is_swap_transaction}
@@ -259,7 +262,6 @@
           bind:value={details.swap_value} />
       </div>
     {/if}
-
   </div>
 
   <button

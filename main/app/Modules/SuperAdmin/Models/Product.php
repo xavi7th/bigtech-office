@@ -314,13 +314,13 @@ class Product extends BaseModel
         return 'multiaccess.products.' . $name;
       };
 
-      Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss,a,ac,d,sk', 'archive'))->middleware('auth:super_admin,stock_keeper');
+      Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss,a,ac,d,sk,s', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep');
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name($p('daily_records'))->defaults('ex', __e('ss', 'archive'))->middleware('auth:super_admin');
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('ss,sk', 'archive'))->middleware('auth:super_admin,stock_keeper');
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss', 'archive', true))->middleware('auth:super_admin');
       Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
-      Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
+      Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss', null, true))->middleware('auth:sales_rep');
       Route::post('{product:product_uuid}/schedule-delivery', [self::class, 'scheduleProductForDelivery'])->name($p('schedule_delivery'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
       Route::post('{product:product_uuid}/return-to-stock', [self::class, 'returnProductToStock'])->name($p('return_to_stock'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
       Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
@@ -349,6 +349,8 @@ class Product extends BaseModel
 
     if ($request->user()->isStockKeeper()) {
       $products = fn () => Cache::rememberForever('stockKeeperProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+    } elseif ($request->user()->isSalesRep()) {
+      $products = fn () => Cache::rememberForever('salesRepProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     } else {
       $products = collect([]);
     }
@@ -775,6 +777,7 @@ class Product extends BaseModel
       Cache::forget($product->office_branch->city . 'officeBranchProducts');
       Cache::forget('products');
       Cache::forget('stockKeeperProducts');
+      Cache::forget('salesRepProducts');
     });
 
     static::updating(function ($product) {

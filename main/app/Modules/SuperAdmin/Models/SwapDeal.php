@@ -31,6 +31,74 @@ use App\Modules\SuperAdmin\Http\Validations\CreateSwapDealValidation;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 
+/**
+ * App\Modules\SuperAdmin\Models\SwapDeal
+ *
+ * @property int $id
+ * @property int|null $app_user_id
+ * @property string $description
+ * @property string $owner_details
+ * @property string|null $id_url
+ * @property string|null $receipt_url
+ * @property string|null $imei
+ * @property string|null $serial_no
+ * @property string|null $model_no
+ * @property float $swap_value
+ * @property float|null $selling_price
+ * @property string|null $sold_at
+ * @property Product $swapped_with
+ * @property int $product_status_id
+ * @property string $product_uuid
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read AppUser|null $app_user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read string $id_thumb_url
+ * @property-read string $receipt_thumb_url
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductExpense[] $product_expenses
+ * @property-read int|null $product_expenses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductHistory[] $product_histories
+ * @property-read int|null $product_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $product_sales_record
+ * @property-read int|null $product_sales_record_count
+ * @property-read ProductStatus $product_status
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
+ * @property-read int|null $reseller_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Reseller[] $with_resellers
+ * @property-read int|null $with_resellers_count
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal backFromRepairs()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal inStock()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal outForRepairs()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal saleConfirmed()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal sold()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal soldByReseller()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal untested()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereAppUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereIdUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereImei($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereModelNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereOwnerDetails($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductStatusId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductUuid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereReceiptUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSellingPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSerialNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSoldAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwapValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWith($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
+ * @mixin \Eloquent
+ */
 class SwapDeal extends BaseModel
 {
   use Commentable;
@@ -183,9 +251,10 @@ class SwapDeal extends BaseModel
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('multiaccess.products.')->group(function () {
-        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk', 'refresh-cw', false))->middleware('auth:stock_keeper');
-        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk', 'refresh-cw', true))->middleware('auth:stock_keeper');
-        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk', null, true))->middleware('auth:stock_keeper');
+        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk,s', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep');
+        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep');
+        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s', null, true))->middleware('auth:stock_keeper,sales_rep');
+        Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->defaults('ex', __e('ss,s', null, true))->middleware('auth:stock_keeper,sales_rep');
       });
     });
   }
@@ -197,7 +266,6 @@ class SwapDeal extends BaseModel
         return 'superadmin.products.' . $name;
       };
       Route::put('{swapDeal:product_uuid}/edit', [self::class, 'editSwapDeal'])->name($p('edit_swap_deal'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name($p('mark_swap_as_sold'))->defaults('ex', __e('ss', null, true));
       Route::put('{swapDeal:product_uuid}/confirm-sale', [self::class, 'confirmSwapDealSale'])->name($p('confirm_swap_sale'))->defaults('ex', __e('ss', null, true));
       Route::put('{swapDeal:product_uuid}/status', [self::class, 'updateSwapDealStatus'])->name($p('update_swap_status'))->defaults('ex', __e('ss', null, true));
     });
@@ -205,12 +273,13 @@ class SwapDeal extends BaseModel
 
   public function getSwapDeals(Request $request)
   {
-    /**
-     *! Sales rep will see the ones that are not sold
-     *! Accountant will see the ones that are sold
-     *! Qa will see the ones that are untested
-     */
-    $swapDeals = (new SwapDealTransformer)->collectionTransformer(self::untested()->orWhere->sold()->orWhere->inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic');
+    if ($request->user()->isSalesRep()) {
+      $swapDeals = Cache::rememberForever('salesRepsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
+    } elseif ($request->user()->isQualityControl()) {
+      $swapDeals = Cache::rememberForever('qualityControlsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
+    } else {
+      $swapDeals = collect([]);
+    }
     $onlineReps = fn () => Cache::rememberForever('onlineReps', fn () => (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic'));
     $salesChannel = fn () => Cache::rememberForever('salesChannel', fn () => (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic'));
     $resellers = fn () => Cache::rememberForever('resellers', fn () => (new ResellerTransformer)->collectionTransformer(Reseller::all(), 'basic'));
@@ -542,6 +611,8 @@ class SwapDeal extends BaseModel
 
     static::saved(function ($swapDeal) {
       Cache::forget('products');
+      Cache::forget('qualityControlsSwapDeals');
+      Cache::forget('salesRepsSwapDeals');
 
       if ($swapDeal->isDirty('product_status_id')) {
         request()->user()->product_histories()->create([

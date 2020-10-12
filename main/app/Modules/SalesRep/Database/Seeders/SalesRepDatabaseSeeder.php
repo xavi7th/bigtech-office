@@ -29,6 +29,11 @@ class SalesRepTableSeeder extends Seeder
    */
   public function run()
   {
-    factory(SalesRep::class, 1)->create();
+    SalesRep::create([
+      'full_name' => 'SysDef Sales Rep',
+      'email' => 'salesrep@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+      'password' => 'sales-reps',
+    ]);
+    factory(SalesRep::class, 7)->create();
   }
 }

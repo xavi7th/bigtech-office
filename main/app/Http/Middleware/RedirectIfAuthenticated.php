@@ -21,6 +21,7 @@ class RedirectIfAuthenticated
     /**
      * ? If no guard specified, authenticate agaings the default guard
      * ! Why are we nit using redirect()->route($request->user()->getDashboardRoute()) ?
+     * * Because ut returns null.
      */
     if (is_null($guards)) {
       if (Auth::check()) {

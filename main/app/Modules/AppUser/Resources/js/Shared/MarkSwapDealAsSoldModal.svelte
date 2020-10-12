@@ -53,7 +53,7 @@
             }
           );
           return Inertia.post(
-            route("superadmin.products.mark_swap_as_sold", productToMarkAsSold),
+            route("multiaccess.products.mark_swap_as_sold", productToMarkAsSold),
             formData,
             {
               preserveState: true,
