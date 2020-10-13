@@ -45,9 +45,9 @@ class ProductExpense extends BaseModel
     return $this->morphTo();
   }
 
-  public static function stockKeeperRoutes()
+  public static function qualityControlRoutes()
   {
-    Route::name('stockkeeper.products.')->group(function () {
+    Route::name('qualitycontrol.products.')->group(function () {
       Route::post('product/{product:product_uuid}/create', [self::class, 'createProductExpense'])->name('create_product_expense')->defaults('ex', __e('ss', null, true));
       Route::post('swap-deal/{swapDeal:product_uuid}/create', [self::class, 'createSwapExpense'])->name('create_swap_expense')->defaults('ex', __e('ss', null, true));
     });
@@ -60,8 +60,8 @@ class ProductExpense extends BaseModel
       };
       // Route::get('', [self::class, 'getAllProductExpenses'])->name($p('create_expense'))->defaults('ex', __e('ss', 'credit-card', true));
       Route::get('{date}', [self::class, 'getDailyProductExpenses'])->name($p('daily_expenses'))->defaults('ex', __e('ss', 'credit-card', true))->middleware('auth:super_admin');
-      Route::get('product/{product:product_uuid}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss,sk', null, true))->middleware('auth:super_admin,stock_keeper');
-      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealExpenses'])->name($p('swap_expenses'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
+      Route::get('product/{product:product_uuid}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss,q', null, true))->middleware('auth:super_admin,quality_control');
+      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealExpenses'])->name($p('swap_expenses'))->defaults('ex', __e('ss,q', null, true))->middleware('auth:super_admin,quality_control');
     });
   }
 

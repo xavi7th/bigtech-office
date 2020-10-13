@@ -13,7 +13,7 @@ $: ({ errors, flash } = $page);
     });
 
     Inertia.put(
-      route("superadmin.products.update_product_status", product.uuid),
+      route("multiaccess.products.update_product_status", product.uuid),
       { product_status_id: product.product_status_id },
       {
         preserveState: true,

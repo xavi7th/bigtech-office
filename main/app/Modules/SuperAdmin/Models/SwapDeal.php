@@ -247,13 +247,22 @@ class SwapDeal extends BaseModel
     });
   }
 
+  static function qualityControlRoutes()
+  {
+    Route::group(['prefix' => 'swap-deals'], function () {
+      Route::name('qualitycontrol.products.')->group(function () {
+        Route::put('{swapDeal:product_uuid}/status', [self::class, 'updateSwapDealStatus'])->name('update_swap_status')->defaults('ex', __e('q', null, true));
+      });
+    });
+  }
+
   static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('multiaccess.products.')->group(function () {
-        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk,s', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep');
-        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep');
-        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s', null, true))->middleware('auth:stock_keeper,sales_rep');
+        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk,s,q', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control');
+        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control');
+        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control');
         Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->defaults('ex', __e('ss,s', null, true))->middleware('auth:stock_keeper,sales_rep');
       });
     });
@@ -267,7 +276,6 @@ class SwapDeal extends BaseModel
       };
       Route::put('{swapDeal:product_uuid}/edit', [self::class, 'editSwapDeal'])->name($p('edit_swap_deal'))->defaults('ex', __e('ss', 'refresh-cw', true));
       Route::put('{swapDeal:product_uuid}/confirm-sale', [self::class, 'confirmSwapDealSale'])->name($p('confirm_swap_sale'))->defaults('ex', __e('ss', null, true));
-      Route::put('{swapDeal:product_uuid}/status', [self::class, 'updateSwapDealStatus'])->name($p('update_swap_status'))->defaults('ex', __e('ss', null, true));
     });
   }
 

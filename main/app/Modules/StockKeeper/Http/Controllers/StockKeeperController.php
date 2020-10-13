@@ -24,7 +24,6 @@ class StockKeeperController extends Controller
         Route::group(['middleware' => ['auth:stock_keeper']], function () {
 
           Route::get('/', [self::class, 'index'])->name('stockkeeper.dashboard')->defaults('ex', __e('sk', 'home', true));
-          ProductExpense::stockKeeperRoutes();
           Reseller::stockKeeperRoutes();
           Product::stockKeeperRoutes();
           SwapDeal::stockKeeperRoutes();

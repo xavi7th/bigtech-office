@@ -18,8 +18,8 @@
     });
 
     let url = isSwapDeal
-      ? route("stockkeeper.products.create_swap_expense", product.uuid)
-      : route("stockkeeper.products.create_product_expense", product.uuid);
+      ? route("qualitycontrol.products.create_swap_expense", product.uuid)
+      : route("qualitycontrol.products.create_product_expense", product.uuid);
     Inertia.post(url, details, {
       preserveState: true,
       preserveScroll: true,
@@ -75,7 +75,7 @@
       </div>
     </div>
   </div>
-  {#if auth.user.isStockKeeper}
+  {#if auth.user.isQualityControl}
     <div class="row vertical-gap mt-5">
       <div class="col-lg-8 col-xl-7 offset-xl-2 mt-5">
         <h2 class="mt-5">Create New Expense</h2>

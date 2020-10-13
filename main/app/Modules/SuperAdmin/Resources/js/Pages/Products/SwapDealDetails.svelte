@@ -82,7 +82,7 @@
     });
 
     Inertia.put(
-      route("superadmin.products.update_swap_status", swapDeal.uuid),
+      route("qualitycontrol.products.update_swap_status", swapDeal.uuid),
       { product_status_id: swapDeal.product_status_id },
       {
         preserveState: true,
@@ -162,12 +162,6 @@
               <th scope="row"><strong>{swapDeal.swap_value}</strong></th>
             </tr>
             <tr>
-              <td class="text-primary"><strong>Total Expenses</strong></td>
-              <th scope="row">
-                <strong>{swapDeal.total_product_expenses}</strong>
-              </th>
-            </tr>
-            <tr>
               <td class="text-primary"><strong>Sold At</strong></td>
               <th scope="row"><strong>{swapDeal.sold_at}</strong></th>
             </tr>
@@ -178,6 +172,14 @@
             <tr>
               <td class="text-primary"><strong>Buyer</strong></td>
               <th scope="row"><strong>{swapDeal.buyer}</strong></th>
+            </tr>
+          {/if}
+          {#if auth.user.isSuperAdmin || auth.user.isQualityControl}
+             <tr>
+              <td class="text-primary"><strong>Total Expenses</strong></td>
+              <th scope="row">
+                <strong>{swapDeal.total_product_expenses}</strong>
+              </th>
             </tr>
           {/if}
           <tr>

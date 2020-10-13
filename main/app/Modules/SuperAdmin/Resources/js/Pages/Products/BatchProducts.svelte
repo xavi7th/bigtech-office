@@ -49,7 +49,7 @@
                   {#if auth.user.isQualityControl}
                     <InertiaLink
                       type="button"
-                      href={route('multiaccess.products.qa_test_results', product.uuid)}
+                      href={route('qualitycontrol.products.qa_test_results', product.uuid)}
                       class="btn btn-dark btn-xs">
                       Test/Result
                     </InertiaLink>
