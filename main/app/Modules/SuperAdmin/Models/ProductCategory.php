@@ -12,33 +12,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductCategory
- *
- * @property int $id
- * @property string $name
- * @property string|null $img_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductModel[] $product_model
- * @property-read int|null $product_model_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductCategory onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductCategory withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductCategory withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductCategory extends BaseModel
 {
   use SoftDeletes;
@@ -55,15 +28,15 @@ class ProductCategory extends BaseModel
     return $this->hasMany(Product::class);
   }
 
-  public static function routes()
+  public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'product-categories'], function () {
       $gen = function ($name = null) {
-        return 'superadmin.miscellaneous.' . $name;
+        return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProductCategories'])->name($gen('product_categories'))->defaults('ex', __e('ss', 'edit-3', false));
-      Route::post('create', [self::class, 'createProductCategory'])->name($gen('create_product_category'))->defaults('ex', __e('ss', 'edit-3', true));
-      Route::put('{category}/edit', [self::class, 'editProductCategory'])->name($gen('edit_product_category'))->defaults('ex', __e('ss', 'edit-3', true));
+      Route::get('', [self::class, 'getProductCategories'])->name($gen('product_categories'))->defaults('ex', __e('ss,a', 'edit-3', false))->middleware('auth:admin,super_admin');;
+      Route::post('create', [self::class, 'createProductCategory'])->name($gen('create_product_category'))->defaults('ex', __e('ss,a', 'edit-3', true))->middleware('auth:admin,super_admin');;
+      Route::put('{productCategory}/edit', [self::class, 'editProductCategory'])->name($gen('edit_product_category'))->defaults('ex', __e('ss,a', 'edit-3', true))->middleware('auth:admin,super_admin');;
     });
   }
 
@@ -84,7 +57,7 @@ class ProductCategory extends BaseModel
     try {
       $product_category = self::create([
         'name' => $request->name,
-        'img_url' => compress_image_upload('img', 'product_models_images/', null, true, 400)['img_url'],
+        'img_url' => compress_image_upload('img', 'product_models_images/', null, 400)['img_url'],
       ]);
 
       if ($request->isApi())
@@ -98,7 +71,7 @@ class ProductCategory extends BaseModel
     }
   }
 
-  public function editProductModel(Request $request, self $productCategory)
+  public function editProductCategory(Request $request, self $productCategory)
   {
 
     if (!$request->name) {

@@ -36,13 +36,6 @@
                 <td>{dailyExpense.amount}</td>
                 <td>{dailyExpense.purpose}</td>
                 <td>{dailyExpense.date}</td>
-
-              </tr>
-            {:else}
-              <tr>
-                <td colspan="4" class="text-center">
-                  No Expense Recorded For Today.
-                </td>
               </tr>
             {/each}
           </tbody>

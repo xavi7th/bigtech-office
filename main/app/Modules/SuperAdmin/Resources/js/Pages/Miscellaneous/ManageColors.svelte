@@ -17,7 +17,7 @@
 
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_product_color"),
+      route("multiaccess.miscellaneous.create_product_color"),
       {name:colorName},
       {
         preserveState: true,
@@ -56,7 +56,7 @@
     formData.append("_method", "PUT");
 
     Inertia.post(
-      route("superadmin.miscellaneous.edit_product_color", colorId),
+      route("multiaccess.miscellaneous.edit_product_color", colorId),
       formData,
       {
         preserveState: true,

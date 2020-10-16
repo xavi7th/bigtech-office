@@ -134,7 +134,7 @@
             <td class="text-primary"><strong>Device ID</strong></td>
             <th scope="row"><strong>{swapDeal.identifier}</strong></th>
           </tr>
-          {#if auth.user.isSuperAdmin}
+          {#if auth.user.isSuperAdmin || auth.user.isAdmin}
             <tr>
               <td class="text-primary"><strong>Seller Details</strong></td>
               <th scope="row"><strong>{swapDeal.seller_details}</strong></th>
@@ -161,10 +161,12 @@
               <td class="text-primary"><strong>Swap Value</strong></td>
               <th scope="row"><strong>{swapDeal.swap_value}</strong></th>
             </tr>
+            {#if auth.user.isSuperAdmin}
             <tr>
               <td class="text-primary"><strong>Sold At</strong></td>
               <th scope="row"><strong>{swapDeal.sold_at}</strong></th>
             </tr>
+            {/if}
             <tr>
               <td class="text-primary"><strong>Swapped With</strong></td>
               <th scope="row"><strong>{swapDeal.swapped_with}</strong></th>
@@ -174,7 +176,7 @@
               <th scope="row"><strong>{swapDeal.buyer}</strong></th>
             </tr>
           {/if}
-          {#if auth.user.isSuperAdmin || auth.user.isQualityControl}
+          {#if auth.user.isSuperAdmin || auth.user.isQualityControl ||auth.user.isAdmin}
              <tr>
               <td class="text-primary"><strong>Total Expenses</strong></td>
               <th scope="row">

@@ -5,7 +5,7 @@
     });
 
     Inertia.post(
-      route("superadmin.product_models.comment_on_model", id),
+      route("multiaccess.product_models.comment_on_model", id),
       { comment },
       {
         preserveState: true,

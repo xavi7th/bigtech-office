@@ -12,29 +12,6 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\SalesChannel
- *
- * @property int $id
- * @property string $channel_name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $sales_records
- * @property-read int|null $sales_records_count
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel newQuery()
- * @method static \Illuminate\Database\Query\Builder|SalesChannel onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel query()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereChannelName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|SalesChannel withTrashed()
- * @method static \Illuminate\Database\Query\Builder|SalesChannel withoutTrashed()
- * @mixin \Eloquent
- */
 class SalesChannel extends BaseModel
 {
   use SoftDeletes;
@@ -51,15 +28,14 @@ class SalesChannel extends BaseModel
     return self::where('channel_name', 'Reseller')->first()->id;
   }
 
-  public static function routes()
+  public static function multiAccessRoutes()
   {
-    Route::group(['prefix' => 'sales-channels', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      $misc = function ($name) {
-        return 'superadmin.miscellaneous.' . $name;
-      };
-      Route::get('', [self::class, 'getSalesChannels'])->name($misc('sales_channels'))->defaults('ex', __e('ss', 'airplay', false));
-      Route::post('create', [self::class, 'createSalesChannel'])->name($misc('create_sales_channel'))->defaults('ex', __e('ss', 'airplay', true));
-      Route::put('{salesChannel}/edit', [self::class, 'editSalesChannel'])->name($misc('edit_sales_channel'))->defaults('ex', __e('ss', 'airplay', true));
+    Route::group(['prefix' => 'sales-channels'], function () {
+      Route::name('multiaccess.miscellaneous.')->group(function () {
+        Route::get('', [self::class, 'getSalesChannels'])->name('sales_channels')->defaults('ex', __e('ss,a', 'airplay', false))->middleware('auth:super_admin,admin');
+        Route::post('create', [self::class, 'createSalesChannel'])->name('create_sales_channel')->defaults('ex', __e('ss,a', 'airplay', true))->middleware('auth:super_admin,admin');
+        Route::put('{salesChannel}/edit', [self::class, 'editSalesChannel'])->name('edit_sales_channel')->defaults('ex', __e('ss,a', 'airplay', true))->middleware('auth:super_admin,admin');
+      });
     });
   }
 

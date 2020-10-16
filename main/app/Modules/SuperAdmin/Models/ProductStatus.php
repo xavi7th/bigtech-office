@@ -128,15 +128,22 @@ class ProductStatus extends BaseModel
     return self::where('status', 'sale confirmed')->first()->id;
   }
 
-  public static function routes()
+  public static function superAdminRoutes()
   {
     Route::group(['prefix' => 'product-statuses'], function () {
-      $gen = function ($name) {
-        return 'superadmin.miscellaneous.' . $name;
-      };
-      Route::get('', [self::class, 'getProductStatuses'])->name($gen('product_status', null))->defaults('ex', __e('ss', 'aperture', false));
-      Route::post('create', [self::class, 'createProductStatus'])->name($gen('create_product_status'))->defaults('ex', __e('ss', 'aperture', true));
-      Route::put('{productStatus}/edit', [self::class, 'editProductStatus'])->name($gen('edit_product_status'))->defaults('ex', __e('ss', 'aperture', true));
+      Route::name('superadmin.miscellaneous.')->group(function () {
+        Route::post('create', [self::class, 'createProductStatus'])->name('create_product_status')->defaults('ex', __e('ss', 'aperture', true));
+        Route::put('{productStatus}/edit', [self::class, 'editProductStatus'])->name('edit_product_status')->defaults('ex', __e('ss', 'aperture', true));
+      });
+    });
+  }
+
+  public static function multiAccessRoutes()
+  {
+    Route::group(['prefix' => 'product-statuses'], function () {
+      Route::name('multiaccess.miscellaneous.')->group(function () {
+        Route::get('', [self::class, 'getProductStatuses'])->name('product_status')->defaults('ex', __e('ss,a', 'aperture', false))->middleware('auth:super_admin,admin');
+      });
     });
   }
 

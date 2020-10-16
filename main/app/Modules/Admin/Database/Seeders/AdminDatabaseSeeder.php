@@ -17,9 +17,17 @@ class AdminDatabaseSeeder extends Seeder
 	public function run()
 	{
 		Model::unguard();
+
     $this->call(OfficeBranchesTableSeeder::class);
 
-		factory(Admin::class, 1)->create();
+    Admin::create([
+      'full_name' => 'SysDef Admin',
+      'email' => 'admin@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+      'password' => 'admin@elects',
+    ]);
+
+
+    factory(Admin::class, 2)->create();
 
 		// $this->call("OthersTableSeeder");
 	}

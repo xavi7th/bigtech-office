@@ -17,7 +17,7 @@
     });
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_storage_size"),
+      route("multiaccess.miscellaneous.create_storage_size"),
       {
         size: storageSizeName
       },
@@ -51,7 +51,7 @@
     });
 
     Inertia.put(
-      route("superadmin.miscellaneous.edit_storage_size", storageSizeId),
+      route("multiaccess.miscellaneous.edit_storage_size", storageSizeId),
       {
         size: storageSizeName
       },
@@ -97,7 +97,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.miscellaneous.delete_storage_size", id),
+            route("multiaccess.miscellaneous.delete_storage_size", id),
             {
               preserveState: true,
               preserveScroll: true,

@@ -17,7 +17,7 @@
     });
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_storage_type"),
+      route("multiaccess.miscellaneous.create_storage_type"),
       {
         type: storageTypeName
       },
@@ -51,7 +51,7 @@
     });
 
     Inertia.put(
-      route("superadmin.miscellaneous.edit_storage_type", storageTypeId),
+      route("multiaccess.miscellaneous.edit_storage_type", storageTypeId),
       {
         type: storageTypeName
       },
@@ -97,7 +97,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.miscellaneous.delete_storage_type", id),
+            route("multiaccess.miscellaneous.delete_storage_type", id),
             {
               preserveState: true,
               preserveScroll: true,

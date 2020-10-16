@@ -260,9 +260,9 @@ class SwapDeal extends BaseModel
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('multiaccess.products.')->group(function () {
-        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk,s,q', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control');
-        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control');
-        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control');
+        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk,s,q,a', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control,admin');
+        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q,a', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin');
+        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q,a', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin');
         Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->defaults('ex', __e('ss,s', null, true))->middleware('auth:stock_keeper,sales_rep');
       });
     });

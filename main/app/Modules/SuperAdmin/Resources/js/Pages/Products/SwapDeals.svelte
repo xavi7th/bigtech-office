@@ -59,7 +59,7 @@
                     Details
                   </InertiaLink>
 
-                  {#if auth.user.isSuperAdmin}
+                  {#if auth.user.isSuperAdmin || auth.user.isAdmin}
                     <InertiaLink
                       type="button"
                       href={route('superadmin.miscellaneous.view_swap_history', product.uuid)}

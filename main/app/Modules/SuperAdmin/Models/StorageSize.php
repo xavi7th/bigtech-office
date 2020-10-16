@@ -11,28 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\StorageSize
- *
- * @property int $id
- * @property float $size
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read string $human_size
- * @method static \Illuminate\Database\Eloquent\Builder|StorageSize newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|StorageSize newQuery()
- * @method static \Illuminate\Database\Query\Builder|StorageSize onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|StorageSize query()
- * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereSize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageSize whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|StorageSize withTrashed()
- * @method static \Illuminate\Database\Query\Builder|StorageSize withoutTrashed()
- * @mixin \Eloquent
- */
 class StorageSize extends BaseModel
 {
   use SoftDeletes;
@@ -61,16 +39,16 @@ class StorageSize extends BaseModel
     return '$value';
   }
 
-  public static function routes()
+  public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'storage-sizes', 'namespace' => '\App\Modules\Admin\Models'], function () {
       $misc = function ($name) {
-        return 'superadmin.miscellaneous.' . $name;
+        return 'multiaccess.miscellaneous.' . $name;
       };
 
-      Route::get('', [self::class, 'getStorageSizes'])->name($misc('storage_sizes'))->defaults('ex', __e('ss', 'hard-drive', false));
-      Route::post('create', [self::class, 'createStorageSize'])->name($misc('create_storage_size'))->defaults('ex', __e('ss', 'hard-drive', true));
-      Route::put('{storageSize}/edit', [self::class, 'editStorageSize'])->name($misc('edit_storage_size'))->defaults('ex', __e('ss', 'hard-drive', true));
+      Route::get('', [self::class, 'getStorageSizes'])->name($misc('storage_sizes'))->defaults('ex', __e('ss,a', 'hard-drive', false))->middleware('auth:super_admin,admin');;
+      Route::post('create', [self::class, 'createStorageSize'])->name($misc('create_storage_size'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,admin');;
+      Route::put('{storageSize}/edit', [self::class, 'editStorageSize'])->name($misc('edit_storage_size'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,admin');;
     });
   }
 

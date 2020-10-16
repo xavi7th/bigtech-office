@@ -66,15 +66,15 @@ class ProductHistory extends BaseModel
     return $this->belongsTo(ProductStatus::class);
   }
 
-  public static function routes()
+  public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'product-histories', 'namespace' => '\App\Modules\Admin\Models'], function () {
       $gen = function ($namespace, $name = null) {
-        return 'superadmin.miscellaneous.' . $namespace . $name;
+        return 'multiaccess.miscellaneous.' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getDetailedProductHistories'])->name($gen('product_histories', null))->defaults('ex', __e('ss', 'rewind', true));
-      Route::get('product/{product:product_uuid}', [self::class, 'getSingleProductHistory'])->name($gen('view_product_history'))->defaults('ex', __e('ss', 'rewind', true));
-      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealHistory'])->name($gen('view_swap_history'))->defaults('ex', __e('ss', 'rewind', true));
+      Route::get('', [self::class, 'getDetailedProductHistories'])->name($gen('product_histories', null))->defaults('ex', __e('ss', 'rewind', true))->middleware('auth:super_admin,admin');;
+      Route::get('product/{product:product_uuid}', [self::class, 'getSingleProductHistory'])->name($gen('view_product_history'))->defaults('ex', __e('ss,a', 'rewind', true))->middleware('auth:super_admin,admin');;
+      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealHistory'])->name($gen('view_swap_history'))->defaults('ex', __e('ss,a', 'rewind', true))->middleware('auth:super_admin,admin');;
     });
   }
 

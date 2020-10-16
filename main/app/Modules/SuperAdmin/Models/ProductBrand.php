@@ -14,35 +14,6 @@ use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductBrand
- *
- * @property int $id
- * @property string $name
- * @property string|null $logo_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductModel[] $product_models
- * @property-read int|null $product_models_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductBrand onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereLogoUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductBrand withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductBrand withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductBrand extends BaseModel
 {
   use SoftDeletes, Commentable;
@@ -59,16 +30,16 @@ class ProductBrand extends BaseModel
     return $this->hasMany(Product::class);
   }
 
-  public static function routes()
+  public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'product-brands'], function () {
       $gen = function ($namespace, $name = null) {
-        return 'superadmin.product_' . $namespace . $name;
+        return 'multiaccess.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductBrands'])->name($gen('brands'))->defaults('ex', __e('ss', 'feather', false));
-      Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('ss', 'feather', true));
-      Route::put('{productBrand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('ss', 'feather', true));
-      Route::delete('{productBrand}/delete', [self::class, 'deleteProductBrand'])->name($gen('brands', '.delete_product_brand'))->defaults('ex', __e('ss', 'feather', true));
+      Route::get('', [self::class, 'getProductBrands'])->name($gen('brands'))->defaults('ex', __e('ss,a', 'feather', false))->middleware('auth:super_admin,admin');
+      Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,admin');
+      Route::put('{productBrand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,admin');
+      Route::delete('{productBrand}/delete', [self::class, 'deleteProductBrand'])->name($gen('brands', '.delete_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,admin');
     });
   }
 
@@ -120,10 +91,6 @@ class ProductBrand extends BaseModel
       return generate_422_error('Specify a new brand to change this to');
     }
 
-    if (self::where('name', $request->name)->exists()) {
-      return generate_422_error('This brand already exists');
-    }
-
     try {
       $productBrand->name = $request->name;
       if ($request->hasFile('img')) {
@@ -147,14 +114,13 @@ class ProductBrand extends BaseModel
 
   public function deleteProductBrand(Request $request, self $productBrand)
   {
-    if ($productBrand->products()->exists() || $productBrand->product_models()->exists()) {
-      return generate_422_error('This brand has products and / or models under it and so cannot be deleted');
+    if ($productBrand->products()->exists()) {
+      return generate_422_error('This brand has products under it and so cannot be deleted');
     }
 
     $productBrand->delete();
 
-    if ($request->isApi())
-      return response()->json([], 204);
+    if ($request->isApi()) return response()->json([], 204);
     return back()->withSuccess('Deleted');
   }
 
@@ -163,9 +129,19 @@ class ProductBrand extends BaseModel
   {
     parent::boot();
 
-    static::saved(function ($product) {
+    static::saved(function (self $productBrand) {
       Cache::forget('brands');
       Cache::forget('brandsWithProductCount');
+    });
+
+    static::deleting(function (self $productBrand) {
+      Cache::forget('brands');
+      Cache::forget('brandsWithProductCount');
+
+      /**
+       * Delete associated models
+       */
+      $productBrand->product_models()->delete();
     });
   }
 }

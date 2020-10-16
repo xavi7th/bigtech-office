@@ -1,6 +1,6 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
@@ -17,7 +17,7 @@
     });
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_qa_test"),
+      route("multiaccess.miscellaneous.create_qa_test"),
       {
         name: qaTestName
       },
@@ -51,7 +51,7 @@
     });
 
     Inertia.put(
-      route("superadmin.miscellaneous.edit_qa_test", qaTestId),
+      route("multiaccess.miscellaneous.edit_qa_test", qaTestId),
       {
         name: qaTestName
       },
@@ -97,7 +97,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.miscellaneous.delete_qa_test", id),
+            route("multiaccess.miscellaneous.delete_qa_test", id),
             {
               preserveState: true,
               preserveScroll: true,

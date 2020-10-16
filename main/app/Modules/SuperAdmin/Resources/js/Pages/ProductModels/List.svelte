@@ -5,7 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
 
-  $: ({ app, errors, flash } = $page);
+  $: ({ auth, errors, flash } = $page);
 
   export let productModels = [],
     productBrands = [],
@@ -28,7 +28,7 @@
     });
 
     Inertia.post(
-      route("superadmin.product_models.edit_product_model", details.id),
+      route("multiaccess.product_models.edit_product_model", details.id),
       formData,
       {
         preserveState: true,
@@ -71,13 +71,18 @@
           <thead>
             <tr>
               <th class="p-0">
-                <InertiaLink
-                  href={route('superadmin.product_models.create_product_model')}
+               {#if auth.user.isAdmin}
+                  <InertiaLink
+                  href={route('multiaccess.product_models.create_product_model')}
                   class="btn btn-brand m-10">
                   <span>Create Product Model</span>
                 </InertiaLink>
+               {/if}
               </th>
-              <th col-span="2" class="d-none">
+              <th class="d-none">
+                NOSIGN
+              </th>
+              <th class="d-none">
                 NOSIGN
               </th>
             </tr>
@@ -105,7 +110,7 @@
                       <span>Edit</span>
                     </button>
                     <InertiaLink
-                      href={route('superadmin.product_models.details', model.id)}
+                      href={route('multiaccess.product_models.details', model.id)}
                       class="btn btn-brand btn-sm">
                       <span>Details</span>
                       <span class="badge badge-light">
@@ -114,7 +119,10 @@
                     </InertiaLink>
                   </div>
                 </td>
-                <td col-span="2" class="d-none">
+                <td class="d-none">
+                  NOSIGN
+                </td>
+                <td class="d-none">
                   NOSIGN
                 </td>
               </tr>
@@ -129,7 +137,10 @@
                     </span>
                   </a>
                 </td>
-                 <td  col-span="2" class="d-none">
+                 <td  class="d-none">
+                  NOSIGN
+                </td>
+                 <td  class="d-none">
                   NOSIGN
                 </td>
               </tr>

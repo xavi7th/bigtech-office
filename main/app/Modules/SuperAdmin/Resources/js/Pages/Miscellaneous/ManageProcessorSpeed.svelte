@@ -17,7 +17,7 @@
     });
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_processor_speed"),
+      route("multiaccess.miscellaneous.create_processor_speed"),
       {
         speed: processorSpeedName
       },
@@ -51,7 +51,7 @@
     });
 
     Inertia.put(
-      route("superadmin.miscellaneous.edit_processor_speed", processorSpeedId),
+      route("multiaccess.miscellaneous.edit_processor_speed", processorSpeedId),
       {
         speed: processorSpeedName
       },
@@ -97,7 +97,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.miscellaneous.delete_processor_speed", id),
+            route("multiaccess.miscellaneous.delete_processor_speed", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -134,12 +134,6 @@
 
   export let processorSpeeds = [];
 </script>
-
-<style>
-  img {
-    max-height: 50px;
-  }
-</style>
 
 <Layout title="Manage Processor Speeds">
   <div class="row vertical-gap">

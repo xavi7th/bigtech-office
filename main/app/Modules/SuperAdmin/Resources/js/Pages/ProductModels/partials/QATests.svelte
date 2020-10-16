@@ -44,7 +44,7 @@
         preConfirm: () => {
           return Inertia.put(
             route(
-              "superadmin.product_models.update_model_qa_tests",
+              "multiaccess.product_models.update_model_qa_tests",
               productModelId
             ),
             {

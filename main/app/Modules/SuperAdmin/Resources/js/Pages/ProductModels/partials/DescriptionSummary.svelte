@@ -5,7 +5,7 @@
     });
 
     Inertia.post(
-      route("superadmin.product_descriptions.create_product_desc"),
+      route("multiaccess.product_descriptions.create_product_desc"),
       {
         description_summary: desc,
         product_model_id: id
@@ -27,7 +27,7 @@
     });
 
     Inertia.put(
-      route("superadmin.product_descriptions.edit_product_desc", id),
+      route("multiaccess.product_descriptions.edit_product_desc", id),
       {
         description_summary: desc
         // product_model_id: id
@@ -45,7 +45,6 @@
 </script>
 
 <script>
-  import Modal from "@superadmin-shared/Partials/Modal";
   import { Inertia } from "@inertiajs/inertia";
 
   export let descriptionSummary, descriptionSummaryUpdated;

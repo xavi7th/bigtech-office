@@ -1,23 +1,20 @@
 <script>
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import { Inertia } from "@inertiajs/inertia";
+  import { page } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import Modal from "@superadmin-shared/Partials/Modal";
-  import FlashMessage from "@usershared/FlashMessage";
-  import Images, { addImage } from "./partials/Images";
-  import Comments, { createModelComment } from "./partials/Comments";
+  import Modal from "@superadmin-shared/Partials/Modal.svelte";
+  import Images, { addImage } from "./partials/Images.svelte";
+  import Comments, { createModelComment } from "./partials/Comments.svelte";
   import QaTests from "./partials/QATests.svelte";
   import DescriptionSummary, {
     createModelDescription,
     updateModelDescription
-  } from "./partials/DescriptionSummary";
-  import ModelSummary from "./partials/ModelSummary";
-  import route from "ziggy";
+  } from "./partials/DescriptionSummary.svelte";
+  import ModelSummary from "./partials/ModelSummary.svelte";
   import { onMount, afterUpdate } from "svelte";
 
   export let description, files, comment;
 
-  $: ({ app, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page);
 
   export let productModel = {
       images: [],
@@ -30,7 +27,6 @@
   });
 
   afterUpdate(() => {
-    console.log(flash);
     if (flash.success) {
       Toast.fire({
         title: "Successful!",
@@ -60,7 +56,6 @@
           return (_.isString(val) ? val : val.join("<br>")) + "<br>" + n;
         });
       }
-      console.log(errs);
       ToastLarge.fire({
         title: "Oops",
         html: errs,

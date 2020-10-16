@@ -3,6 +3,7 @@
 namespace App\Modules\SuperAdmin\Transformers;
 
 use App\Modules\SuperAdmin\Models\ProductStatus;
+use Str;
 
 class ProductStatusTransformer
 {
@@ -18,7 +19,7 @@ class ProductStatusTransformer
   {
     return [
       'id' => (int)$product_status->id,
-      'status' => (string)$product_status->status,
+      'status' => (string)Str::title($product_status->status),
     ];
   }
 }

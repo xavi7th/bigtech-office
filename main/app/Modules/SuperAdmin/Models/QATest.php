@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use Cache;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -10,30 +11,7 @@ use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\ProductQATestResult;
 use App\Modules\SuperAdmin\Transformers\QATestTransformer;
-use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\QATest
- *
- * @property int $id
- * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|QATest[] $product_models
- * @property-read int|null $product_models_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductQATestResult[] $product_qa_test_results
- * @property-read int|null $product_qa_test_results_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|QATest newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|QATest newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|QATest query()
- * @method static \Illuminate\Database\Eloquent\Builder|QATest whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QATest whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QATest whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QATest whereUpdatedAt($value)
- * @mixin \Eloquent
- */
 class QATest extends BaseModel
 {
   protected $fillable = ['name'];
@@ -61,15 +39,14 @@ class QATest extends BaseModel
       ->as('test_result')->withPivot('is_qa_certified')->withTimestamps();
   }
 
-  public static function routes()
+  public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'qa-tests'], function () {
-      $gen = function ($name) {
-        return 'superadmin.miscellaneous.'  . $name;
-      };
-      Route::get('', [self::class, 'getQATests'])->name($gen('qa-tests'))->defaults('ex', __e('ss', 'award', false));
-      Route::post('create', [self::class, 'createQATest'])->name($gen('create_qa_test'))->defaults('ex', __e('ss', 'award', true));
-      Route::put('{qaTest}/edit', [self::class, 'editQATest'])->name($gen('edit_qa_test'))->defaults('ex', __e('ss', 'award', true));
+      Route::name('multiaccess.miscellaneous.')->group(function () {
+        Route::get('', [self::class, 'getQATests'])->name('qa_tests')->defaults('ex', __e('ss,a', 'award', false))->middleware('auth:super_admin,admin');
+        Route::post('create', [self::class, 'createQATest'])->name('create_qa_test')->defaults('ex', __e('ss,a', 'award', true))->middleware('auth:super_admin,admin');
+        Route::put('{qaTest}/edit', [self::class, 'editQATest'])->name('edit_qa_test')->defaults('ex', __e('ss,a', 'award', true))->middleware('auth:super_admin,admin');
+      });
     });
   }
 
@@ -104,7 +81,6 @@ class QATest extends BaseModel
       return back()->withError('Test creation failed');
     }
   }
-
 
   public function editQATest(Request $request, self $qaTest)
   {

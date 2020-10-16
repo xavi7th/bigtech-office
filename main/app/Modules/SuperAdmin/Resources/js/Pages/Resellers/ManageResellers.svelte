@@ -158,69 +158,70 @@
 
 <Layout title="Manage Resellers">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4">
+    {#if auth.user.isSuperAdmin}
+      <div class="col-lg-4 col-xl-4">
+        <form class="#" on:submit|preventDefault={createReseller}>
+          <FlashMessage />
 
-      <form class="#" on:submit|preventDefault={createReseller}>
-        <FlashMessage />
+          <div class="row vertical-gap sm-gap">
+            <div class="col-12">
+              <label for="name">Business Name</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Business Name"
+                bind:value={details.business_name} />
+            </div>
 
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="name">Business Name</label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Business Name"
-              bind:value={details.business_name} />
+            <div class="col-12">
+              <label for="name">CEO</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="CEO Name"
+                bind:value={details.ceo_name} />
+            </div>
+
+            <div class="col-12">
+              <label for="name">Office Phone</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Office Phone"
+                bind:value={details.phone} />
+            </div>
+
+            <div class="col-12">
+              <label for="name">Office Address</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Office Address"
+                bind:value={details.address} />
+            </div>
+
+            <div class="col-12">
+              <label for="name">Business Logo</label>
+              <input
+                type="file"
+                class="form-control"
+                placeholder="Business Logo"
+                bind:files
+                on:change={() => (details.img = files[0])} />
+            </div>
+
+            <div class="col-12">
+              <button
+                type="submit"
+                class="btn btn-success btn-long"
+                disabled={!details.business_name}>
+                <span class="text">Create</span>
+              </button>
+            </div>
           </div>
-
-          <div class="col-12">
-            <label for="name">CEO</label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="CEO Name"
-              bind:value={details.ceo_name} />
-          </div>
-
-          <div class="col-12">
-            <label for="name">Office Phone</label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Office Phone"
-              bind:value={details.phone} />
-          </div>
-
-          <div class="col-12">
-            <label for="name">Office Address</label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Office Address"
-              bind:value={details.address} />
-          </div>
-
-          <div class="col-12">
-            <label for="name">Business Logo</label>
-            <input
-              type="file"
-              class="form-control"
-              placeholder="Business Logo"
-              bind:files
-              on:change={() => (details.img = files[0])} />
-          </div>
-
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long"
-              disabled={!details.business_name}>
-              <span class="text">Create</span>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    {/if}
     <div class="col-lg-8 col-xl-8">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Available Resellers</h2>
@@ -234,7 +235,9 @@
               <th scope="col">CEO</th>
               <th scope="col">Address</th>
               <th scope="col">Phone</th>
-              <th scope="col">Action</th>
+              {#if auth.user.isSuperAdmin}
+                <th scope="col">Action</th>
+              {/if}
             </tr>
           </thead>
           <tbody>
@@ -251,8 +254,10 @@
                 <td>{reseller.ceo_name}</td>
                 <td>{reseller.address}</td>
                 <td>{reseller.phone}</td>
-                <td class="d-flex justify-content-between align-content-center">
-                  <!-- <button
+                {#if auth.user.isSuperAdmin}
+                  <td
+                    class="d-flex justify-content-between align-content-center">
+                    <!-- <button
                     type="button"
                     class="btn btn-danger btn-xs"
                     on:click={() => {
@@ -260,17 +265,18 @@
                     }}>
                     DELETE
                   </button> -->
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-xs"
-                    data-toggle="modal"
-                    data-target="#updateReseller"
-                    on:click={() => {
-                      currentReseller = reseller;
-                    }}>
-                    EDIT
-                  </button>
-                </td>
+                    <button
+                      type="button"
+                      class="btn btn-warning btn-xs"
+                      data-toggle="modal"
+                      data-target="#updateReseller"
+                      on:click={() => {
+                        currentReseller = reseller;
+                      }}>
+                      EDIT
+                    </button>
+                  </td>
+                {/if}
               </tr>
             {:else}
               <tr>
@@ -281,11 +287,9 @@
         </table>
       </div>
     </div>
-
   </div>
   <div slot="modals">
     <Modal modalId="updateReseller" modalTitle="Update Reseller">
-
       <FlashMessage />
 
       <div class="row vertical-gap sm-gap">
@@ -334,7 +338,6 @@
             bind:files
             on:change={() => (currentReseller.brand_img = files[0])} />
         </div>
-
       </div>
       <button
         on:click={updateReseller}
@@ -342,7 +345,6 @@
         class="btn btn-success btn-long">
         <span class="text">Update</span>
       </button>
-
     </Modal>
   </div>
 </Layout>

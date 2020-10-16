@@ -8,7 +8,7 @@
     formData.append("img", img);
 
     Inertia.post(
-      route("superadmin.product_models.create_model_image", id),
+      route("multiaccess.product_models.create_model_image", id),
       formData,
       {
         preserveState: true,
@@ -47,7 +47,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.product_models.delete_model_image", id),
+            route("multiaccess.product_models.delete_model_image", id),
             {
               preserveState: true,
               preserveScroll: true,

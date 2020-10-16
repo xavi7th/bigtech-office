@@ -36,7 +36,7 @@
                 <td>{product.identifier}</td>
                 <td>{product.date_collected}</td>
                 <td>
-                  {#if auth.user.isSuperAdmin}
+                  {#if auth.user.isSuperAdmin || auth.user.isAdmin}
                     {#if product.is_swap_deal}
                       <InertiaLink
                         type="button"

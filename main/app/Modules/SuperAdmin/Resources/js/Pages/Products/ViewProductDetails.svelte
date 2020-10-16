@@ -20,7 +20,7 @@ import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments
     });
 
     Inertia.post(
-      route("superadmin.products.comment_on_product", uuid),
+      route("multiaccess.products.comment_on_product", uuid),
       { comment: userComment },
       {
         preserveState: true,
@@ -94,7 +94,7 @@ import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments
           {/if}
           <tr>
             <td class="text-primary">
-              <strong>Cost Price (Restrict Field)</strong>
+              <strong>Cost Price</strong>
             </td>
             <th scope="row">
               <strong>{productDetails.cost_price}</strong>

@@ -133,7 +133,8 @@
 
 <Layout title="Manage Daily Expenses">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4">
+   {#if auth.user.isAccountant}
+      <div class="col-lg-4 col-xl-4">
 
       <form class="#" on:submit|preventDefault={createDailyExpense}>
         <FlashMessage />
@@ -167,6 +168,7 @@
         </div>
       </form>
     </div>
+   {/if}
     <div class="col-lg-8 col-xl-8">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Today's Expenses</h2>

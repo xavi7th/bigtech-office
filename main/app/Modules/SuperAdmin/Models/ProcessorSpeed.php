@@ -11,42 +11,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProcessorSpeedTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\ProcessorSpeed
- *
- * @property int $id
- * @property string $speed
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProcessorSpeed onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereSpeed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProcessorSpeed withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProcessorSpeed withoutTrashed()
- * @mixin \Eloquent
- */
 class ProcessorSpeed extends BaseModel
 {
   use SoftDeletes;
 
   protected $fillable = ['speed'];
 
-  public static function routes()
+  public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'processor-speeds', 'namespace' => '\App\Modules\Admin\Models'], function () {
       $misc = function ($name) {
-        return 'superadmin.miscellaneous.' . $name;
+        return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProcessorSpeeds'])->name($misc('processor_speeds'))->defaults('ex', __e('ss', 'cpu', false));
-      Route::post('create', [self::class, 'createProcessorSpeed'])->name($misc('create_processor_speed'))->defaults('ex', __e('ss', 'cpu', true));
-      Route::put('{processorSpeed}/edit', [self::class, 'editProcessorSpeed'])->name($misc('edit_processor_speed'))->defaults('ex', __e('ss', 'cpu', true));
+      Route::get('', [self::class, 'getProcessorSpeeds'])->name($misc('processor_speeds'))->defaults('ex', __e('ss,a', 'cpu', false))->middleware('auth:super_admin,admin');
+      Route::post('create', [self::class, 'createProcessorSpeed'])->name($misc('create_processor_speed'))->defaults('ex', __e('ss,a', 'cpu', true))->middleware('auth:super_admin,admin');
+      Route::put('{processorSpeed}/edit', [self::class, 'editProcessorSpeed'])->name($misc('edit_processor_speed'))->defaults('ex', __e('ss,a', 'cpu', true))->middleware('auth:super_admin,admin');
     });
   }
 

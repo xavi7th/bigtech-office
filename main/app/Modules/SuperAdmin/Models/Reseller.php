@@ -24,43 +24,6 @@ use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
 
-/**
- * App\Modules\SuperAdmin\Models\Reseller
- *
- * @property int $id
- * @property string $business_name
- * @property string $ceo_name
- * @property string $address
- * @property string $phone
- * @property string $img_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ResellerHistory[] $reseller_histories
- * @property-read int|null $reseller_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\SwapDeal[] $swap_deals
- * @property-read int|null $swap_deals_count
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller newQuery()
- * @method static \Illuminate\Database\Query\Builder|Reseller onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller query()
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereBusinessName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereCeoName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|Reseller withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Reseller withoutTrashed()
- * @mixin \Eloquent
- */
 class Reseller extends BaseModel
 {
   use SoftDeletes, Notifiable;
@@ -78,7 +41,6 @@ class Reseller extends BaseModel
   public function products()
   {
     return $this->morphedByMany(Product::class, 'product', $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
-    // return $this->belongsToMany(Product::class, $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
   }
 
   public function products_in_possession()
@@ -89,7 +51,6 @@ class Reseller extends BaseModel
   public function swap_deals()
   {
     return $this->morphedByMany(SwapDeal::class, 'product', $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
-    // return $this->belongsToMany(Product::class, $table = 'reseller_product')->using(ResellerProduct::class)->withTimestamps()->as('tenure_record');
   }
 
   public function swap_deals_in_possession()
@@ -110,25 +71,26 @@ class Reseller extends BaseModel
       });
     });
   }
+
   public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'resellers'], function () {
       Route::name('multiaccess.resellers.')->group(function () {
+        Route::get('', [self::class, 'getResellers'])->name('resellers')->defaults('ex', __e('ss,a', 'at-sign', false))->middleware('auth:admin,super_admin');;
         Route::post('{reseller}/give-product/{product_uuid}', [self::class, 'giveProductToReseller'])->name('give_product')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
-        Route::get('products', [self::class, 'getResellersWithProducts'])->name('resellers_with_products')->defaults('ex', __e('ss,sk', 'at-sign', false))->middleware('auth:stock_keeper');
-        Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name('products')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
+        Route::get('products', [self::class, 'getResellersWithProducts'])->name('resellers_with_products')->defaults('ex', __e('ss,sk,a', 'at-sign', false))->middleware('auth:stock_keeper,admin,super_admin');
+        Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name('products')->defaults('ex', __e('ss,sk,a', 'at-sign', true))->middleware('auth:stock_keeper,super_admin,admin');
         Route::post('{reseller}/{product:product_uuid}/return', [self::class, 'resellerReturnProduct'])->name('return_product')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
       });
     });
   }
 
-  public static function routes()
+  public static function superAdminRoutes()
   {
     Route::group(['prefix' => 'resellers'], function () {
       $others = function ($name) {
         return 'superadmin.' . $name;
       };
-      Route::get('', [self::class, 'getResellers'])->name($others('resellers'))->defaults('ex', __e('ss', 'at-sign', false));
       Route::post('create', [self::class, 'createReseller'])->name($others('resellers.create_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
       Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
     });
@@ -145,8 +107,8 @@ class Reseller extends BaseModel
   public function getResellersWithProducts(Request $request)
   {
     $resellersWithProducts = (new ResellerTransformer)->collectionTransformer(self::has('products_in_possession')->orHas('swap_deals_in_possession')->with('products_in_possession', 'swap_deals_in_possession')->get(), 'transformWithTenuredProducts');
-    // $resellersWithSwapDeals = (new ResellerTransformer)->collectionTransformer(self::has('')->with('')->get(), 'transformWithTenuredSwapDeals');
 
+    // $resellersWithSwapDeals = (new ResellerTransformer)->collectionTransformer(self::has('')->with('')->get(), 'transformWithTenuredSwapDeals');
     // $resellersWithProducts = $resellersWithProducts->merge($resellersWithSwapDeals);
 
     if ($request->isApi()) return response()->json($resellersWithProducts, 200);

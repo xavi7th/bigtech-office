@@ -50,41 +50,15 @@ class SuperAdminController extends Controller
 
         ProductPrice::routes();
 
-        ProductModel::routes();
-
-        ProductBrand::routes();
-
         ProductSupplier::routes();
+
+        ProductStatus::superAdminRoutes();
 
         UserComment::routes();
 
-        Reseller::routes();
-
-        ProductColor::routes();
-
-        ProductCategory::routes();
-
         ProductQATestResult::routes();
 
-        ProcessorSpeed::routes();
-
-        ProductGrade::routes();
-
-        StorageSize::routes();
-
-        StorageType::routes();
-
-        ProductStatus::routes();
-
-        ProductHistory::routes();
-
         ProductSaleRecord::routes();
-
-        ProductDescriptionSummary::routes();
-
-        QATest::routes();
-
-        SalesChannel::routes();
 
         SwapDeal::routes();
 
@@ -96,6 +70,34 @@ class SuperAdminController extends Controller
 
         ErrLog::routes();
       });
+
+      Reseller::multiAccessRoutes();
+
+      StorageSize::multiAccessRoutes();
+
+      StorageType::multiAccessRoutes();
+
+      ProductColor::routes();
+
+      ProductGrade::routes();
+
+      ProductCategory::routes();
+
+      ProcessorSpeed::routes();
+
+      ProductBrand::multiAccessRoutes();
+
+      ProductStatus::multiAccessRoutes();
+
+      SalesChannel::multiAccessRoutes();
+
+      QATest::multiAccessRoutes();
+
+      ProductDescriptionSummary::multiAccessRoutes();
+
+      ProductModel::multiAccessRoutes();
+
+      ProductHistory::multiAccessRoutes();
 
       ProductExpense::multiAccessRoutes();
 

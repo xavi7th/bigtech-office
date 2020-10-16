@@ -87,10 +87,10 @@ class ProductBatch extends BaseModel
       $p = function ($name) {
         return 'multiaccess.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q', 'package', false))->middleware('auth:stock_keeper,quality_control');
+      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a', 'package', false))->middleware('auth:stock_keeper,quality_control,admin');
       Route::post('create', [self::class, 'createProductBatch'])->name($p('create_batch'))->defaults('ex', __e('ss', 'package', true))->middleware('auth:super_admin');
-      Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss', 'package', true))->middleware('auth:super_admin');
-      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q', 'package', true))->middleware('auth:stock_keeper,quality_control');
+      Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss,a', 'package', true))->middleware('auth:super_admin,admin');
+      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q,a', 'package', true))->middleware('auth:stock_keeper,quality_control,admin');
       Route::get('{productBatch:batch_number}/price/create', [self::class, 'createProductPricePage'])->name($p('create_batch_price'))->defaults('ex', __e('ss', 'package', true));
       Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss', 'package', true))->middleware('auth:super_admin');
     });
@@ -155,9 +155,11 @@ class ProductBatch extends BaseModel
   public function getBatchProducts(Request $request, ProductBatch $productBatch)
   {
     if ($request->user()->isStockKeeper()) {
-      $batchWithProducts = Cache::rememberForever('stockKeeperBatchWithProducts', fn () => (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->justArrived(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch'])));
+      $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->justArrived(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
     } elseif ($request->user()->isQualityControl()) {
-      $batchWithProducts = Cache::rememberForever('qualityControlBatchWithProducts', fn () => (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->untested(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch'])));
+      $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->untested(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
+    } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin()) {
+      $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products', 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
     } else {
       $batchWithProducts = collect(['products' => []]);
     }
@@ -199,8 +201,6 @@ class ProductBatch extends BaseModel
 
     static::saved(function ($product) {
       Cache::forget('batches');
-      Cache::forget('stockKeeperBatchWithProducts');
-      Cache::forget('qualityControlBatchWithProducts');
     });
 
     static::updating(function ($product) {

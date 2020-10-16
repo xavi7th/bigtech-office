@@ -11,43 +11,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\StorageTypeTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\StorageType
- *
- * @property int $id
- * @property string $type
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType newQuery()
- * @method static \Illuminate\Database\Query\Builder|StorageType onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType query()
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|StorageType withTrashed()
- * @method static \Illuminate\Database\Query\Builder|StorageType withoutTrashed()
- * @mixin \Eloquent
- */
 class StorageType extends BaseModel
 {
   use SoftDeletes;
 
   protected $fillable = ['type'];
 
-  public static function routes()
+  public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'storage-types'], function () {
 
       $misc = function ($name) {
-        return 'superadmin.miscellaneous.' . $name;
+        return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getStorageTypes'])->name($misc('storage_types'))->defaults('ex', __e('ss', 'hard-drive', false));
-      Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->defaults('ex', __e('ss', 'hard-drive', true));
-      Route::put('{storageType}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('ss', 'hard-drive', true));
+      Route::get('', [self::class, 'getStorageTypes'])->name($misc('storage_types'))->defaults('ex', __e('ss,a', 'hard-drive', false))->middleware('auth:super_admin,admin');
+      Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,admin');
+      Route::put('{storageType}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,admin');
     });
   }
 

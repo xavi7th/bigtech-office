@@ -46,19 +46,21 @@
                   <td>{product.selling_price}</td>
                 {/if}
                 <td>
-                  {#if auth.user.isQualityControl}
+                  {#if auth.user.isQualityControl || auth.user.isAdmin}
                     <InertiaLink
                       type="button"
-                      href={route('qualitycontrol.products.qa_test_results', product.uuid)}
+                      href={route('multiaccess.products.qa_test_results', product.uuid)}
                       class="btn btn-dark btn-xs">
                       Test/Result
                     </InertiaLink>
+                    {#if auth.user.isQualityControl}
                     <InertiaLink
                       type="button"
                       href={route('multiaccess.products.expenses', product.uuid)}
                       class="btn btn-warning btn-xs">
                       Record Expense
                     </InertiaLink>
+                    {/if}
                   {/if}
                 </td>
               </tr>

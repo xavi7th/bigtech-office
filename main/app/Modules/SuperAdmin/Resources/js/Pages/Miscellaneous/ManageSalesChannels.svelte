@@ -17,7 +17,7 @@
     });
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_sales_channel"),
+      route("multiaccess.miscellaneous.create_sales_channel"),
       {
         channel_name: salesChannelName
       },
@@ -51,7 +51,7 @@
     });
 
     Inertia.put(
-      route("superadmin.miscellaneous.edit_sales_channel", salesChannelId),
+      route("multiaccess.miscellaneous.edit_sales_channel", salesChannelId),
       {
         channel_name: salesChannelName
       },
@@ -96,7 +96,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.miscellaneous.delete_sales_channel", id),
+            route("multiaccess.miscellaneous.delete_sales_channel", id),
             {
               preserveState: true,
               preserveScroll: true,

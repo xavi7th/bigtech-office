@@ -24,7 +24,7 @@
     formData.append("name", categoryName);
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_product_category"),
+      route("multiaccess.miscellaneous.create_product_category"),
       formData,
       {
         preserveState: true,
@@ -67,7 +67,7 @@
     formData.append("_method", "PUT");
 
     Inertia.post(
-      route("superadmin.miscellaneous.edit_product_category", categoryId),
+      route("multiaccess.miscellaneous.edit_product_category", categoryId),
       formData,
       {
         preserveState: true,
@@ -115,7 +115,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.miscellaneous.delete_product_category", id),
+            route("multiaccess.miscellaneous.delete_product_category", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -155,7 +155,7 @@
 
 <style>
   img {
-    max-height: 100px;
+    max-height: 50px;
   }
 </style>
 

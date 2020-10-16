@@ -9,6 +9,8 @@
 
   $: ({ errors, auth, flash } = $page);
 
+  export let productBrands = [];
+
   let brandName, files, brandId;
 
   let createProductBrand = () => {
@@ -23,7 +25,7 @@
     formData.append("name", brandName);
 
     Inertia.post(
-      route("superadmin.product_brands.create_product_brand"),
+      route("multiaccess.product_brands.create_product_brand"),
       formData,
       {
         preserveState: true,
@@ -66,7 +68,7 @@
     formData.append("_method", "PUT");
 
     Inertia.post(
-      route("superadmin.product_brands.edit_product_brand", brandId),
+      route("multiaccess.product_brands.edit_product_brand", brandId),
       formData,
       {
         preserveState: true,
@@ -101,7 +103,7 @@
       .fire({
         title: "Are you sure?",
         text:
-          "This brand will be permanently deleted and products can no longer be created under this brand",
+          "This brand and all associated models will be permanently deleted and it may no longer be possible to create products under this brand",
         icon: "question",
         showCloseButton: false,
         allowOutsideClick: () => !swal.isLoading(),
@@ -114,7 +116,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.product_brands.delete_product_brand", id),
+            route("multiaccess.product_brands.delete_product_brand", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -148,8 +150,6 @@
         }
       });
   };
-
-  export let productBrands = [];
 </script>
 
 <style>

@@ -5,6 +5,8 @@
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
 
+  $: ({ auth, flash, errors } = $page);
+
   export let productBrands = [],
     productCategories = [];
 
@@ -17,7 +19,6 @@
   let files;
 
   let createModel = () => {
-    console.log(details);
     BlockToast.fire({
       text: "Creating model ..."
     });
@@ -28,7 +29,7 @@
     });
 
     Inertia.post(
-      route("superadmin.product_models.create_product_model"),
+      route("multiaccess.product_models.create_product_model"),
       formData,
       {
         headers: {
@@ -56,7 +57,6 @@
     });
   };
 
-  $: ({ app, flash, errors } = $page);
 </script>
 
 <Layout title="Create Product Model">
