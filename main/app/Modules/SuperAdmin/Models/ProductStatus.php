@@ -209,4 +209,16 @@ class ProductStatus extends BaseModel
   {
     return $query->whereNotIn('id', [self::soldId(), self::saleConfirmedId(), self::soldByResellerId()]);
   }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function ($swapDeal) {
+      Cache::forget('qAProductStatuses');
+      Cache::forget('productStatuses');
+      Cache::forget('statuses');
+    });
+  }
 }

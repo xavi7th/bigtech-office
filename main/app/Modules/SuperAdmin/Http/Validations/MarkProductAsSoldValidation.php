@@ -124,7 +124,8 @@ class MarkProductAsSoldValidation extends FormRequest
      */
 
     return array_merge(collect(parent::validated())->all(), [
-      'swapped_with' => $this->product->id
+      'swapped_with_id' => $this->product->id,
+      'swapped_with_type' => get_class($this->product),
     ]);
   }
 

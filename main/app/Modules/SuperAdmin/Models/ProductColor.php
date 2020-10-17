@@ -13,6 +13,29 @@ use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
 
+/**
+ * App\Modules\SuperAdmin\Models\ProductColor
+ *
+ * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read int|null $products_count
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductColor newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductColor newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductColor onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductColor query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductColor withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductColor withoutTrashed()
+ * @mixin \Eloquent
+ */
 class ProductColor extends BaseModel
 {
   use SoftDeletes;

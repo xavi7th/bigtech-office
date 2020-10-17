@@ -162,10 +162,10 @@
               <th scope="row"><strong>{swapDeal.swap_value}</strong></th>
             </tr>
             {#if auth.user.isSuperAdmin}
-            <tr>
-              <td class="text-primary"><strong>Sold At</strong></td>
-              <th scope="row"><strong>{swapDeal.sold_at}</strong></th>
-            </tr>
+              <tr>
+                <td class="text-primary"><strong>Sold At</strong></td>
+                <th scope="row"><strong>{swapDeal.sold_at}</strong></th>
+              </tr>
             {/if}
             <tr>
               <td class="text-primary"><strong>Swapped With</strong></td>
@@ -176,8 +176,8 @@
               <th scope="row"><strong>{swapDeal.buyer}</strong></th>
             </tr>
           {/if}
-          {#if auth.user.isSuperAdmin || auth.user.isQualityControl ||auth.user.isAdmin}
-             <tr>
+          {#if auth.user.isSuperAdmin || auth.user.isQualityControl || auth.user.isAdmin}
+            <tr>
               <td class="text-primary"><strong>Total Expenses</strong></td>
               <th scope="row">
                 <strong>{swapDeal.total_product_expenses}</strong>
@@ -232,7 +232,7 @@
           </div>
         </div>
       {/if}
-      {#if auth.user.isQualityControl}
+      {#if auth.user.isQualityControl && swapDeal.status != 'sold' && swapDeal.status != 'sale confirmed' && swapDeal.status != 'sold by reseller'}
         <div class="col-12 mb-50">
           <label for="productGrade">Update Swap Deal Status</label>
           <div class="input-group">

@@ -27,8 +27,8 @@ class CreateSwapDealsTable extends Migration
       $table->double('swap_value');
       $table->double('selling_price')->nullable();
       $table->timestamp('sold_at')->nullable();
-      $table->unsignedBigInteger('swapped_with')->nullable();
-      $table->foreign('swapped_with')->references('id')->on('products')->onDelete('cascade');
+      $table->unsignedBigInteger('swapped_with_id')->nullable();
+      $table->string('swapped_with_type')->nullable();
       $table->unsignedBigInteger('product_status_id')->default(1);
       $table->foreign('product_status_id')->references('id')->on('product_statuses')->onDelete('cascade');
       $table->uuid('product_uuid');

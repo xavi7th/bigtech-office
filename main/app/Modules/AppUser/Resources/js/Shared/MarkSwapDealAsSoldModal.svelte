@@ -11,7 +11,9 @@
     salesChannel = [],
     productToMarkAsSold;
 
-  let details = {},
+  let details = {
+      identification_type: "imei"
+    },
     files;
 
   let toggleSwap = () => {
@@ -53,7 +55,10 @@
             }
           );
           return Inertia.post(
-            route("multiaccess.products.mark_swap_as_sold", productToMarkAsSold),
+            route(
+              "multiaccess.products.mark_swap_as_sold",
+              productToMarkAsSold
+            ),
             formData,
             {
               preserveState: true,
@@ -91,7 +96,6 @@
 </script>
 
 <Modal modalId="enterSwapSalesDetails" modalTitle="Enter Sales Details">
-
   <FlashMessage />
 
   <div class="row vertical-gap sm-gap">
@@ -152,8 +156,7 @@
     </div>
 
     <div class="col-12">
-
-      <select class="custom-select " bind:value={details.sales_channel_id}>
+      <select class="custom-select" bind:value={details.sales_channel_id}>
         <option selected>How did buyer come?</option>
         {#each salesChannel as channel}
           <option value={channel.id}>{channel.channel_name}</option>
@@ -170,7 +173,6 @@
     </div>
 
     <div class="col-12">
-
       <select class="custom-select" bind:value={details.online_rep_id}>
         <option selected>Select Online Rep</option>
         {#each onlineReps as rep}
@@ -191,7 +193,6 @@
           Is this a Swap Deal?
         </label>
       </div>
-
     </div>
 
     {#if details.is_swap_transaction}
@@ -228,38 +229,94 @@
       </div>
 
       <div class="col-12">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="IMEI"
-          bind:value={details.imei} />
+        <label for="idType">Choose Primary Identifier</label>
       </div>
+      <div class="col-12 d-flex justify-content-between">
+        <div class="custom-control custom-radio">
+          <input
+            type="radio"
+            id="imei-option"
+            name="primary-identifier"
+            value="imei"
+            on:change={() => {
+              delete details.model_no;
+              delete details.serial_no;
+            }}
+            bind:group={details.identification_type}
+            class="custom-control-input" />
+          <label class="custom-control-label" for="imei-option">IMEI</label>
+        </div>
+        <div class="custom-control custom-radio mt-5">
+          <input
+            type="radio"
+            id="serial-no-option"
+            name="primary-identifier"
+            value="serial_no"
+            on:change={() => {
+              delete details.imei;
+              delete details.model_no;
+            }}
+            bind:group={details.identification_type}
+            class="custom-control-input" />
+          <label class="custom-control-label" for="serial-no-option">
+            Serial No.
+          </label>
+        </div>
+        <div class="custom-control custom-radio mt-5">
+          <input
+            type="radio"
+            id="model-no-option"
+            name="primary-identifier"
+            value="model_no"
+            on:change={() => {
+              delete details.imei;
+              delete details.serial_no;
+            }}
+            bind:group={details.identification_type}
+            class="custom-control-input" />
+          <label class="custom-control-label" for="model-no-option">
+            Model No.
+          </label>
+        </div>
+      </div>
+
+      {#if details.identification_type === 'imei'}
+        <div class="col-12">
+          <label for="imeiNo">Imei No.</label>
+          <input
+            type="number"
+            class="form-control"
+            bind:value={details.imei}
+            placeholder="Enter Imei No." />
+        </div>
+      {:else if details.identification_type === 'serial_no'}
+        <div class="col-12">
+          <label for="serialNo">Serial No.</label>
+          <input
+            type="text"
+            class="form-control"
+            bind:value={details.serial_no}
+            placeholder="Enter S/No" />
+        </div>
+      {:else if details.identification_type === 'model_no'}
+        <div class="col-12">
+          <label for="modelNo">Model No.</label>
+          <input
+            type="text"
+            class="form-control"
+            bind:value={details.model_no}
+            placeholder="Enter Model No." />
+        </div>
+      {/if}
 
       <div class="col-12">
         <input
-          type="text"
-          class="form-control"
-          placeholder="S/No"
-          bind:value={details.serial_no} />
-      </div>
-
-      <div class="col-12">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Model No"
-          bind:value={details.model_no} />
-      </div>
-
-      <div class="col-12">
-        <input
-          type="numeric"
+          type="number"
           class="form-control"
           placeholder="Swap Value"
           bind:value={details.swap_value} />
       </div>
     {/if}
-
   </div>
 
   <button

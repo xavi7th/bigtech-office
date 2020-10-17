@@ -12,6 +12,28 @@ use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\ProductQATestResult;
 use App\Modules\SuperAdmin\Transformers\QATestTransformer;
 
+/**
+ * App\Modules\SuperAdmin\Models\QATest
+ *
+ * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|QATest[] $product_models
+ * @property-read int|null $product_models_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductQATestResult[] $product_qa_test_results
+ * @property-read int|null $product_qa_test_results_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read int|null $products_count
+ * @method static \Illuminate\Database\Eloquent\Builder|QATest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|QATest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|QATest query()
+ * @method static \Illuminate\Database\Eloquent\Builder|QATest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QATest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QATest whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QATest whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class QATest extends BaseModel
 {
   protected $fillable = ['name'];

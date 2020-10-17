@@ -14,6 +14,35 @@ use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
 
+/**
+ * App\Modules\SuperAdmin\Models\ProductBrand
+ *
+ * @property int $id
+ * @property string $name
+ * @property string|null $logo_url
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductModel[] $product_models
+ * @property-read int|null $product_models_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read int|null $products_count
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductBrand onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereLogoUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductBrand withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductBrand withoutTrashed()
+ * @mixin \Eloquent
+ */
 class ProductBrand extends BaseModel
 {
   use SoftDeletes, Commentable;

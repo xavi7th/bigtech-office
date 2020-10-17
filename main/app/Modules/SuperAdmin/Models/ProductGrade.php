@@ -11,6 +11,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductGradeTransformer;
 use Cache;
 
+/**
+ * App\Modules\SuperAdmin\Models\ProductGrade
+ *
+ * @property int $id
+ * @property string $grade
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductGrade onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereGrade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductGrade withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductGrade withoutTrashed()
+ * @mixin \Eloquent
+ */
 class ProductGrade extends BaseModel
 {
   use SoftDeletes;

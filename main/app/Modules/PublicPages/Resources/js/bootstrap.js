@@ -107,6 +107,7 @@ export const getErrorString = errors => {
 import {
 	InertiaApp
 } from '@inertiajs/inertia-svelte'
+import { Inertia } from "@inertiajs/inertia";
 
 const app = document.getElementById('app')
 let isMobile, isDesktop;
@@ -158,4 +159,12 @@ new InertiaApp({
 			}
 		}
 	},
+})
+
+/**
+ *! Cause back() and forward() buttons of the browser to refresh the browser state
+ */
+
+window.addEventListener('popstate', () => {
+	Inertia.reload({ preserveScroll: true, preserveState: false })
 })

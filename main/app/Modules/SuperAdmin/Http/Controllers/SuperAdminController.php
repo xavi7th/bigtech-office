@@ -66,8 +66,6 @@ class SuperAdminController extends Controller
 
         OfficeBranch::routes();
 
-        OtherExpense::routes();
-
         ErrLog::routes();
       });
 
@@ -77,13 +75,13 @@ class SuperAdminController extends Controller
 
       StorageType::multiAccessRoutes();
 
-      ProductColor::routes();
+      ProductColor::multiAccessRoutes();
 
-      ProductGrade::routes();
+      ProductGrade::multiAccessRoutes();
 
-      ProductCategory::routes();
+      ProductCategory::multiAccessRoutes();
 
-      ProcessorSpeed::routes();
+      ProcessorSpeed::multiAccessRoutes();
 
       ProductBrand::multiAccessRoutes();
 
@@ -100,6 +98,8 @@ class SuperAdminController extends Controller
       ProductHistory::multiAccessRoutes();
 
       ProductExpense::multiAccessRoutes();
+
+      OtherExpense::multiAccessRoutes();
 
       ProductBatch::multiAccessRoutes();
 

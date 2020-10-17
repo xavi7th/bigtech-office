@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
-use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Traits\Commentable;
@@ -31,81 +30,13 @@ use App\Modules\SuperAdmin\Http\Validations\CreateSwapDealValidation;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 
-/**
- * App\Modules\SuperAdmin\Models\SwapDeal
- *
- * @property int $id
- * @property int|null $app_user_id
- * @property string $description
- * @property string $owner_details
- * @property string|null $id_url
- * @property string|null $receipt_url
- * @property string|null $imei
- * @property string|null $serial_no
- * @property string|null $model_no
- * @property float $swap_value
- * @property float|null $selling_price
- * @property string|null $sold_at
- * @property Product $swapped_with
- * @property int $product_status_id
- * @property string $product_uuid
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read AppUser|null $app_user
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read string $id_thumb_url
- * @property-read string $receipt_thumb_url
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductExpense[] $product_expenses
- * @property-read int|null $product_expenses_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductHistory[] $product_histories
- * @property-read int|null $product_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $product_sales_record
- * @property-read int|null $product_sales_record_count
- * @property-read ProductStatus $product_status
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
- * @property-read int|null $reseller_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Reseller[] $with_resellers
- * @property-read int|null $with_resellers_count
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal backFromRepairs()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal inStock()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal outForRepairs()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal query()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal saleConfirmed()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal sold()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal soldByReseller()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal untested()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereAppUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereIdUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereImei($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereModelNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereOwnerDetails($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductStatusId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductUuid($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereReceiptUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSellingPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSerialNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSoldAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwapValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWith($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
- * @mixin \Eloquent
- */
 class SwapDeal extends BaseModel
 {
   use Commentable;
 
   protected $fillable = [
     'description', 'owner_details', 'id_url', 'receipt_url', 'imei', 'serial_no', 'model_no',
-    'swap_value', 'swapped_with', 'product_status_id', 'app_user_id'
+    'swap_value', 'swapped_with_id', 'swapped_with_type', 'product_status_id', 'app_user_id'
   ];
 
   protected $apennds = ['id_thumb_url', 'receipt_thumb_url'];
@@ -153,9 +84,15 @@ class SwapDeal extends BaseModel
     // return $this->belongsToMany(Reseller::class, $table = 'reseller_product')->using(ResellerProduct::class)->wherePivot('status', 'tenured')->withPivot('status')->withTimestamps()->as('tenure_record');
   }
 
+  public function swapped_deal_device()
+  {
+    return $this->morphMany(self::class, 'swapped_with');
+  }
+
   public function swapped_with()
   {
-    return $this->belongsTo(Product::class);
+    return $this->morphTo();
+    // return $this->belongsTo(Product::class);
   }
 
   public function product_status()
@@ -179,6 +116,11 @@ class SwapDeal extends BaseModel
      * Check if the product has been sold already or confirmed
      */
     return $this->product_status_id === ProductStatus::soldId() || $this->product_status_id === ProductStatus::saleConfirmedId();
+  }
+
+  public function out_for_delivery(): bool
+  {
+    return $this->product_status_id === ProductStatus::scheduledDeliveryId();
   }
 
   public function in_stock(): bool
@@ -224,7 +166,8 @@ class SwapDeal extends BaseModel
         'serial_no' => $request->serial_no ?? null,
         'model_no' => $request->model_no ?? null,
         'swap_value' => $request->swap_value,
-        'swapped_with' => $request->swapped_with ?? null,
+        'swapped_with_id' => $request->swapped_with_id ?? null,
+        'swapped_with_type' => $request->swapped_with_type ?? null,
         'app_user_id' => $request->app_user_id ?? null,
         'product_status_id' => ProductStatus::undergoingQaId(),
       ]);
@@ -256,14 +199,24 @@ class SwapDeal extends BaseModel
     });
   }
 
+  static function dispatchAdminRoutes()
+  {
+    Route::group(['prefix' => 'swap-deals'], function () {
+      Route::name('dispatchadmin.products.')->group(function () {
+        Route::post('{swapDeal:product_uuid}/schedule-delivery', [self::class, 'scheduleProductForDelivery'])->name('swap_schedule_delivery')->defaults('ex', __e('d', null, true));
+        Route::post('{swapDeal:product_uuid}/return-to-stock', [self::class, 'returnProductToStock'])->name('swap_return_to_stock')->defaults('ex', __e('d', null, true));
+      });
+    });
+  }
+
   static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('multiaccess.products.')->group(function () {
-        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk,s,q,a', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control,admin');
-        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q,a', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin');
-        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q,a', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin');
-        Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->defaults('ex', __e('ss,s', null, true))->middleware('auth:stock_keeper,sales_rep');
+        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk,s,q,a,d', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin');
+        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q,a,d', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin');
+        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q,a,d', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin');
+        Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->defaults('ex', __e('ss,s,d', null, true))->middleware('auth:stock_keeper,sales_rep,dispatch_admin');
       });
     });
   }
@@ -281,10 +234,15 @@ class SwapDeal extends BaseModel
 
   public function getSwapDeals(Request $request)
   {
+
+    ProductSaleRecord::find(1)->sales_rep;
+
     if ($request->user()->isSalesRep()) {
       $swapDeals = Cache::rememberForever('salesRepsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } elseif ($request->user()->isQualityControl()) {
       $swapDeals = Cache::rememberForever('qualityControlsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
+    } elseif ($request->user()->isDispatchAdmin()) {
+      $swapDeals = Cache::rememberForever('dispatchAdminsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } else {
       $swapDeals = collect([]);
     }
@@ -299,7 +257,7 @@ class SwapDeal extends BaseModel
   public function getSwapDealDetails(Request $request, self $swapDeal)
   {
     $swapDeal = (new SwapDealTransformer)->detailed($swapDeal->load('swapped_with', 'product_status', 'app_user', 'comments', 'product_expenses'));
-    $product_statuses = Cache::rememberForever('productStatuses', fn () => (new ProductStatusTransformer)->collectionTransformer(ProductStatus::notSaleStatus()->get(), 'basic'));
+    $product_statuses = Cache::rememberForever('qAProductStatuses', fn () => (new ProductStatusTransformer)->collectionTransformer(ProductStatus::notSaleStatus()->get(), 'basic'));
 
     return Inertia::render('SuperAdmin,Products/SwapDealDetails', compact('swapDeal', 'product_statuses'));
   }
@@ -352,10 +310,45 @@ class SwapDeal extends BaseModel
     return back()->withSuccess('Comment created. ');
   }
 
+  public function scheduleProductForDelivery(Request $request, self $swapDeal)
+  {
+
+    /**
+     * Update the status
+     */
+    if (!$swapDeal->in_stock()) {
+      return generate_422_error('This product is sold already');
+    } else {
+      $swapDeal->product_status_id = ProductStatus::scheduledDeliveryId();
+      $swapDeal->save();
+    }
+
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Product removed from stock list and scheduled for delivery');
+  }
+
+  public function returnProductToStock(Request $request, self $swapDeal)
+  {
+
+    DB::beginTransaction();
+
+    if (!$swapDeal->out_for_delivery()) {
+      return generate_422_error('This product is bot scheduled for delivery');
+    } else {
+      $swapDeal->product_status_id = ProductStatus::inStockId();
+      $swapDeal->save();
+    }
+
+    DB::commit();
+
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Product returned back to the stock list');
+  }
+
   public function markSwapDealAsSold(MarkProductAsSoldValidation $request, self $swapDeal)
   {
 
-    // dd($product);
+    // dd($request->validated());
 
     DB::beginTransaction();
 
@@ -589,6 +582,11 @@ class SwapDeal extends BaseModel
     return $query->where('product_status_id', ProductStatus::inStockId());
   }
 
+  public function scopeOutForDelivery($query)
+  {
+    return $query->where('product_status_id', ProductStatus::scheduledDeliveryId());
+  }
+
   public function scopeOutForRepairs($query)
   {
     return $query->where('product_status_id', ProductStatus::outForRepairsId());
@@ -621,6 +619,7 @@ class SwapDeal extends BaseModel
       Cache::forget('products');
       Cache::forget('qualityControlsSwapDeals');
       Cache::forget('salesRepsSwapDeals');
+      Cache::forget('dispatchAdminsSwapDeals');
 
       if ($swapDeal->isDirty('product_status_id')) {
         request()->user()->product_histories()->create([

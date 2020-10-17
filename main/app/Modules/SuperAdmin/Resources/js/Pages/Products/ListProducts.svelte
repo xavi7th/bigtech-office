@@ -25,7 +25,7 @@
         confirmButtonText: "Mark for Delivery",
         preConfirm: () => {
           return Inertia.post(
-            route("superadmin.products.schedule_delivery", product),
+            route("dispatchadmin.products.schedule_delivery", product),
             {},
             {
               preserveState: true,
@@ -36,7 +36,7 @@
             .then(() => {
               if (flash.success) {
                 return true;
-              } else {
+              } else if (flash.error || _.size(errors) > 0) {
                 throw new Error(flash.error || getErrorString(errors));
               }
             })
@@ -68,7 +68,7 @@
         confirmButtonText: "Return to Stock",
         preConfirm: () => {
           return Inertia.post(
-            route("superadmin.products.return_to_stock", product),
+            route("dispatchadmin.products.return_to_stock", product),
             {},
             {
               preserveState: true,

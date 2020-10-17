@@ -24,6 +24,43 @@ use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
 
+/**
+ * App\Modules\SuperAdmin\Models\Reseller
+ *
+ * @property int $id
+ * @property string $business_name
+ * @property string $ceo_name
+ * @property string $address
+ * @property string $phone
+ * @property string $img_url
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read int|null $products_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ResellerHistory[] $reseller_histories
+ * @property-read int|null $reseller_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\SwapDeal[] $swap_deals
+ * @property-read int|null $swap_deals_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Reseller onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereBusinessName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereCeoName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereImgUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Reseller withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Reseller withoutTrashed()
+ * @mixin \Eloquent
+ */
 class Reseller extends BaseModel
 {
   use SoftDeletes, Notifiable;

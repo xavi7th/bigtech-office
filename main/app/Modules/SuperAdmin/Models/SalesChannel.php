@@ -12,6 +12,29 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 use Cache;
 
+/**
+ * App\Modules\SuperAdmin\Models\SalesChannel
+ *
+ * @property int $id
+ * @property string $channel_name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $sales_records
+ * @property-read int|null $sales_records_count
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel newQuery()
+ * @method static \Illuminate\Database\Query\Builder|SalesChannel onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereChannelName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|SalesChannel withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|SalesChannel withoutTrashed()
+ * @mixin \Eloquent
+ */
 class SalesChannel extends BaseModel
 {
   use SoftDeletes;

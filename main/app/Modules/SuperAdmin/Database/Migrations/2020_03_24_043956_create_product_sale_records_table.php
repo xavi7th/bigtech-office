@@ -21,7 +21,8 @@ class CreateProductSaleRecordsTable extends Migration
 			$table->double('selling_price');
       $table->foreignId('sales_channel_id')->nullable()->constrained('sales_channels')->onDelete('cascade');
       $table->foreignId('online_rep_id')->nullable()->constrained('sales_reps')->onDelete('cascade');
-      $table->foreignId('sales_rep_id')->nullable()->constrained('sales_reps')->onDelete('cascade');
+      $table->unsignedBigInteger('sales_rep_id')->nullable();
+      $table->string('sales_rep_type')->nullable();
 			$table->unsignedBigInteger('sale_confirmed_by')->nullable();
 			$table->string('sale_confirmer_type')->nullable();
       $table->boolean('is_swap_transaction')->default(false);

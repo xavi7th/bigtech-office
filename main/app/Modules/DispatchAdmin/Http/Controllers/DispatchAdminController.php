@@ -9,17 +9,23 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\DispatchAdmin\Models\DispatchAdmin;
+use App\Modules\SuperAdmin\Models\SwapDeal;
 
 class DispatchAdminController extends Controller
 {
 
   static function routes()
   {
-    Route::group(['middleware' => ['web', 'auth:dispatch_admin']], function () {
+    Route::group(['middleware' => ['web']], function () {
       Route::prefix(DispatchAdmin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::get('/', [self::class, 'index'])->name('dispatchadmin.dashboard')->defaults('ex', __e('d', 'home', true));
+        Route::group(['middleware' => ['web', 'auth:dispatch_admin']], function () {
+          Route::get('/', [self::class, 'index'])->name('dispatchadmin.dashboard')->defaults('ex', __e('d', 'home', true));
 
+          Product::dispatchAdminRoutes();
+          SwapDeal::dispatchAdminRoutes();
+        });
         Product::multiAccessRoutes();
+        SwapDeal::multiAccessRoutes();
       });
     });
   }
