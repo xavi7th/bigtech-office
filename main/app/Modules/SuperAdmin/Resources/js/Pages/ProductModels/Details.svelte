@@ -113,18 +113,20 @@
             Comments
           </a>
         </li>
-        <li class="nav-item">
-          <a
-            class="nav-link rui-tabs-link"
-            id="settings-tab"
-            data-toggle="tab"
-            href="#settings"
-            role="tab"
-            aria-controls="settings"
-            aria-selected="false">
-            QA Tests
-          </a>
-        </li>
+        {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+          <li class="nav-item">
+            <a
+              class="nav-link rui-tabs-link"
+              id="settings-tab"
+              data-toggle="tab"
+              href="#settings"
+              role="tab"
+              aria-controls="settings"
+              aria-selected="false">
+              QA Tests
+            </a>
+          </li>
+        {/if}
       </ul>
       <div class="tab-content">
         <div
@@ -132,33 +134,29 @@
           id="activity"
           role="tabpanel"
           aria-labelledby="activity-tab">
-
           <Images images={productModel.images} />
-
         </div>
         <div
           class="tab-pane fade"
           id="timeline"
           role="tabpanel"
           aria-labelledby="timeline-tab">
-
           <Comments
             comments={productModel.comments}
             on:view-comment={updateComment} />
-
         </div>
-        <div
-          class="tab-pane fade"
-          id="settings"
-          role="tabpanel"
-          aria-labelledby="settings-tab">
-
-          <QaTests
-            {qaTests}
-            productModelId={productModel.id}
-            productQaTests={productModel.qaTests} />
-
-        </div>
+        {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+          <div
+            class="tab-pane fade"
+            id="settings"
+            role="tabpanel"
+            aria-labelledby="settings-tab">
+            <QaTests
+              {qaTests}
+              productModelId={productModel.id}
+              productQaTests={productModel.qaTests} />
+          </div>
+        {/if}
       </div>
     </div>
   </div>
@@ -211,23 +209,25 @@
         class="form-control"
         bind:value={description} />
 
-      <button
-        class="btn btn-brand"
-        slot="footer-buttons"
-        on:click={() => {
-          createModelDescription(productModel.id, description);
-        }}>
-        Add Description
-      </button>
-
-      <button
-        class="btn btn-warning"
-        slot="footer-buttons"
-        on:click={() => {
-          updateModelDescription(productModel.id, description);
-        }}>
-        Update Description
-      </button>
+      <span slot="footer-buttons">
+        {#if !description}
+          <button
+            class="btn btn-brand"
+            on:click={() => {
+              createModelDescription(productModel.id, description);
+            }}>
+            Add Description
+          </button>
+        {:else}
+          <button
+            class="btn btn-warning"
+            on:click={() => {
+              updateModelDescription(productModel.id, description);
+            }}>
+            Update Description
+          </button>
+        {/if}
+      </span>
     </Modal>
   </div>
 </Layout>

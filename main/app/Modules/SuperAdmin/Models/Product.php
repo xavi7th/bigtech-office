@@ -340,7 +340,7 @@ class Product extends BaseModel
         return 'multiaccess.products.' . $name;
       };
 
-      Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss,a,ac,d,sk,s,q', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,admin,dispatch_admin');
+      Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss,a,ac,d,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,admin,dispatch_admin,web_admin');
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name($p('daily_records'))->defaults('ex', __e('ss', 'archive'))->middleware('auth:super_admin');
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('ss,sk,a', 'archive'))->middleware('auth:super_admin,stock_keeper,admin');
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss,a', 'archive', true))->middleware('auth:super_admin,admin');
@@ -378,6 +378,8 @@ class Product extends BaseModel
       $products = fn () => Cache::rememberForever('qualityControlProducts', fn () => (new ProductTransformer)->collectionTransformer(self::untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     } elseif ($request->user()->isDispatchAdmin()) {
       $products = fn () => Cache::rememberForever('dispatchAdminProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+    } elseif ($request->user()->isWebAdmin()) {
+      $products = fn () => Cache::rememberForever('webAdminProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin()) {
       $products = fn () => Cache::rememberForever('products', fn () => (new ProductTransformer)->collectionTransformer(self::with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     } else {
@@ -815,6 +817,7 @@ class Product extends BaseModel
     static::saved(function ($product) {
       Cache::forget($product->office_branch->city . 'officeBranchProducts');
       Cache::forget('products');
+      Cache::forget('webAdminProducts');
       Cache::forget('dispatchAdminProducts');
       Cache::forget('stockKeeperProducts');
       Cache::forget('salesRepProducts');

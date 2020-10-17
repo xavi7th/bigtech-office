@@ -256,7 +256,7 @@
           class="btn btn-primary btn-long"
           data-dismiss="modal"
           on:click={editModel}>
-          <span class="text">Update Product</span>
+          <span class="text">Update Model</span>
           <span class="icon">
             <span
               data-feather="check-circle"

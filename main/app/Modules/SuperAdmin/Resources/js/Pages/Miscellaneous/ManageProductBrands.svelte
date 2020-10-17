@@ -160,48 +160,49 @@
 
 <Layout title="Manage Product Brands">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4">
-
-      <form class="#" on:submit|preventDefault={createProductBrand}>
-        <div
-          class="d-flex align-items-center justify-content-between flex-column
-          mb-25">
-          {#each Object.entries(errors) as [err], idx}
-            <FlashMessage msg={err[0]} />
-          {/each}
-        </div>
-
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="name">Enter New Product Brand</label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Brand Name"
-              bind:value={brandName} />
-          </div>
-          <div class="col-12">
-            <label for="brand-logo">Brand logo</label>
-            <input
-              type="file"
-              id="brand-logo"
-              bind:files
-              accept="image/*"
-              class="form-control" />
+    {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+      <div class="col-lg-4 col-xl-4">
+        <form class="#" on:submit|preventDefault={createProductBrand}>
+          <div
+            class="d-flex align-items-center justify-content-between flex-column
+              mb-25">
+            {#each Object.entries(errors) as [err], idx}
+              <FlashMessage msg={err[0]} />
+            {/each}
           </div>
 
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long"
-              disabled={!brandName}>
-              <span class="text">Create</span>
-            </button>
+          <div class="row vertical-gap sm-gap">
+            <div class="col-12">
+              <label for="name">Enter New Product Brand</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="Brand Name"
+                bind:value={brandName} />
+            </div>
+            <div class="col-12">
+              <label for="brand-logo">Brand logo</label>
+              <input
+                type="file"
+                id="brand-logo"
+                bind:files
+                accept="image/*"
+                class="form-control" />
+            </div>
+
+            <div class="col-12">
+              <button
+                type="submit"
+                class="btn btn-success btn-long"
+                disabled={!brandName}>
+                <span class="text">Create</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    {/if}
     <div class="col-lg-8 col-xl-8">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Available Product Brands</h2>
@@ -228,14 +229,16 @@
                 </td>
                 <td>{brand.name} ({brand.products_count} products)</td>
                 <td class="d-flex justify-content-between align-content-center">
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-xs"
-                    on:click={() => {
-                      deleteBrand(brand.id);
-                    }}>
-                    DELETE
-                  </button>
+                  {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-xs"
+                      on:click={() => {
+                        deleteBrand(brand.id);
+                      }}>
+                      DELETE
+                    </button>
+                  {/if}
                   <button
                     type="button"
                     class="btn btn-warning btn-xs"
@@ -260,11 +263,10 @@
         </table>
       </div>
     </div>
-
   </div>
   <div slot="modals">
-    <Modal modalId="updateBrand" modalTitle="Add Image to Product Model">
-      <form class="#" on:submit|preventDefault={updateProductBrand}>
+    <form class="#" on:submit|preventDefault={updateProductBrand}>
+      <Modal modalId="updateBrand" modalTitle="Add Image to Product Model">
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
             <label for="name">Enter New Product Brand</label>
@@ -284,17 +286,15 @@
               accept="image/*"
               class="form-control" />
           </div>
-
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long"
-              disabled={!brandName}>
-              <span class="text">Update</span>
-            </button>
-          </div>
         </div>
-      </form>
-    </Modal>
+        <button
+          slot="footer-buttons"
+          type="submit"
+          class="btn btn-success btn-long"
+          disabled={!brandName}>
+          <span class="text">Update</span>
+        </button>
+      </Modal>
+    </form>
   </div>
 </Layout>

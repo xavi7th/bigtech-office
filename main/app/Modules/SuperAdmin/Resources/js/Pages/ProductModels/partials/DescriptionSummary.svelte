@@ -46,7 +46,6 @@
 
 <script>
   import { Inertia } from "@inertiajs/inertia";
-
   export let descriptionSummary, descriptionSummaryUpdated;
 </script>
 
