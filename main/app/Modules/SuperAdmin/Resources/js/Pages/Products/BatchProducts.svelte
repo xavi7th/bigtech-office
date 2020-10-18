@@ -20,7 +20,7 @@
               <th scope="col">#</th>
               <th scope="col">Model</th>
               <th scope="col">Expenses</th>
-              {#if auth.user.isSuperAdmin}
+              {#if auth.user.isSuperAdmin || auth.user.isAccountant}
                 <th scope="col">Cost</th>
                 <th scope="col">Selling</th>
               {/if}
@@ -41,12 +41,12 @@
                   <span class="d-none">{product.supplier}</span>
                 </td>
                 <td>{product.product_expenses_sum}</td>
-                {#if auth.user.isSuperAdmin}
+                {#if auth.user.isSuperAdmin || auth.user.isAccountant}
                   <td>{product.cost_price}</td>
                   <td>{product.selling_price}</td>
                 {/if}
                 <td>
-                  {#if auth.user.isQualityControl || auth.user.isAdmin}
+                  {#if auth.user.isQualityControl || auth.user.isAdmin || auth.user.isSuperAdmin}
                     <InertiaLink
                       type="button"
                       href={route('multiaccess.products.qa_test_results', product.uuid)}

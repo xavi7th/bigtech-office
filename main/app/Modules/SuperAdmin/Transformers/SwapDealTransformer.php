@@ -39,7 +39,7 @@ class SwapDealTransformer
       'swap_value' => (float)$swapDeal->swap_value,
       'selling_price' => (float)$swapDeal->selling_price,
       'total_product_expenses' => (float)$swapDeal->total_product_expenses(),
-      'sold_at' => (float)$swapDeal->sold_at,
+      'sold_at' => (float)$swapDeal->product_sales_record->selling_price,
       'swapped_with' => $swapDeal->swapped_with,
       'product_status_id' => $swapDeal->product_status_id,
       'status' => $swapDeal->product_status->status,

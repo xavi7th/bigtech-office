@@ -14,7 +14,7 @@
 
   <div class="container-fluid">
     <div class="row vertical-gap">
-      <div class="col-12 col-lg-8 offset-lg-2">
+      <div class="col-12 ">
         <div class="table-responsive">
           <table class="table table-bordered rui-datatable" data-order="[]">
             <thead class="thead-dark">
@@ -49,7 +49,7 @@
                     </ul>
                     <ul class="list-unstyled">
                       <li>
-                      {#if auth.user.isStockKeeper}
+                      {#if auth.user.isStockKeeper || auth.user.isSuperAdmin || auth.user.isAccountant}
                         <InertiaLink
                           href={route('multiaccess.resellers.products', resellersWithProduct.id)}
                           class="btn btn-brand btn-sm">

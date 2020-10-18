@@ -9,6 +9,7 @@
 
   $: ({ errors, auth, flash } = $page);
 
+  export let dailyExpenses = [];
   let details = {};
 
   let createDailyExpense = () => {
@@ -17,7 +18,7 @@
     });
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_daily_expense"),
+      route("accountant.miscellaneous.create_daily_expense"),
       details,
       {
         preserveState: true,
@@ -127,48 +128,45 @@
   //       }
   //     });
   // };
-
-  export let dailyExpenses = [];
 </script>
 
 <Layout title="Manage Daily Expenses">
   <div class="row vertical-gap">
-   {#if auth.user.isAccountant}
+    {#if auth.user.isAccountant}
       <div class="col-lg-4 col-xl-4">
+        <form class="#" on:submit|preventDefault={createDailyExpense}>
+          <FlashMessage />
 
-      <form class="#" on:submit|preventDefault={createDailyExpense}>
-        <FlashMessage />
+          <div class="row vertical-gap sm-gap">
+            <div class="col-12">
+              <label for="name">Enter New Daily Amount</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Amount"
+                bind:value={details.amount} />
+            </div>
+            <div class="col-12">
+              <label for="name">Enter Expense Purpose</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Purpose of Expense"
+                bind:value={details.purpose} />
+            </div>
 
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="name">Enter New Daily Amount</label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Amount"
-              bind:value={details.amount} />
+            <div class="col-12">
+              <button
+                type="submit"
+                class="btn btn-success btn-long"
+                disabled={!details.amount || !details.purpose}>
+                <span class="text">Create</span>
+              </button>
+            </div>
           </div>
-          <div class="col-12">
-            <label for="name">Enter Expense Purpose</label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Purpose of Expense"
-              bind:value={details.purpose} />
-          </div>
-
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long"
-              disabled={!details.amount || !details.purpose}>
-              <span class="text">Create</span>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-   {/if}
+        </form>
+      </div>
+    {/if}
     <div class="col-lg-8 col-xl-8">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Today's Expenses</h2>
@@ -222,7 +220,6 @@
         </table>
       </div>
     </div>
-
   </div>
   <!-- <div slot="modals">
     <Modal modalId="updateDailyExpense" modalTitle="Update Daily Expense">

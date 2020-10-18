@@ -58,7 +58,7 @@
                   </td>
                   <td>
                     <InertiaLink
-                      href={route('superadmin.product_sales_records.daily', day)}>
+                      href={route('multiaccess.product_sales_records.daily', day)}>
                       <strong>
                         <u>Sales</u>
                       </strong>
@@ -69,7 +69,7 @@
                   </td>
                   <td>
                     <InertiaLink
-                      href={route('superadmin.products.daily_expenses', day)}>
+                      href={route('multiaccess.products.daily_expenses', day)}>
                       <strong>
                         <u>Product Expenses</u>
                       </strong>
@@ -80,7 +80,7 @@
                   </td>
                   <td>
                     <InertiaLink
-                      href={route('superadmin.miscellaneous.daily_expenses', day)}>
+                      href={route('multiaccess.miscellaneous.daily_expenses', day)}>
                       <strong>
                         <u>Other Expenses</u>
                       </strong>

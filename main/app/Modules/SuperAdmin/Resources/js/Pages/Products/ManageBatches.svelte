@@ -16,7 +16,7 @@
     });
 
     Inertia.post(
-      route("superadmin.products.create_batch"),
+      route("accountant.products.create_batch"),
       { batch_number, auto_generate, order_date },
       {
         preserveState: true,
@@ -119,7 +119,7 @@
                   {new Date(batch.order_date).toDateString()}
                 </td>
                 <td class="d-flex">
-                  {#if auth.user.isStockKeeper || auth.user.isQualityControl || auth.user.isAdmin}
+                  {#if auth.user.isStockKeeper || auth.user.isQualityControl || auth.user.isAdmin || auth.user.isSuperAdmin || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
                       href={route('multiaccess.products.by_batch', batch.batch_number)}
@@ -129,12 +129,12 @@
                   {/if}
                   {#if auth.user.isSuperAdmin || auth.user.isAccountant}
                     <InertiaLink
-                      href={route('superadmin.products.prices_by_batch', batch.batch_number)}
+                      href={route('multiaccess.products.prices_by_batch', batch.batch_number)}
                       class="btn btn-dark mr-5 btn-xs">
                       Prices
                     </InertiaLink>
                     <InertiaLink
-                      href={route('superadmin.products.create_batch_price', batch.batch_number)}
+                      href={route('accountant.products.create_batch_price', batch.batch_number)}
                       class="btn btn-info mr-5 btn-xs text-nowrap">
                       Create Price
                     </InertiaLink>

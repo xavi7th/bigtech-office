@@ -18,7 +18,7 @@
     });
 
     Inertia.put(
-      route("superadmin.products.edit_swap_deal", swapDeal.uuid),
+      route("accountant.products.edit_swap_deal", swapDeal.uuid),
       swapDeal,
       {
         preserveState: true,
@@ -112,6 +112,12 @@
   };
 </script>
 
+<style>
+  textarea{
+    height:100px;
+  }
+</style>
+
 <Layout title="Swap Device Details">
   <div class="row vertical-gap">
     <div class="col-lg-3">
@@ -134,7 +140,7 @@
             <td class="text-primary"><strong>Device ID</strong></td>
             <th scope="row"><strong>{swapDeal.identifier}</strong></th>
           </tr>
-          {#if auth.user.isSuperAdmin || auth.user.isAdmin}
+          {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
             <tr>
               <td class="text-primary"><strong>Seller Details</strong></td>
               <th scope="row"><strong>{swapDeal.seller_details}</strong></th>
@@ -161,7 +167,7 @@
               <td class="text-primary"><strong>Swap Value</strong></td>
               <th scope="row"><strong>{swapDeal.swap_value}</strong></th>
             </tr>
-            {#if auth.user.isSuperAdmin}
+            {#if auth.user.isSuperAdmin || auth.user.isAccountant}
               <tr>
                 <td class="text-primary"><strong>Sold At</strong></td>
                 <th scope="row"><strong>{swapDeal.sold_at}</strong></th>
@@ -176,7 +182,7 @@
               <th scope="row"><strong>{swapDeal.buyer}</strong></th>
             </tr>
           {/if}
-          {#if auth.user.isSuperAdmin || auth.user.isQualityControl || auth.user.isAdmin}
+          {#if auth.user.isSuperAdmin || auth.user.isQualityControl || auth.user.isAdmin || auth.user.isAccountant}
             <tr>
               <td class="text-primary"><strong>Total Expenses</strong></td>
               <th scope="row">
@@ -197,8 +203,8 @@
       </table>
     </div>
     <div class="col-lg-4">
-      {#if auth.user.isAccountant}
-        <div class="row">
+      {#if auth.user.isAccountant && swapDeal.status != 'sold' && swapDeal.status != 'sale confirmed' && swapDeal.status != 'sold by reseller'}
+        <div class="row mb-50">
           <div class="col-12">
             <label for="updateSellingPrice">Selling price</label>
             <div class="a d-flex flex-wrap">
@@ -217,7 +223,8 @@
                 class="form-control" />
 
               <label for="updateComment">Comment</label>
-              <textarea
+              <input
+                type="text"
                 name="updateComment"
                 id="updateComment"
                 bind:value={swapDeal.comment}

@@ -58,8 +58,6 @@ class SuperAdminController extends Controller
 
         ProductQATestResult::routes();
 
-        ProductSaleRecord::routes();
-
         SwapDeal::routes();
 
         CompanyBankAccount::routes();
@@ -104,6 +102,8 @@ class SuperAdminController extends Controller
       ProductBatch::multiAccessRoutes();
 
       Product::multiAccessRoutes();
+
+      ProductSaleRecord::multiAccessRoutes();
     });
   }
 

@@ -53,15 +53,23 @@ class OtherExpense extends BaseModel
     return $this->morphTo();
   }
 
+  public static function accountantRoutes()
+  {
+    Route::group(['prefix' => 'other-expenses'], function () {
+      Route::name('accountant.miscellaneous.')->group(function () {
+        Route::post('daily', [self::class, 'createExpense'])->name('create_daily_expense')->defaults('ex', __e('ac', 'clipboard', true));
+      });
+    });
+  }
+
   public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'other-expenses'], function () {
       Route::name('multiaccess.miscellaneous.')->group(function () {
-        Route::get('', [self::class, 'getDailyExpenses'])->name('daily_expense')->defaults('ex', __e('ss,a', 'clipboard', false))->middleware('auth:super_admin,admin');
-        Route::get('all', [self::class, 'getAllExpenses'])->name('all_expenses')->defaults('ex', __e('ss,a', 'clipboard', false))->middleware('auth:super_admin,admin');
-        Route::get('{date}', [self::class, 'getExpensesByDate'])->name('daily_expenses')->defaults('ex', __e('ss,a', 'clipboard', true))->middleware('auth:super_admin,admin');
-        Route::post('create', [self::class, 'createExpense'])->name('create_daily_expense')->defaults('ex', __e('ss', 'clipboard', true))->middleware('auth:super_admin');
-        // Route::put('{size}/edit', [self::class, 'editExpense'])->name('edit_expense')->defaults('ex', __e('ss', 'clipboard', true))->middleware('auth:super_admin,admin');
+        Route::get('', [self::class, 'getAllExpenses'])->name('all_expenses')->defaults('ex', __e('ss,a,ac', 'clipboard', false))->middleware('auth:super_admin,admin,accountant');
+        Route::get('daily', [self::class, 'getDailyExpenses'])->name('daily_expense')->defaults('ex', __e('ss,a,ac', 'clipboard', false))->middleware('auth:super_admin,admin,accountant');
+        Route::get('{date}', [self::class, 'getExpensesByDate'])->name('daily_expenses')->defaults('ex', __e('ss,a,ac', 'clipboard', true))->middleware('auth:super_admin,admin,accountant');
+        // Route::put('{expense}/edit', [self::class, 'editExpense'])->name('edit_expense')->defaults('ex', __e('ss', 'clipboard', true))->middleware('auth:super_admin,accountant');
       });
     });
   }

@@ -23,6 +23,61 @@ use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Transformers\ProductSaleRecordTransformer;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 
+/**
+ * App\Modules\SuperAdmin\Models\ProductSaleRecord
+ *
+ * @property int $id
+ * @property int $product_id
+ * @property string $product_type
+ * @property float $selling_price
+ * @property int|null $sales_channel_id
+ * @property int|null $online_rep_id
+ * @property int|null $sales_rep_id
+ * @property string|null $sales_rep_type
+ * @property int|null $sale_confirmed_by
+ * @property string|null $sale_confirmer_type
+ * @property int $is_swap_transaction
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|CompanyBankAccount[] $bank_account_payments
+ * @property-read int|null $bank_account_payments_count
+ * @property-read mixed $is_payment_complete
+ * @property-read float $total_bank_payments_amount
+ * @property-read SalesRep|null $online_rep
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $product
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $sale_confirmer
+ * @property-read SalesChannel|null $sales_channel
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $sales_rep
+ * @property-read SwapDeal|null $swap_deal
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord confirmed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord products()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord swapDeals()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord today()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord unconfirmed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereIsSwapTransaction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereOnlineRepId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereProductType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSaleConfirmedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSaleConfirmerType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSalesChannelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSalesRepId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSalesRepType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereSellingPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord yesterday()
+ * @mixin \Eloquent
+ */
 class ProductSaleRecord extends BaseModel
 {
   use SoftDeletes;
@@ -89,17 +144,24 @@ class ProductSaleRecord extends BaseModel
     return $this->total_bank_payments_amount === $this->selling_price;
   }
 
-  public static function routes()
+  public static function accountantRoutes()
   {
     Route::group(['prefix' => 'product-sales-records'], function () {
-      $p = function ($name) {
-        return 'superadmin.product_sales_records.' . $name;
-      };
-      // Route::get('', [self::class, 'getProductSaleRecords'])->name($p('view_sales_records'))->defaults('ex', __e('ss', null, true));
-      Route::get('/{date}', [self::class, 'getDailyProductSaleRecords'])->name($p('daily'))->defaults('ex', __e('ss', null, true));
-      Route::get('{product}/transactions', [self::class, 'getSaleRecordTransactions'])->name($p('view_sales_record_transactions'))->defaults('ex', __e('ss', null, true));
-      Route::post('{productSaleRecord}/confirm', [self::class, 'confirmSaleRecord'])->name($p('confirm_sale'))->defaults('ex', __e('ss', null, true));
-      Route::get('{product}/swap-deal', [self::class, 'getSaleRecordSwapDeal'])->name($p('view_sales_record_swap_deal'))->defaults('ex', __e('ss', null, true));
+      Route::name('accountant.product_sales_records.')->group(function () {
+        Route::post('{productSaleRecord}/confirm', [self::class, 'confirmSaleRecord'])->name('confirm_sale')->defaults('ex', __e('ac', null, true));
+      });
+    });
+  }
+
+  public static function multiAccessRoutes()
+  {
+    Route::group(['prefix' => 'product-sales-records'], function () {
+      Route::name('multiaccess.product_sales_records.')->group(function () {
+        // Route::get('', [self::class, 'getProductSaleRecords'])->name($p('view_sales_records'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
+        Route::get('/{date}', [self::class, 'getDailyProductSaleRecords'])->name('daily')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+        Route::get('{product}/transactions', [self::class, 'getSaleRecordTransactions'])->name('view_sales_record_transactions')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+        Route::get('{product}/swap-deal', [self::class, 'getSaleRecordSwapDeal'])->name('view_sales_record_swap_deal')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+      });
     });
   }
 
@@ -137,7 +199,18 @@ class ProductSaleRecord extends BaseModel
       'product'
     )->whereDate('created_at', Carbon::parse($date))->get();
 
-    $salesRecords = (new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic')->merge((new ProductSaleRecordTransformer)->collectionTransformer($swapSalesRecords, 'basicSwapTransaction'));
+    // dd($swapSalesRecords);
+
+
+    /**
+     * ! Fix: Call to a member function getKey() on array error when the first collection is empty.
+     * @after Update?
+     */
+    if ($salesRecords->isEmpty()) {
+      $salesRecords = (new ProductSaleRecordTransformer)->collectionTransformer($swapSalesRecords, 'basicSwapTransaction')->merge((new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic'));
+    } else {
+      $salesRecords = (new ProductSaleRecordTransformer)->collectionTransformer($salesRecords, 'basic')->merge((new ProductSaleRecordTransformer)->collectionTransformer($swapSalesRecords, 'basicSwapTransaction'));
+    }
 
     $companyAccounts = Cache::rememberForever('companyAccounts', fn () => (new CompanyBankAccountTransformer)->collectionTransformer(CompanyBankAccount::all(), 'basic'));
 
@@ -206,7 +279,7 @@ class ProductSaleRecord extends BaseModel
       $receipt = $product->generate_receipt();
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin(auth()->user(), $th, 'Receipt generation failed');
-       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
+      // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
       // return back()->withError('Receipt generation failed');
     }
 
@@ -218,7 +291,7 @@ class ProductSaleRecord extends BaseModel
       $product->app_user->notify(new SendProductReceipt($receipt));
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
-        // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
+      // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
       // return back()->withError('Failed to send receipt to user  ' . $product->app_user->emai);
     }
 

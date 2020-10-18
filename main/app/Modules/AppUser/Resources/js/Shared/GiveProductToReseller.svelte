@@ -18,7 +18,7 @@
     });
 
     Inertia.post(
-      route("multiaccess.resellers.give_product", [
+      route("stockkeeper.resellers.give_product", [
         resellerToGiveProduct,
         productToGiveReseller
       ]),

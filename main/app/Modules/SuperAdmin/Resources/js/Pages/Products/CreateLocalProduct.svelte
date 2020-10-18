@@ -26,7 +26,7 @@
       text: "Creating local supplier product ..."
     });
 
-    Inertia.post(route("superadmin.products.create_local"), details, {
+    Inertia.post(route("accountant.products.create_local"), details, {
       preserveState: true,
       preserveScroll: true,
       only: ["flash", "errors"]

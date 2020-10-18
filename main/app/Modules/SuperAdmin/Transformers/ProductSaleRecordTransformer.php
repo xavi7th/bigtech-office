@@ -48,7 +48,7 @@ class ProductSaleRecordTransformer
       'product_supplier' => (string)'Swap Deal',
       'primary_identifier' => (string)$sale_record->product->primary_identifier(),
       'cost_price' => (float)$sale_record->product->cost_price,
-      'proposed_selling_price' => (float)$sale_record->selling_price,
+      'proposed_selling_price' => (float)$sale_record->product->selling_price,
       'selling_price' => (float)$sale_record->selling_price,
       'total_bank_payments_amount' => (float)$sale_record->total_bank_payments_amount,
       'is_payment_complete' => (bool)$sale_record->is_payment_complete,

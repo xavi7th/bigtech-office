@@ -12,7 +12,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
         product_batch_id: batch.id
     };
 
-    $: ({ app,flash,errors } = $page);
+    $: ({ flash,errors } = $page);
 
 
   let createBatchPrice = () => {
@@ -21,7 +21,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
     });
 
     Inertia.post(
-      route("superadmin.prices.create"),
+      route("accountant.prices.create"),
       details,
       {
         preserveState: true,

@@ -142,8 +142,6 @@
           </div>
         </div>
       </div>
-
-      <hr />
     </div>
 
     <div class="col-lg-8 col-xl-8">
@@ -173,7 +171,7 @@
                 <td>
                   {#if auth.user.isStockKeeper}
                     <InertiaLink
-                      href={route('multiaccess.resellers.return_product', [
+                      href={route('stockkeeper.resellers.return_product', [
                         resellerWithProducts.id,
                         product.uuid
                       ])}

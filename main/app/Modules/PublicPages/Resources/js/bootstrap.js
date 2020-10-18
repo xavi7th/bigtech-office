@@ -164,7 +164,8 @@ new InertiaApp({
 /**
  *! Cause back() and forward() buttons of the browser to refresh the browser state
  */
-
+// if (!('onpopstate' in window)) {
 window.addEventListener('popstate', () => {
 	Inertia.reload({ preserveScroll: true, preserveState: false })
 })
+// }

@@ -5,10 +5,10 @@
   import route from "ziggy";
   import MarkSwapDealAsSoldModal from "@usershared/MarkSwapDealAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
-import { Inertia } from "@inertiajs/inertia";
-import { getErrorString } from "@public-assets/js/bootstrap";
+  import { Inertia } from "@inertiajs/inertia";
+  import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ auth, flash,errors } = $page);
+  $: ({ auth, flash, errors } = $page);
 
   export let swapDeals = [],
     resellers = [],
@@ -16,7 +16,6 @@ import { getErrorString } from "@public-assets/js/bootstrap";
     onlineReps = [];
 
   let productToMarkAsSold, productToGiveReseller;
-
 
   let scheduleProductForDelivery = product => {
     swalPreconfirm
@@ -149,16 +148,16 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                     Details
                   </InertiaLink>
 
-                  {#if auth.user.isSuperAdmin || auth.user.isAdmin}
+                  {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
-                      href={route('superadmin.miscellaneous.view_swap_history', product.uuid)}
+                      href={route('multiaccess.miscellaneous.view_swap_history', product.uuid)}
                       class="btn btn-info btn-xs btn-sm">
                       History
                     </InertiaLink>
                   {/if}
 
-                      {#if auth.user.isDispatchAdmin}
+                  {#if auth.user.isDispatchAdmin}
                     {#if product.status == 'in stock'}
                       <button
                         type="button"
@@ -170,16 +169,16 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                       </button>
                     {/if}
                     {#if product.status == 'out for delivery'}
-                       <button
-                      type="button"
-                      on:click={() => {
-                        productToMarkAsSold = product.uuid;
-                      }}
-                      data-toggle="modal"
-                      data-target="#enterSwapSalesDetails"
-                      class="btn btn-success btn-xs btn-sm">
-                      Mark Sold
-                    </button>
+                      <button
+                        type="button"
+                        on:click={() => {
+                          productToMarkAsSold = product.uuid;
+                        }}
+                        data-toggle="modal"
+                        data-target="#enterSwapSalesDetails"
+                        class="btn btn-success btn-xs btn-sm">
+                        Mark Sold
+                      </button>
                       <button
                         type="button"
                         on:click={() => {
@@ -192,30 +191,30 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                   {/if}
 
                   {#if product.status == 'in stock'}
-                   {#if auth.user.isWalkInRep}
+                    {#if auth.user.isWalkInRep}
                       <button
-                      type="button"
-                      on:click={() => {
-                        productToMarkAsSold = product.uuid;
-                      }}
-                      data-toggle="modal"
-                      data-target="#enterSwapSalesDetails"
-                      class="btn btn-success btn-xs btn-sm">
-                      Mark Sold
-                    </button>
-                   {/if}
+                        type="button"
+                        on:click={() => {
+                          productToMarkAsSold = product.uuid;
+                        }}
+                        data-toggle="modal"
+                        data-target="#enterSwapSalesDetails"
+                        class="btn btn-success btn-xs btn-sm">
+                        Mark Sold
+                      </button>
+                    {/if}
 
                     {#if auth.user.isStockKeeper}
                       <button
-                      type="button"
-                      on:click={() => {
-                        productToGiveReseller = product.uuid;
-                      }}
-                      data-toggle="modal"
-                      data-target="#giveProductToReseller"
-                      class="btn btn-warning btn-xs btn-sm">
-                      Give Reseller
-                    </button>
+                        type="button"
+                        on:click={() => {
+                          productToGiveReseller = product.uuid;
+                        }}
+                        data-toggle="modal"
+                        data-target="#giveProductToReseller"
+                        class="btn btn-warning btn-xs btn-sm">
+                        Give Reseller
+                      </button>
                     {/if}
                   {/if}
                 </td>

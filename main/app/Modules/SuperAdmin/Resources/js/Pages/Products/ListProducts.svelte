@@ -141,7 +141,7 @@
                 <td>{product.identifier}</td>
                 <td>{product.selling_price}</td>
                 <td>
-                  {#if auth.user.isSuperAdmin || auth.user.isAdmin}
+                  {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
                       href={route('multiaccess.products.view_product_details', product.uuid)}
@@ -187,7 +187,15 @@
                     {/if}
                   {/if}
 
-
+                  {#if auth.user.isAccountant}
+                    {#if product.status == 'out for delivery'}
+                      <button
+                        type="button"
+                        class="btn btn-orange btn-xs btn-sm">
+                        Out For Delivery
+                      </button>
+                    {/if}
+                  {/if}
                   {#if auth.user.isDispatchAdmin}
                     {#if product.status == 'in stock'}
                       <button

@@ -81,18 +81,26 @@ class ProductBatch extends BaseModel
     return self::where('batch_number', 'LOCAL-SUPPLIER')->first()->id;
   }
 
+  public static function accountantRoutes()
+  {
+    Route::group(['prefix' => 'product-batches'], function () {
+      Route::name('accountant.products.')->group(function () {
+        Route::get('{productBatch:batch_number}/price/create', [self::class, 'createProductPricePage'])->name('create_batch_price')->defaults('ex', __e('ss,ac', 'package', true));
+        Route::post('create', [self::class, 'createProductBatch'])->name('create_batch')->defaults('ex', __e('ss,ac', 'package', true));
+      });
+    });
+  }
+
   public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'product-batches'], function () {
       $p = function ($name) {
         return 'multiaccess.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a', 'package', false))->middleware('auth:stock_keeper,quality_control,admin');
-      Route::post('create', [self::class, 'createProductBatch'])->name($p('create_batch'))->defaults('ex', __e('ss', 'package', true))->middleware('auth:super_admin');
-      Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss,a', 'package', true))->middleware('auth:super_admin,admin');
-      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q,a', 'package', true))->middleware('auth:stock_keeper,quality_control,admin');
-      Route::get('{productBatch:batch_number}/price/create', [self::class, 'createProductPricePage'])->name($p('create_batch_price'))->defaults('ex', __e('ss', 'package', true));
-      Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss', 'package', true))->middleware('auth:super_admin');
+      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', false))->middleware('auth:stock_keeper,quality_control,admin,accountant');
+      Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss,a,ac', 'package', true))->middleware('auth:super_admin,admin,accountant');
+      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', true))->middleware('auth:stock_keeper,quality_control,admin,accountant');
+      Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss,ac', 'package', true))->middleware('auth:super_admin,accountant');
     });
   }
 
@@ -158,7 +166,7 @@ class ProductBatch extends BaseModel
       $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->justArrived(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
     } elseif ($request->user()->isQualityControl()) {
       $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->untested(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
-    } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin()) {
+    } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin() || $request->user()->isAccountant()) {
       $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products', 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
     } else {
       $batchWithProducts = collect(['products' => []]);
@@ -201,16 +209,6 @@ class ProductBatch extends BaseModel
 
     static::saved(function ($product) {
       Cache::forget('batches');
-    });
-
-    static::updating(function ($product) {
-      /**
-       * add an entry for the product trail that it's status changed
-       */
-      request()->user()->product_histories()->create([
-        'product_id' => $product->id,
-        'product_status_id' => $product->product_status_id,
-      ]);
     });
   }
 }

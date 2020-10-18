@@ -70,7 +70,7 @@ class SwapDeal extends BaseModel
 
   public function product_sales_record()
   {
-    return $this->morphMany(ProductSaleRecord::class, 'product');
+    return $this->morphOne(ProductSaleRecord::class, 'product');
   }
 
   public function product_expenses()
@@ -199,6 +199,16 @@ class SwapDeal extends BaseModel
     });
   }
 
+  static function accountantRoutes()
+  {
+    Route::group(['prefix' => 'swap-deals'], function () {
+      Route::name('accountant.products.')->group(function () {
+        Route::put('{swapDeal:product_uuid}/edit', [self::class, 'editSwapDeal'])->name('edit_swap_deal')->defaults('ex', __e('ac', 'refresh-cw', true));
+        Route::put('{swapDeal:product_uuid}/confirm-sale', [self::class, 'confirmSwapDealSale'])->name('confirm_swap_sale')->defaults('ex', __e('ac', null, true));
+      });
+    });
+  }
+
   static function dispatchAdminRoutes()
   {
     Route::group(['prefix' => 'swap-deals'], function () {
@@ -213,36 +223,24 @@ class SwapDeal extends BaseModel
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('multiaccess.products.')->group(function () {
-        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk,s,q,a,d', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin');
-        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q,a,d', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin');
-        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q,a,d', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin');
+        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('sk,s,q,a,d,ac', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin,accountant');
+        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q,a,d,ac', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin,accountant');
+        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q,a,d,ac', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin,accountant');
         Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->defaults('ex', __e('ss,s,d', null, true))->middleware('auth:stock_keeper,sales_rep,dispatch_admin');
       });
     });
   }
 
-  public static function routes()
-  {
-    Route::group(['prefix' => 'swap-deals', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      $p = function ($name) {
-        return 'superadmin.products.' . $name;
-      };
-      Route::put('{swapDeal:product_uuid}/edit', [self::class, 'editSwapDeal'])->name($p('edit_swap_deal'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::put('{swapDeal:product_uuid}/confirm-sale', [self::class, 'confirmSwapDealSale'])->name($p('confirm_swap_sale'))->defaults('ex', __e('ss', null, true));
-    });
-  }
-
   public function getSwapDeals(Request $request)
   {
-
-    ProductSaleRecord::find(1)->sales_rep;
-
     if ($request->user()->isSalesRep()) {
       $swapDeals = Cache::rememberForever('salesRepsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } elseif ($request->user()->isQualityControl()) {
       $swapDeals = Cache::rememberForever('qualityControlsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } elseif ($request->user()->isDispatchAdmin()) {
       $swapDeals = Cache::rememberForever('dispatchAdminsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
+    } elseif ($request->user()->isAccountant()) {
+      $swapDeals = Cache::rememberForever('accountantSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } else {
       $swapDeals = collect([]);
     }
@@ -256,7 +254,7 @@ class SwapDeal extends BaseModel
 
   public function getSwapDealDetails(Request $request, self $swapDeal)
   {
-    $swapDeal = (new SwapDealTransformer)->detailed($swapDeal->load('swapped_with', 'product_status', 'app_user', 'comments', 'product_expenses'));
+    $swapDeal = (new SwapDealTransformer)->detailed($swapDeal->load('swapped_with', 'product_status', 'app_user', 'comments', 'product_expenses', 'product_sales_record'));
     $product_statuses = Cache::rememberForever('qAProductStatuses', fn () => (new ProductStatusTransformer)->collectionTransformer(ProductStatus::notSaleStatus()->get(), 'basic'));
 
     return Inertia::render('SuperAdmin,Products/SwapDealDetails', compact('swapDeal', 'product_statuses'));
@@ -620,6 +618,7 @@ class SwapDeal extends BaseModel
       Cache::forget('qualityControlsSwapDeals');
       Cache::forget('salesRepsSwapDeals');
       Cache::forget('dispatchAdminsSwapDeals');
+      Cache::forget('accountantSwapDeals');
 
       if ($swapDeal->isDirty('product_status_id')) {
         request()->user()->product_histories()->create([

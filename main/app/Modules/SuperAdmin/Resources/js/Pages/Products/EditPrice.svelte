@@ -15,7 +15,7 @@
     });
 
     Inertia.put(
-      route("superadmin.prices.edit", price.id),
+      route("accountant.prices.edit", price.id),
       price,
       {
         preserveState: true,

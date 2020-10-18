@@ -70,7 +70,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
     });
 
     Inertia.post(
-      route("superadmin.product_sales_records.confirm_sale", productToMarkAsPaid),
+      route("accountant.product_sales_records.confirm_sale", productToMarkAsPaid),
       { payment_records },
       {
         preserveState: true,

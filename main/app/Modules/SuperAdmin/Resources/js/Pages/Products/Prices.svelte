@@ -20,7 +20,7 @@
   <div class="row vertical-gap">
     <div class="col-12">
       <InertiaLink
-        href={route('superadmin.products.create_batch_price', productBatchWithPriceDetails.batch_number)}
+        href={route('accountant.products.create_batch_price', productBatchWithPriceDetails.batch_number)}
         class="btn btn-brand btn-long text-white">
         <span class="text">Create New Price</span>
         <span class="icon">
@@ -53,13 +53,11 @@
                 <td>{price.cost_price}</td>
                 <td>
                   {price.proposed_selling_price}
-
                     <InertiaLink
-                      href={route('superadmin.prices.edit_page', price.id)}
+                      href={route('accountant.prices.edit_page', price.id)}
                       class="btn btn-link">
                       Edit
                     </InertiaLink>
-
                 </td>
               </tr>
             {/each}
