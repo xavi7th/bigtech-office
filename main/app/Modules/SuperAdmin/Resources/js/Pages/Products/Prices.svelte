@@ -1,5 +1,5 @@
 <script>
-  import { InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import route from "ziggy";
 
@@ -18,7 +18,8 @@
 <Layout
   title="View Product Prices for Batch {productBatchWithPriceDetails.batch_number}">
   <div class="row vertical-gap">
-    <div class="col-12">
+   {#if $page.auth.user.isAccountant}
+      <div class="col-12">
       <InertiaLink
         href={route('accountant.products.create_batch_price', productBatchWithPriceDetails.batch_number)}
         class="btn btn-brand btn-long text-white">
@@ -30,6 +31,7 @@
         </span>
       </InertiaLink>
     </div>
+   {/if}
     <div class="col-lg-12">
       <div class="table-responsive-md">
         <table class="rui-datatable table table-striped">
@@ -53,11 +55,13 @@
                 <td>{price.cost_price}</td>
                 <td>
                   {price.proposed_selling_price}
-                    <InertiaLink
+                    {#if $page.auth.user.isAccountant}
+                      <InertiaLink
                       href={route('accountant.prices.edit_page', price.id)}
                       class="btn btn-link">
                       Edit
                     </InertiaLink>
+                    {/if}
                 </td>
               </tr>
             {/each}

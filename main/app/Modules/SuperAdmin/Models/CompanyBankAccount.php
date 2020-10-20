@@ -73,7 +73,7 @@ class CompanyBankAccount extends BaseModel
     return optional(self::where('bank', 'Cash')->first())->id ?? 0;
   }
 
-  public static function routes()
+  public static function superAdminRoutes()
   {
     Route::group(['prefix' => 'company-bank-accounts'], function () {
       $misc = function ($name) {
@@ -154,7 +154,7 @@ class CompanyBankAccount extends BaseModel
   public function restoreCompanyBankAccount(Request $request, $id)
   {
     self::onlyTrashed()
-      ->where('id', $id)
+      ->find($id)
       ->restore();
 
 
@@ -182,7 +182,13 @@ class CompanyBankAccount extends BaseModel
   {
     parent::boot();
 
-    static::saved(function ($product) {
+    static::saved(function () {
+      Cache::forget('bankAccounts');
+    });
+    static::deleted(function () {
+      Cache::forget('bankAccounts');
+    });
+    static::restored(function () {
       Cache::forget('bankAccounts');
     });
   }

@@ -21,6 +21,7 @@ class CompanyBankAccountTransformer
       'account_name' => (string)$account->account_name,
       'account_number' => (string)$account->account_number,
       'bank' => (string)$account->bank,
+      'is_suspended' => (bool) $account->deleted_at
     ];
   }
 
@@ -49,6 +50,7 @@ class CompanyBankAccountTransformer
       'account_name' => (string)$account->account_name,
       'account_number' => (string)$account->account_number,
       'bank' => (string)$account->bank,
+      'is_suspended' => (bool) $account->deleted_at,
       'amount' => (string)$account->payment_record->amount,
     ];
   }

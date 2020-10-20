@@ -160,7 +160,7 @@
 
 <Layout title="Manage Product Brands">
   <div class="row vertical-gap">
-    {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+    {#if auth.user.isAdmin}
       <div class="col-lg-4 col-xl-4">
         <form class="#" on:submit|preventDefault={createProductBrand}>
           <div
@@ -229,7 +229,7 @@
                 </td>
                 <td>{brand.name} ({brand.products_count} products)</td>
                 <td class="d-flex justify-content-between align-content-center">
-                  {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+                  {#if auth.user.isSuperAdmin}
                     <button
                       type="button"
                       class="btn btn-danger btn-xs"

@@ -3,6 +3,7 @@
 namespace App\Modules\Accountant\Models;
 
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * App\Modules\Accountant\Models\Accountant
@@ -31,21 +32,21 @@ use App\User;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant query()
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereOfficeBranchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Accountant whereVerifiedAt($value)
+ * @method static Builder|Accountant newModelQuery()
+ * @method static Builder|Accountant newQuery()
+ * @method static Builder|Accountant query()
+ * @method static Builder|Accountant whereCreatedAt($value)
+ * @method static Builder|Accountant whereDeletedAt($value)
+ * @method static Builder|Accountant whereEmail($value)
+ * @method static Builder|Accountant whereFullName($value)
+ * @method static Builder|Accountant whereGender($value)
+ * @method static Builder|Accountant whereId($value)
+ * @method static Builder|Accountant whereIsActive($value)
+ * @method static Builder|Accountant whereOfficeBranchId($value)
+ * @method static Builder|Accountant wherePassword($value)
+ * @method static Builder|Accountant whereRememberToken($value)
+ * @method static Builder|Accountant whereUpdatedAt($value)
+ * @method static Builder|Accountant whereVerifiedAt($value)
  * @mixin \Eloquent
  */
 class Accountant extends User
@@ -68,5 +69,13 @@ class Accountant extends User
   static function findByEmail(string $email)
   {
     return self::whereEmail($email)->first();
+  }
+
+
+  protected static function booted()
+  {
+    static::addGlobalScope('safeRecords', function (Builder $builder) {
+      $builder->where('id', '>', 1);
+    });
   }
 }

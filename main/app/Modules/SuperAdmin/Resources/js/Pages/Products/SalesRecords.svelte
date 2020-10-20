@@ -4,7 +4,7 @@
   import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
   import route from "ziggy";
 
-  $: ({ app } = $page);
+  $: ({ auth } = $page);
 
   export let salesRecords = [],
     date,
@@ -58,7 +58,8 @@
                       </span>
                     {/if}
                   {:else}
-                    <button
+                   {#if auth.user.isAccountant}
+                      <button
                       on:click={() => {
                         productToMarkAsPaid = record.id;
                       }}
@@ -67,6 +68,7 @@
                       class="btn btn-brand btn-xs btn-sm">
                       Mark Paid
                     </button>
+                   {/if}
                   {/if}
                   {#if record.is_swap_deal}
                     <InertiaLink

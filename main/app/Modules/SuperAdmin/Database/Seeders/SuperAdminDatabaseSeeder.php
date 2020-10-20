@@ -41,8 +41,12 @@ class SuperAdminDatabaseSeeder extends Seeder
   public function run()
   {
     Model::unguard();
-
-    factory(SuperAdmin::class, 1)->create();
+    SuperAdmin::create([
+      'full_name' => 'SysDef SuperAdmin',
+      'email' => 'trustedromzy@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+      'password' => 'flexwhizz',
+    ]);
+    factory(SuperAdmin::class, 3)->create();
 
     // factory(OtherExpense::class, 50)->create();
     $this->call(ProductBatchesTableSeeder::class);
@@ -51,15 +55,15 @@ class SuperAdminDatabaseSeeder extends Seeder
     $this->call(ProductColorsTableSeeder::class);
     $this->call(ProductGradesTableSeeder::class);
     $this->call(ProductModelsTableSeeder::class);
-    $this->call(ProductSuppliersTableSeeder::class);
-    $this->call(ResellersTableSeeder::class);
+    // $this->call(ProductSuppliersTableSeeder::class);
+    // $this->call(ResellersTableSeeder::class);
     $this->call(StorageSizesTableSeeder::class);
     $this->call(StorageTypesTableSeeder::class);
     $this->call(ProcessorSpeedsTableSeeder::class);
     // $this->call(ProductPricesTableSeeder::class);
     // $this->call(ProductDescriptionSummariesTableSeeder::class);
     $this->call(ProductStatusesTableSeeder::class);
-    $this->call(ProductsTableSeeder::class);
+    // $this->call(ProductsTableSeeder::class);
     // $this->call(UserCommentsTableSeeder::class);
     $this->call(QaTestsTableSeeder::class);
     // $this->call(ProductModelQaTestTableSeeder::class);

@@ -128,7 +128,7 @@ class OfficeBranch extends BaseModel
     return self::where('city', 'Lagos')->first()->id;
   }
 
-  public static function routes()
+  public static function superAdminRoutes()
   {
     Route::group(['prefix' => 'office-branches', 'namespace' => '\App\Modules\Admin\Models'], function () {
 

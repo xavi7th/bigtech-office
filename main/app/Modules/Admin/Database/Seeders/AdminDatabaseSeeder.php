@@ -27,7 +27,7 @@ class AdminDatabaseSeeder extends Seeder
     ]);
 
 
-    factory(Admin::class, 2)->create();
+    factory(Admin::class, 5)->create();
 
 		// $this->call("OthersTableSeeder");
 	}

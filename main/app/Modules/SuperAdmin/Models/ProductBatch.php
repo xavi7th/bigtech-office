@@ -78,7 +78,12 @@ class ProductBatch extends BaseModel
 
   static function local_supplied_id(): int
   {
-    return self::where('batch_number', 'LOCAL-SUPPLIER')->first()->id;
+    static $id =  null;
+    if (is_null($id)) {
+      $id = self::where('batch_number', 'LOCAL-SUPPLIER')->first()->id;
+    }
+
+    return $id;
   }
 
   public static function accountantRoutes()
@@ -97,9 +102,9 @@ class ProductBatch extends BaseModel
       $p = function ($name) {
         return 'multiaccess.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', false))->middleware('auth:stock_keeper,quality_control,admin,accountant');
+      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', false))->middleware('auth:stock_keeper,quality_control,admin,accountant,super_admin');
       Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss,a,ac', 'package', true))->middleware('auth:super_admin,admin,accountant');
-      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', true))->middleware('auth:stock_keeper,quality_control,admin,accountant');
+      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', true))->middleware('auth:stock_keeper,quality_control,admin,accountant,super_admin');
       Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss,ac', 'package', true))->middleware('auth:super_admin,accountant');
     });
   }

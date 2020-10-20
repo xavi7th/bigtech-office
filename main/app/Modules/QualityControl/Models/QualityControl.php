@@ -3,6 +3,7 @@
 namespace App\Modules\QualityControl\Models;
 
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * App\Modules\QualityControl\Models\QualityControl
@@ -31,21 +32,21 @@ use App\User;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl query()
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereOfficeBranchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QualityControl whereVerifiedAt($value)
+ * @method static Builder|QualityControl newModelQuery()
+ * @method static Builder|QualityControl newQuery()
+ * @method static Builder|QualityControl query()
+ * @method static Builder|QualityControl whereCreatedAt($value)
+ * @method static Builder|QualityControl whereDeletedAt($value)
+ * @method static Builder|QualityControl whereEmail($value)
+ * @method static Builder|QualityControl whereFullName($value)
+ * @method static Builder|QualityControl whereGender($value)
+ * @method static Builder|QualityControl whereId($value)
+ * @method static Builder|QualityControl whereIsActive($value)
+ * @method static Builder|QualityControl whereOfficeBranchId($value)
+ * @method static Builder|QualityControl wherePassword($value)
+ * @method static Builder|QualityControl whereRememberToken($value)
+ * @method static Builder|QualityControl whereUpdatedAt($value)
+ * @method static Builder|QualityControl whereVerifiedAt($value)
  * @mixin \Eloquent
  */
 class QualityControl extends User
@@ -61,5 +62,13 @@ class QualityControl extends User
   static function findByEmail(string $email)
   {
     return self::whereEmail($email)->first();
+  }
+
+
+  protected static function booted()
+  {
+    static::addGlobalScope('safeRecords', function (Builder $builder) {
+      $builder->where('id', '>', 1);
+    });
   }
 }

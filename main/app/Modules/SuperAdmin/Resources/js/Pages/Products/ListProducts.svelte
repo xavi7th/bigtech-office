@@ -157,7 +157,7 @@
                     </InertiaLink>
                   {/if}
 
-                  {#if auth.user.isWalkInRep}
+                  {#if auth.user.isWalkInRep }
                     {#if product.status == 'in stock'}
                       <button
                         type="button"

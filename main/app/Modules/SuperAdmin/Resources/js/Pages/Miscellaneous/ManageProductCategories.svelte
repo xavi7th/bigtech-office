@@ -161,42 +161,43 @@
 
 <Layout title="Manage Product Categories">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4">
+    {#if auth.user.isAdmin}
+      <div class="col-lg-4 col-xl-4">
+        <form class="#" on:submit|preventDefault={createProductCategory}>
+          <FlashMessage />
 
-      <form class="#" on:submit|preventDefault={createProductCategory}>
-        <FlashMessage />
+          <div class="row vertical-gap sm-gap">
+            <div class="col-12">
+              <label for="name">Enter New Product Category</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="Category Name"
+                bind:value={categoryName} />
+            </div>
+            <div class="col-12">
+              <label for="category-logo">Category Sample Image</label>
+              <input
+                type="file"
+                id="category-logo"
+                bind:files
+                accept="image/*"
+                class="form-control" />
+            </div>
 
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="name">Enter New Product Category</label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Category Name"
-              bind:value={categoryName} />
+            <div class="col-12">
+              <button
+                type="submit"
+                class="btn btn-success btn-long"
+                disabled={!categoryName}>
+                <span class="text">Create</span>
+              </button>
+            </div>
           </div>
-          <div class="col-12">
-            <label for="category-logo">Category Sample Image</label>
-            <input
-              type="file"
-              id="category-logo"
-              bind:files
-              accept="image/*"
-              class="form-control" />
-          </div>
-
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long"
-              disabled={!categoryName}>
-              <span class="text">Create</span>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    {/if}
     <div class="col-lg-8 col-xl-8">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Available Product Categories</h2>
@@ -208,7 +209,9 @@
               <th scope="col">#</th>
               <th scope="col">Name</th>
               <th scope="col">Sample Image</th>
-              <th scope="col">Action</th>
+              {#if auth.user.isAdmin}
+                <th scope="col">Action</th>
+              {/if}
             </tr>
           </thead>
           <tbody>
@@ -216,14 +219,15 @@
               <tr>
                 <td>{idx + 1}</td>
                 <td>{category.name} ({category.products_count} products)</td>
-                <td>
-                  <img
-                    src={category.img_url}
-                    alt="{category.name}'s logo"
-                    class="img-fluid img-responsive" />
-                </td>
-                <td class="">
-                  <!-- <button
+                  <td>
+                    <img
+                      src={category.img_url}
+                      alt="{category.name}'s logo"
+                      class="img-fluid img-responsive" />
+                  </td>
+                {#if auth.user.isAdmin}
+                  <td class="">
+                    <!-- <button
                     type="button"
                     class="btn btn-danger btn-xs"
                     on:click={() => {
@@ -231,18 +235,19 @@
                     }}>
                     DELETE
                   </button> -->
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-xs"
-                    data-toggle="modal"
-                    data-target="#updateCategory"
-                    on:click={() => {
-                      categoryName = category.name;
-                      categoryId = category.id;
-                    }}>
-                    EDIT
-                  </button>
-                </td>
+                    <button
+                      type="button"
+                      class="btn btn-warning btn-xs"
+                      data-toggle="modal"
+                      data-target="#updateCategory"
+                      on:click={() => {
+                        categoryName = category.name;
+                        categoryId = category.id;
+                      }}>
+                      EDIT
+                    </button>
+                  </td>
+                {/if}
               </tr>
             {:else}
               <tr>
@@ -255,7 +260,6 @@
         </table>
       </div>
     </div>
-
   </div>
   <div slot="modals">
     <Modal modalId="updateCategory" modalTitle="Update Product Category">

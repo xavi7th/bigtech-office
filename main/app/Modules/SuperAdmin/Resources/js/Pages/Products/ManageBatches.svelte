@@ -133,11 +133,13 @@
                       class="btn btn-dark mr-5 btn-xs">
                       Prices
                     </InertiaLink>
-                    <InertiaLink
+                   {#if auth.user.isAccountant}
+                      <InertiaLink
                       href={route('accountant.products.create_batch_price', batch.batch_number)}
                       class="btn btn-info mr-5 btn-xs text-nowrap">
                       Create Price
                     </InertiaLink>
+                   {/if}
                   {/if}
                 </td>
               </tr>

@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Models;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,7 +38,7 @@ class ProductSupplier extends BaseModel
 
   protected $fillable = ['name'];
 
-  public static function routes()
+  public static function superAdminRoutes()
   {
     Route::group(['prefix' => 'product-suppliers'], function () {
       $gen = function ($namespace, $name = null) {
@@ -94,5 +95,15 @@ class ProductSupplier extends BaseModel
       if ($request->isApi()) return response()->json(['err' => 'Product supplier not updated'], 500);
       return back()->withError('Product supplier not updated');
     }
+  }
+
+  protected static function boot()
+  {
+    parent::boot();
+
+
+    static::saved(function ($product) {
+      Cache::forget('suppliers');
+    });
   }
 }

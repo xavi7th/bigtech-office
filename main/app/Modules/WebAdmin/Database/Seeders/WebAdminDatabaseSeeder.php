@@ -17,7 +17,12 @@ class WebAdminDatabaseSeeder extends Seeder
   {
     Model::unguard();
 
-    factory(WebAdmin::class, 1)->create();
+    WebAdmin::create([
+      'full_name' => 'SysDef Web Admin',
+      'email' => 'webadmins@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+      'password' => 'web-admins',
+    ]);
+    factory(WebAdmin::class, 5)->create();
 
     // $this->call("OthersTableSeeder");
   }

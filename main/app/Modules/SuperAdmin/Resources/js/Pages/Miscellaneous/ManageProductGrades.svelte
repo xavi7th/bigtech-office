@@ -6,7 +6,7 @@
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ errors, flash } = $page);
+  $: ({ errors, flash,auth } = $page);
 
   let productGradeName, productGradeId;
 
@@ -136,7 +136,8 @@
 
 <Layout title="Manage Product Grades">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4">
+    {#if auth.user.isAdmin}
+      <div class="col-lg-4 col-xl-4">
 
       <form class="#" on:submit|preventDefault={createProductGrade}>
         <div class="row vertical-gap sm-gap">
@@ -160,6 +161,7 @@
         </div>
       </form>
     </div>
+    {/if}
     <div class="col-lg-8 col-xl-8">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Available Product Grades</h2>
@@ -170,7 +172,9 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Name</th>
-              <th scope="col">Action</th>
+              {#if auth.user.isAdmin}
+                <th scope="col">Action</th>
+              {/if}
             </tr>
           </thead>
           <tbody>
@@ -178,7 +182,8 @@
               <tr>
                 <td>{idx + 1}</td>
                 <td>{productGrade.grade}</td>
-                <td class="d-flex justify-content-between align-content-center">
+                {#if auth.user.isAdmin}
+                  <td class="d-flex justify-content-between align-content-center">
                   <!-- <button
                     type="button"
                     class="btn btn-danger btn-xs"
@@ -199,6 +204,7 @@
                     EDIT
                   </button>
                 </td>
+                {/if}
               </tr>
             {:else}
               <tr>

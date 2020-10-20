@@ -6,15 +6,16 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
   import { onMount } from "svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
+  import { AuthenticatorAssertionResponse } from "lodash/_freeGlobal";
 
-  $: ({ app, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page);
   export let onlineReps = [],
     salesChannel = [],
     officeBranch = {
       branchProducts: []
     };
 
-  let  productToMarkAsSold;
+  let productToMarkAsSold;
 
   onMount(() => {
     if (flash.success) {
@@ -76,13 +77,22 @@
                 <td>{product.cost_price}</td>
                 <td>{product.selling_price}</td>
                 <td>
-                  <InertiaLink
-                    type="button"
-                    href={route('superadmin.products.view_product_details', product.uuid)}
-                    class="btn btn-primary btn-xs btn-sm">
-                    Details
-                  </InertiaLink>
-                  {#if product.status == 'in stock'}
+                  {#if auth.user.isSuperAdmin}
+                    <InertiaLink
+                      type="button"
+                      href={route('multiaccess.products.view_product_details', product.uuid)}
+                      class="btn btn-primary btn-xs btn-sm">
+                      Details
+                    </InertiaLink>
+                    <InertiaLink
+                      type="button"
+                      preserve-scroll
+                      href={route('multiaccess.miscellaneous.view_product_history', product.uuid)}
+                      class="btn btn-info btn-xs btn-sm">
+                      History
+                    </InertiaLink>
+                  {/if}
+                  {#if product.status == 'in stock' && auth.user.isWalkInRep}
                     <button
                       type="button"
                       on:click={() => {
@@ -94,14 +104,6 @@
                       Mark Sold
                     </button>
                   {/if}
-
-                  <InertiaLink
-                    type="button"
-                    preserve-scroll
-                    href={route('superadmin.miscellaneous.view_product_history', product.uuid)}
-                    class="btn btn-info btn-xs btn-sm">
-                    History
-                  </InertiaLink>
                 </td>
               </tr>
             {:else}
@@ -109,7 +111,6 @@
                 <td colspan="5">No Products In {officeBranch.city}'s Branch</td>
               </tr>
             {/each}
-
           </tbody>
         </table>
       </div>

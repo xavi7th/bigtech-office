@@ -23,7 +23,6 @@ use App\Modules\SuperAdmin\Models\ProductBrand;
 use App\Modules\SuperAdmin\Models\ProductColor;
 use App\Modules\SuperAdmin\Models\ProductGrade;
 use App\Modules\SuperAdmin\Models\ProductModel;
-use App\Modules\SuperAdmin\Models\ProductPrice;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ProcessorSpeed;
@@ -42,32 +41,53 @@ class SuperAdminController extends Controller
   static function routes()
   {
     Route::group(['middleware' => ['web'], 'prefix' => SuperAdmin::DASHBOARD_ROUTE_PREFIX], function () {
+
+      Product::multiAccessRoutes();
+
+      Reseller::multiAccessRoutes();
+
+      SwapDeal::multiAccessRoutes();
+
+
       Route::group(['middleware' => ['auth:super_admin']], function () {
 
         Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss,a', 'home', true));
 
-        AppUser::routes();
+        // AppUser::routes();
 
-        ProductPrice::routes();
-
-        ProductSupplier::routes();
+        ProductSupplier::superAdminRoutes();
 
         ProductStatus::superAdminRoutes();
 
-        UserComment::routes();
+        Reseller::superAdminRoutes();
 
-        ProductQATestResult::routes();
+        // UserComment::routes();
 
-        SwapDeal::routes();
+        // ProductQATestResult::superAdminRoutes();
 
-        CompanyBankAccount::routes();
 
-        OfficeBranch::routes();
+        CompanyBankAccount::superAdminRoutes();
 
-        ErrLog::routes();
+        OfficeBranch::superAdminRoutes();
+
+        ErrLog::superAdminRoutes();
       });
 
-      Reseller::multiAccessRoutes();
+
+
+      ProductBrand::multiAccessRoutes();
+
+      ProductModel::multiAccessRoutes();
+
+      ProductHistory::multiAccessRoutes();
+
+      ProductExpense::multiAccessRoutes();
+
+      OtherExpense::multiAccessRoutes();
+
+      ProductBatch::multiAccessRoutes();
+
+      ProductSaleRecord::multiAccessRoutes();
 
       StorageSize::multiAccessRoutes();
 
@@ -81,8 +101,6 @@ class SuperAdminController extends Controller
 
       ProcessorSpeed::multiAccessRoutes();
 
-      ProductBrand::multiAccessRoutes();
-
       ProductStatus::multiAccessRoutes();
 
       SalesChannel::multiAccessRoutes();
@@ -90,20 +108,6 @@ class SuperAdminController extends Controller
       QATest::multiAccessRoutes();
 
       ProductDescriptionSummary::multiAccessRoutes();
-
-      ProductModel::multiAccessRoutes();
-
-      ProductHistory::multiAccessRoutes();
-
-      ProductExpense::multiAccessRoutes();
-
-      OtherExpense::multiAccessRoutes();
-
-      ProductBatch::multiAccessRoutes();
-
-      Product::multiAccessRoutes();
-
-      ProductSaleRecord::multiAccessRoutes();
     });
   }
 

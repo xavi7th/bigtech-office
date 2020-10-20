@@ -331,12 +331,12 @@
                     alt="" />
                   <span>{bankAccount.account_name}</span>
                 </td>
-                <td>{bankAccount.account_number}</td>
+                <td>{bankAccount.bank}/{bankAccount.account_number}</td>
                 <td class="d-flex justify-content-between align-content-center">
                   {#if bankAccount.is_suspended}
                     <button
                       type="button"
-                      class="btn btn-dark btn-xs"
+                      class="btn btn-success btn-xs"
                       on:click={() => {
                         restoreBankAccount(bankAccount.id);
                       }}>

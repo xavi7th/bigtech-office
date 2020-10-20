@@ -27,11 +27,9 @@ class ErrLogTransformer
         })
       ];
     } catch (\Throwable $e) {
-      return [
-        'error_logs' => $collection->map(function ($v) use ($transformerMethod) {
-          return $this->$transformerMethod($v);
-        })
-      ];
+      return $collection->map(function ($v) use ($transformerMethod) {
+        return $this->$transformerMethod($v);
+      });
     }
   }
 
@@ -42,7 +40,7 @@ class ErrLogTransformer
       'id' => (int)$log->id,
       'message' => (string)$log->message,
       'type' => (string)$log->level_name,
-      'context' => (object)json_decode($log->context),
+      'context' => (string)json_encode($log->context),
       'extra' => (string)$log->extra,
       'time' => (string)$log->created_at,
     ];

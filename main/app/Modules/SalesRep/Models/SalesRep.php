@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Models\ActivityLog;
-use App\Modules\SuperAdmin\Models\StockRequest;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 
@@ -203,7 +202,7 @@ class SalesRep extends User
   protected static function booted()
   {
     static::addGlobalScope('safeRecords', function (Builder $builder) {
-      $builder->where('unit', '<>', 'sys-default');
+      $builder->where('id', '>', 1);
     });
   }
 }

@@ -30,6 +30,79 @@ use App\Modules\SuperAdmin\Http\Validations\CreateSwapDealValidation;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 
+/**
+ * App\Modules\SuperAdmin\Models\SwapDeal
+ *
+ * @property int $id
+ * @property int|null $app_user_id
+ * @property string $description
+ * @property string $owner_details
+ * @property string|null $id_url
+ * @property string|null $receipt_url
+ * @property string|null $imei
+ * @property string|null $serial_no
+ * @property string|null $model_no
+ * @property float $swap_value
+ * @property float|null $selling_price
+ * @property string|null $sold_at
+ * @property int|null $swapped_with_id
+ * @property string|null $swapped_with_type
+ * @property int $product_status_id
+ * @property string $product_uuid
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read AppUser|null $app_user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read string $id_thumb_url
+ * @property-read string $receipt_thumb_url
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductExpense[] $product_expenses
+ * @property-read int|null $product_expenses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductHistory[] $product_histories
+ * @property-read int|null $product_histories_count
+ * @property-read ProductSaleRecord|null $product_sales_record
+ * @property-read ProductStatus $product_status
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
+ * @property-read int|null $reseller_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|SwapDeal[] $swapped_deal_device
+ * @property-read int|null $swapped_deal_device_count
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $swapped_with
+ * @property-read \Illuminate\Database\Eloquent\Collection|Reseller[] $with_resellers
+ * @property-read int|null $with_resellers_count
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal backFromRepairs()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal inStock()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal outForDelivery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal outForRepairs()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal saleConfirmed()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal sold()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal soldByReseller()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal untested()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereAppUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereIdUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereImei($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereModelNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereOwnerDetails($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductStatusId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductUuid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereReceiptUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSellingPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSerialNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSoldAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwapValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWithId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWithType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
+ * @mixin \Eloquent
+ */
 class SwapDeal extends BaseModel
 {
   use Commentable;

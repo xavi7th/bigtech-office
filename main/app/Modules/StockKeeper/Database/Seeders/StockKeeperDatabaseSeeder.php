@@ -17,6 +17,11 @@ class StockKeeperDatabaseSeeder extends Seeder
   {
     Model::unguard();
 
-    factory(StockKeeper::class, 1)->create();
+    StockKeeper::create([
+      'full_name' => 'SysDef Sales Rep',
+      'email' => 'stockkeeper@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+      'password' => 'stock-keepers',
+    ]);
+    factory(StockKeeper::class, 5)->create();
   }
 }

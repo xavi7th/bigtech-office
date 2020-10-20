@@ -34,6 +34,6 @@ class SalesRepTableSeeder extends Seeder
       'email' => 'salesrep@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
       'password' => 'sales-reps',
     ]);
-    factory(SalesRep::class, 7)->create();
+    factory(SalesRep::class, 15)->create();
   }
 }

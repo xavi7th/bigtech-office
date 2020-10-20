@@ -3,6 +3,7 @@
 namespace App\Modules\StockKeeper\Models;
 
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * App\Modules\StockKeeper\Models\StockKeeper
@@ -31,21 +32,21 @@ use App\User;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper query()
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereOfficeBranchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StockKeeper whereVerifiedAt($value)
+ * @method static Builder|StockKeeper newModelQuery()
+ * @method static Builder|StockKeeper newQuery()
+ * @method static Builder|StockKeeper query()
+ * @method static Builder|StockKeeper whereCreatedAt($value)
+ * @method static Builder|StockKeeper whereDeletedAt($value)
+ * @method static Builder|StockKeeper whereEmail($value)
+ * @method static Builder|StockKeeper whereFullName($value)
+ * @method static Builder|StockKeeper whereGender($value)
+ * @method static Builder|StockKeeper whereId($value)
+ * @method static Builder|StockKeeper whereIsActive($value)
+ * @method static Builder|StockKeeper whereOfficeBranchId($value)
+ * @method static Builder|StockKeeper wherePassword($value)
+ * @method static Builder|StockKeeper whereRememberToken($value)
+ * @method static Builder|StockKeeper whereUpdatedAt($value)
+ * @method static Builder|StockKeeper whereVerifiedAt($value)
  * @mixin \Eloquent
  */
 class StockKeeper extends User
@@ -61,5 +62,12 @@ class StockKeeper extends User
   static function findByEmail(string $email)
   {
     return self::whereEmail($email)->first();
+  }
+
+  protected static function booted()
+  {
+    static::addGlobalScope('safeRecords', function (Builder $builder) {
+      $builder->where('id', '>', 1);
+    });
   }
 }

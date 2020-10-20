@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Admin\Models\Admin;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 
@@ -39,23 +40,23 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin query()
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereAvatar($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereOfficeBranchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin whereVerifiedAt($value)
+ * @method static Builder|SuperAdmin newModelQuery()
+ * @method static Builder|SuperAdmin newQuery()
+ * @method static Builder|SuperAdmin query()
+ * @method static Builder|SuperAdmin whereAddress($value)
+ * @method static Builder|SuperAdmin whereAvatar($value)
+ * @method static Builder|SuperAdmin whereCreatedAt($value)
+ * @method static Builder|SuperAdmin whereDeletedAt($value)
+ * @method static Builder|SuperAdmin whereEmail($value)
+ * @method static Builder|SuperAdmin whereFullName($value)
+ * @method static Builder|SuperAdmin whereGender($value)
+ * @method static Builder|SuperAdmin whereId($value)
+ * @method static Builder|SuperAdmin whereOfficeBranchId($value)
+ * @method static Builder|SuperAdmin wherePassword($value)
+ * @method static Builder|SuperAdmin wherePhone($value)
+ * @method static Builder|SuperAdmin whereRememberToken($value)
+ * @method static Builder|SuperAdmin whereUpdatedAt($value)
+ * @method static Builder|SuperAdmin whereVerifiedAt($value)
  * @mixin \Eloquent
  */
 class SuperAdmin extends User
@@ -148,5 +149,12 @@ class SuperAdmin extends User
     $admin->forceDelete();
 
     return response()->json(['rsp' => true], 204);
+  }
+
+  protected static function booted()
+  {
+    static::addGlobalScope('safeRecords', function (Builder $builder) {
+      $builder->where('id', '>', 1);
+    });
   }
 }

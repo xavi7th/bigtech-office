@@ -20,10 +20,9 @@ use App\Modules\WebAdmin\Models\WebAdmin;
 
 
 $factory->define(WebAdmin::class, function (Faker $faker) {
-  dump('web-admins' . strtolower(str_replace(" ", "-", config('app.name'))));
   return [
-    'full_name' => 'SysDef Accountant',
-    'email' => 'webadmins@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+    'full_name' => $faker->name,
+    'email' => $faker->email,
     'password' => 'web-admins',
   ];
 });

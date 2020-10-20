@@ -46,6 +46,22 @@
                   <td>{product.selling_price}</td>
                 {/if}
                 <td>
+                    {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
+                    <InertiaLink
+                      type="button"
+                      href={route('multiaccess.products.view_product_details', product.uuid)}
+                      class="btn btn-primary btn-xs btn-sm">
+                      Details
+                    </InertiaLink>
+
+                    <InertiaLink
+                      type="button"
+                      href={route('multiaccess.miscellaneous.view_product_history', product.uuid)}
+                      class="btn btn-info btn-xs btn-sm">
+                      History
+                    </InertiaLink>
+                  {/if}
+
                   {#if auth.user.isQualityControl || auth.user.isAdmin || auth.user.isSuperAdmin}
                     <InertiaLink
                       type="button"

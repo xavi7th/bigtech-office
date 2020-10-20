@@ -63,18 +63,32 @@ class ErrLog extends BaseModel
     Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class($user), 'exception' => $exception]);
   }
 
-  static function routes()
+  static function superAdminRoutes()
   {
     Route::group([], function () {
-
       Route::get('error-logs', [self::class, 'getErrorLogs'])->name('superadmin.logs.error_logs')->defaults('ex', __e('ss', 'activity', false));
+      Route::delete('error-logs', [self::class, 'pruneErrLogs'])->name('superadmin.logs.prune')->defaults('ex', __e('ss', 'activity', false));
     });
   }
 
   public function getErrorLogs(Request $request)
   {
-    if ($request->isApi())
-      return (new ErrLogTransformer)->collectionTransformer(self::latest()->get(), 'basicTransform');
-    return Inertia::render('SuperAdmin,Notifications/ErrorLogs');
+    if ($request->isApi()) return (new ErrLogTransformer)->collectionTransformer(self::latest()->get(), 'basicTransform');
+    return Inertia::render('SuperAdmin,Notifications/ErrorLogs', [
+      'errLogs' => (new ErrLogTransformer)->collectionTransformer(self::latest()->get(), 'basicTransform')
+    ]);
   }
+
+  public function pruneErrLogs(Request $request)
+  {
+    self::old()->delete();
+
+    return back()->withSuccess('Error logs cleared');
+  }
+
+  public function scopeOld($query)
+  {
+    return $query->whereDate('created_at', '<', now()->subDays(7));
+  }
+
 }

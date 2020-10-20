@@ -118,9 +118,6 @@ class OtherExpense extends BaseModel
         'purpose' => $request->purpose,
       ]);
 
-      Cache::forget('dailyExpenses');
-      Cache::forget('allExpenses');
-
       if ($request->isApi()) return response()->json((new OtherExpenseTransformer)->basic($expense), 201);
       return back()->withSuccess('Expense Record created. ');
     } catch (\Throwable $th) {
@@ -144,6 +141,16 @@ class OtherExpense extends BaseModel
   {
     static::addGlobalScope('latest', function (Builder $builder) {
       $builder->latest();
+    });
+  }
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function () {
+      Cache::forget('dailyExpenses');
+      Cache::forget('allExpenses');
     });
   }
 }

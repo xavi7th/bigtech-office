@@ -11,13 +11,14 @@ use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductStatusTransformer;
 use Cache;
+use Str;
 
 /**
  * App\Modules\SuperAdmin\Models\ProductStatus
  *
  * @property int $id
  * @property string $status
- * @property string $status-slug
+ * @property string $status_slug
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -90,7 +91,7 @@ class ProductStatus extends BaseModel
   }
   static function scheduledDeliveryId(): int
   {
-    return self::where('status-slug', 'out-for-delivery')->first()->id;
+    return self::where('status_slug', 'out-for-delivery')->first()->id;
   }
 
   /**
@@ -215,7 +216,11 @@ class ProductStatus extends BaseModel
   {
     parent::boot();
 
-    static::saved(function ($swapDeal) {
+    static::saving(function (self $productStatus) {
+      $productStatus->status_slug = Str::slug($productStatus->status);
+    });
+
+    static::saved(function (self $productStatus) {
       Cache::forget('qAProductStatuses');
       Cache::forget('productStatuses');
       Cache::forget('statuses');

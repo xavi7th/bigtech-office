@@ -137,33 +137,34 @@
 
 <Layout title="Manage Storage Types">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4">
+    {#if auth.user.isAdmin}
+      <div class="col-lg-4 col-xl-4">
+        <form class="#" on:submit|preventDefault={createStorageType}>
+          <FlashMessage />
 
-      <form class="#" on:submit|preventDefault={createStorageType}>
-        <FlashMessage />
+          <div class="row vertical-gap sm-gap">
+            <div class="col-12">
+              <label for="name">Enter New Storage Type</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="Storage Type Name"
+                bind:value={storageTypeName} />
+            </div>
 
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="name">Enter New Storage Type</label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Storage Type Name"
-              bind:value={storageTypeName} />
+            <div class="col-12">
+              <button
+                type="submit"
+                class="btn btn-success btn-long"
+                disabled={!storageTypeName}>
+                <span class="text">Create</span>
+              </button>
+            </div>
           </div>
-
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long"
-              disabled={!storageTypeName}>
-              <span class="text">Create</span>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    {/if}
     <div class="col-lg-8 col-xl-8">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Available Storage Types</h2>
@@ -174,7 +175,9 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Name</th>
-              <th scope="col">Action</th>
+              {#if auth.user.isAdmin}
+                <th scope="col">Action</th>
+              {/if}
             </tr>
           </thead>
           <tbody>
@@ -182,8 +185,10 @@
               <tr>
                 <td>{idx + 1}</td>
                 <td>{storageType.type}</td>
-                <td class="d-flex justify-content-between align-content-center">
-                  <!-- <button
+                {#if auth.user.isAdmin}
+                  <td
+                    class="d-flex justify-content-between align-content-center">
+                    <!-- <button
                     type="button"
                     class="btn btn-danger btn-xs"
                     on:click={() => {
@@ -191,18 +196,19 @@
                     }}>
                     DELETE
                   </button> -->
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-xs"
-                    data-toggle="modal"
-                    data-target="#updateStorageType"
-                    on:click={() => {
-                      storageTypeName = storageType.type;
-                      storageTypeId = storageType.id;
-                    }}>
-                    EDIT
-                  </button>
-                </td>
+                    <button
+                      type="button"
+                      class="btn btn-warning btn-xs"
+                      data-toggle="modal"
+                      data-target="#updateStorageType"
+                      on:click={() => {
+                        storageTypeName = storageType.type;
+                        storageTypeId = storageType.id;
+                      }}>
+                      EDIT
+                    </button>
+                  </td>
+                {/if}
               </tr>
             {:else}
               <tr>
@@ -213,7 +219,6 @@
         </table>
       </div>
     </div>
-
   </div>
   <div slot="modals">
     <Modal modalId="updateStorageType" modalTitle="Update Storage Type">

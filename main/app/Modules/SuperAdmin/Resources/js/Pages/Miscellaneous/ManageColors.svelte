@@ -15,10 +15,9 @@
       text: "Creating color ..."
     });
 
-
     Inertia.post(
       route("multiaccess.miscellaneous.create_product_color"),
-      {name:colorName},
+      { name: colorName },
       {
         preserveState: true,
         preserveScroll: true,
@@ -143,30 +142,29 @@
 
 <Layout title="Manage Product Colors">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4">
+    {#if auth.user.isAdmin}
+      <div class="col-lg-4 col-xl-4">
+        <form class="#" on:submit|preventDefault={createProductColor}>
+          <div class="row vertical-gap sm-gap">
+            <div class="col-12">
+              <label for="name">Enter New Product Color</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="Color Name"
+                bind:value={colorName} />
+            </div>
 
-      <form class="#" on:submit|preventDefault={createProductColor}>
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="name">Enter New Product Color</label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Color Name"
-              bind:value={colorName} />
+            <div class="col-12">
+              <button type="submit" class="btn btn-success btn-long">
+                <span class="text">Create</span>
+              </button>
+            </div>
           </div>
-
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long">
-              <span class="text">Create</span>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    {/if}
     <div class="col-lg-8 col-xl-8">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Available Product Colors</h2>
@@ -177,7 +175,9 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Name</th>
-              <th scope="col">Action</th>
+              {#if auth.user.isAdmin}
+                <th scope="col">Action</th>
+              {/if}
             </tr>
           </thead>
           <tbody>
@@ -185,8 +185,10 @@
               <tr>
                 <td>{idx + 1}</td>
                 <td>{color.name} ({color.products_count} products)</td>
-                <td class="d-flex justify-content-between align-content-center">
-                  <!-- <button
+                {#if auth.user.isAdmin}
+                  <td
+                    class="d-flex justify-content-between align-content-center">
+                    <!-- <button
                     type="button"
                     class="btn btn-danger btn-xs"
                     on:click={() => {
@@ -194,18 +196,19 @@
                     }}>
                     DELETE
                   </button> -->
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-xs"
-                    data-toggle="modal"
-                    data-target="#updateColor"
-                    on:click={() => {
-                      colorName = color.name;
-                      colorId = color.id;
-                    }}>
-                    EDIT
-                  </button>
-                </td>
+                    <button
+                      type="button"
+                      class="btn btn-warning btn-xs"
+                      data-toggle="modal"
+                      data-target="#updateColor"
+                      on:click={() => {
+                        colorName = color.name;
+                        colorId = color.id;
+                      }}>
+                      EDIT
+                    </button>
+                  </td>
+                {/if}
               </tr>
             {:else}
               <tr>
@@ -218,7 +221,6 @@
         </table>
       </div>
     </div>
-
   </div>
   <div slot="modals">
     <Modal modalId="updateColor" modalTitle="Update Product Color">

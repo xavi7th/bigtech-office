@@ -68,9 +68,7 @@ class PublicPagesServiceProvider extends ServiceProvider
         'email' => config('app.email'),
       ],
       'routes' => function (Request $request) {
-        return Cache::remember('routes', config('cache.user_routes_cache_duration'), function () use ($request) {
-          return optional($request->user())->get_navigation_routes() ?? get_related_routes('app.', ['GET'], true);
-        });
+        return Cache::remember('routes', config('cache.user_routes_cache_duration'), fn () => $request->user() ? $request->user()->get_navigation_routes() : get_related_routes('app.', ['GET'], true));
       },
       'isInertiaRequest' => !!request()->header('X-Inertia'),
       'auth' => function () {

@@ -83,9 +83,11 @@
         brand={productModel.brand} />
     </div>
     <div class="col-lg-6 col-xl-7">
-      <DescriptionSummary
+      {#if auth.user.isWebAdmin || auth.user.isAdmin}
+         <DescriptionSummary
         descriptionSummary={productModel.descriptionSummary}
         descriptionSummaryUpdated={productModel.descriptionSummaryUpdated} />
+      {/if}
     </div>
     <div class="col-12">
       <ul class="nav nav-tabs rui-tabs-sliding" role="tablist">
@@ -184,7 +186,7 @@
         on:click={() => {
           createModelComment(productModel.id, comment);
         }}>
-        Add Description
+        Add Comment
       </button>
     </Modal>
     <Modal modalId="addImage" modalTitle="Add Image to Product Model">

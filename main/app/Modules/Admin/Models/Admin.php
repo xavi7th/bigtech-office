@@ -66,10 +66,10 @@ class Admin extends User
     return self::whereEmail($email)->first();
   }
 
-  // protected static function booted()
-  // {
-  //   static::addGlobalScope('safeRecords', function (Builder $builder) {
-  //     $builder->where('full_name', '<>', 'SysDef Admin');
-  //   });
-  // }
+  protected static function booted()
+  {
+    static::addGlobalScope('safeRecords', function (Builder $builder) {
+      $builder->where('id', '>', 1);
+    });
+  }
 }

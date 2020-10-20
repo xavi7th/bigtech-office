@@ -1,72 +1,120 @@
 <script>
-    import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-    import { Inertia } from "@inertiajs/inertia";
-    import Layout from "@superadmin-shared/SuperAdminLayout";
-    import FlashMessage from "@usershared/FlashMessage";
-    import route from "ziggy";
+  import { Inertia } from "@inertiajs/inertia";
+  import { page } from "@inertiajs/inertia-svelte";
+  import { getErrorString } from "@public-assets/js/bootstrap";
+  import Modal from "@superadmin-shared/Partials/Modal.svelte";
+  import Layout from "@superadmin-shared/SuperAdminLayout";
 
-    let details = {};
+  $: ({ flash, errors } = $page);
 
-    $: ({ app } = $page);
+  export let errLogs = [];
+  let fullErrorMessage;
+
+  let pruneErrLogs = product => {
+    swalPreconfirm
+      .fire({
+        text: "This will delete all old error logs",
+        confirmButtonText: "Delete",
+        preConfirm: () => {
+          return Inertia.delete(route("superadmin.logs.prune"), {
+            preserveState: true,
+            preserveScroll: true,
+            only: ["flash", "errors", "errLogs"]
+          })
+            .then(() => {
+              if (flash.success) {
+                return true;
+              } else if (flash.error || _.size(errors) > 0) {
+                throw new Error(flash.error || getErrorString(errors));
+              }
+            })
+            .catch(error => {
+              swal.showValidationMessage(`Request failed: ${error}`);
+            });
+        }
+      })
+      .then(result => {
+        if (result.dismiss && result.dismiss == "cancel") {
+          swal.fire(
+            "Canceled!",
+            "You canceled the action. Nothing was changed",
+            "info"
+          );
+        } else if (flash.success) {
+          ToastLarge.fire({
+            title: "Successful!",
+            html: flash.success
+          });
+        }
+      });
+  };
 </script>
 
-<Layout title="Error Logs">
+<style>
+  textarea {
+    width: 100%;
+    height: 400px;
+  }
+</style>
 
-    <div class="row vertical-gap">
-        <div class="col-12">
-            <div class="table-responsive">
-                <table
-                    class="table table-bordered rui-datatable"
-                    data-order="[]">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">Errors</th>
-                        </tr>
-                    </thead>
-                    <tbody
-                        class="list-group list-group-flush m-0
-                        rui-project-task-list">
-                        <tr class="list-group-item p-0">
-                            <td class="rui-task rui-task-danger">
-                                <div class="rui-task-icon">
-                                    <span class="fa fa-history mr-10" />
-                                    2020-07-21 16:53:44
-                                </div>
-                                <div class="rui-task-content">
-                                    <b class="rui-task-title">
-                                        404: https://smartcoophq.org/robots.txt
-                                        "url":
-                                        "https:\/\/smartcoophq.org\/robots.txt",
-                                        "method": "GET", "data": []
-                                    </b>
-                                    <small class="rui-task-subtitle">
-                                        <strong>Error Type:</strong>
-                                        DEBUG
-                                    </small>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="list-group-item p-0">
-                            <td class="rui-task rui-task-danger">
-                                <div class="rui-task-icon">
-                                    <span class="fa fa-history mr-10" />
-                                    2020-07-21 12:55:42
-                                </div>
-                                <div class="rui-task-content">
-                                    <b class="rui-task-title">
-                                        Prof. Jasen Funk V has no default card
-                                        to auto deduct
-                                    </b>
-                                    <small class="rui-task-subtitle">
-                                        <strong>Error Type:</strong>
-                                        Notice
-                                    </small>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<Layout title="Error Logs">
+  <div class="row vertical-gap">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table table-bordered rui-datatable" data-order="[]">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">
+                Errors <button type="button" on:click={pruneErrLogs} class="btn
+                    btn-danger btn-xs ml-50"> Prune Logs </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="list-group list-group-flush m-0 rui-project-task-list">
+            {#each errLogs as log}
+              <tr class="list-group-item p-0">
+                <td class="rui-task rui-task-danger">
+                  <div class="rui-task-icon">
+                    <span class="fa fa-history mr-10" />
+                    {log.time}
+                  </div>
+                  <div class="rui-task-content">
+                    <b class="rui-task-title">
+                      {log.message || 'No User friendly Description'}
+                      <button
+                        type="button"
+                        on:click={() => {
+                          fullErrorMessage = log.context;
+                        }}
+                        data-toggle="modal"
+                        data-target="#enterSalesDetails"
+                        class="btn btn-danger btn-xs btn-sm">
+                        View Details
+                      </button></b>
+                    <small class="rui-task-subtitle">
+                      <strong>Error Type:</strong> DEBUG
+                    </small>
+                  </div>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
+
+  <div slot="modals">
+    <Modal modalId="enterSalesDetails" modalTitle="Enter Sales Details">
+      <div class="row vertical-gap sm-gap">
+        <div class="col-12">
+          {#if fullErrorMessage}
+            <textarea readonly>{JSON.parse(fullErrorMessage)}</textarea>
+          {/if}
+        </div>
+      </div>
+    </Modal>
+
+    Object.entries(cats) as as [cat_name, cat_number], index
+  </div>
 </Layout>

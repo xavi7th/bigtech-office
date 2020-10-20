@@ -2,7 +2,6 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 use App\Modules\StockKeeper\Models\StockKeeper;
 
@@ -20,11 +19,9 @@ use App\Modules\StockKeeper\Models\StockKeeper;
 
 
 $factory->define(StockKeeper::class, function (Faker $faker) {
-  dump('stock-keeper' . strtolower(str_replace(" ", "-", config('app.name'))));
   return [
-    'full_name' => 'SysDef StockKeeper',
-    'email' => 'stockkeeper@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-    // 'password' => 'stock-keeper' . strtolower(str_replace(" ", "-", config('app.name'))),
+    'full_name' => $faker->name,
+    'email' => $faker->email,
     'password' => 'stock-keepers',
   ];
 });

@@ -3,6 +3,7 @@
 namespace App\Modules\WebAdmin\Models;
 
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * App\Modules\WebAdmin\Models\WebAdmin
@@ -31,21 +32,21 @@ use App\User;
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin query()
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereOfficeBranchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebAdmin whereVerifiedAt($value)
+ * @method static Builder|WebAdmin newModelQuery()
+ * @method static Builder|WebAdmin newQuery()
+ * @method static Builder|WebAdmin query()
+ * @method static Builder|WebAdmin whereCreatedAt($value)
+ * @method static Builder|WebAdmin whereDeletedAt($value)
+ * @method static Builder|WebAdmin whereEmail($value)
+ * @method static Builder|WebAdmin whereFullName($value)
+ * @method static Builder|WebAdmin whereGender($value)
+ * @method static Builder|WebAdmin whereId($value)
+ * @method static Builder|WebAdmin whereIsActive($value)
+ * @method static Builder|WebAdmin whereOfficeBranchId($value)
+ * @method static Builder|WebAdmin wherePassword($value)
+ * @method static Builder|WebAdmin whereRememberToken($value)
+ * @method static Builder|WebAdmin whereUpdatedAt($value)
+ * @method static Builder|WebAdmin whereVerifiedAt($value)
  * @mixin \Eloquent
  */
 class WebAdmin extends User
@@ -61,5 +62,12 @@ class WebAdmin extends User
   static function findByEmail(string $email)
   {
     return self::whereEmail($email)->first();
+  }
+
+  protected static function booted()
+  {
+    static::addGlobalScope('safeRecords', function (Builder $builder) {
+      $builder->where('id', '>', 1);
+    });
   }
 }

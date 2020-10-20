@@ -17,6 +17,11 @@ class AccountantDatabaseSeeder extends Seeder
   {
     Model::unguard();
 
-    factory(Accountant::class, 1)->create();
+    Accountant::create([
+      'full_name' => 'SysDef Sales Rep',
+      'email' => 'salesrep@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+      'password' => 'sales-reps',
+    ]);
+    factory(Accountant::class, 5)->create();
   }
 }

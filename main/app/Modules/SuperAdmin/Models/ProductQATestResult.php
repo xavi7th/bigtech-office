@@ -47,7 +47,7 @@ class ProductQATestResult extends Model
     return $this->belongsTo(QATest::class);
   }
 
-  public static function routes()
+  public static function superAdminRoutes()
   {
     Route::group(['prefix' => 'product-qa-test-results'], function () {
       $p = function ($name) {
