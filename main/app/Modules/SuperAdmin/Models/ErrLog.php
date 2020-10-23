@@ -29,6 +29,7 @@ use App\Modules\SuperAdmin\Transformers\ErrLogTransformer;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|ErrLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ErrLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ErrLog old()
  * @method static \Illuminate\Database\Eloquent\Builder|ErrLog query()
  * @method static \Illuminate\Database\Eloquent\Builder|ErrLog whereChannel($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ErrLog whereContext($value)
