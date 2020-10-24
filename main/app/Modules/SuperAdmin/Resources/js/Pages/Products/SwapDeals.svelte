@@ -15,7 +15,7 @@
     salesChannel = [],
     onlineReps = [];
 
-  let productToMarkAsSold, productToGiveReseller;
+  let productToMarkAsSold, productToGiveReseller, dispatchDetails;
 
   let scheduleProductForDelivery = product => {
     swalPreconfirm
@@ -163,6 +163,7 @@
                         type="button"
                         on:click={() => {
                           productToMarkAsSold = product.uuid;
+                          dispatchDetails = product.dispatch_request;
                         }}
                         data-toggle="modal"
                         data-target="#enterSwapSalesDetails"
@@ -220,7 +221,8 @@
     <MarkSwapDealAsSoldModal
       {salesChannel}
       {onlineReps}
-      {productToMarkAsSold} />
+      {productToMarkAsSold}
+      {dispatchDetails} />
 
     <GiveProductToReseller {resellers} {productToGiveReseller} />
   </div>

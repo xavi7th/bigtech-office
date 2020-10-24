@@ -23,10 +23,11 @@ class CreateProductDispatchRequestsTable extends Migration
       $table->double('proposed_selling_price');
       $table->string('customer_first_name');
       $table->string('customer_last_name')->nullable();
-      $table->string('customer_phone')->unique();
+      $table->string('customer_phone');
+      $table->string('customer_email')->nullable();
       $table->string('customer_address');
       $table->string('customer_city');
-      $table->string('customer_ig_handle')->unique()->nullable();
+      $table->string('customer_ig_handle')->nullable();
       $table->timestamp('scheduled_at')->nullable();
       $table->timestamp('sold_at')->nullable();
 

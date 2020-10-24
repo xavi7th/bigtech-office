@@ -318,7 +318,7 @@ class SwapDeal extends BaseModel
     } elseif ($request->user()->isQualityControl()) {
       $swapDeals = Cache::rememberForever('qualityControlsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } elseif ($request->user()->isDispatchAdmin()) {
-      $swapDeals = Cache::rememberForever('dispatchAdminsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
+      $swapDeals = Cache::rememberForever('dispatchAdminsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with('swapped_with', 'product_status', 'app_user', 'dispatch_request')->get(), 'basicDispatch'));
     } elseif ($request->user()->isAccountant()) {
       $swapDeals = Cache::rememberForever('accountantSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } else {

@@ -47,6 +47,21 @@ class ProductTransformer
     ];
   }
 
+  public function dispatchListing(Product $product)
+  {
+    return [
+      'uuid' => (string)$product->product_uuid,
+      'model' => (string)$product->product_model->name,
+      'identifier' => (string)$product->primary_identifier(),
+      'selling_price' => $product->proposed_selling_price,
+      'color' => (string)$product->product_color->name,
+      'status' => $product->product_status->status,
+      'storage_size' => (string)$product->storage_size->human_size,
+      'supplier' => (string)$product->product_supplier->name,
+      'dispatch_request' => $product->dispatch_request
+    ];
+  }
+
   public function detailed(Product $product)
   {
     return [

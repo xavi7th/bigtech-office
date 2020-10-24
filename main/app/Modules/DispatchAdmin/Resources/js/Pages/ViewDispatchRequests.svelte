@@ -311,7 +311,7 @@
         on:click={scheduleProductForDelivery}
         slot="footer-buttons"
         class="btn btn-orange btn-long"
-        disabled={!dispatchRequestToSchedule.imei && !dispatchRequestToSchedule.serial_no && !dispatchRequestToSchedule.model_no && dispatchRequestToSchedule.is_scheduled}>
+        disabled={(!dispatchRequestToSchedule.imei && !dispatchRequestToSchedule.serial_no && !dispatchRequestToSchedule.model_no) || dispatchRequestToSchedule.is_scheduled}>
         <span class="text">Schedule Delivery</span>
       </button>
     </Modal>

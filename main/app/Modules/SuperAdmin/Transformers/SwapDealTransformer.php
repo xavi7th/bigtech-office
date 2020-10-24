@@ -26,6 +26,18 @@ class SwapDealTransformer
     ];
   }
 
+  public function basicDispatch(SwapDeal $swapDeal): array
+  {
+    return [
+      'description' => (string)$swapDeal->description,
+      'identifier' => (string)$swapDeal->primary_identifier(),
+      'selling_price' => (float)$swapDeal->selling_price,
+      'dispatch_request' => $swapDeal->dispatch_request,
+      'uuid' => $swapDeal->product_uuid,
+      'status' => $swapDeal->product_status->status,
+    ];
+  }
+
   public function detailed(SwapDeal $swapDeal): array
   {
     return [

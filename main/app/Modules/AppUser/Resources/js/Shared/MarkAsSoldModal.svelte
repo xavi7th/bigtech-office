@@ -5,10 +5,11 @@
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
   import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page);
 
   export let onlineReps = [],
     salesChannel = [],
+    dispatchDetails = {},
     productToMarkAsSold;
 
   let details = {
@@ -17,6 +18,19 @@
       identification_type: "imei"
     },
     files;
+
+  $: if (dispatchDetails) {
+    details.selling_price = dispatchDetails.proposed_selling_price;
+    details.first_name = dispatchDetails.customer_first_name;
+    details.last_name = dispatchDetails.customer_last_name;
+    details.phone = dispatchDetails.customer_phone;
+    details.email = dispatchDetails.customer_email;
+    details.address = dispatchDetails.customer_address;
+    details.city = dispatchDetails.customer_city;
+    details.ig_handle = dispatchDetails.customer_ig_handle;
+    details.sales_channel_id = dispatchDetails.sales_channel_id;
+    details.online_rep_id = dispatchDetails.online_rep_id;
+  }
 
   let toggleSwap = () => {
     if (!details.is_swap_transaction) {
@@ -175,28 +189,30 @@
         bind:value={details.ig_handle} />
     </div>
 
-    <div class="col-12">
-      <select class="custom-select" bind:value={details.online_rep_id}>
-        <option value={null}>Select Online Rep</option>
-        {#each onlineReps as rep}
-          <option value={rep.id}>{rep.full_name}</option>
-        {/each}
-      </select>
-    </div>
-
-    <div class="col-12">
-      <div class="custom-control custom-switch">
-        <input
-          type="checkbox"
-          class="custom-control-input"
-          id="is-swap-deal"
-          bind:checked={details.is_swap_transaction}
-          on:change={toggleSwap} />
-        <label class="custom-control-label" for="is-swap-deal">
-          Is this a Swap Deal?
-        </label>
+    {#if !auth.user.isDispatchAdmin}
+      <div class="col-12">
+        <select class="custom-select" bind:value={details.online_rep_id}>
+          <option selected>Select Online Rep</option>
+          {#each onlineReps as rep}
+            <option value={rep.id}>{rep.full_name}</option>
+          {/each}
+        </select>
       </div>
-    </div>
+
+      <div class="col-12">
+        <div class="custom-control custom-switch">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="is-swap-deal"
+            bind:checked={details.is_swap_transaction}
+            on:change={toggleSwap} />
+          <label class="custom-control-label" for="is-swap-deal">
+            Is this a Swap Deal?
+          </label>
+        </div>
+      </div>
+    {/if}
 
     {#if details.is_swap_transaction}
       <div class="col-12">

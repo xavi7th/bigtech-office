@@ -11,13 +11,15 @@
 
   $: ({ auth, flash, errors } = $page);
 
-  export let products = [],
+  export let onlineReps = [],
+    products = [],
     resellers = [],
-    onlineReps = [],
     salesChannel = [];
 
-  let productToMarkAsSold, productToGiveReseller, productToSendToDispatch;
-
+  let productToMarkAsSold,
+    productToGiveReseller,
+    productToSendToDispatch,
+    dispatchDetails;
 
   let returnToStock = product => {
     swalPreconfirm
@@ -149,7 +151,7 @@
                     {#if product.status == 'in stock'}
                       <button
                         on:click={() => {
-                          productToSendToDispatch = `Device: ${product.color}  ${product.model} ${product.storage_size}`
+                          productToSendToDispatch = `Device: ${product.color}  ${product.model} ${product.storage_size}`;
                         }}
                         type="button"
                         data-toggle="modal"
@@ -166,6 +168,7 @@
                         type="button"
                         on:click={() => {
                           productToMarkAsSold = product.uuid;
+                          dispatchDetails = product.dispatch_request;
                         }}
                         data-toggle="modal"
                         data-target="#enterSalesDetails"
@@ -191,9 +194,13 @@
     </div>
   </div>
   <div slot="modals">
-    <MarkAsSoldModal {salesChannel} {onlineReps} {productToMarkAsSold} />
+    <MarkAsSoldModal
+      {salesChannel}
+      {productToMarkAsSold}
+      {dispatchDetails}
+      {onlineReps} />
 
-    <SendToDispatchModal {salesChannel} {onlineReps} {productToSendToDispatch} />
+    <SendToDispatchModal {salesChannel} {productToSendToDispatch} />
 
     <GiveProductToReseller {resellers} {productToGiveReseller} />
   </div>

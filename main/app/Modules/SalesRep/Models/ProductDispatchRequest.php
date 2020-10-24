@@ -28,7 +28,7 @@ class ProductDispatchRequest extends Model
   use Commentable;
   use SoftDeletes;
 
-  protected $fillable = ['sales_channel_id', 'online_rep_id', 'product_description', 'product_id', 'product_type', 'proposed_selling_price', 'customer_first_name', 'customer_last_name', 'customer_phone', 'customer_address', 'customer_city', 'customer_ig_handle'];
+  protected $fillable = ['sales_channel_id', 'online_rep_id', 'product_description', 'product_id', 'product_type', 'proposed_selling_price', 'customer_first_name', 'customer_last_name', 'customer_phone', 'customer_email', 'customer_address', 'customer_city', 'customer_ig_handle'];
 
   public function sales_channel()
   {

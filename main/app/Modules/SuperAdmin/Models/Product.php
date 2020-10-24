@@ -385,7 +385,7 @@ class Product extends BaseModel
     } elseif ($request->user()->isQualityControl()) {
       $products = fn () => Cache::rememberForever('qualityControlProducts', fn () => (new ProductTransformer)->collectionTransformer(self::untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     } elseif ($request->user()->isDispatchAdmin()) {
-      $products = fn () => Cache::rememberForever('dispatchAdminProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+      $products = fn () => Cache::rememberForever('dispatchAdminProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier', 'dispatch_request'])->get(), 'dispatchListing'));
     } elseif ($request->user()->isWebAdmin()) {
       $products = fn () => Cache::rememberForever('webAdminProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     } elseif ($request->user()->isAccountant()) {
@@ -400,7 +400,7 @@ class Product extends BaseModel
     $resellers = fn () => Cache::rememberForever('resellers', fn () => (new ResellerTransformer)->collectionTransformer(Reseller::all(), 'basic'));
 
     if ($request->isApi()) return  response()->json($products, 200);
-    return Inertia::render('SuperAdmin,Products/ListProducts', compact('products', 'onlineReps', 'salesChannel', 'resellers'));
+    return Inertia::render('SuperAdmin,Products/ListProducts', compact('products', 'salesChannel', 'resellers', 'onlineReps'));
   }
 
   public function getProductDetails(Request $request, Product $product)
