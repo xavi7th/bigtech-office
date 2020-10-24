@@ -19,11 +19,14 @@ class ProductDispatcgRequestTransformer
     return [
       'id' => (int)$productDispatchRequest->id,
       'product_description' => (string)$productDispatchRequest->product_description,
+      'primary_identifier' => (string)$productDispatchRequest->primary_identifier(),
       'online_rep' => (string)$productDispatchRequest->online_rep->full_name,
       'grand_total' => (string)$productDispatchRequest->proposed_selling_price,
       'customer_details' => (string) $productDispatchRequest->customer_details(),
       'time_of_request' => (string)$productDispatchRequest->created_at->diffForHumans(),
-      // 'status' => $productDispatchRequest->product_status->status,
+      'is_scheduled' => (bool)$productDispatchRequest->is_scheduled(),
+      'is_sold' => (bool)$productDispatchRequest->is_sold(),
+
     ];
   }
 }

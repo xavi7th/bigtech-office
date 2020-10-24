@@ -11,10 +11,13 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\SuperAdmin\Models\Product;
+use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Traits\Commentable;
 use Illuminate\Validation\ValidationException;
 use App\Modules\SuperAdmin\Models\SalesChannel;
+use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SalesRep\Notifications\DispatchRequestDiscarded;
 use App\Modules\SalesRep\Http\Validations\SendDispatchRequestValidation;
 use App\Modules\DispatchAdmin\Transformers\ProductDispatcgRequestTransformer;
@@ -44,13 +47,19 @@ class ProductDispatchRequest extends Model
 
   public function is_scheduled(): bool
   {
-    return $this->scheduled_at == null;
+    return !is_null($this->scheduled_at);
   }
 
   public function is_sold(): bool
   {
-    return $this->sold_at == null;
+    return !is_null($this->sold_at);
   }
+
+  public function primary_identifier(): ?string
+  {
+    return optional($this->product)->primary_identifier();
+  }
+
 
   public function customer_details(): HtmlString
   {
@@ -88,6 +97,7 @@ class ProductDispatchRequest extends Model
     Route::group(['prefix' => 'product-dispatch-requests'], function () {
       Route::name('dispatchadmin.dispatch_requests.')->group(function () {
         Route::get('', [self::class, 'getDispatchRequests'])->name('view_dispatch_requests')->defaults('ex', __e('d', 'list', false));
+        Route::post('{productDispatchRequest}/schedule-delivery', [self::class, 'scheduleProductForDeliveryRequest'])->name('schedule_delivery')->defaults('ex', __e('d', null, true));
         Route::post('{productDispatchRequest}/delete', [self::class, 'deleteDispatchRequest'])->name('delete')->defaults('ex', __e('d', 'list', false));
       });
     });
@@ -101,13 +111,39 @@ class ProductDispatchRequest extends Model
     return back()->withSuccess('A request has been sent to the dispatch unit');
   }
 
-
-
   public function getDispatchRequests(Request $request)
   {
     return Inertia::render('DispatchAdmin,ViewDispatchRequests', [
       'dispatch_requests' => fn () => Cache::rememberForever('dispatchRequests', fn () => (new ProductDispatcgRequestTransformer)->collectionTransformer(self::with('online_rep')->get(), 'basic')),
     ]);
+  }
+
+  public function scheduleProductForDeliveryRequest(Request $request, self $productDispatchRequest)
+  {
+    if (!$request->identification_type) throw ValidationException::withMessages(['err' => "An IMEI or Serial Number or Model Number is required"])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+
+    $product = Product::where($request->identification_type, $request->input($request->identification_type))->first() ?? SwapDeal::where($request->identification_type, $request->input($request->identification_type))->firstOr(function () {
+      throw ValidationException::withMessages(['err' => "Invalid product selected"])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+    });
+
+    DB::beginTransaction();
+
+    if (!$product->in_stock()) {
+      throw ValidationException::withMessages(['err' => "This product is currently not listed in the stock list"])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+    } else {
+      $product->product_status_id = ProductStatus::scheduledDeliveryId();
+      $product->save();
+    }
+
+    $productDispatchRequest->product_id = $product->id;
+    $productDispatchRequest->product_type = get_class($product);
+    $productDispatchRequest->scheduled_at = now();
+    $productDispatchRequest->save();
+
+    DB::commit();
+
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Product removed from stock list and scheduled for delivery');
   }
 
   public function deleteDispatchRequest(Request $request, self $productDispatchRequest)
@@ -135,7 +171,6 @@ class ProductDispatchRequest extends Model
     return back()->withSuccess('Dispatch request deleted. Kindly inform ' . $productDispatchRequest->online_rep->full_name . ' that you discarded one of their requests if they are not aware');
   }
 
-
   protected static function boot()
   {
     parent::boot();
@@ -150,6 +185,13 @@ class ProductDispatchRequest extends Model
 
     static::deleted(function ($dispatchRequest) {
       Cache::forget('dispatchRequests');
+      Cache::forget('products');
+      Cache::forget('webAdminProducts');
+      Cache::forget('dispatchAdminProducts');
+      Cache::forget('stockKeeperProducts');
+      Cache::forget('salesRepProducts');
+      Cache::forget('qualityControlProducts');
+      Cache::forget('brandsWithProductCount');
     });
   }
 }

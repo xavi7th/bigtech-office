@@ -15,7 +15,7 @@
     identification_type: "imei"
   };
 
-  let scheduleProductForDelivery = product => {
+  let scheduleProductForDelivery = () => {
     swalPreconfirm
       .fire({
         text:
@@ -23,12 +23,21 @@
         confirmButtonText: "Mark for Delivery",
         preConfirm: () => {
           return Inertia.post(
-            route("dispatchadmin.products.schedule_delivery", product),
-            {},
+            route(
+              "dispatchadmin.dispatch_requests.schedule_delivery",
+              dispatchRequestToSchedule.id
+            ),
+            {
+              identification_type:
+                dispatchRequestToSchedule.identification_type,
+              imei: dispatchRequestToSchedule.imei,
+              serial_no: dispatchRequestToSchedule.serial_no,
+              model_no: dispatchRequestToSchedule.model_no
+            },
             {
               preserveState: true,
               preserveScroll: true,
-              only: ["flash", "errors", "products"]
+              only: ["flash", "errors", "dispatch_requests"]
             }
           )
             .then(() => {
@@ -67,14 +76,18 @@
         input: "text",
         inputAttributes: {
           autocapitalize: "off",
-          placeholder: 'Enter reason'
+          placeholder: "Enter reason"
         },
-        confirmButtonText: "Mark for Delivery",
+        confirmButtonText: "Discard Request",
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
         preConfirm: reason => {
           if (!reason) {
-            swal.showValidationMessage(`You must provide a reason for deleting the request`);
+            swal.showValidationMessage(
+              `You must provide a reason for deleting the request`
+            );
             return false;
-          };
+          }
 
           return Inertia.post(
             route("dispatchadmin.dispatch_requests.delete", dispatchRequestId),
@@ -84,7 +97,7 @@
             {
               preserveState: true,
               preserveScroll: true,
-              only: ["flash", "errors", 'dispatch_requests']
+              only: ["flash", "errors", "dispatch_requests"]
             }
           )
             .then(() => {
@@ -110,7 +123,7 @@
           ToastLarge.fire({
             title: "Successful!",
             html: flash.success,
-            timer:10000
+            timer: 10000
           });
         }
       });
@@ -152,9 +165,22 @@
                 <td>{dispatchRequest.time_of_request}</td>
                 <td>
                   {#if auth.user.isDispatchAdmin}
+                    {#if !dispatchRequest.is_scheduled}
+                      <button
+                        type="button"
+                        on:click={() => {
+                          discardDispatchRequest(dispatchRequest.id);
+                        }}
+                        class="btn btn-danger btn-xs btn-sm">
+                        Discard Request
+                      </button>
+                    {/if}
                     <button
                       type="button"
                       on:click={() => {
+                        dispatchRequestToSchedule.id = dispatchRequest.id;
+                        dispatchRequestToSchedule.is_scheduled = dispatchRequest.is_scheduled;
+                        dispatchRequestToSchedule.primary_identifier = dispatchRequest.primary_identifier;
                         dispatchRequestToSchedule.grand_total = dispatchRequest.grand_total;
                         dispatchRequestToSchedule.product_description = dispatchRequest.product_description;
                         dispatchRequestToSchedule.customer_details = dispatchRequest.customer_details;
@@ -163,14 +189,6 @@
                       data-target="#enterSalesDetails"
                       class="btn btn-dark btn-xs btn-sm">
                       Details
-                    </button>
-                    <button
-                      type="button"
-                      on:click={() => {
-                        discardDispatchRequest(dispatchRequest.id);
-                      }}
-                      class="btn btn-danger btn-xs btn-sm">
-                      Discard Request
                     </button>
                   {/if}
                 </td>
@@ -198,86 +216,94 @@
             {@html dispatchRequestToSchedule.customer_details}
           </div>
         </div>
+        {#if dispatchRequestToSchedule.is_scheduled}
+          <div class="col-12">
+            <div class="bg-grey-1 pt-15 pr-20 pb-15 pl-20 br-4">
+              Scheduled Product:
+              {dispatchRequestToSchedule.primary_identifier}
+            </div>
+          </div>
+        {:else}
+          <div class="col-12">
+            <label for="idType">Choose Primary Identifier</label>
+          </div>
+          <div class="col-12 d-flex justify-content-between">
+            <div class="custom-control custom-radio">
+              <input
+                type="radio"
+                id="imei-option"
+                name="primary-identifier"
+                value="imei"
+                on:change={() => {
+                  delete dispatchRequestToSchedule.model_no;
+                  delete dispatchRequestToSchedule.serial_no;
+                }}
+                bind:group={dispatchRequestToSchedule.identification_type}
+                class="custom-control-input" />
+              <label class="custom-control-label" for="imei-option">IMEI</label>
+            </div>
+            <div class="custom-control custom-radio mt-5">
+              <input
+                type="radio"
+                id="serial-no-option"
+                name="primary-identifier"
+                value="serial_no"
+                on:change={() => {
+                  delete dispatchRequestToSchedule.imei;
+                  delete dispatchRequestToSchedule.model_no;
+                }}
+                bind:group={dispatchRequestToSchedule.identification_type}
+                class="custom-control-input" />
+              <label class="custom-control-label" for="serial-no-option">
+                Serial No.
+              </label>
+            </div>
+            <div class="custom-control custom-radio mt-5">
+              <input
+                type="radio"
+                id="model-no-option"
+                name="primary-identifier"
+                value="model_no"
+                on:change={() => {
+                  delete dispatchRequestToSchedule.imei;
+                  delete dispatchRequestToSchedule.serial_no;
+                }}
+                bind:group={dispatchRequestToSchedule.identification_type}
+                class="custom-control-input" />
+              <label class="custom-control-label" for="model-no-option">
+                Model No.
+              </label>
+            </div>
+          </div>
 
-        <div class="col-12">
-          <label for="idType">Choose Primary Identifier</label>
-        </div>
-        <div class="col-12 d-flex justify-content-between">
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="imei-option"
-              name="primary-identifier"
-              value="imei"
-              on:change={() => {
-                delete dispatchRequestToSchedule.model_no;
-                delete dispatchRequestToSchedule.serial_no;
-              }}
-              bind:group={dispatchRequestToSchedule.identification_type}
-              class="custom-control-input" />
-            <label class="custom-control-label" for="imei-option">IMEI</label>
-          </div>
-          <div class="custom-control custom-radio mt-5">
-            <input
-              type="radio"
-              id="serial-no-option"
-              name="primary-identifier"
-              value="serial_no"
-              on:change={() => {
-                delete dispatchRequestToSchedule.imei;
-                delete dispatchRequestToSchedule.model_no;
-              }}
-              bind:group={dispatchRequestToSchedule.identification_type}
-              class="custom-control-input" />
-            <label class="custom-control-label" for="serial-no-option">
-              Serial No.
-            </label>
-          </div>
-          <div class="custom-control custom-radio mt-5">
-            <input
-              type="radio"
-              id="model-no-option"
-              name="primary-identifier"
-              value="model_no"
-              on:change={() => {
-                delete dispatchRequestToSchedule.imei;
-                delete dispatchRequestToSchedule.serial_no;
-              }}
-              bind:group={dispatchRequestToSchedule.identification_type}
-              class="custom-control-input" />
-            <label class="custom-control-label" for="model-no-option">
-              Model No.
-            </label>
-          </div>
-        </div>
-
-        {#if dispatchRequestToSchedule.identification_type === 'imei'}
-          <div class="col-12">
-            <label for="imeiNo">Imei No.</label>
-            <input
-              type="number"
-              class="form-control"
-              bind:value={dispatchRequestToSchedule.imei}
-              placeholder="Enter Imei No." />
-          </div>
-        {:else if dispatchRequestToSchedule.identification_type === 'serial_no'}
-          <div class="col-12">
-            <label for="serialNo">Serial No.</label>
-            <input
-              type="text"
-              class="form-control"
-              bind:value={dispatchRequestToSchedule.serial_no}
-              placeholder="Enter S/No" />
-          </div>
-        {:else if dispatchRequestToSchedule.identification_type === 'model_no'}
-          <div class="col-12">
-            <label for="modelNo">Model No.</label>
-            <input
-              type="text"
-              class="form-control"
-              bind:value={dispatchRequestToSchedule.model_no}
-              placeholder="Enter Model No." />
-          </div>
+          {#if dispatchRequestToSchedule.identification_type === 'imei'}
+            <div class="col-12">
+              <label for="imeiNo">Imei No.</label>
+              <input
+                type="number"
+                class="form-control"
+                bind:value={dispatchRequestToSchedule.imei}
+                placeholder="Enter Imei No." />
+            </div>
+          {:else if dispatchRequestToSchedule.identification_type === 'serial_no'}
+            <div class="col-12">
+              <label for="serialNo">Serial No.</label>
+              <input
+                type="text"
+                class="form-control"
+                bind:value={dispatchRequestToSchedule.serial_no}
+                placeholder="Enter S/No" />
+            </div>
+          {:else if dispatchRequestToSchedule.identification_type === 'model_no'}
+            <div class="col-12">
+              <label for="modelNo">Model No.</label>
+              <input
+                type="text"
+                class="form-control"
+                bind:value={dispatchRequestToSchedule.model_no}
+                placeholder="Enter Model No." />
+            </div>
+          {/if}
         {/if}
       </div>
 
@@ -285,7 +311,7 @@
         on:click={scheduleProductForDelivery}
         slot="footer-buttons"
         class="btn btn-orange btn-long"
-        disabled={!dispatchRequestToSchedule.imei && !dispatchRequestToSchedule.serial_no && !dispatchRequestToSchedule.model_no}>
+        disabled={!dispatchRequestToSchedule.imei && !dispatchRequestToSchedule.serial_no && !dispatchRequestToSchedule.model_no && dispatchRequestToSchedule.is_scheduled}>
         <span class="text">Schedule Delivery</span>
       </button>
     </Modal>

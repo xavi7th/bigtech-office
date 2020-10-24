@@ -158,16 +158,6 @@
                   {/if}
 
                   {#if auth.user.isDispatchAdmin}
-                    {#if product.status == 'in stock'}
-                      <button
-                        type="button"
-                        on:click={() => {
-                          scheduleProductForDelivery(product.uuid);
-                        }}
-                        class="btn btn-orange btn-xs btn-sm">
-                        Schedule Delivery
-                      </button>
-                    {/if}
                     {#if product.status == 'out for delivery'}
                       <button
                         type="button"

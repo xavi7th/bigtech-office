@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -16,11 +17,13 @@ use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Traits\Commentable;
+use Illuminate\Validation\ValidationException;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
@@ -144,6 +147,11 @@ class SwapDeal extends BaseModel
   public function product_sales_record()
   {
     return $this->morphOne(ProductSaleRecord::class, 'product');
+  }
+
+  public function dispatch_request()
+  {
+    return $this->morphOne(ProductDispatchRequest::class, 'product')->latest();
   }
 
   public function product_expenses()
@@ -286,7 +294,6 @@ class SwapDeal extends BaseModel
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('dispatchadmin.products.')->group(function () {
-        Route::post('{swapDeal:product_uuid}/schedule-delivery', [self::class, 'scheduleProductForDelivery'])->name('swap_schedule_delivery')->defaults('ex', __e('d', null, true));
         Route::post('{swapDeal:product_uuid}/return-to-stock', [self::class, 'returnProductToStock'])->name('swap_return_to_stock')->defaults('ex', __e('d', null, true));
       });
     });
@@ -381,27 +388,22 @@ class SwapDeal extends BaseModel
     return back()->withSuccess('Comment created. ');
   }
 
-  public function scheduleProductForDelivery(Request $request, self $swapDeal)
-  {
-
-    /**
-     * Update the status
-     */
-    if (!$swapDeal->in_stock()) {
-      return generate_422_error('This product is sold already');
-    } else {
-      $swapDeal->product_status_id = ProductStatus::scheduledDeliveryId();
-      $swapDeal->save();
-    }
-
-    if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product removed from stock list and scheduled for delivery');
-  }
-
   public function returnProductToStock(Request $request, self $swapDeal)
   {
+    $productDispatchRequest = $swapDeal->dispatch_request;
 
     DB::beginTransaction();
+
+
+    if ($productDispatchRequest) {
+      if ($productDispatchRequest->is_sold()) {
+        throw ValidationException::withMessages(['err' => "INCONSISTENT DATA: This product's dispatch request has been marked as sold already."])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+      }
+      $productDispatchRequest->product_id = null;
+      $productDispatchRequest->product_type = null;
+      $productDispatchRequest->scheduled_at = null;
+      $productDispatchRequest->save();
+    }
 
     if (!$swapDeal->out_for_delivery()) {
       return generate_422_error('This product is bot scheduled for delivery');
