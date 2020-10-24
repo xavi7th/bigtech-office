@@ -61,6 +61,7 @@ use App\Modules\SuperAdmin\Transformers\ProcessorSpeedTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductValidation;
+use App\Modules\SalesRep\Http\Validations\SendDispatchRequestValidation;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateLocalSupplierProductValidation;
@@ -644,7 +645,7 @@ class Product extends BaseModel
     /**
      * Update product status to sold
      */
-    $product->product_status_id = $status_id = ProductStatus::soldId();
+    $product->product_status_id = ProductStatus::soldId();
     $product->sold_at = now();
 
     /**

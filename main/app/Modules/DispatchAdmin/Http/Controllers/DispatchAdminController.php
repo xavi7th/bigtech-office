@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\DispatchAdmin\Models\DispatchAdmin;
+use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 
 class DispatchAdminController extends Controller
@@ -23,6 +24,7 @@ class DispatchAdminController extends Controller
 
           Product::dispatchAdminRoutes();
           SwapDeal::dispatchAdminRoutes();
+          ProductDispatchRequest::dispatchAdminRoutes();
         });
         Product::multiAccessRoutes();
         SwapDeal::multiAccessRoutes();

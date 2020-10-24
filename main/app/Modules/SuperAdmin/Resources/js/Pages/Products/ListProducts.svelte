@@ -1,12 +1,13 @@
 <script>
   import { Inertia } from "@inertiajs/inertia";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import Layout from "@superadmin-shared/SuperAdminLayout";
+  import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
-  import route from "ziggy";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
+  import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
   import { getErrorString } from "@public-assets/js/bootstrap";
+  import route from "ziggy";
 
   $: ({ auth, flash, errors } = $page);
 
@@ -15,51 +16,8 @@
     onlineReps = [],
     salesChannel = [];
 
-  let productToMarkAsSold, productToGiveReseller;
+  let productToMarkAsSold, productToGiveReseller, productToSendToDispatch;
 
-  let scheduleProductForDelivery = product => {
-    swalPreconfirm
-      .fire({
-        text:
-          "This will mark this product as out for delivery and remove it from the stock list",
-        confirmButtonText: "Mark for Delivery",
-        preConfirm: () => {
-          return Inertia.post(
-            route("dispatchadmin.products.schedule_delivery", product),
-            {},
-            {
-              preserveState: true,
-              preserveScroll: true,
-              only: ["flash", "errors", "products"]
-            }
-          )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else if (flash.error || _.size(errors) > 0) {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
-        }
-      })
-      .then(result => {
-        if (result.dismiss && result.dismiss == "cancel") {
-          swal.fire(
-            "Canceled!",
-            "You canceled the action. Nothing was changed",
-            "info"
-          );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
-        }
-      });
-  };
 
   let returnToStock = product => {
     swalPreconfirm
@@ -157,7 +115,7 @@
                     </InertiaLink>
                   {/if}
 
-                  {#if auth.user.isWalkInRep }
+                  {#if auth.user.isWalkInRep}
                     {#if product.status == 'in stock'}
                       <button
                         type="button"
@@ -187,26 +145,22 @@
                     {/if}
                   {/if}
 
-                  {#if auth.user.isAccountant}
-                    {#if product.status == 'out for delivery'}
+                  {#if auth.user.isSocialMediaRep}
+                    {#if product.status == 'in stock'}
                       <button
+                        on:click={() => {
+                          productToSendToDispatch = `Device: ${product.color}  ${product.model} ${product.storage_size}`
+                        }}
                         type="button"
+                        data-toggle="modal"
+                        data-target="#sendToDispatch"
                         class="btn btn-orange btn-xs btn-sm">
-                        Out For Delivery
+                        Send to Dispatch
                       </button>
                     {/if}
                   {/if}
+
                   {#if auth.user.isDispatchAdmin}
-                    {#if product.status == 'in stock'}
-                      <button
-                        type="button"
-                        on:click={() => {
-                          scheduleProductForDelivery(product.uuid);
-                        }}
-                        class="btn btn-orange btn-xs btn-sm">
-                        Schedule Delivery
-                      </button>
-                    {/if}
                     {#if product.status == 'out for delivery'}
                       <button
                         type="button"
@@ -238,6 +192,8 @@
   </div>
   <div slot="modals">
     <MarkAsSoldModal {salesChannel} {onlineReps} {productToMarkAsSold} />
+
+    <SendToDispatchModal {salesChannel} {onlineReps} {productToSendToDispatch} />
 
     <GiveProductToReseller {resellers} {productToGiveReseller} />
   </div>
