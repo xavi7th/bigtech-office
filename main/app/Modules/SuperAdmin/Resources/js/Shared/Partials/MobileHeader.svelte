@@ -1,3 +1,16 @@
+<script>
+import { Inertia } from "@inertiajs/inertia";
+
+
+  let logoutUser = () => {
+    BlockToast.fire("Securing your dashboard ...");
+
+    Inertia.post(route("app.logout")).then(() => {
+      location.reload();
+    });
+  };
+</script>
+
 <div class="rui-navbar rui-navbar-mobile">
   <div class="rui-navbar-head">
     <button
@@ -6,7 +19,7 @@
       aria-label="Toggle side navigation">
       <span />
     </button>
-    <a class="rui-navbar-logo mr-auto" href="dashboard.html">
+    <a class="rui-navbar-logo mr-auto" href="/">
       <img
         src="/img/logo.png"
         data-src-night="/img/logo-white.png"
@@ -25,36 +38,11 @@
       </a>
       <ul class="dropdown-menu nav">
         <li>
-          <a href="profile.html" class="nav-link">
-            <span
-              data-feather="plus-circle"
-              class="rui-icon rui-icon-stroke-1_5" />
-            <span>Create new Post</span>
-            <span class="rui-nav-circle" />
-          </a>
-        </li>
-        <li>
-          <a href="profile.html" class="nav-link">
-            <span data-feather="users" class="rui-icon rui-icon-stroke-1_5" />
-            <span>Manage Users</span>
-            <span class="rui-nav-circle" />
-          </a>
-        </li>
-        <li>
-          <a href="profile.html" class="nav-link">
-            <span
-              data-feather="check-circle"
-              class="rui-icon rui-icon-stroke-1_5" />
-            <span>Check Updates</span>
-            <span class="rui-nav-circle" />
-          </a>
-        </li>
-        <li>
-          <a href="profile.html" class="nav-link">
+          <button class="nav-link btn btn-link" on:click={logoutUser}>
             <span data-feather="log-out" class="rui-icon rui-icon-stroke-1_5" />
-            <span>Exit</span>
+            <span>Logout</span>
             <span class="rui-nav-circle" />
-          </a>
+          </button>
         </li>
       </ul>
     </div>

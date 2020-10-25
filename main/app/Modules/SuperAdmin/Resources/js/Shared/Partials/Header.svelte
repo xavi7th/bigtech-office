@@ -1,24 +1,22 @@
 <script>
-import { Inertia } from "@inertiajs/inertia";
+  import { Inertia } from "@inertiajs/inertia";
 
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-import { location } from "lodash/_freeGlobal";
+  import { location } from "lodash/_freeGlobal";
   import route from "ziggy";
 
-  let logoutUser = () =>{
-    BlockToast.fire('Securing your dashboard ...')
+  let logoutUser = () => {
+    BlockToast.fire("Securing your dashboard ...");
 
-    Inertia.post(route('app.logout')).then(() => {
+    Inertia.post(route("app.logout")).then(() => {
       location.reload();
-    })
-  }
-
-
+    });
+  };
 </script>
 
 <nav class="rui-navbar rui-navbar-top rui-navbar-sticky">
   <div class="rui-navbar-brand">
-    <a href="dashboard.html" class="rui-navbar-logo">
+    <a href="/" class="rui-navbar-logo">
       <img
         src="/img/logo.png"
         data-src-night="/img/logo-white.png"
@@ -73,7 +71,7 @@ import { location } from "lodash/_freeGlobal";
               </a>
             </li> -->
             <li>
-              <button class="nav-link btn btn-link" on:click="{logoutUser}">
+              <button class="nav-link btn btn-link" on:click={logoutUser}>
                 <span
                   data-feather="log-out"
                   class="rui-icon rui-icon-stroke-1_5" />
