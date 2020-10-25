@@ -283,6 +283,11 @@ class Product extends BaseModel
     return $this->product_status_id === ProductStatus::inStockId();
   }
 
+  public function is_from_local_supplier(): bool
+  {
+    return $this->product_batch_id === ProductBatch::local_supplied_id();
+  }
+
   public function with_reseller(): bool
   {
     return $this->product_status_id === ProductStatus::withResellerId();
@@ -297,6 +302,15 @@ class Product extends BaseModel
   public function getProposedSellingPriceAttribute()
   {
     return is_numeric($this->product_price->proposed_selling_price) ? to_naira($this->product_price->proposed_selling_price) : $this->product_price->proposed_selling_price;
+  }
+
+  static function superAdminRoutes()
+  {
+    Route::group(['prefix' => 'products'], function () {
+      Route::name('superadmin.products.')->group(function () {
+        Route::delete('local-product/{product:product_uuid}/delete', [self::class, 'deleteLocalProduct'])->name('delete_local_product')->defaults('ex', __e('ac', 'archive'));
+      });
+    });
   }
 
   static function accountantRoutes()
@@ -735,6 +749,16 @@ class Product extends BaseModel
 
     if ($request->isApi()) return response()->json($comment, 201);
     return back()->withSuccess('Comment created. ');
+  }
+
+  public function deleteLocalProduct(Request $request, self $product)
+  {
+    if (!$product->is_from_local_supplier()) throw ValidationException::withMessages(['err' => "You can only delete products from local suppliers."])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+    if ($product->is_sold()) throw ValidationException::withMessages(['err' => "This product has been marked as sold already. You cannot delete it any more"])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+
+    $product->forceDelete();
+
+    return back()->withSuccess('Deleted');
   }
 
   public function getApplicableProductQATests(Request $request, self $product)

@@ -4,10 +4,64 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
+import { getErrorString } from "@public-assets/js/bootstrap";
 
   $: ({ auth } = $page);
 
   export let batchWithProducts;
+
+  let deleteProduct = productUUID => {
+    swal
+      .fire({
+        title: "Are you sure?",
+        text: "This will delete this comment completely",
+        icon: "question",
+        showCloseButton: false,
+        allowOutsideClick: () => !swal.isLoading(),
+        allowEscapeKey: false,
+        showCancelButton: true,
+        focusCancel: true,
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#725ec3",
+        confirmButtonText: "Yes, carry on!",
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+          return Inertia.delete(
+            route("superadmin.products.delete_local_product", productUUID),
+            {
+              preserveState: true,
+              preserveScroll: true
+            }
+          )
+            .then(() => {
+              if ($page.flash.success) {
+                return true;
+              } else if ($page.flash.error || _.size($page.errors) > 0) {
+                throw new Error(
+                  $page.flash.error || getErrorString($page.errors)
+                );
+              }
+            })
+            .catch(error => {
+              swal.showValidationMessage(`Request failed: ${error}`);
+            });
+        }
+      })
+      .then(result => {
+        if (result.dismiss && result.dismiss == "cancel") {
+          swal.fire(
+            "Canceled!",
+            "You canceled the action. Nothing was changed",
+            "info"
+          );
+        } else if ($page.flash.success) {
+          ToastLarge.fire({
+            title: "Successful!",
+            html: $page.flash.success
+          });
+        }
+      });
+  };
 </script>
 
 <Layout title="Products In Batch: {batchWithProducts.batch_number}">
@@ -38,14 +92,25 @@
                   <span class="badge badge-dark">{product.status}</span>
                   <br />
                   {product.identifier}
-                  <span class:d-none={!batchWithProducts.is_local}>{product.supplier}</span>
+                  <span
+                    class:d-none={!batchWithProducts.is_local}>{product.supplier}</span>
+                  <br />
+                  {#if $page.auth.user.isSuperAdmin && batchWithProducts.is_local && product.status !== 'sold' && product.status !== 'sale confirmed'}
+                    <button
+                      class="btn btn-danger btn-xs"
+                      on:click={() => {
+                        deleteProduct(product.uuid);
+                      }}>DELETE</button>
+                  {/if}
                 </td>
                 <td>{product.product_expenses_sum}</td>
                 {#if auth.user.isSuperAdmin || auth.user.isAccountant}
                   <td>
                     {product.cost_price}
                     <span class="d-none">
-                      {#if product.is_today}TODAY{:else if product.is_yersteday}Yesterday{/if}
+                      {#if product.is_today}
+                        TODAY
+                      {:else if product.is_yersteday}Yesterday{/if}
                     </span>
                   </td>
                   <td>{product.selling_price}</td>
