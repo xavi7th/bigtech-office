@@ -62,6 +62,7 @@ class ProductBatchTransformer
       'id' => (int)$productBatch->id,
       'batch_number' => $productBatch->batch_number,
       'order_date' => $productBatch->order_date,
+      'is_local' => $productBatch->is_local(),
       'products' => (new ProductTransformer)->collectionTransformer($productBatch->products, 'basic')
     ];
   }

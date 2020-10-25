@@ -29,7 +29,9 @@ class ProductTransformer
       'color' => (string)$product->product_color->name,
       'storage_size' => (string)$product->storage_size->human_size,
       'supplier' => (string)$product->product_supplier->name,
-      'product_expenses_sum' => (float)$product->product_expenses_sum()
+      'product_expenses_sum' => (float)$product->product_expenses_sum(),
+      'is_today' => (bool)$product->created_at->isToday(),
+      'is_yesterday' => (bool)$product->created_at->isYesterday(),
     ];
   }
 

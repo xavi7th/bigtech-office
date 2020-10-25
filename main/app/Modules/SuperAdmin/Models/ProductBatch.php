@@ -86,6 +86,11 @@ class ProductBatch extends BaseModel
     return $id;
   }
 
+  public function is_local(): bool
+  {
+    return $this->batch_number == 'LOCAL-SUPPLIER';
+  }
+
   public static function accountantRoutes()
   {
     Route::group(['prefix' => 'product-batches'], function () {

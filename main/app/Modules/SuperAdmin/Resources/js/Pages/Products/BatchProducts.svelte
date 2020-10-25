@@ -38,15 +38,20 @@
                   <span class="badge badge-dark">{product.status}</span>
                   <br />
                   {product.identifier}
-                  <span class="d-none">{product.supplier}</span>
+                  <span class:d-none={!batchWithProducts.is_local}>{product.supplier}</span>
                 </td>
                 <td>{product.product_expenses_sum}</td>
                 {#if auth.user.isSuperAdmin || auth.user.isAccountant}
-                  <td>{product.cost_price}</td>
+                  <td>
+                    {product.cost_price}
+                    <span class="d-none">
+                      {#if product.is_today}TODAY{:else if product.is_yersteday}Yesterday{/if}
+                    </span>
+                  </td>
                   <td>{product.selling_price}</td>
                 {/if}
                 <td>
-                    {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
+                  {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
                       href={route('multiaccess.products.view_product_details', product.uuid)}
@@ -70,12 +75,12 @@
                       Test/Result
                     </InertiaLink>
                     {#if auth.user.isQualityControl}
-                    <InertiaLink
-                      type="button"
-                      href={route('multiaccess.products.expenses', product.uuid)}
-                      class="btn btn-warning btn-xs">
-                      Record Expense
-                    </InertiaLink>
+                      <InertiaLink
+                        type="button"
+                        href={route('multiaccess.products.expenses', product.uuid)}
+                        class="btn btn-warning btn-xs">
+                        Record Expense
+                      </InertiaLink>
                     {/if}
                   {/if}
                 </td>
