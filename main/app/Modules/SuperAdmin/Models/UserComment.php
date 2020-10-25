@@ -58,6 +58,18 @@ class UserComment extends Model
     return $this->morphTo();
   }
 
+
+  static function superAdminRoutes()
+  {
+    Route::group(['prefix' => 'user-comments'], function () {
+      Route::name('superadmin.user_comments.')->group(function () {
+        Route::delete('{userComment}/delete', [self::class, 'deleteUserComments'])->name('delete')->defaults('ex', __e('ss', 'message-circle', true));
+      });
+    });
+  }
+
+
+
   static function routes()
   {
     Route::group(['prefix' => 'user-comments', 'namespace' => '\App\Modules\Admin\Models'], function () {
@@ -76,6 +88,13 @@ class UserComment extends Model
 
     if ($request->isApi()) return response()->json($userComments, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ViewUsersComments', compact('userComments'));
+  }
+
+  public function deleteUserComments(Request $request, self $userComment)
+  {
+    $userComment->delete();
+
+    return back()->withSuccess('Comment deleted');
   }
 
   public function getProductBatchComments(ProductBatch $product_batch)

@@ -1,8 +1,7 @@
 <script>
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
   import { getErrorString } from "@public-assets/js/bootstrap";
 import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";

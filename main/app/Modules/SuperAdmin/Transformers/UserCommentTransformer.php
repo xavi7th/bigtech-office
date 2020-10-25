@@ -70,6 +70,7 @@ class UserCommentTransformer
   public function commentDetails(UserComment $comment)
   {
     return [
+      'id' => (string)$comment->id,
       'comment' => (string)$comment->comment,
       'user' => (string)$comment->user->full_name,
       'date' => (string)$comment->created_at->diffForHumans()

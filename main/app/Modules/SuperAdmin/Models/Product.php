@@ -64,7 +64,6 @@ use App\Modules\SuperAdmin\Transformers\ProcessorSpeedTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductValidation;
-use App\Modules\SalesRep\Http\Validations\SendDispatchRequestValidation;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateLocalSupplierProductValidation;
@@ -334,7 +333,7 @@ class Product extends BaseModel
   {
     Route::group(['prefix' => 'products'], function () {
       Route::name('dispatchadmin.products.')->group(function () {
-        Route::post('{product:product_uuid}/return-to-stock', [self::class, 'returnProductToStock'])->name('return_to_stock')->defaults('ex', __e('d', null, true))->middleware('auth:dispatch_admin');
+        Route::post('{product:product_uuid}/return-to-stock', [self::class, 'returnProductToStock'])->name('return_to_stock')->defaults('ex', __e('d', null, true));
       });
     });
   }

@@ -61,7 +61,7 @@ class SuperAdminController extends Controller
 
         Reseller::superAdminRoutes();
 
-        // UserComment::routes();
+        UserComment::superAdminRoutes();
 
         // ProductQATestResult::superAdminRoutes();
 
@@ -123,7 +123,7 @@ class SuperAdminController extends Controller
   {
     // return ProductSaleRecord::with('product.product_price')->today()->get();
 
-    $sales_record_today = ProductSaleRecord::with('product.product_price')->today()->get();
+    // $sales_record_today = ProductSaleRecord::with('product.product_price')->today()->get();
     $stock_sales_records = $sales_record_today->where('product.product_batch_id', '<>', ProductBatch::local_supplied_id());
     $local_supplier_sales_records = $sales_record_today->where('product.product_batch_id', ProductBatch::local_supplied_id());
 
