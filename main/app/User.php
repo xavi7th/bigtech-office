@@ -196,7 +196,7 @@ class User extends Authenticatable implements JWTSubject
 
   public function getDashboardRoute(): string
   {
-    return 'multiaccess.products.view_products';
+    // return 'multiaccess.products.view_products';
     return strtolower($this->getType()) . '.dashboard';
   }
 
