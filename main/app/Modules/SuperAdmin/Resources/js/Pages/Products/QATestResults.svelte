@@ -24,7 +24,7 @@
     let parsedResults = [];
 
     BlockToast.fire({
-      text: "Marking product as paid for ..."
+      text: "Updating test results ..."
     });
 
     _.each(results, (val, key, coll) => {
@@ -32,7 +32,7 @@
     });
 
     Inertia.put(
-      route("superadmin.products.update_qa_result", product.uuid),
+      route("qualitycontrol.products.update_qa_result", product.uuid),
       { qa_test_results: parsedResults },
       {
         preserveState: false,
@@ -136,64 +136,66 @@
           <div class="row vertical-gap">
             <p class="lead col-12">Select the results of each test type</p>
             <div class="col-lg-9">
-              <table class="table table-striped">
-                <thead class="thead-dark">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Test Type</th>
-                    <th scope="col">Result</th>
-                    <th scope="col">Test Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each product.valid_tests as test, idx}
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead class="thead-dark">
                     <tr>
-                      <th scope="row">{idx + 1}</th>
-                      <td><strong>{test.name}</strong></td>
-                      <td>
-                        <select
-                          class="custom-select"
-                          on:blur={() => {
-                            testResultUpdated = true;
-                          }}
-                          bind:value={results[test.id]}>
-                          <option
-                            selected={testResult(test.name) == null}
-                            value={null}>
-                            Not Tested
-                          </option>
-
-                          <option
-                            selected={testResult(test.name) == false}
-                            value={false}>
-                            Failed
-                          </option>
-                          <option
-                            selected={testResult(test.name) == true}
-                            value={true}>
-                            Passed
-                          </option>
-                        </select>
-                      </td>
-                      <td>
-                        <span
-                          class="fas {testResult(test.name) === true ? 'fa-check text-success' : 'fas fa-exclamation text-warning'}" />
-                      </td>
+                      <th scope="col">#</th>
+                      <th scope="col">Test Type</th>
+                      <th scope="col">Result</th>
+                      <th scope="col">Test Score</th>
                     </tr>
-                  {/each}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {#each product.valid_tests as test, idx}
+                      <tr>
+                        <th scope="row">{idx + 1}</th>
+                        <td><strong>{test.name}</strong></td>
+                        <td>
+                          <select
+                            class="custom-select"
+                            on:blur={() => {
+                              testResultUpdated = true;
+                            }}
+                            bind:value={results[test.id]}>
+                            <option
+                              selected={testResult(test.name) == null}
+                              value={null}>
+                              Not Tested
+                            </option>
+
+                            <option
+                              selected={testResult(test.name) == false}
+                              value={false}>
+                              Failed
+                            </option>
+                            <option
+                              selected={testResult(test.name) == true}
+                              value={true}>
+                              Passed
+                            </option>
+                          </select>
+                        </td>
+                        <td>
+                          <span
+                            class="fas {testResult(test.name) === true ? 'fa-check text-success' : 'fas fa-exclamation text-warning'}" />
+                        </td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="col-lg-3">
               {#if auth.user.isQualityControl}
-                <UpdateProductStatus {product} {product_statuses} />
-
                 {#if testResultUpdated}
                   <button
                     on:click={updateQATestResults}
                     class="btn btn-success btn-long">
                     <span class="text">Update Results</span>
                   </button>
+                {:else}
+                  <UpdateProductStatus {product} {product_statuses} />
                 {/if}
               {/if}
             </div>
