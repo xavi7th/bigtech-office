@@ -7,6 +7,7 @@
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import { Inertia } from "@inertiajs/inertia";
   import { getErrorString } from "@public-assets/js/bootstrap";
+import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
 
   $: ({ auth, flash, errors } = $page);
 
@@ -15,51 +16,7 @@
     salesChannel = [],
     onlineReps = [];
 
-  let productToMarkAsSold, productToGiveReseller, dispatchDetails;
-
-  let scheduleProductForDelivery = product => {
-    swalPreconfirm
-      .fire({
-        text:
-          "This will mark this product as out for delivery and remove it from the stock list",
-        confirmButtonText: "Mark for Delivery",
-        preConfirm: () => {
-          return Inertia.post(
-            route("dispatchadmin.products.swap_schedule_delivery", product),
-            {},
-            {
-              preserveState: true,
-              preserveScroll: true,
-              only: ["flash", "errors", "swapDeals"]
-            }
-          )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
-        }
-      })
-      .then(result => {
-        if (result.dismiss && result.dismiss == "cancel") {
-          swal.fire(
-            "Canceled!",
-            "You canceled the action. Nothing was changed",
-            "info"
-          );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
-        }
-      });
-  };
+  let productToMarkAsSold, productToGiveReseller, dispatchDetails, productToSendToDispatch;
 
   let returnToStock = product => {
     swalPreconfirm
@@ -157,6 +114,21 @@
                     </InertiaLink>
                   {/if}
 
+                  {#if auth.user.isSocialMediaRep}
+                    {#if product.status == 'in stock'}
+                      <button
+                        on:click={() => {
+                          productToSendToDispatch = `Awoof Device: ${product.description}, Price: ${product.selling_price}`;
+                        }}
+                        type="button"
+                        data-toggle="modal"
+                        data-target="#sendToDispatch"
+                        class="btn btn-orange btn-xs btn-sm text-nowrap">
+                        Send to Dispatch
+                      </button>
+                    {/if}
+                  {/if}
+
                   {#if auth.user.isDispatchAdmin}
                     {#if product.status == 'out for delivery'}
                       <button
@@ -175,7 +147,7 @@
                         on:click={() => {
                           returnToStock(product.uuid);
                         }}
-                        class="btn btn-orange btn-xs btn-sm">
+                        class="btn btn-orange btn-xs btn-sm text-nowrap">
                         Return to Stock
                       </button>
                     {/if}
@@ -225,5 +197,7 @@
       {dispatchDetails} />
 
     <GiveProductToReseller {resellers} {productToGiveReseller} />
+
+    <SendToDispatchModal {salesChannel} {productToSendToDispatch} />
   </div>
 </Layout>

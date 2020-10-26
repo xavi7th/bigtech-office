@@ -120,7 +120,7 @@
 
 <Layout title="Swap Device Details">
   <div class="row vertical-gap">
-    <div class="col-lg-3">
+    <!-- <div class="col-lg-3">
       <a
         href="/img/iphone-11.png"
         data-fancybox="images"
@@ -128,13 +128,15 @@
         <img src="/img/iphone-11.png" class="rui-img" alt="" />
       </a>
       <hr />
-    </div>
+    </div> -->
     <div class="col-lg-5">
       <table class="table table-bordered">
         <tbody>
           <tr>
             <td class="text-primary"><strong>Description</strong></td>
-            <th scope="row"><strong>{swapDeal.description}</strong></th>
+            <th scope="row">
+              <strong>{swapDeal.description}</strong>
+            </th>
           </tr>
           <tr>
             <td class="text-primary"><strong>Device ID</strong></td>
