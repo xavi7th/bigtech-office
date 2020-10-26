@@ -316,6 +316,8 @@ class SwapDeal extends BaseModel
   {
     if ($request->user()->isSalesRep()) {
       $swapDeals = Cache::rememberForever('salesRepsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
+    } elseif ($request->user()->isStockKeeper()) {
+      $swapDeals = Cache::rememberForever('stockKeeoerSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } elseif ($request->user()->isQualityControl()) {
       $swapDeals = Cache::rememberForever('qualityControlsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } elseif ($request->user()->isDispatchAdmin()) {
@@ -693,6 +695,7 @@ class SwapDeal extends BaseModel
       Cache::forget('products');
       Cache::forget('qualityControlsSwapDeals');
       Cache::forget('salesRepsSwapDeals');
+      Cache::forget('stockKeeoerSwapDeals');
       Cache::forget('dispatchAdminsSwapDeals');
       Cache::forget('accountantSwapDeals');
 

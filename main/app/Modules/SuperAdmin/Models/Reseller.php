@@ -105,7 +105,7 @@ class Reseller extends BaseModel
     Route::group(['prefix' => 'resellers'], function () {
       Route::name('stockkeeper.resellers.')->group(function () {
         Route::post('{reseller}/{product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('sk', 'at-sign', true));
-        Route::post('{reseller}/{product:product_uuid}/return', [self::class, 'resellerReturnProduct'])->name('return_product')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
+        Route::post('{reseller}/{product_uuid}/return', [self::class, 'resellerReturnProduct'])->name('return_product')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
         Route::post('{reseller}/give-product/{product_uuid}', [self::class, 'giveProductToReseller'])->name('give_product')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
       });
     });
@@ -145,16 +145,13 @@ class Reseller extends BaseModel
   {
     $resellersWithProducts = (new ResellerTransformer)->collectionTransformer(self::has('products_in_possession')->orHas('swap_deals_in_possession')->with('products_in_possession', 'swap_deals_in_possession')->get(), 'transformWithTenuredProducts');
 
-    // $resellersWithSwapDeals = (new ResellerTransformer)->collectionTransformer(self::has('')->with('')->get(), 'transformWithTenuredSwapDeals');
-    // $resellersWithProducts = $resellersWithProducts->merge($resellersWithSwapDeals);
-
     if ($request->isApi()) return response()->json($resellersWithProducts, 200);
     return Inertia::render('SuperAdmin,Resellers/ViewResellersWithProducts', compact('resellersWithProducts'));
   }
 
   public function getProductsWithReseller(Request $request, self $reseller)
   {
-    $resellerWithProducts = fn () => (new ResellerTransformer)->fullDetailsWithTenuredProducts($reseller->load('products_in_possession'));
+    $resellerWithProducts = fn () => (new ResellerTransformer)->fullDetailsWithTenuredProducts($reseller->load('products_in_possession', 'swap_deals_in_possession'));
 
     if ($request->isApi())  return response()->json($resellerWithProducts, 200);
     return Inertia::render('SuperAdmin,Resellers/ViewProductsWithReseller', compact('resellerWithProducts'));
@@ -291,8 +288,14 @@ class Reseller extends BaseModel
     return back()->withSuccess('Done. Product has been removed from stock list');
   }
 
-  public function resellerReturnProduct(Request $request, self $reseller, Product $product)
+  public function resellerReturnProduct(Request $request, self $reseller, $product_uuid)
   {
+
+    try {
+      $product = Product::whereProductUuid($product_uuid)->firstOr(fn () => SwapDeal::whereProductUuid($product_uuid)->firstOrFail());
+    } catch (ModelNotFoundException $th) {
+      return back()->withError('The product you are trying to return to shelf does not exist');
+    }
 
     /**
      * Check if this product is marked as with reseller
@@ -320,9 +323,15 @@ class Reseller extends BaseModel
       /**
        * Update the entry in the product reseller table to reflect returned
        */
-      $reseller->products()->where('product_id', $product->id)->update([
-        'status' => 'returned'
-      ]);
+      if ($product instanceof Product) {
+        $reseller->products()->where('product_id', $product->id)->update([
+          'status' => 'returned'
+        ]);
+      } elseif ($product instanceof SwapDeal) {
+        $reseller->swap_deals()->where('product_id', $product->id)->update([
+          'status' => 'returned'
+        ]);
+      }
     } catch (QueryException $th) {
       if ($th->errorInfo[1] == 1062) {
         return generate_422_error($th->errorInfo[2]);
@@ -356,7 +365,7 @@ class Reseller extends BaseModel
     try {
       $product = Product::whereProductUuid($product_uuid)->firstOr(fn () => SwapDeal::whereProductUuid($product_uuid)->firstOrFail());
     } catch (ModelNotFoundException $th) {
-      return generate_422_error('Invalid product selected');
+      return generate_422_error('The product you are trying to mark as sold does not exist');
     }
 
 

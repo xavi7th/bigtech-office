@@ -44,7 +44,7 @@ class ResellerTransformer
       'id' => (int)$reseller->id,
       'business_name' => $reseller->business_name,
       'phone' => $reseller->phone,
-      'products_in_possession' => (new ProductTransformer)->collectionTransformer($reseller->products_in_possession->load('product_color', 'product_model'), 'transformWithTenureDetails'),
+      'products_in_possession' => collect((new ProductTransformer)->collectionTransformer($reseller->products_in_possession->load('product_color', 'product_model', 'storage_size'), 'transformWithTenureDetails'))->merge((new SwapDealTransformer)->collectionTransformer($reseller->swap_deals_in_possession, 'transformWithTenureDetails')),
     ];
   }
 
@@ -68,7 +68,7 @@ class ResellerTransformer
       'address' => $reseller->address,
       'img_url' => $reseller->img_url,
       'registered_on' => $reseller->created_at->diffForHumans(),
-      'products_in_possession' => (new ProductTransformer)->collectionTransformer($reseller->products_in_possession->load('product_color', 'product_model', 'storage_size'), 'transformWithTenureDetails')->merge((new SwapDealTransformer)->collectionTransformer($reseller->swap_deals_in_possession, 'transformWithTenureDetails')),
+      'products_in_possession' => collect((new ProductTransformer)->collectionTransformer($reseller->products_in_possession->load('product_color', 'product_model', 'storage_size'), 'transformWithTenureDetails'))->merge((new SwapDealTransformer)->collectionTransformer($reseller->swap_deals_in_possession, 'transformWithTenureDetails')),
     ];
   }
 }
