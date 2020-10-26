@@ -463,10 +463,18 @@ class Product extends BaseModel
 
   public function getProductsWithResellers(Request $request)
   {
-    $productsWithResellers = (new ProductTransformer)->collectionTransformer(self::has('with_resellers')->with('with_resellers', 'product_color', 'product_model')->get(), 'transformWithResellerDetails');
+    $productsWithResellers = (new ProductTransformer)->collectionTransformer(self::has('with_resellers')->with('with_resellers', 'product_color', 'product_model', 'storage_size')->get(), 'transformWithResellerDetails');
     $swapDealsWithResellers = (new SwapDealTransformer)->collectionTransformer(SwapDeal::has('with_resellers')->with('with_resellers')->get(), 'transformWithResellerDetails');
 
-    $productsWithResellers = $productsWithResellers->merge($swapDealsWithResellers);
+    /**
+     * ! Fix: Call to a member function getKey() on array error when the first collection is empty.
+     * @after Update?
+     */
+    if ($productsWithResellers->isEmpty()) {
+      $productsWithResellers = $swapDealsWithResellers->merge($productsWithResellers);
+    } else {
+      $productsWithResellers = $productsWithResellers->merge($swapDealsWithResellers);
+    }
 
     if ($request->isApi())  return response()->json($productsWithResellers, 200);
     return Inertia::render('SuperAdmin,Products/ProductsWithResellers', compact('productsWithResellers'));
