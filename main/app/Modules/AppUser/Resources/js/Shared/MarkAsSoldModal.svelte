@@ -19,7 +19,7 @@
     },
     files;
 
-  $: if (dispatchDetails) {
+  $: if (_.size(dispatchDetails)) {
     details.selling_price = dispatchDetails.proposed_selling_price;
     details.first_name = dispatchDetails.customer_first_name;
     details.last_name = dispatchDetails.customer_last_name;
@@ -231,6 +231,9 @@
           bind:value={details.owner_details} />
       </div>
 
+       <div class="col-12 pb-0 mb-0">
+        <label for="idType">Customer's ID Card</label>
+      </div>
       <div class="col-12">
         <input
           type="file"
@@ -239,6 +242,9 @@
           on:change={(details.id_card = files[0])} />
       </div>
 
+      <div class="col-12 pb-0 mb-0">
+        <label for="idType">Device Receipt</label>
+      </div>
       <div class="col-12">
         <input
           type="file"
