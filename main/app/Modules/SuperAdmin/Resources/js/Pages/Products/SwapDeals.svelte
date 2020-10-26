@@ -114,7 +114,7 @@ import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
                     </InertiaLink>
                   {/if}
 
-                  {#if auth.user.isSocialMediaRep}
+                  {#if auth.user.isSocialMediaRep || auth.user.isCallCenterRep}
                     {#if product.status == 'in stock'}
                       <button
                         on:click={() => {
