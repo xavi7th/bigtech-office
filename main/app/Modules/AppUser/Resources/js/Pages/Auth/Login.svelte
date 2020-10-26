@@ -5,6 +5,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import route from "ziggy";
   import axios from "axios";
+  import { getErrorString } from "@public-assets/js/bootstrap";
   $: ({ errors, flash } = $page);
 
   let details = {
@@ -41,30 +42,46 @@
                   title: "Enter a password",
                   input: "text",
                   inputAttributes: {
-                    autocapitalize: "off"
+                    autocapitalize: "off",
+                    autocomplete: false,
+                    placeholder: "New password"
                   },
                   showCancelButton: true,
                   confirmButtonText: "Set Password",
                   showLoaderOnConfirm: true,
                   preConfirm: pw => {
+                    if (!pw) {
+                      swal.showValidationMessage(
+                        `You must provide a password for your account`
+                      );
+                      return false;
+                    }
                     return Inertia.post(route("app.password.new"), {
                       pw,
                       email: details.email
-                    }).then(() => {
-                      swal.close();
-                      return { rsp: true };
-                    });
+                    })
+                      .then(() => {
+                        if (flash.error || _.size(errors) > 0) {
+                          throw new Error(
+                            flash.error || getErrorString(errors)
+                          );
+                        } else {
+                          swal.close();
+                          return { rsp: true };
+                        }
+                      })
+                      .catch(error => {
+                        swal.showValidationMessage(`Request failed: ${error}`);
+                      });
                   },
                   allowOutsideClick: () => !swal.isLoading()
                 })
                 .then(result => {
-                  console.log(result);
-
                   if (flash.success == 204) {
-
                     swal.fire({
                       title: `Success`,
-                      text: "Password set successfully! Login using your new credentials",
+                      text:
+                        "Password set successfully! Login using your new credentials",
                       icon: "success"
                     });
                   } else if (result.dismiss) {
@@ -165,17 +182,20 @@
         <ul class="rui-social-links">
           <li>
             <a href class="rui-social-github">
-              <span class="fab fa-github" /> Github
+              <span class="fab fa-github" />
+              Github
             </a>
           </li>
           <li>
             <a href class="rui-social-facebook">
-              <span class="fab fa-facebook-f" /> Facebook
+              <span class="fab fa-facebook-f" />
+              Facebook
             </a>
           </li>
           <li>
             <a href class="rui-social-google">
-              <span class="fab fa-google" /> Google
+              <span class="fab fa-google" />
+              Google
             </a>
           </li>
         </ul>

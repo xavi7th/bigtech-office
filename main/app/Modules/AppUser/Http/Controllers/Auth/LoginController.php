@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 use App\Providers\RouteServiceProvider;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Modules\SuperAdmin\Events\NotificationEvent;
 use App\Modules\SuperAdmin\Events\NotificationEvents;
@@ -104,6 +105,8 @@ class LoginController extends Controller
 
   public function adminSetNewPassword()
   {
+    if (!request('pw')) throw ValidationException::withMessages(['err' => "A password is required for your account."])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+
     $user = User::findUserByEmail(request('email')) ?? back()->withError('Not Found');
 
     if ($user && !$user->is_verified()) {
