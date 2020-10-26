@@ -40,7 +40,7 @@
                           <div class="rui-changelog-item rui-changelog-success">
                             <span
                               class="rui-changelog-item-type text-capitalize">
-                              {product.color} {product.model} ({product.identifier})
+                              {product.color || ''} {product.model} ({product.identifier})
                               collected on {product.collection_date}
                             </span>
                           </div>

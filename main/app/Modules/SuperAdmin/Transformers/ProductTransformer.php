@@ -137,7 +137,7 @@ class ProductTransformer
     return [
       'id' => (int)$product->id,
       'color' => (string)$product->product_color->name,
-      'model' => (string)$product->product_model->name,
+      'model' => (string)$product->product_model->name . ' ' . $product->storage_size->human_size,
       'identifier' => (string)$product->primary_identifier(),
       'reseller' => (string)$product->with_resellers[0]->business_name,
       'reseller_phone' => (string)$product->with_resellers[0]->phone,

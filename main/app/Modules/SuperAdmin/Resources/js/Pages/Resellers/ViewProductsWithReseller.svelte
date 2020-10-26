@@ -165,7 +165,7 @@
             {#each resellerWithProducts.products_in_possession as product, idx}
               <tr>
                 <td>{idx + 1}</td>
-                <td>{product.color} {product.model} {product.storage_size}</td>
+                <td>{product.color || ''} {product.model} {product.storage_size || ''}</td>
                 <td>{product.identifier}</td>
                 <td>{product.collection_date}</td>
                 <td>
@@ -188,7 +188,7 @@
                       }}
                       data-toggle="modal"
                       data-target="#enterProductSellingPrice"
-                      class="btn btn-success btn-xs btn-sm">
+                      class="btn btn-success btn-xs btn-sm text-nowrap">
                       Mark Sold
                     </button>
                   {/if}

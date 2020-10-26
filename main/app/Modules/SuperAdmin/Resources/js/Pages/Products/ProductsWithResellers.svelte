@@ -31,7 +31,7 @@
             {#each productsWithResellers as product, idx}
               <tr>
                 <th scope="row">{idx + 1}</th>
-                <td>{product.color} {product.model}</td>
+                <td>{product.color || ''} {product.model}</td>
                 <td>{product.reseller} <br /> {product.reseller_phone}</td>
                 <td>{product.identifier}</td>
                 <td>{product.date_collected}</td>
