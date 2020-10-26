@@ -121,6 +121,7 @@ class SuperAdminController extends Controller
 
   protected function getDashboardStatistics()
   {
+    return [];
     // return ProductSaleRecord::with('product.product_price')->today()->get();
 
     // $sales_record_today = ProductSaleRecord::with('product.product_price')->today()->get();
