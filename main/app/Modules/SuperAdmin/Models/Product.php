@@ -260,6 +260,11 @@ class Product extends BaseModel
     }
   }
 
+  public function just_arrived(): bool
+  {
+    return $this->product_status_id === ProductStatus::justArrivedId();
+  }
+
   public function is_sold(): bool
   {
     /**
@@ -339,6 +344,7 @@ class Product extends BaseModel
     Route::group(['prefix' => 'products'], function () {
       Route::name('qualitycontrol.products.')->group(function () {
         Route::put('{product:product_uuid}/qa-test-results', [self::class, 'updateProductQATestResults'])->name('update_qa_result')->defaults('ex', __e('ss,q', null, true));
+        Route::put('{product:product_uuid}/mark-undergoing-qa', [self::class, 'markProductAsUndergoingQA'])->name('undergoing_qa')->defaults('ex', __e('ss,q', null, true));
       });
     });
   }
@@ -372,7 +378,7 @@ class Product extends BaseModel
       Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss,q', null, true))->middleware('auth:super_admin,quality_control');
       Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss,a,ac,d,sk', null, true))->middleware('auth:super_admin,admin,accountant');
       Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name($p('applicable_qa_tests'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
-      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name($p('comment_on_qa_test'))->defaults('ex', __e('ss,d', null, true))->middleware('auth:super_admin,stock_keeper');
+      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name($p('comment_on_qa_test'))->defaults('ex', __e('ss,d,q', null, true))->middleware('auth:super_admin,stock_keeper,quality_control');
       Route::get('search', [self::class, 'findProduct'])->name($p('find_product'))->defaults('ex', __e('archive'))->middleware('auth:super_admin');
     });
   }
@@ -650,6 +656,19 @@ class Product extends BaseModel
     if ($request->isApi()) return response()->json([], 204);
     return back()->withSuccess('Status updated');
   }
+
+  public function markProductAsUndergoingQA(Request $request, self $product)
+  {
+
+    if (!$product->just_arrived()) throw ValidationException::withMessages(['err' => "You can only mark products that just arriced as undergoing QA."])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+
+    $product->product_status_id = ProductStatus::undergoingQaId();
+    $product->save();
+
+    if ($request->isApi()) return response()->json([], 204);
+    return back()->withSuccess('Product has been marked as undergoing QA.');
+  }
+
 
   public function markProductAsSold(MarkProductAsSoldValidation $request, self $product)
   {

@@ -4,7 +4,7 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import FlashMessage from "@usershared/FlashMessage";
   import route from "ziggy";
-import { getErrorString } from "@public-assets/js/bootstrap";
+  import { getErrorString } from "@public-assets/js/bootstrap";
 
   $: ({ auth } = $page);
 
@@ -60,6 +60,28 @@ import { getErrorString } from "@public-assets/js/bootstrap";
             html: $page.flash.success
           });
         }
+      });
+  };
+
+  let markUndergoingQa = productUUID => {
+    BlockToast.fire({ text: "marking as undergoing qa ..." });
+
+    Inertia.put(route("qualitycontrol.products.undergoing_qa", productUUID), null,{
+      preserveState: true,
+      preserveScroll: true
+    })
+      .then(() => {
+        if ($page.flash.success) {
+          ToastLarge.fire({
+            title: "Successful!",
+            html: $page.flash.success
+          });
+        } else if ($page.flash.error || _.size($page.errors) > 0) {
+          throw new Error($page.flash.error || getErrorString($page.errors));
+        }
+      })
+      .catch(error => {
+        swal.showValidationMessage(`Request failed: ${error}`);
       });
   };
 </script>
@@ -141,11 +163,17 @@ import { getErrorString } from "@public-assets/js/bootstrap";
                     </InertiaLink>
                     {#if auth.user.isQualityControl}
                       <InertiaLink
-                        type="button"
                         href={route('multiaccess.products.expenses', product.uuid)}
-                        class="btn btn-warning btn-xs">
+                        class="btn btn-warning btn-xs text-nowrap">
                         Record Expense
                       </InertiaLink>
+                      {#if product.just_arrived}
+                        <button
+                          class="btn btn-brand btn-xs"
+                          on:click={() => {
+                            markUndergoingQa(product.uuid);
+                          }}>Received</button>
+                      {/if}
                     {/if}
                   {/if}
                 </td>

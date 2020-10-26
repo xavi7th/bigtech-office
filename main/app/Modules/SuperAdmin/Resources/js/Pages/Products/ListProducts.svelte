@@ -126,7 +126,7 @@
                         }}
                         data-toggle="modal"
                         data-target="#enterSalesDetails"
-                        class="btn btn-success btn-xs btn-sm">
+                        class="btn btn-success btn-xs btn-sm text-nowrap">
                         Mark Sold
                       </button>
                     {/if}
@@ -141,7 +141,7 @@
                         }}
                         data-toggle="modal"
                         data-target="#giveProductToReseller"
-                        class="btn btn-warning btn-xs btn-sm">
+                        class="btn btn-warning btn-xs btn-sm text-nowrap">
                         Give Reseller
                       </button>
                     {/if}
@@ -156,7 +156,7 @@
                         type="button"
                         data-toggle="modal"
                         data-target="#sendToDispatch"
-                        class="btn btn-orange btn-xs btn-sm">
+                        class="btn btn-orange btn-xs btn-sm text-nowrap">
                         Send to Dispatch
                       </button>
                     {/if}
@@ -180,7 +180,7 @@
                         on:click={() => {
                           returnToStock(product.uuid);
                         }}
-                        class="btn btn-orange btn-xs btn-sm">
+                        class="btn btn-orange btn-xs btn-sm text-nowrap">
                         Return to Stock
                       </button>
                     {/if}

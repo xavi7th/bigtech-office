@@ -25,13 +25,14 @@ class ProductTransformer
       'identifier' => (string)$product->primary_identifier(),
       'cost_price' => $product->cost_price,
       'selling_price' => $product->proposed_selling_price,
-      'status' => $product->product_status->status,
+      'status' => $status = $product->product_status->status,
       'color' => (string)$product->product_color->name,
       'storage_size' => (string)$product->storage_size->human_size,
       'supplier' => (string)$product->product_supplier->name,
       'product_expenses_sum' => (float)$product->product_expenses_sum(),
       'is_today' => (bool)$product->created_at->isToday(),
       'is_yesterday' => (bool)$product->created_at->isYesterday(),
+      'just_arrived' => (bool)($status == 'just arrived'),
     ];
   }
 

@@ -105,6 +105,7 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
  * @mixin \Eloquent
+ * @property-read ProductDispatchRequest|null $dispatch_request
  */
 class SwapDeal extends BaseModel
 {
