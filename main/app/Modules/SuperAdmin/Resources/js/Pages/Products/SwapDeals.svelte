@@ -7,7 +7,7 @@
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import { Inertia } from "@inertiajs/inertia";
   import { getErrorString } from "@public-assets/js/bootstrap";
-import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
+  import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
 
   $: ({ auth, flash, errors } = $page);
 
@@ -16,7 +16,10 @@ import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
     salesChannel = [],
     onlineReps = [];
 
-  let productToMarkAsSold, productToGiveReseller, dispatchDetails, productToSendToDispatch;
+  let productToMarkAsSold,
+    productToGiveReseller,
+    dispatchDetails,
+    productToSendToDispatch;
 
   let returnToStock = product => {
     swalPreconfirm
@@ -95,7 +98,14 @@ import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
               <tr>
                 <th scope="row">{idx + 1}</th>
                 <td>{product.description}</td>
-                <td>{product.identifier}</td>
+                <td>
+                  {product.identifier}
+                  <br />
+                  <span class="small font-weight-bold text-capitalize">
+                    STATUS:
+                    {product.status}
+                  </span>
+                </td>
                 <td>{product.selling_price}</td>
                 <td class="nowrap">
                   <InertiaLink

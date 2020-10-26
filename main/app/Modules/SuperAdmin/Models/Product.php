@@ -260,6 +260,11 @@ class Product extends BaseModel
     }
   }
 
+  public function shortDescription()
+  {
+    return $this->product_color->color . ' ' . $this->product_model->name . ' ' . $this->storage_size->human_size . ' ' . $this->primary_identifier();
+  }
+
   public function just_arrived(): bool
   {
     return $this->product_status_id === ProductStatus::justArrivedId();

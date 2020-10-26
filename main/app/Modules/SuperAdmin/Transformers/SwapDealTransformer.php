@@ -52,7 +52,7 @@ class SwapDealTransformer
       'selling_price' => (float)$swapDeal->selling_price,
       'total_product_expenses' => (float)$swapDeal->total_product_expenses(),
       'sold_at' => (float)optional($swapDeal->product_sales_record)->selling_price,
-      'swapped_with' => $swapDeal->swapped_with,
+      'swapped_with' => (string)optional($swapDeal->swapped_with)->shortDescription(),
       'product_status_id' => $swapDeal->product_status_id,
       'status' => $swapDeal->product_status->status,
       'uuid' => $swapDeal->product_uuid,

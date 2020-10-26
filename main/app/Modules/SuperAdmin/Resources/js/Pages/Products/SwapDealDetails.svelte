@@ -205,7 +205,7 @@
       </table>
     </div>
     <div class="col-lg-4">
-      {#if auth.user.isAccountant && swapDeal.status != 'sold' && swapDeal.status != 'sale confirmed' && swapDeal.status != 'sold by reseller'}
+      {#if auth.user.isAccountant && swapDeal.status == 'in stock'}
         <div class="row mb-50">
           <div class="col-12">
             <label for="updateSellingPrice">Selling price</label>
