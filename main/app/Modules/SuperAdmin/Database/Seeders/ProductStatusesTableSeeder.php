@@ -24,6 +24,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('Just arrived'),
         'status_slug' => Str::slug('Just arrived'),
+        'scope' => 'stock',
         'created_at' => '2020-03-21 14:57:59',
         'updated_at' => '2020-03-21 14:57:59',
         'deleted_at' => NULL,
@@ -32,6 +33,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('Undergoing QA'),
         'status_slug' => Str::slug('Undergoing QA'),
+        'scope' => 'qa',
         'created_at' => '2020-03-22 07:53:21',
         'updated_at' => '2020-03-22 07:53:21',
         'deleted_at' => NULL,
@@ -40,6 +42,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('Out for repairs'),
         'status_slug' => Str::slug('Out for repairs'),
+        'scope' => 'qa',
         'created_at' => '2020-03-22 07:53:38',
         'updated_at' => '2020-03-22 07:53:38',
         'deleted_at' => NULL,
@@ -48,6 +51,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('RTO (Damaged)'),
         'status_slug' => Str::slug('RTO (Damaged)'),
+        'scope' => 'qa',
         'created_at' => '2020-03-22 07:54:31',
         'updated_at' => '2020-03-22 07:54:31',
         'deleted_at' => NULL,
@@ -56,6 +60,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('Back from repairs'),
         'status_slug' => Str::slug('Back from repairs'),
+        'scope' => 'qa',
         'created_at' => '2020-03-22 07:54:46',
         'updated_at' => '2020-03-22 07:54:46',
         'deleted_at' => NULL,
@@ -64,6 +69,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('In stock'),
         'status_slug' => Str::slug('In stock'),
+        'scope' => 'general',
         'created_at' => '2020-03-22 07:55:11',
         'updated_at' => '2020-03-22 07:55:11',
         'deleted_at' => NULL,
@@ -72,6 +78,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('With reseller'),
         'status_slug' => Str::slug('With reseller'),
+        'scope' => 'stock',
         'created_at' => '2020-03-22 07:55:23',
         'updated_at' => '2020-03-22 07:55:23',
         'deleted_at' => NULL,
@@ -80,6 +87,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('Sold'),
         'status_slug' => Str::slug('Sold'),
+        'scope' => 'general',
         'created_at' => '2020-03-22 07:59:21',
         'updated_at' => '2020-03-22 07:59:21',
         'deleted_at' => NULL,
@@ -88,6 +96,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('QA failed'),
         'status_slug' => Str::slug('QA failed'),
+        'scope' => 'qa',
         'created_at' => '2020-03-22 08:00:02',
         'updated_at' => '2020-03-22 08:00:02',
         'deleted_at' => NULL,
@@ -96,6 +105,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('sale confirmed'),
         'status_slug' => Str::slug('sale confirmed'),
+        'scope' => 'accountant',
         'created_at' => '2020-03-24 04:00:12',
         'updated_at' => '2020-03-24 04:00:12',
         'deleted_at' => NULL,
@@ -104,6 +114,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('Sold by Reseller'),
         'status_slug' => Str::slug('Sold by Reseller'),
+        'scope' => 'stock',
         'created_at' => '2020-03-31 15:04:53',
         'updated_at' => '2020-03-31 15:04:53',
         'deleted_at' => NULL,
@@ -112,6 +123,7 @@ class ProductStatusesTableSeeder extends Seeder
       array(
         'status' => strtolower('Out for Delivery'),
         'status_slug' => Str::slug('Out for Delivery'),
+        'scope' => 'dispatch',
         'created_at' => '2020-03-31 15:04:53',
         'updated_at' => '2020-03-31 15:04:53',
         'deleted_at' => NULL,

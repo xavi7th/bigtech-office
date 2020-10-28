@@ -38,6 +38,8 @@ use Str;
  * @method static \Illuminate\Database\Query\Builder|ProductStatus withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductStatus withoutTrashed()
  * @mixin \Eloquent
+ * @property string $scope
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereScope($value)
  */
 class ProductStatus extends BaseModel
 {
@@ -206,9 +208,9 @@ class ProductStatus extends BaseModel
     }
   }
 
-  public function scopeNotSaleStatus($query)
+  public function scopeQa($query)
   {
-    return $query->whereNotIn('id', [self::soldId(), self::saleConfirmedId(), self::soldByResellerId()]);
+    return $query->whereScope('qa');
   }
 
 

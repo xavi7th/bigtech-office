@@ -33,6 +33,8 @@ use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
  * @mixin \Eloquent
  * @property int $is_local
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereIsLocal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier foreign()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier local()
  */
 class ProductSupplier extends BaseModel
 {

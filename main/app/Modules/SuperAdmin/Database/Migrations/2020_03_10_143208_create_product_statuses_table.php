@@ -17,6 +17,7 @@ class CreateProductStatusesTable extends Migration
 			$table->bigIncrements('id');
 			$table->string('status');
       $table->string('status_slug');
+      $table->string('scope')->default('general');
 
 			$table->timestamps();
 			$table->softDeletes();

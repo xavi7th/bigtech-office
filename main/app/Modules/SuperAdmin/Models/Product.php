@@ -802,7 +802,7 @@ class Product extends BaseModel
   {
     $productQATestResults = fn () => (new ProductTransformer)->transformWithTestResults($product->load('qa_tests', 'product_model.qa_tests'));
     $productQATestResultsComments = fn () => (new UserCommentTransformer)->collectionTransformer($product->test_result_comments, 'detailed');
-    $productStatuses = Cache::rememberForever('productStatuses', fn () => (new ProductStatusTransformer)->collectionTransformer(ProductStatus::notSaleStatus()->get(), 'basic'));
+    $productStatuses = Cache::rememberForever('productStatuses', fn () => (new ProductStatusTransformer)->collectionTransformer(ProductStatus::qa()->get(), 'basic'));
 
     if ($request->isApi()) return response()->json(['product' => $productQATestResults, 'comments' => $productQATestResultsComments,], 200);
     return Inertia::render('SuperAdmin,Products/QATestResults', [

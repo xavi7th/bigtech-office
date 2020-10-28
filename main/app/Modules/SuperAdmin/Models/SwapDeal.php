@@ -340,7 +340,7 @@ class SwapDeal extends BaseModel
   public function getSwapDealDetails(Request $request, self $swapDeal)
   {
     $swapDeal = (new SwapDealTransformer)->detailed($swapDeal->load('swapped_with', 'product_status', 'app_user', 'comments', 'product_expenses', 'product_sales_record'));
-    $product_statuses = Cache::rememberForever('qAProductStatuses', fn () => (new ProductStatusTransformer)->collectionTransformer(ProductStatus::notSaleStatus()->get(), 'basic'));
+    $product_statuses = Cache::rememberForever('qAProductStatuses', fn () => (new ProductStatusTransformer)->collectionTransformer(ProductStatus::qa()->get(), 'basic'));
 
     return Inertia::render('SuperAdmin,Products/SwapDealDetails', compact('swapDeal', 'product_statuses'));
   }
