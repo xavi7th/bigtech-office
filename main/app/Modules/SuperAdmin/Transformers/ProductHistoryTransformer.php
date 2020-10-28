@@ -30,7 +30,7 @@ class ProductHistoryTransformer
       'id' => (int)$product_history->id,
       'product' => (string)$product_history->product->product_model->name . ' with ' . $product_history->product->primary_identifier(),
       'product_status' => (string)'changed to ' . $product_history->product_status->status .
-        ' by ' . $product_history->user->email .
+        ' by ' . $product_history->user->full_name .
         ' on ' . $product_history->created_at
     ];
   }
@@ -41,7 +41,7 @@ class ProductHistoryTransformer
       'id' => (int)$product_history->id,
       'product' => (string)$product_history->product->description . ' with ' . $product_history->product->primary_identifier(),
       'product_status' => (string)'changed to ' . $product_history->product_status->status .
-        ' by ' . $product_history->user->email .
+        ' by ' . $product_history->user->full_name .
         ' on ' . $product_history->created_at
     ];
   }

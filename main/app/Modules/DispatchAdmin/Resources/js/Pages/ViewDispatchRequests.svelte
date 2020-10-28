@@ -72,7 +72,7 @@
     swalPreconfirm
       .fire({
         text:
-          "This will delete this delivery request and this request can no longer be processed. Enter a reason for deliting this request in the box below. ",
+          "This will delete this delivery request and this request can no longer be processed. Enter a reason for deleting this request in the box below. ",
         input: "text",
         inputAttributes: {
           autocapitalize: "off",
@@ -171,7 +171,7 @@
                         on:click={() => {
                           discardDispatchRequest(dispatchRequest.id);
                         }}
-                        class="btn btn-danger btn-xs btn-sm">
+                        class="btn btn-danger btn-xs btn-sm text-nowrap">
                         Discard Request
                       </button>
                     {/if}
@@ -280,7 +280,7 @@
             <div class="col-12">
               <label for="imeiNo">Imei No.</label>
               <input
-                type="number"
+                type="text"
                 class="form-control"
                 bind:value={dispatchRequestToSchedule.imei}
                 placeholder="Enter Imei No." />

@@ -299,7 +299,7 @@
           <div class="col-12">
             <label for="imeiNo">Imei No.</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
               bind:value={details.imei}
               placeholder="Enter Imei No." />

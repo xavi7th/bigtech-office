@@ -211,7 +211,7 @@
                   </button>
                   <InertiaLink
                     href={route('superadmin.miscellaneous.office_branches.view_products', officeBranch.id)}
-                    class="btn btn-brand btn-xs">
+                    class="btn btn-brand btn-xs text-nowrap">
                     PRODUCTS ({officeBranch.products_count})
                   </InertiaLink>
                 </td>

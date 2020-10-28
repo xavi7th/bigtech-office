@@ -98,7 +98,13 @@
                   {product.model}
                   {product.storage_size}
                 </td>
-                <td>{product.identifier}</td>
+                <td>
+                  {product.identifier}
+                  {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+                  <br>
+                    <strong class="small font-weight-bold badge badge-brand">{product.status}</strong>
+                  {/if}
+                </td>
                 <td>{product.selling_price}</td>
                 <td>
                   {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}

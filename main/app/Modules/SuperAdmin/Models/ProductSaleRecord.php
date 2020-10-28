@@ -183,23 +183,22 @@ class ProductSaleRecord extends BaseModel
 
   public function getDailyProductSaleRecords(Request $request, $date)
   {
-    $salesRecords =  self::products()->with(
+    $salesRecords =  self::products()->with([
       'product',
       'product.product_supplier',
       'product.product_price',
       'product.product_model:id,name',
-      'sales_rep:id,full_name,email',
+      'sales_rep' => fn ($query) => $query->withoutGlobalScope('safeRecords')->select(['id', 'full_name', 'email']),
       'online_rep:id,full_name,email',
       'sale_confirmer:id,full_name,email',
       'sales_channel:id,channel_name',
       'bank_account_payments'
-    )->whereDate('created_at', Carbon::parse($date))->get();
+    ])->whereDate('created_at', Carbon::parse($date))->get();
 
-    $swapSalesRecords =  self::swapDeals()->with(
-      'product'
-    )->whereDate('created_at', Carbon::parse($date))->get();
-
-    // dd($swapSalesRecords);
+    $swapSalesRecords =  self::swapDeals()->with([
+      'product',
+      'sales_rep' => fn ($query) => $query->withoutGlobalScope('safeRecords')->select(['id', 'full_name', 'email'])
+    ])->whereDate('created_at', Carbon::parse($date))->get();
 
 
     /**

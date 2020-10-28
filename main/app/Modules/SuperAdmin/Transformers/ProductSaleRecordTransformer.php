@@ -32,9 +32,9 @@ class ProductSaleRecordTransformer
       'is_payment_complete' => (bool)$sale_record->is_payment_complete,
       'is_swap_transaction' => (bool)$sale_record->is_swap_transaction,
       'sales_channel' => (string)$sale_record->sales_channel->channel_name,
-      'sales_rep' => (string)$sale_record->sales_rep->full_name . '(' . $sale_record->sales_rep->email . ')',
-      'online_rep' => (string)optional($sale_record->online_rep)->full_name . '(' . optional($sale_record->online_rep)->email . ')',
-      'sale_confirmer' => $sale_record->sale_confirmer ? (string)$sale_record->sale_confirmer->full_name . '(' . $sale_record->sale_confirmer->email . ')' : null,
+      'sales_rep' => (string)$sale_record->sales_rep->full_name,
+      'online_rep' => (string)optional($sale_record->online_rep)->full_name,
+      'sale_confirmer' => optional($sale_record->sale_confirmer)->full_name,
       'is_confirmed' => (bool)$sale_record->sale_confirmer,
       'product_uuid' => (string)$sale_record->product->product_uuid,
     ];
@@ -55,9 +55,9 @@ class ProductSaleRecordTransformer
       'is_swap_transaction' => (bool)$sale_record->is_swap_transaction,
       'is_swap_deal' => (bool)true,
       'sales_channel' => (string)$sale_record->sales_channel->channel_name,
-      'sales_rep' => (string)$sale_record->sales_rep->full_name . '(' . $sale_record->sales_rep->email . ')',
-      'online_rep' => (string)optional($sale_record->online_rep)->full_name . '(' . optional($sale_record->online_rep)->email . ')',
-      'sale_confirmer' => $sale_record->sale_confirmer ? (string)$sale_record->sale_confirmer->full_name . '(' . $sale_record->sale_confirmer->email . ')' : null,
+      'sales_rep' => (string)$sale_record->sales_rep->full_name,
+      'online_rep' => (string)optional($sale_record->online_rep)->full_name,
+      'sale_confirmer' => optional($sale_record->sale_confirmer)->full_name,
       'is_confirmed' => (bool)$sale_record->sale_confirmer,
       'product_uuid' => (string)$sale_record->product->product_uuid,
     ];
@@ -98,9 +98,9 @@ class ProductSaleRecordTransformer
       'is_payment_complete' => (bool)$sale_record->is_payment_complete,
       'is_swap_transaction' => (bool)$sale_record->is_swap_transaction,
       'sales_channel' => (string)$sale_record->sales_channel->channel_name,
-      'sales_rep' => (string)$sale_record->sales_rep->full_name . '(' . $sale_record->sales_rep->email . ')',
-      'online_rep' => (string)optional($sale_record->online_rep)->full_name . '(' . optional($sale_record->online_rep)->email . ')',
-      'sale_confirmer' => $sale_record->sale_confirmer ? (string)$sale_record->sale_confirmer->full_name . '(' . $sale_record->sale_confirmer->email . ')' : null,
+      'sales_rep' => (string)$sale_record->sales_rep->full_name,
+      'online_rep' => (string)optional($sale_record->online_rep)->full_name,
+      'sale_confirmer' => optional($sale_record->sale_confirmer)->full_name,
       'is_confirmed' => (bool)$sale_record->sale_confirmer,
       'swap_deal' => (new SwapDealTransformer)->detailed($sale_record->swap_deal)
     ];

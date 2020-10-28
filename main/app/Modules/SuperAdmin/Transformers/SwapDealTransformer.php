@@ -57,7 +57,7 @@ class SwapDealTransformer
       'status' => $swapDeal->product_status->status,
       'uuid' => $swapDeal->product_uuid,
       'comments' => (new UserCommentTransformer)->collectionTransformer($swapDeal->comments, 'commentDetails'),
-      'buyer' => optional($swapDeal->app_user)->email ?? 'N/A',
+      'buyer' => optional($swapDeal->app_user)->full_name ?? 'N/A',
     ];
   }
 

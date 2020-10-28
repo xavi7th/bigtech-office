@@ -100,11 +100,13 @@
                 <td>{product.description}</td>
                 <td>
                   {product.identifier}
-                  <br />
-                  <span class="small font-weight-bold text-capitalize">
+                 {#if auth.user.isAdmin || auth.user.isAccountant || auth.user.isSuperAdmin}
+                    <br />
+                  <span class="small font-weight-bold text-capitalize badge badge-brand">
                     STATUS:
                     {product.status}
                   </span>
+                 {/if}
                 </td>
                 <td>{product.selling_price}</td>
                 <td class="nowrap">

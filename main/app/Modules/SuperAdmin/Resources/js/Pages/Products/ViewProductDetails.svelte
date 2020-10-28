@@ -6,7 +6,7 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
 import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
 
-  $: ({ app, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page);
 
   export let productDetails = {},
     productComments = [];
@@ -78,7 +78,8 @@ import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments
               <strong>{productDetails.status}</strong>
             </th>
           </tr>
-          {#if productDetails.status == 'sold'}
+         {#if auth.user.isAccountant || auth.user.isSuperAdmin}
+            {#if productDetails.status == 'sold'}
             <tr>
               <td class="text-primary">
                 <strong>Buyer</strong>
@@ -99,6 +100,7 @@ import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments
               <strong>{productDetails.cost_price}</strong>
             </th>
           </tr>
+         {/if}
           <tr>
             <td class="text-primary">
               <strong>Selling Price</strong>

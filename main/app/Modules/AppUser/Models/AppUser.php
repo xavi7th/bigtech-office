@@ -169,6 +169,11 @@ class AppUser extends User
     return $this->hasMany(Voucher::class)->whereDate('created_at', '<', Carbon::today()->subDays(config('app.voucher_validity_days'))->toDateString());
   }
 
+  public function getFullNameAttribute()
+  {
+    return $this->first_name . ' ' . $this->last_name;
+  }
+
 
   static function routes()
   {

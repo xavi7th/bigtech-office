@@ -74,14 +74,14 @@
                     <InertiaLink
                       type="button"
                       href={route('multiaccess.products.swap_deal_details', record.product_uuid)}
-                      class="btn btn-primary btn-xs btn-sm">
+                      class="btn btn-primary btn-xs btn-sm text-nowrap">
                       Product Details
                     </InertiaLink>
                   {:else}
                     <InertiaLink
                       type="button"
                       href={route('multiaccess.products.view_product_details', record.product_uuid)}
-                      class="btn btn-primary btn-xs btn-sm">
+                      class="btn btn-primary btn-xs btn-sm text-nowrap">
                       Product Details
                     </InertiaLink>
                   {/if}

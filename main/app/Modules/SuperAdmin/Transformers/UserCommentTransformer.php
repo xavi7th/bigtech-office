@@ -57,7 +57,7 @@ class UserCommentTransformer
       'id' => (int)$comment->id,
       'comment' => (string)$comment->comment,
       'subject' => (string)substr(strrchr(get_class($comment->subject), '\\'), 1) . ' - ' . $comment->subject->primary_identifier(),
-      'user' => (string)$comment->user->email,
+      'user' => (string)$comment->user->full_name,
       'avatar' => (string)$comment->user->avatar,
       'full_name' => (string)$comment->user->full_name,
       'department' => (string)$comment->user->getType(),
