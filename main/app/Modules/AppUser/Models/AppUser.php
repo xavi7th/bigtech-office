@@ -81,6 +81,7 @@ use App\Modules\PublicPages\Notifications\SendPasswordResetNotification;
  * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read mixed $full_name
  */
 class AppUser extends User
 {

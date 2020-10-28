@@ -16,6 +16,7 @@ class CreateProductSuppliersTable extends Migration
 		Schema::create('product_suppliers', function (Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->string('name')->unique();
+      $table->boolean('is_local')->default(false);
 
 			$table->timestamps();
 			$table->softDeletes();

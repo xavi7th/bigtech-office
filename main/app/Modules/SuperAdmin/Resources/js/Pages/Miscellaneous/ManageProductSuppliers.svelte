@@ -10,7 +10,9 @@
 
   $: ({ errors, auth, flash } = $page);
 
-  let productSupplierName, productSupplierId;
+  let productSupplierObj = {
+    is_local:false
+  };
 
   let createProductSupplier = () => {
     BlockToast.fire({
@@ -20,7 +22,8 @@
     Inertia.post(
       route("superadmin.product_suppliers.create"),
       {
-        name: productSupplierName
+        name: productSupplierObj.name,
+        is_local: productSupplierObj.is_local
       },
       {
         preserveState: true,
@@ -34,7 +37,7 @@
           html: flash.success
         });
 
-        productSupplierName = null;
+        productSupplierObj.name = null;
       } else {
         ToastLarge.fire({
           title: "Oops!",
@@ -52,9 +55,10 @@
     });
 
     Inertia.put(
-      route("superadmin.product_suppliers.edit", productSupplierId),
+      route("superadmin.product_suppliers.edit", productSupplierObj.id),
       {
-        name: productSupplierName
+        name: productSupplierObj.name,
+        is_local: productSupplierObj.is_local
       },
       {
         preserveState: true,
@@ -63,7 +67,7 @@
       }
     ).then(() => {
       if (flash.success) {
-        productSupplierName = null;
+        productSupplierObj = {};
 
         ToastLarge.fire({
           title: "Successful!",
@@ -141,7 +145,6 @@
 <Layout title="Manage Product Suppliers">
   <div class="row vertical-gap">
     <div class="col-lg-4 col-xl-4">
-
       <form class="#" on:submit|preventDefault={createProductSupplier}>
         <FlashMessage />
 
@@ -153,14 +156,27 @@
               class="form-control"
               id="name"
               placeholder="Product Supplier Name"
-              bind:value={productSupplierName} />
+              bind:value={productSupplierObj.name} />
+          </div>
+
+          <div class="col-12">
+            <div class="custom-control custom-switch">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="is-local-supplier"
+                bind:checked={productSupplierObj.is_local} />
+              <label class="custom-control-label" for="is-local-supplier">
+                Local Supplier
+              </label>
+            </div>
           </div>
 
           <div class="col-12">
             <button
               type="submit"
               class="btn btn-success btn-long"
-              disabled={!productSupplierName}>
+              disabled={!productSupplierObj.name}>
               <span class="text">Create</span>
             </button>
           </div>
@@ -200,8 +216,7 @@
                     data-toggle="modal"
                     data-target="#updateProductSupplier"
                     on:click={() => {
-                      productSupplierName = productSupplier.name;
-                      productSupplierId = productSupplier.id;
+                      productSupplierObj = productSupplier
                     }}>
                     EDIT
                   </button>
@@ -216,11 +231,9 @@
         </table>
       </div>
     </div>
-
   </div>
   <div slot="modals">
     <Modal modalId="updateProductSupplier" modalTitle="Update Product Supplier">
-
       <FlashMessage />
 
       <div class="row vertical-gap sm-gap">
@@ -230,7 +243,20 @@
             type="text"
             class="form-control"
             placeholder="Product Supplier Name"
-            bind:value={productSupplierName} />
+            bind:value={productSupplierObj.name} />
+        </div>
+
+        <div class="col-12">
+          <div class="custom-control custom-switch">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="is-swap-deal"
+              bind:checked={productSupplierObj.is_local} />
+            <label class="custom-control-label" for="is-swap-deal">
+              Local Supplier
+            </label>
+          </div>
         </div>
 
       </div>
@@ -238,10 +264,9 @@
         on:click={updateProductSupplier}
         slot="footer-buttons"
         class="btn btn-success btn-long"
-        disabled={!productSupplierName}>
+        disabled={!productSupplierObj.name}>
         <span class="text">Update</span>
       </button>
-
     </Modal>
   </div>
 </Layout>

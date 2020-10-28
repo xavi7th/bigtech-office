@@ -31,12 +31,14 @@ use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
  * @method static \Illuminate\Database\Query\Builder|ProductSupplier withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductSupplier withoutTrashed()
  * @mixin \Eloquent
+ * @property int $is_local
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereIsLocal($value)
  */
 class ProductSupplier extends BaseModel
 {
   use SoftDeletes;
 
-  protected $fillable = ['name'];
+  protected $fillable = ['name', 'is_local'];
 
   public static function superAdminRoutes()
   {
@@ -52,7 +54,7 @@ class ProductSupplier extends BaseModel
 
   public function getProductSuppliers(Request $request)
   {
-    $productSuppliers = (new ProductSupplierTransformer)->collectionTransformer(self::all(), 'basic');
+    $productSuppliers = Cache::rememberForever('suppliers', fn () => (new ProductSupplierTransformer)->collectionTransformer(self::all(), 'basic'));
     if ($request->isApi()) return response()->json($productSuppliers, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageProductSuppliers', compact('productSuppliers'));
   }
@@ -64,13 +66,15 @@ class ProductSupplier extends BaseModel
     try {
       $product_supplier = self::create([
         'name' => $request->name,
+        'is_local' => $request->is_local,
       ]);
 
       if ($request->isApi()) return response()->json((new ProductSupplierTransformer)->basic($product_supplier), 201);
       return back()->withSuccess('Success');
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product supplier not created');
-      return response()->json(['err' => 'Product supplier not created'], 500);
+      if ($request->isApi()) return response()->json(['err' => 'Product supplier not created'], 500);
+      return back()->withError('Product supplier not created');
     }
   }
 
@@ -97,13 +101,24 @@ class ProductSupplier extends BaseModel
     }
   }
 
+  public function scopeLocal($query)
+  {
+    return $query->where('is_local', true);
+  }
+
+  public function scopeForeign($query)
+  {
+    return $query->where('is_local', false);
+  }
+
   protected static function boot()
   {
     parent::boot();
 
-
     static::saved(function ($product) {
       Cache::forget('suppliers');
+      Cache::forget('localSuppliers');
+      Cache::forget('foreignSuppliers');
     });
   }
 }
