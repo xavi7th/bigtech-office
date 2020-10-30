@@ -32,6 +32,13 @@ class StorageTypesTableSeeder extends Seeder
         'updated_at' => '2020-03-20 12:51:11',
         'deleted_at' => NULL,
       ),
+      2 =>
+      array(
+        'type' => 'NVMe',
+        'created_at' => '2020-03-20 12:51:11',
+        'updated_at' => '2020-03-20 12:51:11',
+        'deleted_at' => NULL,
+      ),
     ));
   }
 }

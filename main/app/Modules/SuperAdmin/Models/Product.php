@@ -429,7 +429,7 @@ class Product extends BaseModel
 
   public function getProductDetails(Request $request, Product $product)
   {
-    $productDetails = $product->load(
+    $productDetails = $product->load([
       'product_color',
       'product_grade',
       'product_model',
@@ -445,8 +445,8 @@ class Product extends BaseModel
       'product_price',
       'app_user',
       'location',
-      'comments.user'
-    );
+      'comments.user' => fn ($query) => $query->withoutGlobalScopes()
+    ]);
 
     if ($request->isApi()) return  response()->json((new ProductTransformer)->detailed($productDetails), 200);
     return Inertia::render('SuperAdmin,Products/ViewProductDetails', [
@@ -552,6 +552,9 @@ class Product extends BaseModel
         ProductPrice::create(collect($request->validated())->merge(['product_batch_id' => $request->localSupplierId])->all());
       } catch (QueryException $th) {
         if ($th->getCode() == 23000) {
+          ErrLog::notifyAdminAndFail($request->user(), $th, 'Local Product not created');
+          if ($request->isApi()) return response()->json(['err' => 'Product not created'], 500);
+          return back()->withError('Product not created');
         } else {
           throw_if(true, $th);
         }

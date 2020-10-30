@@ -40,6 +40,7 @@ use Str;
  * @mixin \Eloquent
  * @property string $scope
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereScope($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus qa()
  */
 class ProductStatus extends BaseModel
 {

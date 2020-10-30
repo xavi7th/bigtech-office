@@ -21,6 +21,7 @@ class ProductSuppliersTableSeeder extends Seeder
       0 =>
       array(
         'name' => 'WeSell Cellular',
+        'is_local' => 0,
         'created_at' => '2020-03-20 13:01:41',
         'updated_at' => '2020-03-20 13:03:16',
         'deleted_at' => NULL,
@@ -28,6 +29,7 @@ class ProductSuppliersTableSeeder extends Seeder
       1 =>
       array(
         'name' => 'Ontronics',
+        'is_local' => 0,
         'created_at' => '2020-03-20 13:01:48',
         'updated_at' => '2020-03-20 13:01:48',
         'deleted_at' => NULL,
@@ -35,6 +37,7 @@ class ProductSuppliersTableSeeder extends Seeder
       2 =>
       array(
         'name' => 'Saheed',
+        'is_local' => 1,
         'created_at' => '2020-03-20 13:01:52',
         'updated_at' => '2020-03-20 13:01:52',
         'deleted_at' => NULL,
@@ -42,6 +45,7 @@ class ProductSuppliersTableSeeder extends Seeder
       3 =>
       array(
         'name' => 'Biggie',
+        'is_local' => 1,
         'created_at' => '2020-03-20 13:02:02',
         'updated_at' => '2020-03-20 13:02:02',
         'deleted_at' => NULL,
