@@ -3,6 +3,7 @@
 namespace App\Modules\SuperAdmin\Transformers;
 
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
+use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 
 class CompanyBankAccountTransformer
 {
@@ -51,7 +52,33 @@ class CompanyBankAccountTransformer
       'account_number' => (string)$account->account_number,
       'bank' => (string)$account->bank,
       'is_suspended' => (bool) $account->deleted_at,
-      'amount' => (string)$account->payment_record->amount,
+      'amount' => (float)$account->payment_record->amount,
     ];
   }
+
+  public function transformWithPaymentRecordSum(CompanyBankAccount $account)
+  {
+    return [
+      'id' => (int)$account->id,
+      'account_name' => (string)$account->account_name,
+      'account_number' => (string)$account->account_number,
+      'bank' => (string)$account->bank,
+      'is_suspended' => (bool) $account->deleted_at,
+      'total_payments_received' => (float)$account->payment_records->sum('amount'),
+    ];
+  }
+
+
+  public function transformWithPaymentRecords(CompanyBankAccount $account)
+  {
+    return [
+      'id' => (int)$account->id,
+      'account_name' => (string)$account->account_name,
+      'account_number' => (string)$account->account_number,
+      'bank' => (string)$account->bank,
+      'is_suspended' => (bool) $account->deleted_at,
+      'payment_records' => (new BankPaymentRecordTransformer)->collectionTransformer($account->payment_records, 'transformBankAccountPaymentRecord')
+    ];
+  }
+
 }

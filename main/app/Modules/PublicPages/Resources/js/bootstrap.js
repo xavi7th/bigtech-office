@@ -87,22 +87,55 @@ export const getErrorString = errors => {
 	return errs
 }
 
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
+export const toCurrency = (amount, currencySymbol = '₦') => {
+	if (isNaN(amount)) {
+		console.log(amount);
+		return 'Invalid Amount';
+	}
+	return currencySymbol + amount.toFixed(2)
+		.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+}
 
-// import Echo from 'laravel-echo';
+export const displayTableSum = (tableColumn) => {
+		return function(row, data, start, end, display) {
 
-// window.Pusher = require('pusher-js');
+				var api = this.api(),
+					data;
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     encrypted: true
-// });
+				// Remove the formatting to get integer data for summation
+				var intVal = function(i) {
+					return typeof i === "string" ? // ? i.replace(/[\$,]/g, "") * 1
+						i.substring(0, i.lastIndexOf("."))
+						.replace(/\D/g, "") * 1 :
+						typeof i === "number" ?
+						i :
+						0;
+				};
+
+				// Total over all pages
+				let total = api
+					.column(tableColumn)
+					.data()
+					.reduce(function(a, b) {
+						return intVal(a) + intVal(b);
+					}, 0);
+
+        // Total over this page
+        let pageTotal = api
+        	.column(tableColumn, { page: "current" })
+        	.data()
+        	.reduce(function(a, b) {
+        		return intVal(a) + intVal(b);
+        	}, 0);
+
+        // Update footer
+        jQuery(api.column(2)
+        		.footer())
+        	.html(
+        		toCurrency(pageTotal) + " (" + toCurrency(total) + " total)"
+        	);
+        }
+        }
 
 import {
 	InertiaApp

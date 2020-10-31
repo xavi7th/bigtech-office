@@ -67,7 +67,7 @@
 
       <div class="table-responsive-md">
         <table
-          class="rui-datatable table table-striped table-bordered table-sm">
+          class="rui-datatable table table-striped table-bordered table-sm" data-order='[0]'>
           <thead>
             <tr>
               <th class="p-0">
@@ -78,12 +78,6 @@
                   <span>Create Product Model</span>
                 </InertiaLink>
                {/if}
-              </th>
-              <th class="d-none">
-                NOSIGN
-              </th>
-              <th class="d-none">
-                NOSIGN
               </th>
             </tr>
           </thead>
@@ -119,12 +113,6 @@
                     </InertiaLink>
                   </div>
                 </td>
-                <td class="d-none">
-                  NOSIGN
-                </td>
-                <td class="d-none">
-                  NOSIGN
-                </td>
               </tr>
             {:else}
               <tr class="list-group-item p-0">
@@ -136,12 +124,6 @@
                       <small class="media-subtitle">N/A</small>
                     </span>
                   </a>
-                </td>
-                 <td  class="d-none">
-                  NOSIGN
-                </td>
-                 <td  class="d-none">
-                  NOSIGN
                 </td>
               </tr>
             {/each}

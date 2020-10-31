@@ -70,7 +70,7 @@
     <div class="col-lg-12 col-xl-12">
       <div class="table-responsive-md">
         <table
-          class="rui-datatable table table-striped table-bordered table-sm">
+          class="rui-datatable table table-striped table-bordered table-sm" data-order='[0, "asc"]'>
           <thead class="thead-dark">
             <tr>
               <th scope="col">

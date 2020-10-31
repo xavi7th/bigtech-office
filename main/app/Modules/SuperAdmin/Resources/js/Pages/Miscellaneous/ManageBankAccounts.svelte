@@ -5,7 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
   import route from "ziggy";
-  import { getErrorString } from "@public-assets/js/bootstrap";
+  import { getErrorString, toCurrency } from "@public-assets/js/bootstrap";
   import { __dirname } from "lodash/_freeGlobal";
 
   $: ({ errors, auth, flash } = $page);
@@ -226,8 +226,7 @@
 
 <Layout title="Manage Bank Accounts">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4">
-
+    <div class="col-lg-4 col-xl-4 order-1 order-lg-0">
       <form class="#" on:submit|preventDefault={createBankAccount}>
         <FlashMessage />
 
@@ -306,9 +305,14 @@
         </div>
       </form>
     </div>
-    <div class="col-lg-8 col-xl-8">
+    <div class="col-lg-8 col-xl-8 order-0 order-lg-1">
       <div class="d-flex align-items-center justify-content-between mb-25">
-        <h2 class="mnb-2" id="formBase">Available Bank Accounts</h2>
+        <h2 class="mnb-2" id="formBase">
+          Available Bank Accounts
+        </h2>
+          <InertiaLink href={route('superadmin.miscellaneous.bank_accounts_daily_transactions')} class="btn btn-brand ml-auto">
+            <span>Today's Transactions</span>
+          </InertiaLink>
       </div>
       <div class="table-responsive">
         <table class="table table-bordered">
@@ -331,7 +335,11 @@
                     alt="" />
                   <span>{bankAccount.account_name}</span>
                 </td>
-                <td>{bankAccount.bank}/{bankAccount.account_number}</td>
+                <td>
+                  {bankAccount.bank}/{bankAccount.account_number}
+                  <br />
+                  (Total Today: {(toCurrency(bankAccount.total_payments_received))})
+                </td>
                 <td class="d-flex justify-content-between align-content-center">
                   {#if bankAccount.is_suspended}
                     <button
@@ -352,6 +360,11 @@
                       SUSPEND
                     </button>
                   {/if}
+                  <InertiaLink
+                    href={route('superadmin.miscellaneous.bank_account_daily_transactions', bankAccount.account_number)}
+                    class="btn btn-brand btn-xs text-nowrap">
+                    Today's Transactions
+                  </InertiaLink>
                   <button
                     type="button"
                     class="btn btn-warning btn-xs"
@@ -373,7 +386,6 @@
         </table>
       </div>
     </div>
-
   </div>
   <div slot="modals">
     <Modal modalId="updateBankAccount" modalTitle="Update Bank Account">
@@ -384,40 +396,40 @@
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
-            <label for="bank-name">Change Bank Name</label>
+            <label for="edit-bank-name">Change Bank Name</label>
             <input
               type="text"
               class="form-control"
-              id="bank-name"
+              id="edit-bank-name"
               placeholder="Bank Name"
               bind:value={details.bank} />
           </div>
 
           <div class="col-12">
-            <label for="acc-name">Change Account Name</label>
+            <label for="edit-acc-name">Change Account Name</label>
             <input
               type="text"
               class="form-control"
-              id="acc-name"
+              id="edit-acc-name"
               placeholder="Bank Account Name"
               bind:value={details.account_name} />
           </div>
           <div class="col-12">
-            <label for="acc-number">Change Account Number</label>
+            <label for="edit-acc-number">Change Account Number</label>
             <input
               type="text"
               class="form-control"
-              id="acc-number"
+              id="edit-acc-number"
               placeholder="Bank Account Number"
               bind:value={details.account_number} />
           </div>
 
           <div class="col-12">
-            <label for="acc-type">Change Account Type</label>
+            <label for="edit-acc-type">Change Account Type</label>
             <select
               name="acc-type"
               class="form-control"
-              id="acc-type"
+              id="edit-acc-type"
               bind:value={details.account_type}>
               <option>savings</option>
               <option>current</option>
@@ -426,11 +438,11 @@
           </div>
 
           <div class="col-12">
-            <label for="acc-description">Change Account Description</label>
+            <label for="edit-acc-description">Change Account Description</label>
             <textarea
               bind:value={details.account_description}
               class="form-control"
-              id="acc-description"
+              id="edit-acc-description"
               cols="30"
               rows="10"
               placeholder="Romzy's personal GTB account" />
@@ -440,12 +452,11 @@
             <label for="bank-logo">Change Bank logo</label>
             <input
               type="file"
-              id="bank-logo"
+              id="edit-bank-logo"
               bind:files
               accept="image/*"
               class="form-control" />
           </div>
-
         </div>
       </form>
 
@@ -457,7 +468,6 @@
         disabled={!details.account_number}>
         <span class="text">Update</span>
       </button>
-
     </Modal>
   </div>
 </Layout>

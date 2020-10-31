@@ -13,41 +13,9 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateBankAccountValidation;
+use App\Modules\SuperAdmin\Transformers\BankPaymentRecordTransformer;
+use Arr;
 
-/**
- * App\Modules\SuperAdmin\Models\CompanyBankAccount
- *
- * @property int $id
- * @property string $bank
- * @property string $account_name
- * @property string $account_number
- * @property string $account_type
- * @property string|null $img_url
- * @property string|null $account_description
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $sales_records
- * @property-read int|null $sales_records_count
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount cashTransactions()
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount newQuery()
- * @method static \Illuminate\Database\Query\Builder|CompanyBankAccount onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount query()
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereBank($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|CompanyBankAccount withTrashed()
- * @method static \Illuminate\Database\Query\Builder|CompanyBankAccount withoutTrashed()
- * @mixin \Eloquent
- */
 class CompanyBankAccount extends BaseModel
 {
 
@@ -63,9 +31,24 @@ class CompanyBankAccount extends BaseModel
       ->as('payment_record')->withPivot('amount')->withTimestamps();
   }
 
-  public function sales_records_amount()
+  public function payment_records()
+  {
+    return $this->hasMany(SalesRecordBankAccount::class);
+  }
+
+  public function payment_records_sum(): float
+  {
+    return $this->payment_records()->sum('amount');
+  }
+
+  public function total_sales_records_amount()
   {
     return $this->sales_records()->sum('amount');
+  }
+
+  public function today_payment_records_sum()
+  {
+    return $this->sales_records()->today()->sum('amount');
   }
 
   static function cash_transaction_id(): int
@@ -80,6 +63,9 @@ class CompanyBankAccount extends BaseModel
         return 'superadmin.miscellaneous.' . $name;
       };
       Route::get('', [self::class, 'getCompanyBankAccounts'])->name($misc('bank_accounts'))->defaults('ex', __e('ss', 'refresh-cw', false));
+      Route::get('daily-transactions', [self::class, 'getAllTransactionsToday'])->name($misc('bank_accounts_daily_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::get('{companyBankAccount:account_number}/daily-transactions', [self::class, 'getAccountDailyTransactions'])->name($misc('bank_account_daily_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      // Route::get('{companyBankAccount}/transactions', [self::class, 'getCompanyBankAccountTransactions'])->name($misc('bank_account_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
       Route::post('create', [self::class, 'createCompanyBankAccount'])->name($misc('create_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
       Route::put('{companyBankAccount}/edit', [self::class, 'editCompanyBankAccount'])->name($misc('edit_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
       Route::delete('{companyBankAccount}/suspend', [self::class, 'suspendCompanyBankAccount'])->name($misc('suspend_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
@@ -91,11 +77,37 @@ class CompanyBankAccount extends BaseModel
   public function getCompanyBankAccounts(Request $request)
   {
     $bankAccounts = Cache::rememberForever('bankAccounts', function () {
-      return (new CompanyBankAccountTransformer)->collectionTransformer(self::withTrashed()->get(), 'basic');
+      return (new CompanyBankAccountTransformer)->collectionTransformer(self::withTrashed()->with(['payment_records' => fn ($query) => $query->today()])->get(), 'transformWithPaymentRecordSum');
     });
 
     if ($request->isApi())  return response()->json($bankAccounts, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/ManageBankAccounts', compact('bankAccounts'));
+  }
+
+  public function getAccountDailyTransactions(Request $request, self $companyBankAccount)
+  {
+    $companyBankAccountWithTransactions = (new CompanyBankAccountTransformer)->transformWithPaymentRecords($companyBankAccount->load(['payment_records' => fn ($query) => $query->today(), 'payment_records.product_sale_record.product.product_model', 'payment_records.product_sale_record.product.product_price']));
+
+    if ($request->isApi())  return response()->json($companyBankAccountWithTransactions, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/BankAccountTransactions', [
+      'companyAccountTransactions' => $companyBankAccountWithTransactions['payment_records'],
+      'companyAccount' => Arr::except($companyBankAccountWithTransactions, 'payment_records'),
+      'date' => now(),
+
+    ]);
+  }
+
+  public function getAllTransactionsToday(Request $request)
+  {
+    $companyBankAccountWithTransactions = (new BankPaymentRecordTransformer)->collectionTransformer(SalesRecordBankAccount::today()->with('company_bank_account', 'product_sale_record.product.product_model')->get(), 'fullDetails');
+
+    if ($request->isApi())  return response()->json($companyBankAccountWithTransactions, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/BankAccountTransactions', [
+      'companyAccountTransactions' => $companyBankAccountWithTransactions,
+      'companyAccount' => [],
+      'date' => now(),
+
+    ]);
   }
 
   public function createCompanyBankAccount(CreateBankAccountValidation $request)
