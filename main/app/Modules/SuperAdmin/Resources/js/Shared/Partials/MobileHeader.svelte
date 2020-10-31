@@ -11,6 +11,12 @@ import { Inertia } from "@inertiajs/inertia";
   };
 </script>
 
+<style>
+  .dashboard-logo{
+    max-height: 50px;
+  }
+</style>
+
 <div class="rui-navbar rui-navbar-mobile">
   <div class="rui-navbar-head">
     <button
@@ -24,6 +30,7 @@ import { Inertia } from "@inertiajs/inertia";
         src="/img/logo.png"
         data-src-night="/img/logo-white.png"
         data-src-day="/img/logo.png"
+        class="dashboard-logo"
         alt=""
         width="45" />
     </a>

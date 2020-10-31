@@ -107,4 +107,14 @@ class ProcessorSpeed extends BaseModel
       return back()->withError('Processor Speed update failed');
     }
   }
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function ($product) {
+      Cache::forget('processorSpeeds');
+      Cache::forget('processor_speeds');
+    });
+  }
 }

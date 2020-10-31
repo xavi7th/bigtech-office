@@ -14,6 +14,12 @@
   };
 </script>
 
+<style>
+  .dashboard-logo{
+    max-height: 70px;
+  }
+</style>
+
 <nav class="rui-navbar rui-navbar-top rui-navbar-sticky">
   <div class="rui-navbar-brand">
     <a href="/" class="rui-navbar-logo">
@@ -22,6 +28,7 @@
         data-src-night="/img/logo-white.png"
         data-src-day="/img/logo.png"
         alt=""
+        class="dashboard-logo"
         width="45" />
     </a>
     <button class="yay-toggle rui-yaybar-toggle" type="button">

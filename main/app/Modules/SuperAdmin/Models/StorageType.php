@@ -103,4 +103,14 @@ class StorageType extends BaseModel
       return back()->withError('Type creation failed');
     }
   }
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function ($product) {
+      Cache::forget('storageTypes');
+      Cache::forget('storage_types');
+    });
+  }
 }

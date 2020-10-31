@@ -129,4 +129,14 @@ class StorageSize extends BaseModel
       return back()->withSuccess('Storage size not created');
     }
   }
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function ($product) {
+      Cache::forget('storageSizes');
+      Cache::forget('storage_sizes');
+    });
+  }
 }
