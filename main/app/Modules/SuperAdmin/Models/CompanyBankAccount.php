@@ -63,16 +63,16 @@ class CompanyBankAccount extends BaseModel
         return 'superadmin.miscellaneous.' . $name;
       };
       Route::get('', [self::class, 'getCompanyBankAccounts'])->name($misc('bank_accounts'))->defaults('ex', __e('ss', 'refresh-cw', false));
-      Route::get('daily-transactions', [self::class, 'getAllTransactionsToday'])->name($misc('bank_accounts_daily_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::get('{companyBankAccount:account_number}/daily-transactions', [self::class, 'getAccountDailyTransactions'])->name($misc('bank_account_daily_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      // Route::get('{companyBankAccount}/transactions', [self::class, 'getCompanyBankAccountTransactions'])->name($misc('bank_account_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::get('daily-transactions', [self::class, 'getAllPaymentTransactionsToday'])->name($misc('bank_accounts_daily_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::get('{companyBankAccount:account_number}/daily-transactions', [self::class, 'getDailyPaymentTransactions'])->name($misc('bank_account_daily_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
+      Route::get('transaction-history', [self::class, 'getPaymentTransactionsSummary'])->name($misc('payment_records'))->defaults('ex', __e('ss', 'layers', false));
+      Route::get('{companyBankAccount:bank}/{date}/transaction-history', [self::class, 'getBankPaymentTransactionsHistory'])->name($misc('bank_payment_records'))->defaults('ex', __e('ss', 'layers', true));
       Route::post('create', [self::class, 'createCompanyBankAccount'])->name($misc('create_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
       Route::put('{companyBankAccount}/edit', [self::class, 'editCompanyBankAccount'])->name($misc('edit_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
       Route::delete('{companyBankAccount}/suspend', [self::class, 'suspendCompanyBankAccount'])->name($misc('suspend_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
       Route::delete('{id}/restore', [self::class, 'restoreCompanyBankAccount'])->name($misc('restore_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
     });
   }
-
 
   public function getCompanyBankAccounts(Request $request)
   {
@@ -84,7 +84,7 @@ class CompanyBankAccount extends BaseModel
     return Inertia::render('SuperAdmin,Miscellaneous/ManageBankAccounts', compact('bankAccounts'));
   }
 
-  public function getAccountDailyTransactions(Request $request, self $companyBankAccount)
+  public function getDailyPaymentTransactions(Request $request, self $companyBankAccount)
   {
     $companyBankAccountWithTransactions = (new CompanyBankAccountTransformer)->transformWithPaymentRecords($companyBankAccount->load(['payment_records' => fn ($query) => $query->today(), 'payment_records.product_sale_record.product.product_model', 'payment_records.product_sale_record.product.product_price']));
 
@@ -97,7 +97,7 @@ class CompanyBankAccount extends BaseModel
     ]);
   }
 
-  public function getAllTransactionsToday(Request $request)
+  public function getAllPaymentTransactionsToday(Request $request)
   {
     $companyBankAccountWithTransactions = (new BankPaymentRecordTransformer)->collectionTransformer(SalesRecordBankAccount::today()->with('company_bank_account', 'product_sale_record.product.product_model')->get(), 'fullDetails');
 
@@ -107,6 +107,29 @@ class CompanyBankAccount extends BaseModel
       'companyAccount' => [],
       'date' => now(),
 
+    ]);
+  }
+
+  public function getPaymentTransactionsSummary(Request $request)
+  {
+    $paymentRecords = (new BankPaymentRecordTransformer)->collectionTransformer(SalesRecordBankAccount::with('company_bank_account', 'product_sale_record.product.product_model')->get(), 'transformForSummary')
+    ->groupBy(['created_at', 'bank'], true)->map(fn ($item, $key) =>  $item->map(fn ($item, $key) =>  $item->sum('amount_paid')));
+
+    if ($request->isApi())  return response()->json($paymentRecords, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/PaymentRecords', [
+      'paymentRecords' => $paymentRecords,
+    ]);
+  }
+
+  public function getBankPaymentTransactionsHistory(Request $request, self $companyBankAccount, string $date)
+  {
+    $paymentRecords = (new BankPaymentRecordTransformer)->collectionTransformer($companyBankAccount->payment_records()->whereDate('created_at', $date)->get(), 'transformForSummary');
+
+    if ($request->isApi())  return response()->json($paymentRecords, 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/BankAccountTransactions', [
+      'companyAccountTransactions' => $paymentRecords,
+      'companyAccount' => $companyBankAccount,
+      'date' => $date,
     ]);
   }
 
