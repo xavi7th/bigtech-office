@@ -36,6 +36,7 @@ return [
 
 	'channels' => [
 		'stack' => [
+      'name' => 'Log Stack',
 			'driver' => 'stack',
 			'channels' => ['database', 'daily'],
 			'ignore_exceptions' => false,
@@ -108,6 +109,8 @@ return [
 			'connection' => 'default',
 			'collection' => 'err_logs',
 			'detailed' => true,
+      'queue' => true,
+      'queue_name' => 'logToDBQueue',
 			'max_rows' => env('LOG_DB_MAX_ROWS'),
 			'max_records' => env('LOG_DB_MAX_ROWS'),
 			'max_hours' => env('LOG_DB_MAX_HOURS'),
