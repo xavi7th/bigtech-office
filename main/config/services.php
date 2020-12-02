@@ -48,5 +48,10 @@ return [
     'api_key' => env('TERMII_API_KEY'), // optional when using username and password
     'from' => env('TERMII_SENDER_ID'), // optional
   ],
+  'bulk_sms' => [
+    'endpoint' => 'https://www.bulksmsnigeria.com/api/v1/sms/create',
+    'api_token' => env('BULK_SMS_API_TOKEN'),
+    'from' => env('BULK_SMS_SENDER_ID'),
+  ],
 
 ];

@@ -13,11 +13,11 @@ use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
+use App\Modules\AppUser\Models\ProductReceipt;
 use Illuminate\Database\QueryException;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
-use App\Modules\SuperAdmin\Models\RamSize;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -153,6 +153,11 @@ class Product extends BaseModel
   public function product_supplier()
   {
     return $this->belongsTo(ProductSupplier::class);
+  }
+
+  public function productReceipt()
+  {
+    return $this->hasOne(ProductReceipt::class);
   }
 
   public function swapped_deal_device()
@@ -296,6 +301,17 @@ class Product extends BaseModel
   public function is_from_local_supplier(): bool
   {
     return $this->product_batch_id === ProductBatch::local_supplied_id();
+  }
+
+  public function generateReceipt(float $amount): ProductReceipt
+  {
+    return $this->productReceipt()->create([
+      'user_email' => $this->app_user->email,
+      'user_phone' => $this->app_user->phone,
+      'user_address' => $this->app_user->address,
+      'user_city' => $this->app_user->city,
+      'amount_paid' => $amount
+    ]);
   }
 
   public function with_reseller(): bool

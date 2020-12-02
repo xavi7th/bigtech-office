@@ -29,6 +29,10 @@ mix.scripts([
         __dirname + '/Resources/js/vendor/v4-shims.js',
     ], 'public_html/js/dashboard-app-vendor.js');
 
+mix.copy([
+       __dirname + '/Resources/js/vendor/html2pdf.js',
+    ], 'public_html/js/html2pdf.js');
+
 mix.scripts([
         __dirname + '/Resources/js/vendor/rootui.js',
         __dirname + '/Resources/js/vendor/rootui-init.js',

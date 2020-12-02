@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\PublicPages\Notifications\Channels;
+namespace App\Modules\AppUser\Notifications\Channels;
 
 use GuzzleHttp\Client;
 use Illuminate\Notifications\Notification;
 
-class SMSSolutionsMessage
+class TermiiSMSMessage
 {
   /**
    * The message content.
@@ -24,7 +24,7 @@ class SMSSolutionsMessage
    *
    * @var string
    */
-  public $sender;
+  public $from;
 
   /**
    * These are the phone numbers the messages are to be sent to.
@@ -42,39 +42,40 @@ class SMSSolutionsMessage
   /**
    * This specifies the type of message you want to send. Valid types are:
    *
-   * 0: Plain Text
-   * 1: Flash Plain Text
-   * 2: Unicode SMS
-   * 6: Unicode Flash SMS
+   * plain, voice, mms, unicode
    *
    * Note: 70 characters makes a page of 1- page Unicode SMS, while 63 characters makes a page for multiple pages Unicode SMS
    * @var int
    */
-  public $type = 0;
+  public $type = 'plain';
 
   /**
    *	Set how you want the phone numbers on DND to be handled.
    *
    *	Valid options are:
    *
-   *	2 = Send all messages via the Basic Route. DND phone numbers are not charged
-   *	3 = Send message via the Basic route but send to those on DND via the Corporate Route.
-   *	4 = Use corporate route for all the phone numbers
-   *	5 = Use the SIM server for all the phone numbers Note: Note that the pricing of the corporate route is different from the basic route.
-   * 	6 = This option allows sending of SMS to all numbers on DND only via the Hosted SIM
+   * whatsapp, dnd, generic
+   *
+   * generic: this is an sms channel and you can register your preferred sender Ids on but delivery to phone numbers
+   * 					who have Do Not Disturb activated
+   * dnd: this is for OTP and product notifications, you Do not Disturb Ids
+   * whatsapp: is for WhatsApp
+   *
+   * DND represents Do-Not-Distrub and messages sent via this channel are blocked by telcom providers.
+   * To ensure your messages are allowed to deliver, apply for a sender ID through your dashboard.
    *
    * @var int
    */
-  public $routing = 3;
+  public $channel = 'dnd';
 
   /**
-   * The client reference.
-   * This is the access token that authorizes the delivery of the message. You can generate on our Access Token Page.
-   * https://smartsmssolutions.com/sms/api-x-tokens
+   * The API KEY.
+   * This is the access token that authorizes the delivery of the message. You can get your api_key from
+   * https://www.termii.com/dashboard
    *
    * @var string
    */
-  public $token;
+  public $api_key;
 
   /**
    * Create a new message instance.
@@ -124,17 +125,6 @@ class SMSSolutionsMessage
   }
 
   /**
-   * Set the message type to be a flash message.
-   *
-   * @return $this
-   */
-  public function flash_message()
-  {
-    $this->type = 1;
-    return $this;
-  }
-
-  /**
    * Send the given notification.
    *
    * @param  mixed  $notifiable
@@ -143,25 +133,25 @@ class SMSSolutionsMessage
    */
   public function send($notifiable, Notification $notification)
   {
-    $msg_obj = $notification->toSMSSolutions($notifiable);
-    $msg_obj->token = config('services.sms_solutions.token');
+    $msg_obj = $notification->toTermiiSMS($notifiable);
+    $msg_obj->api_key = config('services.termii_sms.api_key');
     /** ! This will always overwrite the ID set by the from(). Refactor */
-    $msg_obj->sender = config('services.sms_solutions.sms_sender');
+    $msg_obj->from = config('services.termii_sms.from');
 
 
     // Send notification to the $notifiable instance...
     $client = new Client();
 
-    $url = config('services.sms_solutions.url');
+    $url = config('services.termii_sms.endpoint');
 
     $response = $client->post($url, [
       'form_params' => [
-        'sender' => $msg_obj->sender,
+        'from' => $msg_obj->from,
         'to' => $msg_obj->to,
         'type' => $msg_obj->type,
-        'routing' => $msg_obj->routing,
-        'message' => $msg_obj->message,
-        'token' => $msg_obj->token,
+        'channel' => $msg_obj->channel,
+        'sms' => $msg_obj->message,
+        'api_key' => $msg_obj->api_key,
       ]
     ]);
 

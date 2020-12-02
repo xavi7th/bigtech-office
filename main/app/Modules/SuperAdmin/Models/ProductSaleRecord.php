@@ -15,11 +15,13 @@ use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
+use App\Modules\AppUser\Notifications\ProductReceiptNotification;
 use App\Modules\SuperAdmin\Transformers\ProductSaleRecordTransformer;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
 
@@ -227,8 +229,9 @@ class ProductSaleRecord extends BaseModel
    */
   public function confirmSaleRecord(Request $request, self $productSaleRecord)
   {
-
+    // return (new ProductReceiptNotification(ProductReceipt::find(1)))->toMail(ProductReceipt::find(1)->appUser);
     $paymentRecords = $request->payment_records;
+    $amountPaid = collect($paymentRecords)->sum('amount');
 
     /**
      * !Remove any empty fields from input
@@ -275,7 +278,7 @@ class ProductSaleRecord extends BaseModel
      * ? this receipt will still carry this his current records
      */
     try {
-      $receipt = $product->generate_receipt();
+      $receipt = $product->generateReceipt($amountPaid);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin(auth()->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
@@ -287,8 +290,9 @@ class ProductSaleRecord extends BaseModel
      */
 
     try {
-      $product->app_user->notify(new SendProductReceipt($receipt));
+      $product->app_user->notify(new ProductReceiptNotification($receipt));
     } catch (\Throwable $th) {
+      dd($th);
       ErrLog::notifyAdmin(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
       // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
       // return back()->withError('Failed to send receipt to user  ' . $product->app_user->emai);

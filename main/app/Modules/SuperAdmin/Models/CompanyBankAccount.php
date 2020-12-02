@@ -16,6 +16,42 @@ use App\Modules\SuperAdmin\Http\Validations\CreateBankAccountValidation;
 use App\Modules\SuperAdmin\Transformers\BankPaymentRecordTransformer;
 use Arr;
 
+/**
+ * App\Modules\SuperAdmin\Models\CompanyBankAccount
+ *
+ * @property int $id
+ * @property string $bank
+ * @property string $account_name
+ * @property string $account_number
+ * @property string $account_type
+ * @property string|null $img_url
+ * @property string|null $account_description
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|SalesRecordBankAccount[] $payment_records
+ * @property-read int|null $payment_records_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $sales_records
+ * @property-read int|null $sales_records_count
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount cashTransactions()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount newQuery()
+ * @method static \Illuminate\Database\Query\Builder|CompanyBankAccount onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereAccountType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereBank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereImgUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompanyBankAccount whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|CompanyBankAccount withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|CompanyBankAccount withoutTrashed()
+ * @mixin \Eloquent
+ */
 class CompanyBankAccount extends BaseModel
 {
 

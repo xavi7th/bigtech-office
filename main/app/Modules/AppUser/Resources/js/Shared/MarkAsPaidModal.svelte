@@ -78,7 +78,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
         only: ["flash", "errors", "officeBranch", "products", "salesRecords"]
       }
     ).then(() => {
-      if (flash.success) {
+      if ($page.flash.success) {
         ToastLarge.fire({
           title: "Successful!",
           html: flash.success
@@ -86,9 +86,13 @@ import { getErrorString } from "@public-assets/js/bootstrap";
 
         payment_records = [];
         bankRecords = [];
+        bankRecords[0] = null;
         paymentRecords = [];
         numOfBanks = 1;
-      } else if (flash.error || _.size(errors) > 0) {
+
+        jQuery('#enterProductPaymentDetails').modal('hide');
+
+      } else if ($page.flash.error || _.size(errors) > 0) {
         ToastLarge.fire({
           title: "Oops!",
           html: flash.error || getErrorString(errors),

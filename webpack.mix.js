@@ -1,4 +1,3 @@
-const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const mix = require('laravel-mix');
 const autoPreprocess = require('svelte-preprocess');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -34,7 +33,6 @@ mix.webpackConfig({
   /**
   * To strip all locales except“ en”
   */
-    new MomentLocalesPlugin(),
     new CleanWebpackPlugin({
 			dry: false,
 			cleanOnceBeforeBuildPatterns: ['js/*', './*.js', 'css/*', 'fonts/*', '/img/*', './mix-manifest.json']
@@ -65,7 +63,9 @@ mix
 	.svelte({
 		dev: !mix.inProduction(),
 		css: true,
-		preprocess: autoPreprocess(),
+		preprocess: autoPreprocess({
+			sourceMap: !mix.inProduction()
+		}),
 		onwarn: (warning, handler) => {
 			const {
 				code,
