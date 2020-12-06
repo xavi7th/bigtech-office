@@ -139,6 +139,11 @@ class User extends Authenticatable implements JWTSubject
     return $this instanceof SalesRep && $this->unit == 'call-center';
   }
 
+  public function isOnlineSalesRep(): bool
+  {
+    return $this->isSocialMediaRep() || $this->isCallCenterRep();
+  }
+
   public function isStockKeeper(): bool
   {
     return $this instanceof StockKeeper;

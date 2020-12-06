@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Http\Controllers;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Modules\SalesRep\Models\SalesRep;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
@@ -51,9 +52,11 @@ class SuperAdminController extends Controller
 
         Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss,a', 'home', true));
 
-        // AppUser::routes();
+        SalesRep::superAdminRoutes();
 
         Product::superAdminRoutes();
+
+        ProductSaleRecord::superAdminRoutes();
 
         ProductSupplier::superAdminRoutes();
 
@@ -64,7 +67,6 @@ class SuperAdminController extends Controller
         UserComment::superAdminRoutes();
 
         // ProductQATestResult::superAdminRoutes();
-
 
         CompanyBankAccount::superAdminRoutes();
 

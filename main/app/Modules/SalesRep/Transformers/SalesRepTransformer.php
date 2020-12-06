@@ -92,4 +92,40 @@ class SalesRepTransformer
       'total_withdrawable' => (float)number_format($user->total_withdrawalable_amount(), 2, '.', '')
     ];
   }
+
+  public function transformForAdminViewSalesReps(SalesRep $salesRep)
+  {
+    return [
+      'id' => (int)$salesRep->id,
+      'name' => (string)$salesRep->full_name,
+      'total_deposit' => (float)$salesRep->monthly_sales_count(),
+      'total_withdrawal' => (float)$salesRep->total_withdrawal_amount(),
+      'total_profit' => (float)$salesRep->total_profit_amount(),
+      'target_profit' => (float)$salesRep->expected_withdrawal_amount(),
+      'total_withdrawable' => (float)number_format($salesRep->total_withdrawalable_amount(), 2, '.', '')
+    ];
+  }
+
+  public function transformForSuperAdminViewSalesReps(SalesRep $salesRep)
+  {
+    return [
+      'id' => (int)$salesRep->id,
+      'full_name' => (string)$salesRep->full_name,
+      'email' => (string)$salesRep->email,
+      'statistics' => [
+        'total_online_sales_count' => (float)$salesRep->online_sales_records_count,
+        'total_walk_in_sales_count' => (float)$salesRep->walk_in_sales_records_count,
+        'total_online_sales_amount' => (float)$salesRep->total_online_sales_amount,
+        'total_walk_in_sales_amount' => (float)$salesRep->total_walk_in_sales_amount,
+        'total_online_sales_bonus_amount' => (float)$salesRep->total_online_sales_bonus_amount,
+        'total_walk_in_sales_bonus_amount' => (float)$salesRep->total_walk_in_sales_bonus_amount,
+        'today_online_sales_count' => (float)$salesRep->today_online_sales_count,
+        'today_walk_in_sales_count' => (float)$salesRep->today_walk_in_sales_count,
+        'today_online_sales_amount' => (float)$salesRep->today_online_sales_amount,
+        'today_walk_in_sales_amount' => (float)$salesRep->today_walk_in_sales_amount,
+        'today_online_sales_bonus_amount' => (float)$salesRep->today_online_sales_bonus_amount,
+        'today_walk_in_sales_bonus_amount' => (float)$salesRep->today_walk_in_sales_bonus_amount,
+      ]
+    ];
+  }
 }

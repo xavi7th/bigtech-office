@@ -44,6 +44,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|ProductReceipt withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductReceipt withoutTrashed()
  * @mixin \Eloquent
+ * @property-read Product $product
  */
 class ProductReceipt extends Model
 {

@@ -15,7 +15,6 @@ use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
@@ -79,6 +78,10 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
  * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord withoutTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord yesterday()
  * @mixin \Eloquent
+ * @property float $online_rep_bonus
+ * @property float $walk_in_rep_bonus
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereOnlineRepBonus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereWalkInRepBonus($value)
  */
 class ProductSaleRecord extends BaseModel
 {
@@ -144,6 +147,16 @@ class ProductSaleRecord extends BaseModel
   public function getIsPaymentCompleteAttribute()
   {
     return $this->total_bank_payments_amount === $this->selling_price;
+  }
+
+  public static function superAdminRoutes()
+  {
+    Route::group(['prefix' => 'product-sales-records'], function () {
+      Route::name('superadmin.product_sales_records.')->group(function () {
+        Route::get('{salesRep}', [self::class, 'getSalesRepSaleRecordsToday'])->name('sales_rep.today')->defaults('ex', __e('ss,ac', null, true));
+        Route::get('{salesRep}/{date}', [self::class, 'getSalesRepSaleRecordsToday'])->name('sales_rep.history')->defaults('ex', __e('ss,ac', null, true));
+      });
+    });
   }
 
   public static function accountantRoutes()

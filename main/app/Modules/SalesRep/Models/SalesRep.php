@@ -4,12 +4,17 @@ namespace App\Modules\SalesRep\Models;
 
 use App\User;
 use Throwable;
+use Inertia\Inertia;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 
 /**
@@ -70,6 +75,10 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @method static Builder|SalesRep whereUpdatedAt($value)
  * @method static Builder|SalesRep whereVerifiedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $onlineSalesRecords
+ * @property-read int|null $online_sales_records_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $walkInSalesRecords
+ * @property-read int|null $walk_in_sales_records_count
  */
 class SalesRep extends User
 {
@@ -89,9 +98,14 @@ class SalesRep extends User
     return 1;
   }
 
-  public function product_sales_record()
+  public function walkInSalesRecords()
   {
     return $this->morphMany(ProductSaleRecord::class, 'sales_rep');
+  }
+
+  public function onlineSalesRecords()
+  {
+    return $this->hasMany(ProductSaleRecord::class, 'online_rep_id');
   }
 
   public function product_dispatch_requests()
@@ -104,61 +118,79 @@ class SalesRep extends User
     return self::whereEmail($email)->first();
   }
 
-  static function adminRoutes()
+  public function getReceiptThumbUrlAttribute(): string
   {
-    Route::group(['namespace' => '\App\Modules\SalesRep\Models'], function () {
-      Route::get('sales-reps', 'SalesRep@getAllSalesReps')->middleware('auth:admin');
+    return Str::of($this->avatar)->replace(Str::of($this->avatar)->dirname(), Str::of($this->avatar)->dirname() . '/thumbs');
+  }
 
-      Route::post('sales-rep/create', 'SalesRep@createSalesRep')->middleware('auth:admin');
-
-      Route::put('sales-rep/{sales_rep}/suspend', 'SalesRep@suspendSalesRep')->middleware('auth:admin');
-
-      Route::put('sales-rep/{id}/restore', 'SalesRep@restoreSalesRep')->middleware('auth:admin');
-
-      Route::delete('sales-rep/{sales_rep}/delete', 'SalesRep@deleteSalesRep')->middleware('auth:admin');
+  static function superAdminRoutes()
+  {
+    Route::name('superadmin.manage_staff.')->prefix('sales-reps')->group(function () {
+      Route::get('', [self::class, 'getAllSalesReps'])->name('sales_reps')->defaults('ex', __e('ss', 'aperture'));
+      Route::post('create', [self::class, 'createSalesRep'])->name('sales_rep.create');
+      Route::post('{salesRep}/edit', [self::class, 'editSalesRep'])->name('sales_rep.edit');
+      Route::put('{sales_rep}/suspend', [self::class, 'suspendSalesRep'])->name('sales_rep.suspend');
+      Route::put('{id}/restore', [self::class, 'restoreSalesRep'])->name('sales_rep.reactivate');
+      Route::delete('{sales_rep}/delete', [self::class, 'deleteSalesRep'])->name('sales_rep.delete');
     });
   }
 
-  static function salesRepRoutes()
+  public function getAllSalesReps(Request $request)
   {
-    Route::group(['middleware' => ['auth:sales_rep', 'sales_reps'], 'namespace' => '\App\Modules\SalesRep\Models'], function () {
-      Route::group(['prefix' => 'api'], function () {
-        Route::get('statistics', 'SalesRep@getDashboardStatistics')->middleware('auth:sales_rep');
-      });
-    });
+
+    $salesReps =
+      // Cache::rememberForever('allSalesReps', fn() =>
+      (new SalesRepTransformer)->collectionTransformer(
+        self::withCount([
+          'onlineSalesRecords',
+          'walkInSalesRecords',
+          'onlineSalesRecords AS total_online_sales_amount' => fn ($query) => $query->select(DB::raw('SUM(selling_price)')),
+          'walkInSalesRecords AS total_walk_in_sales_amount' => fn ($query) => $query->select(DB::raw('SUM(selling_price)')),
+          'onlineSalesRecords AS total_online_sales_bonus_amount' => fn ($query) => $query->select(DB::raw('SUM(online_rep_bonus)')),
+          'walkInSalesRecords AS total_walk_in_sales_bonus_amount' => fn ($query) => $query->select(DB::raw('SUM(walk_in_rep_bonus)')),
+          'onlineSalesRecords AS today_online_sales_count' => fn ($query) => $query->today(),
+          'walkInSalesRecords AS today_walk_in_sales_count' => fn ($query) => $query->today(),
+          'onlineSalesRecords AS today_online_sales_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(selling_price)')),
+          'walkInSalesRecords AS today_walk_in_sales_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(selling_price)')),
+          'onlineSalesRecords AS today_online_sales_bonus_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(online_rep_bonus)')),
+          'walkInSalesRecords AS today_walk_in_sales_bonus_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(walk_in_rep_bonus)')),
+        ])->get(),
+        'transformForSuperAdminViewSalesReps'
+      );
+    // });
+    // dd($salesReps);
+    if ($request->isApi())  return response()->json($salesReps, 200);
+    return Inertia::render('SuperAdmin,ManageStaff/ManageSalesReps', compact('salesReps'));
+
   }
 
-  public function getDashboardStatistics()
+  public function createSalesRep(Request $request)
   {
-    return [];
-  }
+    $validated = $request->validate([
+      'full_name' => 'required|string|max:20',
+      'email' => 'required|email|max:50|unique:sales_reps,email',
+      'avatar' => 'required|file|mimes:jpeg,bmp,png,gif',
+      'password' => ''
+    ]);
 
-  public function getAllSalesReps()
-  {
-    return (new AdminUserTransformer)->collectionTransformer(self::withTrashed()->get(), 'transformForAdminViewSalesReps');
-  }
+    $validated['password'] = 'sales-reps';
 
-  public function createSalesRep()
-  {
+    if ($request->hasFile('avatar')) {
+      $validated['avatar'] = compress_image_upload('avatar', 'user-avatars/', 'user-avatars/thumbs/', 1400, true, 50)['img_url'];
+    }
+
     try {
-      DB::beginTransaction();
-      $sales_rep = self::create(Arr::collapse([
-        request()->all(),
-        [
-          'password' => bcrypt('itsefintech@sales_rep'),
-        ]
-      ]));
 
-      DB::commit();
+      $salesRep = self::create($validated);
 
-      ActivityLog::logUserActivity(auth()->user()->email . ' created a sales rep account for ' . $sales_rep->email);
+      ActivityLog::notifySuperAdmins($request->user()->full_name . ' created a sales rep account for ' . $salesRep->full_name);
 
-      return response()->json(['rsp' => $sales_rep], 201);
+      return back()->withSuccess('Sales rep account created');
     } catch (Throwable $e) {
       if (app()->environment() == 'local') {
-        return response()->json(['error' => $e->getMessage()], 500);
+        return back()->withError($e->getMessage());
       }
-      return response()->json(['rsp' => 'error occurred'], 500);
+      return back()->withError('Error occurred');
     }
   }
 
@@ -210,6 +242,11 @@ class SalesRep extends User
   {
     static::addGlobalScope('safeRecords', function (Builder $builder) {
       $builder->where('id', '>', 1);
+    });
+
+
+    static::saved(function (self $salesRep) {
+      Cache::forget('allSalesReps');
     });
   }
 }
