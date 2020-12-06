@@ -623,6 +623,7 @@ if (!function_exists('compress_image_upload')) {
     if ($constrain_aspect_ratio) {
       $image->resize($size, null, function ($constraint) {
         $constraint->aspectRatio();
+        $constraint->upsize();
       })->save(public_path(Storage::url($save_path)) . request()->file($key)->hashName(), 85);
 
       $url = Storage::url($save_path) . request()->file($key)->hashName();
@@ -630,6 +631,7 @@ if (!function_exists('compress_image_upload')) {
       if ($thumb_path) {
         $image->resize(null, $thumb_size, function ($constraint) {
           $constraint->aspectRatio();
+          $constraint->upsize();
         })->save(public_path(Storage::url($thumb_path)) . request()->file($key)->hashName(), 70);
 
         $thumb_url = Storage::url($thumb_path) . request()->file($key)->hashName();
