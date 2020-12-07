@@ -129,9 +129,9 @@ class SalesRep extends User
       Route::get('', [self::class, 'getAllSalesReps'])->name('sales_reps')->defaults('ex', __e('ss', 'aperture'));
       Route::post('create', [self::class, 'createSalesRep'])->name('sales_rep.create');
       Route::put('{salesRep}/edit', [self::class, 'editSalesRep'])->name('sales_rep.edit');
-      Route::put('{sales_rep}/suspend', [self::class, 'suspendSalesRep'])->name('sales_rep.suspend');
+      Route::delete('{salesRep}/suspend', [self::class, 'suspendSalesRep'])->name('sales_rep.suspend');
       Route::put('{id}/restore', [self::class, 'restoreSalesRep'])->name('sales_rep.reactivate');
-      Route::delete('{sales_rep}/delete', [self::class, 'deleteSalesRep'])->name('sales_rep.delete');
+      Route::delete('{salesRep}/delete', [self::class, 'deleteSalesRep'])->name('sales_rep.delete');
     });
   }
 
@@ -154,7 +154,7 @@ class SalesRep extends User
           'walkInSalesRecords AS today_walk_in_sales_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(selling_price)')),
           'onlineSalesRecords AS today_online_sales_bonus_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(online_rep_bonus)')),
           'walkInSalesRecords AS today_walk_in_sales_bonus_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(walk_in_rep_bonus)')),
-        ])->get(),
+      ])->withTrashed()->get(),
         'transformForSuperAdminViewSalesReps'
       );
     // });
@@ -221,33 +221,33 @@ class SalesRep extends User
     }
   }
 
-  public function suspendSalesRep(self $sales_rep)
+  public function suspendSalesRep(self $salesRep)
   {
-    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $sales_rep->email);
+    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $salesRep->email);
 
-    $sales_rep->delete();
+    $salesRep->delete();
 
-    return response()->json(['rsp' => true], 204);
+    return back()->withSuccess('User account suspended');
   }
 
   public function restoreSalesRep($id)
   {
-    $sales_rep = self::withTrashed()->find($id);
+    $salesRep = self::withTrashed()->find($id);
 
-    $sales_rep->restore();
+    $salesRep->restore();
 
-    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $sales_rep->email);
+    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $salesRep->email);
 
-    return response()->json(['rsp' => true], 204);
+    return back()->withSuccess('User account reactivated');
   }
 
-  public function deleteSalesRep(self $sales_rep)
+  public function deleteSalesRep(self $salesRep)
   {
-    ActivityLog::logUserActivity(auth()->user()->email . ' permanently deleted the account of ' . $sales_rep->email);
+    ActivityLog::logUserActivity(auth()->user()->email . ' permanently deleted the account of ' . $salesRep->email);
 
-    $sales_rep->forceDelete();
+    $salesRep->forceDelete();
 
-    return response()->json(['rsp' => true], 204);
+    return back()->withSuccess('User account deleted');
   }
 
   public function scopeSocialMedia($query)

@@ -111,7 +111,7 @@
       .fire({
         title: "Are you sure?",
         text:
-          "This sales rep will no longer be available as a payment option for users. It can be restored at a later time",
+          "This sales rep will no longer be able to login to their account. It can be restored at a later time",
         icon: "question",
         showCloseButton: false,
         allowOutsideClick: () => !swal.isLoading(),
@@ -164,7 +164,7 @@
       .fire({
         title: "Are you sure?",
         text:
-          "This sales rep will once again be available as a payment option for users.",
+          "This sales rep will once again be ableto acces their accounts.",
         icon: "question",
         showCloseButton: false,
         allowOutsideClick: () => !swal.isLoading(),
@@ -176,7 +176,7 @@
         confirmButtonText: "Yes, carry on!",
         showLoaderOnConfirm: true,
         preConfirm: () => {
-          return Inertia.delete(
+          return Inertia.put(
             route("superadmin.manage_staff.sales_rep.reactivate", id),
             {
               preserveState: true,
@@ -322,11 +322,11 @@
                       SUSPEND
                     </button>
                   {/if}
-                  <InertiaLink
+                  <!-- <InertiaLink
                     href={route('superadmin.product_sales_records.sales_rep.today', [salesRep.id])}
                     class="btn btn-brand btn-xs text-nowrap">
                     Today's Transactions
-                  </InertiaLink>
+                  </InertiaLink> -->
                   <button
                     type="button"
                     class="btn btn-warning btn-xs"
