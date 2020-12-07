@@ -711,7 +711,8 @@ h(), r.on("resize load orientationchange", h);
             }, {
 				key: "initPluginSwiper",
 				value: function() {
-					return at.call(this)
+          return;
+          // return at.call(this)
 				}
             }]) && ct(e.prototype, n), a && ct(e, a), t
 		}();

@@ -13,6 +13,9 @@
 			"@superadmin-pages/*": ["main/app/Modules/SuperAdmin/Resources/js/Pages/*"],
 			"@superadmin-shared/*": ["main/app/Modules/SuperAdmin/Resources/js/Shared/*"],
 			"@superadmin-assets/*": ["main/app/Modules/SuperAdmin/Resources/*"],
+			"@salesrep-pages/*": ["main/app/Modules/SalesRep/Resources/js/Pages/*"],
+			"@salesrep-shared/*": ["main/app/Modules/SalesRep/Resources/js/Shared/*"],
+			"@salesrep-assets/*": ["main/app/Modules/SalesRep/Resources/*"],
 		}
 	},
 	"include": ["main/app", "main/config/", "main/database/", "main/resources/", "main/routes/"]

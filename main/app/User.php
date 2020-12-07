@@ -178,11 +178,17 @@ class User extends Authenticatable implements JWTSubject
     } elseif ($this->isSuperAdmin()) {
       return ['isSuperAdmin' => true];
     } elseif ($this->isSocialMediaRep()) {
-      return ['isSocialMediaRep' => true];
+      return [
+        'isSocialMediaRep' => true,
+        'isOnlineSalesRep' => true
+      ];
     } elseif ($this->isWalkInRep()) {
       return ['isWalkInRep' => true];
     } elseif ($this->isCallCenterRep()) {
-      return ['isCallCenterRep' => true];
+      return [
+        'isCallCenterRep' => true,
+        'isOnlineSalesRep' => true
+      ];
     } elseif ($this->isStockKeeper()) {
       return ['isStockKeeper' => true];
     } elseif ($this->isQualityControl()) {

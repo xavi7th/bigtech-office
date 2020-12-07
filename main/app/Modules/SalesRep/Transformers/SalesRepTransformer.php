@@ -129,4 +129,28 @@ class SalesRepTransformer
       ]
     ];
   }
+
+  public function transformForSalesRepsDashboard(SalesRep $salesRep)
+  {
+    return [
+
+      'total_online_sales_count' => (float)$salesRep->online_sales_records_count,
+      'total_walk_in_sales_count' => (float)$salesRep->walk_in_sales_records_count,
+      'total_online_sales_amount' => (float) $salesRep->total_online_sales_amount,
+      'total_walk_in_sales_amount' => (float) $salesRep->total_walk_in_sales_amount,
+      'monthly_online_sales_amount' => (float) $salesRep->monthly_online_sales_amount,
+      'monthly_walk_in_sales_amount' => (float) $salesRep->monthly_walk_in_sales_amount,
+      'monthly_online_sales_bonus_amount' => (float) $salesRep->monthly_online_sales_bonus_amount,
+      'monthly_walk_in_sales_bonus_amount' => (float) $salesRep->monthly_walk_in_sales_bonus_amount,
+      'monthly_online_sales_count' => (float) $salesRep->monthly_online_sales_count,
+      'monthly_walk_in_sales_count' => (float) $salesRep->monthly_walk_in_sales_count,
+      'today_online_sales_count' => (float) $salesRep->today_online_sales_count,
+      'today_walk_in_sales_count' => (float) $salesRep->today_walk_in_sales_count,
+      'today_online_sales_amount' => (float) $salesRep->today_online_sales_amount,
+      'today_walk_in_sales_amount' => (float) $salesRep->today_walk_in_sales_amount,
+      'today_online_sales_bonus_amount' => (float) $salesRep->today_online_sales_bonus_amount,
+      'today_walk_in_sales_bonus_amount' => (float) $salesRep->today_walk_in_sales_bonus_amount,
+
+    ];
+  }
 }
