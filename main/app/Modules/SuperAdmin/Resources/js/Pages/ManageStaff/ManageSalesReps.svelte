@@ -74,7 +74,7 @@
     });
     formData.append("_method", "PUT");
 
-    Inertia.put(
+    Inertia.post(
       route("superadmin.manage_staff.sales_rep.edit", details.id),
       formData,
       {
@@ -89,6 +89,7 @@
       if (flash.success) {
         details = {};
         files = undefined;
+        jQuery('#updateSalesRep').modal('hide');
 
         ToastLarge.fire({
           title: "Successful!",

@@ -128,7 +128,7 @@ class SalesRep extends User
     Route::name('superadmin.manage_staff.')->prefix('sales-reps')->group(function () {
       Route::get('', [self::class, 'getAllSalesReps'])->name('sales_reps')->defaults('ex', __e('ss', 'aperture'));
       Route::post('create', [self::class, 'createSalesRep'])->name('sales_rep.create');
-      Route::post('{salesRep}/edit', [self::class, 'editSalesRep'])->name('sales_rep.edit');
+      Route::put('{salesRep}/edit', [self::class, 'editSalesRep'])->name('sales_rep.edit');
       Route::put('{sales_rep}/suspend', [self::class, 'suspendSalesRep'])->name('sales_rep.suspend');
       Route::put('{id}/restore', [self::class, 'restoreSalesRep'])->name('sales_rep.reactivate');
       Route::delete('{sales_rep}/delete', [self::class, 'deleteSalesRep'])->name('sales_rep.delete');
@@ -169,7 +169,7 @@ class SalesRep extends User
     $validated = $request->validate([
       'full_name' => 'required|string|max:20',
       'email' => 'required|email|max:50|unique:sales_reps,email',
-      'avatar' => 'required|file|mimes:jpeg,bmp,png,gif',
+      'avatar' => 'nullable|file|mimes:jpeg,bmp,png,gif',
       'password' => ''
     ]);
 
@@ -186,6 +186,33 @@ class SalesRep extends User
       ActivityLog::notifySuperAdmins($request->user()->full_name . ' created a sales rep account for ' . $salesRep->full_name);
 
       return back()->withSuccess('Sales rep account created');
+    } catch (Throwable $e) {
+      if (app()->environment() == 'local') {
+        return back()->withError($e->getMessage());
+      }
+      return back()->withError('Error occurred');
+    }
+  }
+
+  public function editSalesRep(Request $request, self $salesRep)
+  {
+    $validated = $request->validate([
+      'full_name' => 'required|string|max:20',
+      'email' => 'required|email|max:50|unique:sales_reps,email,' . $salesRep->id,
+      'avatar' => 'nullable|file|mimes:jpeg,bmp,png,gif',
+    ]);
+
+    if ($request->hasFile('avatar')) {
+      $validated['avatar'] = compress_image_upload('avatar', 'user-avatars/', 'user-avatars/thumbs/', 1400, true, 50)['img_url'];
+    }
+
+    try {
+
+      $salesRep->update($validated);
+
+      ActivityLog::notifySuperAdmins($request->user()->full_name . ' updated the sales rep account for ' . $salesRep->full_name);
+
+      return back()->withSuccess('Sales rep account updated');
     } catch (Throwable $e) {
       if (app()->environment() == 'local') {
         return back()->withError($e->getMessage());
