@@ -277,6 +277,32 @@ class ProductSaleRecord extends BaseModel
 
     $productSaleRecord->sale_confirmed_by = auth()->id();
     $productSaleRecord->sale_confirmer_type = get_class($request->user());
+
+    /**
+     * Assign bonuses to the relevant parties
+     */
+
+    if ($productSaleRecord->selling_price > +config('app.upper_bonus_treshold')) {
+      $bonus = config('app.upper_bonus_amount');
+    } else {
+      $bonus = config('app.lower_bonus_amount');
+    }
+
+    if (!$productSaleRecord->online_rep && $productSaleRecord->sales_rep instanceof SalesRep) {
+      /**
+       * If this sale was handled by walk in rep alone, they get all the bonus
+       */
+      $productSaleRecord->walk_in_rep_bonus = $bonus;
+    } elseif ($productSaleRecord->sales_rep instanceof SalesRep) {
+      /**
+       * If this sale was started by an online rep and marked sold by a walk in rep, then share the bonus
+       */
+      $productSaleRecord->walk_in_rep_bonus =  $walkInRepBonus = $bonus * (config('app.walk_in_bonus_percentage') / 100);
+      $productSaleRecord->online_rep_bonus = $bonus - $walkInRepBonus;
+    } else {
+      $productSaleRecord->online_rep_bonus = $bonus;
+    }
+
     $productSaleRecord->save();
 
     /**

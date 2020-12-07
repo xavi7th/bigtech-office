@@ -359,7 +359,6 @@ class Product extends BaseModel
     });
   }
 
-
   static function qualityControlRoutes()
   {
     Route::group(['prefix' => 'products'], function () {
@@ -378,7 +377,6 @@ class Product extends BaseModel
       });
     });
   }
-
 
   static function multiAccessRoutes()
   {

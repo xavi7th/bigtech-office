@@ -23,6 +23,17 @@ return [
    */
   'permissible_idle_time' => env('PERMISSIBLE_IDLE_TIME', 300),
 
+  /**
+   * The amount where the bonus changes
+   */
+  'upper_bonus_treshold' => env('APP_UPPER_BONUS_TRESHOLD_AMOUNT', 100000),
+  'walk_in_bonus_percentage' => env('WALK_IN_REP_BONUS_PERCENTAGE', 30),
+  'lower_bonus_amount' => env('APP_LOWER_BONUS_AMOUNT', 500),
+  'upper_bonus_amount' => env(
+    'APP_UPPER_BONUS_AMOUNT',
+    1000
+  ),
+
 
   /*
     |--------------------------------------------------------------------------
