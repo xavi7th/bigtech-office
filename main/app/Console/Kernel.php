@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
 
     $schedule->command('database:backup')
     ->daily()
-      ->sendOutputTo(Module::getModulePath('Admin/Console') . '/1database-backup-log.cson')
+    ->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/1database-backup-log.cson')
       ->onFailure(function () {
         // ActivityLog::notifyAdmins('Compounding due interests of target savings failed to complete successfully');
       });
@@ -48,7 +48,7 @@ class Kernel extends ConsoleKernel
      * !See the explanation in ./explanation.cson
      */
     if (app()->environment('local')) {
-      $schedule->command('queue:work --once --queue=high,low,default')->sendOutputTo(Module::getModulePath('Admin/Console') . '/queue-jobs.cson');
+      $schedule->command('queue:work --once --queue=high,low,default')->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/queue-jobs.cson');
     } else {
       $schedule->command('queue:restart')->hourly();
       $schedule->command('queue:work --sleep=3 --timeout=900 --queue=high,default,low')->runInBackground()->withoutOVerlapping()->everyMinute();
