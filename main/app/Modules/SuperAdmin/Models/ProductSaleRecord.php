@@ -82,6 +82,7 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
  * @property float $walk_in_rep_bonus
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereOnlineRepBonus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereWalkInRepBonus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord thisMonth()
  */
 class ProductSaleRecord extends BaseModel
 {

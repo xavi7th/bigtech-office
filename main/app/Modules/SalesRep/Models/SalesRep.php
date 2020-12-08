@@ -79,6 +79,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property-read int|null $online_sales_records_count
  * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $walkInSalesRecords
  * @property-read int|null $walk_in_sales_records_count
+ * @property-read string $receipt_thumb_url
  */
 class SalesRep extends User
 {
@@ -118,7 +119,7 @@ class SalesRep extends User
     return self::whereEmail($email)->first();
   }
 
-  public function getReceiptThumbUrlAttribute(): string
+  public function getAvatarThumbUrlAttribute(): string
   {
     return Str::of($this->avatar)->replace(Str::of($this->avatar)->dirname(), Str::of($this->avatar)->dirname() . '/thumbs');
   }

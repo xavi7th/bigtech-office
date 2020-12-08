@@ -23,6 +23,7 @@
 		"laravel/ui": "^2.0",
 		"nwidart/laravel-modules": "^7.1",
 		"orangehill/iseed": "^2.6",
+		"rachidlaasri/travel": "^1.0",
 		"tightenco/ziggy": "^0.9.1",
 		"tymon/jwt-auth": "^1.0",
 		"wewowweb/laravel-svelte-preset": "^0.1.7"

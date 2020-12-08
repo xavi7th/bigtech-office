@@ -82,6 +82,43 @@ use App\Modules\PublicPages\Notifications\SendPasswordResetNotification;
  * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read mixed $full_name
+ * @property string $country
+ * @property string|null $date_of_birth
+ * @property string|null $gender
+ * @property string|null $acc_num
+ * @property string|null $acc_name
+ * @property string|null $acc_bank
+ * @property string|null $acc_type
+ * @property string|null $paystack_nuban
+ * @property string|null $paystack_nuban_name
+ * @property string|null $paystack_nuban_bank
+ * @property string|null $bvn
+ * @property string|null $bvn_name
+ * @property int $is_bvn_verified
+ * @property int $is_bank_verified
+ * @property string|null $id_card
+ * @property string|null $verified_at
+ * @property int $can_withdraw
+ * @property int|null $agent_id
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereAccBank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereAccName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereAccNum($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereAccType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereAgentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereBvn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereBvnName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereCanWithdraw($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereDateOfBirth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereFullName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereIdCard($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereIsBankVerified($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereIsBvnVerified($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser wherePaystackNuban($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser wherePaystackNubanBank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser wherePaystackNubanName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereVerifiedAt($value)
  */
 class AppUser extends User
 {

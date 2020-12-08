@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use RachidLaasri\Travel\Travel;
+use Nwidart\Modules\Facades\Module;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,6 +18,12 @@ class Kernel extends ConsoleKernel
         //
     ];
 
+  public function bootstrap()
+  {
+    parent::bootstrap();
+    // Travel::to('11months 25 days 12:00am');
+  }
+
     /**
      * Define the application's command schedule.
      *
@@ -24,8 +32,31 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+    // $schedule->command('inspire')->hourly();
+
+
+    $schedule->command('database:backup')
+    ->daily()
+      ->sendOutputTo(Module::getModulePath('Admin/Console') . '/1database-backup-log.cson')
+      ->onFailure(function () {
+        // ActivityLog::notifyAdmins('Compounding due interests of target savings failed to complete successfully');
+      });
+
+    // $schedule->job(new SendLoginNotification(AppUser::find(1)))->emailOutputTo('xavi7th@gmail.com')->everyFiveMinutes();
+
+    /**
+     * !See the explanation in ./explanation.cson
+     */
+    if (app()->environment('local')) {
+      $schedule->command('queue:work --once --queue=high,low,default')->sendOutputTo(Module::getModulePath('Admin/Console') . '/queue-jobs.cson');
+    } else {
+      $schedule->command('queue:restart')->hourly();
+      $schedule->command('queue:work --sleep=3 --timeout=900 --queue=high,default,low')->runInBackground()->withoutOVerlapping()->everyMinute();
     }
+
+    }
+
+
 
     /**
      * Register the commands for the application.
@@ -35,6 +66,7 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
+    $this->load(Module::getModulePath('SuperAdmin/Console'));
 
         require base_path('routes/console.php');
     }

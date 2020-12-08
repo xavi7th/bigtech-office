@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5714f24391e07275ac0f54c80443fe8",
+    "content-hash": "dce3e8609a120dbb4f21b789f60ccc90",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2604,6 +2604,53 @@
                 "shell"
             ],
             "time": "2020-05-03T19:32:03+00:00"
+        },
+        {
+            "name": "rachidlaasri/travel",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rashidlaasri/travel.git",
+                "reference": "51f7bd5ee06125fbcabf8b15438aac1ecd4e6faf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rashidlaasri/travel/zipball/51f7bd5ee06125fbcabf8b15438aac1ecd4e6faf",
+                "reference": "51f7bd5ee06125fbcabf8b15438aac1ecd4e6faf",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": ">=1.29.0",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.2|^9.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RachidLaasri\\Travel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rachid Laasri",
+                    "email": "rashidlaasri@gmail.com",
+                    "homepage": "https://rachidlaasri.com"
+                }
+            ],
+            "description": "Framework agnostic PHP package to control the time.",
+            "homepage": "https://github.com/rashidlaasri/travel",
+            "keywords": [
+                "carbon",
+                "time",
+                "travel"
+            ],
+            "time": "2020-06-19T19:00:35+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
