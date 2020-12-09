@@ -3,8 +3,7 @@
 namespace App\Modules\SuperAdmin\Console;
 
 use Illuminate\Console\Command;
-use App\Modules\Admin\Models\Admin;
-use App\Modules\Admin\Notifications\GenericAdminNotification;
+use Str;
 
 class DatabaseBackup extends Command
 {
@@ -41,13 +40,13 @@ class DatabaseBackup extends Command
   public function handle()
   {
 
-    $filename = "backup-" . now()->format('Y-m-d') . ".gz";
+    $filename = Str::slug(config('app.name')) . "-backup-" . now()->format('Y-m-d') . ".gz";
 
     $command = "mysqldump --user=" . env('DB_USERNAME') . " --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . "  | gzip > " . storage_path() . "/app/backup/" . $filename;
     $returnVar = NULL;
     $output  = NULL;
 
-    exec($command, $output, $returnVar);
+    exec($command, $this->notification, $returnVar);
 
     dump(collect($this->notification)->implode(',' . PHP_EOL));
     // Admin::find(1)->notify(new GenericAdminNotification('Processed database backup', collect($this->notification)->implode(', ' . PHP_EOL)));

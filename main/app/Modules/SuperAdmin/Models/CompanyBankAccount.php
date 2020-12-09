@@ -255,12 +255,15 @@ class CompanyBankAccount extends BaseModel
 
     static::saved(function () {
       Cache::forget('bankAccounts');
+      Cache::forget('companyAccounts');
     });
     static::deleted(function () {
       Cache::forget('bankAccounts');
+      Cache::forget('companyAccounts');
     });
     static::restored(function () {
       Cache::forget('bankAccounts');
+      Cache::forget('companyAccounts');
     });
   }
 }

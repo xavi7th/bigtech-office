@@ -80,6 +80,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $walkInSalesRecords
  * @property-read int|null $walk_in_sales_records_count
  * @property-read string $receipt_thumb_url
+ * @property-read string $avatar_thumb_url
  */
 class SalesRep extends User
 {
