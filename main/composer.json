@@ -10,10 +10,11 @@
 	"require": {
 		"php": "^7.2.5",
 		"awobaz/compoships": "^2.0",
+		"coconutcraig/laravel-postmark": "^2.10",
 		"danielme85/laravel-log-to-db": "^2.2",
 		"fideloper/proxy": "^4.2",
 		"fruitcake/laravel-cors": "^1.0",
-		"guzzlehttp/guzzle": "^6.3",
+		"guzzlehttp/guzzle": "^7.2",
 		"inertiajs/inertia-laravel": "^0.2.5",
 		"intervention/image": "^2.5",
 		"intervention/validation": "^2.3",
