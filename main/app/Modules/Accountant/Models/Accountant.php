@@ -4,6 +4,7 @@ namespace App\Modules\Accountant\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
+use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 
 /**
  * App\Modules\Accountant\Models\Accountant
@@ -48,6 +49,8 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static Builder|Accountant whereUpdatedAt($value)
  * @method static Builder|Accountant whereVerifiedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $product_sales_record
+ * @property-read int|null $product_sales_record_count
  */
 class Accountant extends User
 {
