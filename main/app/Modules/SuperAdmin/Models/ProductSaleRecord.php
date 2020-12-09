@@ -152,7 +152,7 @@ class ProductSaleRecord extends BaseModel
 
   public static function superAdminRoutes()
   {
-    Route::group(['prefix' => 'product-sales-records'], function () {
+    Route::group(['prefix' => 'product-sales-records/sales-reps'], function () {
       Route::name('superadmin.product_sales_records.')->group(function () {
         Route::get('{salesRep}', [self::class, 'getSalesRepSaleRecordsToday'])->name('sales_rep.today')->defaults('ex', __e('ss,ac', null, true));
         Route::get('{salesRep}/{date}', [self::class, 'getSalesRepSaleRecordsToday'])->name('sales_rep.history')->defaults('ex', __e('ss,ac', null, true));
