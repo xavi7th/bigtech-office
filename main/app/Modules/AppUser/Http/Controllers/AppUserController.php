@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
+use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\AppUser\Http\Controllers\Auth\LoginController;
 use App\Modules\AppUser\Http\Controllers\Auth\RegisterController;
 
@@ -22,6 +23,11 @@ class AppUserController extends Controller
     // ForgotPasswordController::routes();
     // ConfirmPasswordController::routes();
     // VerificationController::routes();
+
+
+    Route::group(['middleware' => 'web'], function () {
+      Route::get('/preview-product-receipt/{productReceipt:order_ref}', [self::class, 'previewReceipt'])->name('appuser.preview_receipt');
+    });
 
     Route::group(['middleware' => ['web', 'auth'], 'namespace' => '\App\Modules\AppUser\Http\Controllers'], function () {
 
@@ -66,6 +72,12 @@ class AppUserController extends Controller
   {
     Auth::logout();
     return Inertia::render('AppUser,Welcome');
+  }
+
+  public function previewReceipt(Request $request, ProductReceipt $productReceipt)
+  {
+    dd($productReceipt);
+    return view('appuser::emails.product_receipt', ['receipt' => ProductReceipt::find(1)->load('product.app_user', 'product.product_model', 'product.swapped_deal_device')]);
   }
 
   public function previewProduct(Request $request)

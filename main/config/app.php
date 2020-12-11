@@ -15,6 +15,7 @@ return [
 
   'name' => env('APP_NAME', 'The Elects'),
   'phone' => env('APP_PHONE', '08022222222'),
+  'complaint_phone_line' => env('APP_COMPLAINT_PHONE_LINE', '08022222222'),
   'email' => env('APP_EMAIL', 'support@theelects.com'),
   'address' => env('APP_ADDRESS', null),
 

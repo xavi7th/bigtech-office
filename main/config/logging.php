@@ -110,7 +110,7 @@ return [
 			'collection' => 'err_logs',
 			'detailed' => true,
       'queue' => true,
-      'queue_name' => 'logToDBQueue',
+      'queue_name' => 'low',
 			'max_rows' => env('LOG_DB_MAX_ROWS'),
 			'max_records' => env('LOG_DB_MAX_ROWS'),
 			'max_hours' => env('LOG_DB_MAX_HOURS'),

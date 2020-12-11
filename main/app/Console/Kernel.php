@@ -37,6 +37,7 @@ class Kernel extends ConsoleKernel
 
     $schedule->command('database:backup')
     ->daily()
+    ->emailOutputTo('xavi7th@gmail.com')
     ->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/1database-backup-log.cson')
       ->onFailure(function () {
         // ActivityLog::notifyAdmins('Compounding due interests of target savings failed to complete successfully');

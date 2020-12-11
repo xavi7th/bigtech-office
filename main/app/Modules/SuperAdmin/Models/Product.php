@@ -162,7 +162,7 @@ class Product extends BaseModel
 
   public function swapped_deal_device()
   {
-    return $this->morphMany(SwapDeal::class, 'swapped_with');
+    return $this->morphOne(SwapDeal::class, 'swapped_with');
   }
 
   public function product_sales_record()

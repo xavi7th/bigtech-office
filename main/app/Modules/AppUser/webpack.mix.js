@@ -11,6 +11,8 @@ mix.webpackConfig({
 	},
 })
 
+mix.copyDirectory(__dirname + '/Resources/img', 'public_html/img');
+
 mix.scripts([
         __dirname + '/Resources/js/vendor/jquery.min.js',
         __dirname + '/Resources/js/vendor/popper.min.js',

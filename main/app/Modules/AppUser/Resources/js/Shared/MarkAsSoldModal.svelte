@@ -82,8 +82,8 @@
             .then(() => {
               if ($page.flash.success) {
                 return true;
-              } else if ($page.flash.error || _.size(errors) > 0) {
-                throw new Error($page.flash.error || getErrorString(errors));
+              } else if ($page.flash.error || _.size($page.errors) > 0) {
+                throw new Error($page.flash.error || getErrorString($page.errors));
               }
             })
             .catch(error => {
