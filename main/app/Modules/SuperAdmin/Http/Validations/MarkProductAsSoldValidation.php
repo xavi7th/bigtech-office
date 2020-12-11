@@ -3,6 +3,7 @@
 namespace App\Modules\SuperAdmin\Http\Validations;
 
 use Illuminate\Validation\Rule;
+use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\Admin\Models\ProductStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
@@ -11,6 +12,11 @@ use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
 class MarkProductAsSoldValidation extends FormRequest
 {
+  /**
+   * The product to mark as sold
+   *
+   * @var Product
+   */
   private $product;
   /**
    * Get the validation rules that apply to the request.
@@ -33,8 +39,8 @@ class MarkProductAsSoldValidation extends FormRequest
       'is_swap_transaction' => 'nullable',
       'description' => 'required_if:is_swap_transaction,true|string',
       'owner_details' => 'required_if:is_swap_transaction,true|string',
-      'id_card' => 'required_if:is_swap_transaction,true|file|mimes:jpeg,bmp,png',
-      'receipt' => 'required_if:is_swap_transaction,true|file|mimes:jpeg,bmp,png',
+      'id_card' => 'required_if:is_swap_transaction,true|file|image',
+      'receipt' => 'required_if:is_swap_transaction,true|file|image',
       'swap_value' => 'required_if:is_swap_transaction,true|numeric',
       'imei' => 'nullable|alpha_num|unique:swap_deals,imei',
       'serial_no' =>  'nullable|alpha_dash|unique:swap_deals,serial_no',
@@ -82,6 +88,7 @@ class MarkProductAsSoldValidation extends FormRequest
   public function withValidator($validator)
   {
     $validator->after(function ($validator) {
+      // dd($this->product->is_sold());
 
       /**
        * Check if the product has been sold already or confirmed

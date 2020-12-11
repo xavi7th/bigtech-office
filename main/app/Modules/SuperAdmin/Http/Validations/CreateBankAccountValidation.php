@@ -23,7 +23,7 @@ class CreateBankAccountValidation extends FormRequest
         'account_number' =>  ['required', 'numeric', Rule::unique('company_bank_accounts')->ignore($this->route('companyBankAccount')->account_number, 'account_number')],
         'account_type' => 'string',
         'account_description' => 'nullable|string',
-        'img' => 'file|mimes:jpeg,bmp,png',
+        'img' => 'file|image',
       ];
     } elseif ($this->isMethod('POST')) {
       return [
@@ -32,7 +32,7 @@ class CreateBankAccountValidation extends FormRequest
         'account_number' => 'required|numeric|unique:company_bank_accounts,account_number',
         'account_type' => 'required|string',
         'account_description' => 'nullable|string',
-        'img' => 'required|file|mimes:jpeg,bmp,png',
+        'img' => 'required|file|image',
       ];
     }
   }
