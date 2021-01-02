@@ -76,8 +76,7 @@ class AppUserController extends Controller
 
   public function previewReceipt(Request $request, ProductReceipt $productReceipt)
   {
-    dd($productReceipt);
-    return view('appuser::emails.product_receipt', ['receipt' => ProductReceipt::find(1)->load('product.app_user', 'product.product_model', 'product.swapped_deal_device')]);
+    return view('appuser::emails.product_receipt', ['receipt' => $productReceipt->load('product.app_user', 'product.product_model', 'product.swapped_deal_device')]);
   }
 
   public function previewProduct(Request $request)

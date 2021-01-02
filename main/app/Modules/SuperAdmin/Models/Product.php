@@ -319,6 +319,11 @@ class Product extends BaseModel
     return $this->product_status_id === ProductStatus::withResellerId();
   }
 
+  public function getFullNameAttribute()
+  {
+    return $this->product_color->color . ' ' . $this->product_model->name . ' ' . $this->storage_size->human_size;
+  }
+
   public function getCostPriceAttribute()
   {
     return is_numeric($this->product_price->cost_price)  ?
@@ -427,7 +432,7 @@ class Product extends BaseModel
     } elseif ($request->user()->isWebAdmin()) {
       $products = fn () => Cache::rememberForever('webAdminProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     } elseif ($request->user()->isAccountant()) {
-      $products = fn () => Cache::rememberForever('accountantProducts', fn () => (new ProductTransformer)->collectionTransformer(self::sold()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+      $products = fn () => Cache::rememberForever('accountantProducts', fn () => (new ProductTransformer)->collectionTransformer(self::sold()->orWhere->saleConfirmed()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin()) {
       $products = fn () => Cache::rememberForever('products', fn () => (new ProductTransformer)->collectionTransformer(self::with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
     } else {
@@ -860,6 +865,11 @@ class Product extends BaseModel
   public function scopeInStock($query)
   {
     return $query->where('product_status_id', ProductStatus::inStockId());
+  }
+
+  public function scopeSaleConfirmed($query)
+  {
+    return $query->where('product_status_id', ProductStatus::saleConfirmedId());
   }
 
   public function scopeSold($query)

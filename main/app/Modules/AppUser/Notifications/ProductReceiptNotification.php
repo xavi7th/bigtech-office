@@ -83,6 +83,7 @@ class ProductReceiptNotification extends Notification implements ShouldQueue
         "orderRef" => $this->receipt->order_ref,
         "purchaseDate" => $this->receipt->created_at->toDateString(),
         "productName" => $this->receipt->product->product_model->name,
+        "productDescription" => $this->receipt->product->full_name,
         "productId" => $this->receipt->product->primary_identifier(),
         "amountPaid" => to_naira($this->receipt->amount_paid),
         "swapDevices" => $this->receipt->product->swapped_deal_device ? [
