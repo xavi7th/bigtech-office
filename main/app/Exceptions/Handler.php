@@ -116,12 +116,7 @@ class Handler extends ExceptionHandler
     //   }
     // }
     elseif (in_array($response->status(), [419])) {
-
-      Inertia::version(function () {
-        return \Str::random();
-      });
-
-      return back()->withError('Your session has expired. Please try again');
+      return back()->withFlash(['error'=>'Your session has expired. Please try again']);
     }
 
     return $response;
