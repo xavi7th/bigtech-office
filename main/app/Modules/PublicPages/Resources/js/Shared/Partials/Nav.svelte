@@ -1,6 +1,6 @@
 <script>
   import { InertiaLink } from "@inertiajs/inertia-svelte";
-  import route from "ziggy";
+
 
   export let topMenuRoutes = [];
 </script>

@@ -3,7 +3,7 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
-  import route from "ziggy";
+
   import { getErrorString } from "@public-assets/js/bootstrap";
 
   $: ({ errors, flash,auth } = $page);

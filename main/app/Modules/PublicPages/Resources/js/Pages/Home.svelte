@@ -1,5 +1,6 @@
 <script>
   import Layout from "@public-shared/Layout";
+  // let {default: Layout} = import('./say.js');
   import Slider from "@public-pages/Home/Slider";
   import InfoBoxes from "@public-pages/Home/InfoBoxes";
   import FeaturedProducts from "@public-pages/Home/FeaturedProducts";
@@ -12,7 +13,7 @@
   import SpecialOffers from "@public-pages/Home/SpecialOffers";
   import { Inertia } from "@inertiajs/inertia";
   import { page } from "@inertiajs/inertia-svelte";
-  import route from "ziggy";
+
   import { afterUpdate } from "svelte";
 
   $: ({ errors, app } = $page);

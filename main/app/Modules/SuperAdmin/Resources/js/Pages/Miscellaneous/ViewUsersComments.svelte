@@ -4,7 +4,7 @@
     import { Inertia } from "@inertiajs/inertia";
     import FlashMessage from "@usershared/FlashMessage";
     import { onMount } from "svelte";
-    import route from "ziggy";
+
 
     $: ({ errors, auth } = $page);
     let activeComments = {},

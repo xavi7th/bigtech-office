@@ -3,7 +3,7 @@
     import { Inertia } from "@inertiajs/inertia";
     import Layout from "@salesrep-shared/SalesRepLayout.svelte";
     import FlashMessage from "@usershared/FlashMessage";
-    import route from "ziggy";
+
 import { onMount, tick } from "svelte";
 import { toCurrency } from "@public-assets/js/bootstrap";
 

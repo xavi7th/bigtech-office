@@ -2,7 +2,7 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { toCurrency } from "@public-assets/js/bootstrap";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import route from "ziggy";
+
 
   export let paymentRecords = [];
 

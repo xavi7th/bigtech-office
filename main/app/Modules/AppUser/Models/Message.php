@@ -23,6 +23,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\Message whereSubject($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\AppUser\Models\Message whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $address
+ * @property string $message
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereMessage($value)
  */
 class Message extends Model
 {

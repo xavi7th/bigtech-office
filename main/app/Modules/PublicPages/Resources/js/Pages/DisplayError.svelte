@@ -1,5 +1,5 @@
 <script>
-  import route from "ziggy";
+
   import { page } from "@inertiajs/inertia-svelte";
 
   export let status;

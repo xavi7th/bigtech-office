@@ -3,7 +3,7 @@
   import FlashMessage from "@usershared/FlashMessage.svelte";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import route from "ziggy";
+
   import axios from "axios";
   import { getErrorString } from "@public-assets/js/bootstrap";
   $: ({ errors, flash } = $page);

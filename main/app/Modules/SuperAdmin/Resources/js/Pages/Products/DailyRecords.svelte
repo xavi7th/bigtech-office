@@ -1,7 +1,7 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import route from "ziggy";
+
 
   export let dailyRecords = [];
 

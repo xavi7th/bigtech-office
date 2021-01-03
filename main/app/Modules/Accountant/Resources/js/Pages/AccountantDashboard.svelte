@@ -3,7 +3,7 @@
     import { Inertia } from "@inertiajs/inertia";
     import Layout from "@accountant-shared/AccountantLayout.svelte";
     import FlashMessage from "@usershared/FlashMessage";
-    import route from "ziggy";
+
 import { onMount } from "svelte";
 
     $: ({ flash } = $page);

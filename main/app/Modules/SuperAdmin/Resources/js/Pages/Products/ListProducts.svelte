@@ -7,7 +7,7 @@
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
   import { getErrorString } from "@public-assets/js/bootstrap";
-  import route from "ziggy";
+
 
   $: ({ auth, flash, errors } = $page);
 

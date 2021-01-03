@@ -3,7 +3,7 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import FlashMessage from "@usershared/FlashMessage";
-  import route from "ziggy";
+
 
   $: ({ auth } = $page);
 

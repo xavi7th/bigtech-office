@@ -4,7 +4,7 @@ import { displayTableSum, getErrorString, toCurrency } from "@public-assets/js/b
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
   import { onMount, tick } from "svelte";
-  import route from "ziggy";
+
 
   $: ({ auth } = $page);
 

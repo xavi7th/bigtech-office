@@ -1,7 +1,7 @@
 <script>
   import Nav from "@public-shared/Partials/Nav";
   import { InertiaLink } from "@inertiajs/inertia-svelte";
-  import route from "ziggy";
+
 </script>
 
 <!-- desktop site__header -->

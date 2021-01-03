@@ -4,7 +4,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
-  import route from "ziggy";
+
   import { getErrorString } from "@public-assets/js/bootstrap";
 
   $: ({ errors, auth, flash } = $page);

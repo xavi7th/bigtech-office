@@ -4,7 +4,7 @@
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
   import { getErrorString } from "@public-assets/js/bootstrap";
-  import route from "ziggy";
+
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
 
   $: ({ auth, flash, errors } = $page);

@@ -2,7 +2,7 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
-  import route from "ziggy";
+
   import MarkSwapDealAsSoldModal from "@usershared/MarkSwapDealAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import { Inertia } from "@inertiajs/inertia";

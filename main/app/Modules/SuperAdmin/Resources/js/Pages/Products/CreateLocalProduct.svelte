@@ -2,7 +2,7 @@
   import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import route from "ziggy";
+
   import { getErrorString } from "@public-assets/js/bootstrap";
 
   $: ({ flash, errors } = $page);

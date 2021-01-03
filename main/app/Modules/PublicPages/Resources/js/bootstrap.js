@@ -1,6 +1,8 @@
 window._ = require('lodash');
 window.swal = require('sweetalert2')
 
+route();
+
 window.Toast = swal.mixin({
 	toast: true,
 	position: 'top-end',
@@ -137,9 +139,7 @@ export const displayTableSum = (tableColumn) => {
         }
         }
 
-import {
-	InertiaApp
-} from '@inertiajs/inertia-svelte'
+import { InertiaApp } from '@inertiajs/inertia-svelte'
 import { Inertia } from "@inertiajs/inertia";
 
 const app = document.getElementById('app')
@@ -198,7 +198,7 @@ new InertiaApp({
  *! Cause back() and forward() buttons of the browser to refresh the browser state
  */
 // if (!('onpopstate' in window)) {
-window.addEventListener('popstate', () => {
-	Inertia.reload({ preserveScroll: true, preserveState: false })
-})
+// window.addEventListener('popstate', () => {
+// 	Inertia.reload({ preserveScroll: true, preserveState: false })
+// })
 // }

@@ -3,7 +3,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import FlashMessage from "@usershared/FlashMessage";
-  import route from "ziggy";
+
   import { getErrorString } from "@public-assets/js/bootstrap";
 
   $: ({ auth } = $page);

@@ -2,7 +2,7 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
   import Icon from "@superadmin-shared/Partials/TableSortIcon.svelte";
-  import route from "ziggy";
+
   import { getErrorString } from "@public-assets/js/bootstrap";
   import { onMount } from "svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";

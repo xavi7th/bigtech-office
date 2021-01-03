@@ -3,7 +3,7 @@
 
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { location } from "lodash/_freeGlobal";
-  import route from "ziggy";
+
 
   let logoutUser = () => {
     BlockToast.fire("Securing your dashboard ...");

@@ -4,7 +4,7 @@
     import Layout from "@superadmin-shared/SuperAdminLayout";
     import FlashMessage from "@usershared/FlashMessage";
     import { getErrorString } from "@public-assets/js/bootstrap";
-    import route from "ziggy";
+
 
     $: ({ flash, errors } = $page);
 
