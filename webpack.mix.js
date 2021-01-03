@@ -4,6 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 require('laravel-mix-imagemin');
 require('laravel-mix-svelte');
+require('laravel-mix-bundle-analyzer');
 
 let fs = require('fs-extra');
 let modules = fs.readdirSync('./main/app/Modules');
@@ -19,29 +20,21 @@ if (modules && modules.length > 0) {
 
 mix.setPublicPath('./public_html');
 
+mix.babelConfig({
+	plugins: ['@babel/plugin-syntax-dynamic-import'],
+});
+
 mix.webpackConfig({
 	output: {
-		filename: "[name].[chunkhash].js",
-		chunkFilename: "[name].[chunkhash].js",
-	},
-	resolve: {
-		alias: {
-			ziggy: path.resolve('./main/vendor/tightenco/ziggy/dist/js/route.js'),
-		},
+		filename: mix.inProduction() ? "[name].[contenthash].js" : "[name].[hash].js",
+		chunkFilename:mix.inProduction() ? "[name].[contenthash].js" : "[name].[hash].js",
 	},
 	plugins: [
-  /**
-  * To strip all locales except“ en”
-  */
     new CleanWebpackPlugin({
 			dry: false,
 			cleanOnceBeforeBuildPatterns: ['js/*', './*.js', 'css/*', 'fonts/*', '/img/*', './mix-manifest.json']
 		}),
   ]
-});
-
-mix.babelConfig({
-	plugins: ['@babel/plugin-syntax-dynamic-import'],
 });
 
 mix
@@ -106,16 +99,20 @@ mix
 	//   ], {
 	// 		context: './main/app/Modules',
 	// 	}, {
-	// 		optipng: {
-	// 			optimizationLevel: 7
-	// 		},
+	// 		optipng: null,
+	// 		// optipng: {
+	// 		// 	optimizationLevel: 7
+	// 		// },
 	// 		jpegtran: null,
 	// 		plugins: [
-	//               require('imagemin-mozjpeg')({
+  //       // require('imagemin-mozjpeg')({
+	// 			// 	quality: 75,
+	// 			// 	progressive: true,
+	// 			// }),
+  //       require('imagemin-webp')({
 	// 				quality: 75,
-	// 				progressive: true,
 	// 			}),
-	//           ],
+  //     ],
 	// 	}
 	// )
 	.then(() => {
@@ -148,5 +145,9 @@ mix
 	})
 
 if (!mix.inProduction()) {
-	mix.sourceMaps()
+	mix.sourceMaps();
+}
+
+if (!mix.inProduction()) {
+  // mix.bundleAnalyzer();
 }

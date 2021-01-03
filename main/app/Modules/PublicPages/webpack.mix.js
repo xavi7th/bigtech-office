@@ -1,5 +1,4 @@
 const mix = require('laravel-mix');
-require('laravel-mix-merge-manifest');
 
 mix.webpackConfig({
 	resolve: {
@@ -12,12 +11,10 @@ mix.webpackConfig({
 	},
 })
 
-if (['buildcss'].includes(process.env.npm_config_section)) {
 	// mix.copyDirectory(__dirname + '/Resources/img', 'public_html/img');
 	mix.copyDirectory(__dirname + '/Resources/fonts', 'public_html/fonts');
 
 	// mix.sass(__dirname + '/Resources/sass/app.scss', 'css/app.css')
-} else {
 
 	mix.scripts([
       __dirname + '/Resources/js/vendor/jquery.min.js',
@@ -37,4 +34,3 @@ if (['buildcss'].includes(process.env.npm_config_section)) {
   ], 'public_html/js/public-init.js');
 
 	mix.js(__dirname + '/Resources/js/app.js', 'js/app.js')
-}
