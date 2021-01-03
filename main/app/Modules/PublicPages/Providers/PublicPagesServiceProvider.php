@@ -2,11 +2,7 @@
 
 namespace App\Modules\PublicPages\Providers;
 
-use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\PublicPages\Providers\RouteServiceProvider;
@@ -30,8 +26,8 @@ class PublicPagesServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    // $this->registerTranslations();
-    // $this->registerConfig();
+    $this->registerTranslations();
+    $this->registerConfig();
     $this->registerViews();
     $this->registerFactories();
     $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
@@ -45,51 +41,10 @@ class PublicPagesServiceProvider extends ServiceProvider
   public function register()
   {
     $this->app->register(RouteServiceProvider::class);
-    $this->registerInertia();
 
     Request::macro('isApi', function () {
       return ($this->ajax() || $this->expectsJson()) && !$this->header('X-Inertia');
     });
-  }
-
-
-  public function registerInertia()
-  {
-    Inertia::version(function () {
-      return md5_file(public_path('mix-manifest.json'));
-    });
-
-    Inertia::share([
-      'app' => [
-        'name' => config('app.name'),
-        'whatsapp' => config('app.whatsapp'),
-        'address' => config('app.address'),
-        'phone' => config('app.phone'),
-        'email' => config('app.email'),
-      ],
-      'routes' => function (Request $request) {
-        return Cache::remember('routes', config('cache.user_routes_cache_duration'), fn () => $request->user() ? $request->user()->get_navigation_routes() : get_related_routes('app.', ['GET'], true));
-      },
-      'isInertiaRequest' => !!request()->header('X-Inertia'),
-      'auth' => function () {
-        return [
-          'user' => Auth::user()
-            ? collect(Auth::user())->merge(request()->user()->getUserType())
-            : (object)[],
-        ];
-      },
-      'flash' => function () {
-        return [
-          'success' => Session::get('success'),
-          'error' => Session::get('error'),
-        ];
-      },
-      'errors' => function () {
-        return Session::get('errors')
-          ? Session::get('errors')->getBag('default')->getMessages()
-          : (object)[];
-      },
-    ]);
   }
 
   /**
