@@ -3,10 +3,8 @@
   import FlashMessage from "@usershared/FlashMessage.svelte";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-
-  import axios from "axios";
   import { getErrorString } from "@public-assets/js/bootstrap";
-  $: ({ errors, flash } = $page);
+  $: ({ errors, flash } = $page.props);
 
   let details = {
       remember: true
@@ -117,7 +115,7 @@
   }
 </style>
 
-<Layout title="Login">
+<Layout title="Login Page">
   <form
     class="form rui-sign-form rui-sign-form-cloud"
     on:submit|preventDefault={handleLogin}

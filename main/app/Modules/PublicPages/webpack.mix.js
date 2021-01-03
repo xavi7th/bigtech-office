@@ -34,3 +34,4 @@ mix.webpackConfig({
   ], 'public_html/js/public-init.js');
 
 	mix.js(__dirname + '/Resources/js/app.js', 'js/app.js')
+mix.sass(__dirname + '/Resources/sass/app.scss', 'css/app.css')

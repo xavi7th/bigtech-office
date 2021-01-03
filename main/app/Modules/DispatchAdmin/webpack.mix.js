@@ -12,3 +12,4 @@ mix.webpackConfig({
 })
 
 mix.js(__dirname + '/Resources/js/app.js', 'js/dispatchadmin.js')
+mix.sass(__dirname + '/Resources/sass/app.scss', 'css/dispatch-admin-app.css')

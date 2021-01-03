@@ -18,3 +18,4 @@ mix.webpackConfig({
 })
 
 mix.js(__dirname + '/Resources/js/app.js', 'js/superadmin.js')
+mix.sass(__dirname + '/Resources/sass/app.scss', 'css/superadmin-app.css')

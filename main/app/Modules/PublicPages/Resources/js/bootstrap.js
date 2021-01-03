@@ -1,8 +1,6 @@
 window._ = require('lodash');
 window.swal = require('sweetalert2')
 
-route();
-
 window.Toast = swal.mixin({
 	toast: true,
 	position: 'top-end',
@@ -10,7 +8,6 @@ window.Toast = swal.mixin({
 	timer: 2000,
 	icon: "success"
 });
-let timerInterval;
 
 window.ToastLarge = swal.mixin({
 	icon: "success",
@@ -20,19 +17,8 @@ window.ToastLarge = swal.mixin({
 	timerProgressBar: true,
 	onBeforeOpen: () => {
 		swal.showLoading()
-		// timerInterval = setInterval( () => {
-		//     const content = swal.getContent()
-		//     if ( content ) {
-		//         const b = content.querySelector( 'b' )
-		//         if ( b ) {
-		//             b.textContent = Swal.getTimerLeft()
-		//         }
-		//     }
-		// }, 100 )
 	},
-	// onClose: () => {
-	//     clearInterval( timerInterval )
-	// }
+	// onClose: () => {}
 })
 
 window.BlockToast = swal.mixin({
@@ -64,11 +50,6 @@ window.swalPreconfirm = swal.mixin({
 })
 
 /**
- * Implement this when you call the mixin
- * .then( ( result ) => {} );
- */
-
-/**
  * Transforms an error object into HTML string
  *
  * @param {String|Array|null} errors The errors to transform
@@ -96,53 +77,73 @@ export const toCurrency = (amount, currencySymbol = '₦') => {
 	}
 	return currencySymbol + amount.toFixed(2)
 		.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+
+     var p = Number(amount).toFixed(2).split(".");
+    return currency + p[0].split("").reverse().reduce(function(acc, amount, i, orig) {
+        return  amount=="-" ? acc : amount + (i && !(i % 3) ? "," : "") + acc;
+    }, "") + "." + p[1];
 }
 
 export const displayTableSum = (tableColumn) => {
-		return function(row, data, start, end, display) {
+  return function(row, data, start, end, display) {
+    var api = this.api(),
+      data;
 
-				var api = this.api(),
-					data;
+    // Remove the formatting to get integer data for summation
+    var intVal = function(i) {
+      return typeof i === "string" ? // ? i.replace(/[\$,]/g, "") * 1
+        i.substring(0, i.lastIndexOf("."))
+        .replace(/\D/g, "") * 1 :
+        typeof i === "number" ?
+        i :
+        0;
+    };
 
-				// Remove the formatting to get integer data for summation
-				var intVal = function(i) {
-					return typeof i === "string" ? // ? i.replace(/[\$,]/g, "") * 1
-						i.substring(0, i.lastIndexOf("."))
-						.replace(/\D/g, "") * 1 :
-						typeof i === "number" ?
-						i :
-						0;
-				};
+    // Total over all pages
+    let total = api
+      .column(tableColumn)
+      .data()
+      .reduce(function(a, b) {
+        return intVal(a) + intVal(b);
+      }, 0);
 
-				// Total over all pages
-				let total = api
-					.column(tableColumn)
-					.data()
-					.reduce(function(a, b) {
-						return intVal(a) + intVal(b);
-					}, 0);
+    // Total over this page
+    let pageTotal = api
+      .column(tableColumn, { page: "current" })
+      .data()
+      .reduce(function(a, b) {
+        return intVal(a) + intVal(b);
+      }, 0);
 
-        // Total over this page
-        let pageTotal = api
-        	.column(tableColumn, { page: "current" })
-        	.data()
-        	.reduce(function(a, b) {
-        		return intVal(a) + intVal(b);
-        	}, 0);
+    // Update footer
+    jQuery(api.column(2)
+        .footer())
+      .html(
+        toCurrency(pageTotal) + " (" + toCurrency(total) + " total)"
+      );
+  }
+}
 
-        // Update footer
-        jQuery(api.column(2)
-        		.footer())
-        	.html(
-        		toCurrency(pageTotal) + " (" + toCurrency(total) + " total)"
-        	);
-        }
-        }
 
-import { InertiaApp } from '@inertiajs/inertia-svelte'
-import { Inertia } from "@inertiajs/inertia";
 
-const app = document.getElementById('app')
+import { App } from '@inertiajs/inertia-svelte'
+import { InertiaProgress } from '@inertiajs/progress'
+
+InertiaProgress.init({
+  // The delay after which the progress bar will
+  // appear during navigation, in milliseconds.
+  delay: 250,
+
+  // The color of the progress bar.
+  color: '#29d',
+
+  // Whether to include the default NProgress styles.
+  includeCSS: true,
+
+  // Whether the NProgress spinner will be shown.
+  showSpinner: true,
+})
+
 let isMobile, isDesktop;
 
 let mediaHandler = () => {
@@ -171,7 +172,8 @@ let mediaHandler = () => {
 }
 mediaHandler();
 
-new InertiaApp({
+const app = document.getElementById('app')
+new App({
 	target: app,
 	props: {
 		initialPage: JSON.parse(app.dataset.page),
@@ -182,15 +184,15 @@ new InertiaApp({
 					/* webpackChunkName: "js/[request]" */
 					/* webpackPrefetch: true */
 					`../../../${section}/Resources/js/Pages/${module}.svelte`)
-				.then(module => module.default)
 		},
-		transformProps: props => {
-			return {
-				...props,
-				isMobile,
-				isDesktop
-			}
-		}
+    // resolveErrors: page => (page.props.errors || page.props.flash.error || {}),
+		// transformProps: props => {
+		// 	return {
+		// 		...props,
+		// 		isMobile,
+		// 		isDesktop
+		// 	}
+		// }
 	},
 })
 

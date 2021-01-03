@@ -12,3 +12,4 @@ mix.webpackConfig({
 })
 
 mix.js(__dirname + '/Resources/js/app.js', 'js/stockkeeper.js')
+mix.sass(__dirname + '/Resources/sass/app.scss', 'css/stock-keeper-app.css')

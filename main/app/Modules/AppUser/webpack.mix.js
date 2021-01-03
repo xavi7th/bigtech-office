@@ -41,3 +41,4 @@ mix.scripts([
     ], 'public_html/js/user-dashboard-init.js');
 
 mix.js(__dirname + '/Resources/js/app.js', 'js/dashboard-app.js')
+mix.sass(__dirname + '/Resources/sass/app.scss', 'css/dashboard-app.css')

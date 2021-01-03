@@ -9,7 +9,7 @@
   import PageTitle from "@superadmin-shared/Partials/PageTitle";
   import Footer from "@superadmin-shared/Partials/Footer";
 
-  $: ({ app } = $page);
+  $: ({ app } = $page.props);
 
   console.log($page);
 
@@ -36,12 +36,12 @@
         <InertiaLink href={route('app.home')}>
           <img
             src="/img/the-elects-logo.png"
-            alt={$page.app.name}
+            alt={app.name}
             class="logo-img"
             width="100" />
         </InertiaLink>
       </div>
-      <slot />
+      <slot></slot>
     </div>
   </div>
 {:else}

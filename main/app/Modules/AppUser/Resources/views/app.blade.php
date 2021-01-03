@@ -7,7 +7,6 @@
 
 	<meta charset="utf-8" />
 	<meta name="robots" content="index, follow" />
-	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="format-detection" content="telephone=yes">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -29,6 +28,7 @@
 	<script src="{{ mix('/js/manifest.js') }}" defer></script>
 	<script src="{{ mix('/js/vendor.js') }}" defer></script>
 	<script src="{{ mix('js/dashboard-app.js') }}" defer></script>
+  <link rel="stylesheet" href="{{ mix('css/dashboard-app.css') }}">
 </head>
 
 <body data-spy="scroll" data-target=".rui-page-sidebar" data-offset="140"

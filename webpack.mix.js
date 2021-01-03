@@ -74,6 +74,9 @@ mix
 			if (code == 'css-unused-selector' && frame.includes('sweetalert')) {
 				return
 			}
+			if (code == 'missing-declaration' && frame.includes('route')) {
+				return
+			}
 
 			console.log(
 				'\x1b[41m%s\x1b[0m',

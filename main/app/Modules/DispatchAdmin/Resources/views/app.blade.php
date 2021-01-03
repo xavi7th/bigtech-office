@@ -17,6 +17,8 @@
 	<script src="{{ mix('/js/manifest.js') }}" defer async></script>
 	<script src="{{ mix('/js/vendor.js') }}" defer async></script>
 	<script src="{{ mix('js/dispatchadmin.js') }}" defer></script>
+  <link rel="stylesheet" href="{{ mix('css/dashboard-app.css') }}">
+  <link rel="stylesheet" href="{{ mix('css/diapatch-admin-app.css') }}">
 
 </body>
 
