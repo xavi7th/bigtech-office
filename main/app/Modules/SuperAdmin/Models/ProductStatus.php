@@ -174,12 +174,12 @@ class ProductStatus extends BaseModel
       Cache::forget('productStatuses');
 
       if ($request->isApi()) return response()->json((new ProductStatusTransformer)->basic($productStatus), 201);
-      return back()->withSuccess('Product status created. <br/> Products can now be assigned this status');
+      return back()->withFlash(['success'=>'Product status created. <br/> Products can now be assigned this status']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product status not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Product status not created'], 500);
-      return back()->withError('Status creation failed');
+      return back()->withFlash(['error'=>['Status creation failed']]);
     }
   }
 
@@ -200,12 +200,12 @@ class ProductStatus extends BaseModel
       Cache::forget('productStatuses');
 
       if ($request->isApi())       return response()->json([], 204);
-      return back()->withSuccess('Product status updated. <br/> Products can now be assigned this status');
+      return back()->withFlash(['success'=>'Product status updated. <br/> Products can now be assigned this status']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product status not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Product status not created'], 500);
-      return back()->withError('Status creation failed');
+      return back()->withFlash(['error'=>['Status creation failed']]);
     }
   }
 

@@ -176,12 +176,12 @@ class OfficeBranch extends BaseModel
       Cache::forget('officeBranches');
 
       if ($request->isApi()) return response()->json((new OfficeBranchTransformer)->basic($account), 201);
-      return back()->withSuccess('Office branch created.');
+      return back()->withFlash(['success'=>'Office branch created.']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Office Branch not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Office Branch not created'], 500);
-      return back()->withError('Office Branch creation failed');
+      return back()->withFlash(['error'=>['Office Branch creation failed']]);
     }
   }
 
@@ -201,12 +201,12 @@ class OfficeBranch extends BaseModel
       Cache::forget('officeBranches');
 
       if ($request->isApi()) return response()->json([], 204);
-      return back()->withSuccess('Office branch updated');
+      return back()->withFlash(['success'=>'Office branch updated']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Branch details NOT updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Branch details NOT updated'], 500);
-      return back()->withError('Branch update failed');
+      return back()->withFlash(['error'=>['Branch update failed']]);
     }
   }
 

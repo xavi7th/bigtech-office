@@ -89,12 +89,12 @@ class ProductCategory extends BaseModel
 
       if ($request->isApi())
         return response()->json((new ProductCategoryTransformer)->basic($product_category), 201);
-      return back()->withSuccess('Product category created. <br/> Products can now be created under this category');
+      return back()->withFlash(['success'=>'Product category created. <br/> Products can now be created under this category']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product category not created');
       if ($request->isApi())
         return response()->json(['err' => 'Category creation failed'], 500);
-      return back()->withError('Category creation failed');
+      return back()->withFlash(['error'=>['Category creation failed']]);
     }
   }
 
@@ -116,12 +116,12 @@ class ProductCategory extends BaseModel
       if ($request->isApi()) {
         return response()->json([], 204);
       }
-      return back()->withSuccess('Updated');
+      return back()->withFlash(['success'=>'Updated']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Category not updated');
       if ($request->isApi())
         return response()->json(['err' => 'Category not updated'], 500);
-      return back()->withError('Category update failed');
+      return back()->withFlash(['error'=>['Category update failed']]);
     }
   }
 

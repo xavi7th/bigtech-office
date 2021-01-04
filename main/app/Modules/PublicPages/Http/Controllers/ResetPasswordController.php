@@ -214,9 +214,8 @@ class ResetPasswordController extends Controller
    */
   protected function sendResetFailedResponse($request, $response)
   {
-    return response()->json(trans($response), 422);
+    if($request->isApi()) return response()->json(trans($response), 422);
     return redirect()->back()
-      ->withInput($request->only('email'))
       ->withErrors(['email' => trans($response)]);
   }
 

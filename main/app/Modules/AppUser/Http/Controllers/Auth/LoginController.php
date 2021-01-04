@@ -107,7 +107,7 @@ class LoginController extends Controller
   {
     if (!request('pw')) throw ValidationException::withMessages(['err' => "A password is required for your account."])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-    $user = User::findUserByEmail(request('email')) ?? back()->withError('Not Found');
+    $user = User::findUserByEmail(request('email')) ?? back()->withFlash(['error'=>'Not Found']);
 
     if ($user && !$user->is_verified()) {
 
@@ -117,7 +117,7 @@ class LoginController extends Controller
 
       return back()->withFlash(['success' => 204]);
     }
-    return back()->withError('Unauthorised');
+    return back()->withFlash(['error'=>'Unauthorised']);
   }
 
   /**
@@ -214,7 +214,7 @@ class LoginController extends Controller
         /**
          * ?Watch out for this 401 on the client side and trigger a password reset
          */
-        return back()->withError(401);
+        return back()->withFlash(['error'=>401]);
       }
     }
   }

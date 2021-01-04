@@ -86,12 +86,12 @@ class SalesChannel extends BaseModel
       Cache::forget('salesChannels');
 
       if ($request->isApi()) return response()->json((new SalesChannelTransformer)->basic($channel_name), 201);
-      return back()->withSuccess('Sales Channel created');
+      return back()->withFlash(['success'=>'Sales Channel created']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Sales Channel not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Sales Channel not created'], 500);
-      return back()->withError('Sales channel creation failed');
+      return back()->withFlash(['error'=>['Sales channel creation failed']]);
     }
   }
 
@@ -109,12 +109,12 @@ class SalesChannel extends BaseModel
       Cache::forget('salesChannels');
 
       if ($request->isApi())       return response()->json([], 204);
-      return back()->withSuccess('Sales channel updated');
+      return back()->withFlash(['success'=>'Sales channel updated']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Channel name not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Sales Channel not created'], 500);
-      return back()->withError('Sales channel creation failed');
+      return back()->withFlash(['error'=>['Sales channel creation failed']]);
     }
   }
 }

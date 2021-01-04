@@ -187,12 +187,12 @@ class SalesRep extends User
 
       ActivityLog::notifySuperAdmins($request->user()->full_name . ' created a sales rep account for ' . $salesRep->full_name);
 
-      return back()->withSuccess('Sales rep account created');
+      return back()->withFlash(['success'=>'Sales rep account created']);
     } catch (Throwable $e) {
       if (app()->environment() == 'local') {
-        return back()->withError($e->getMessage());
+        return back()->withFlash(['error'=>$e->getMessage()]);
       }
-      return back()->withError('Error occurred');
+      return back()->withFlash(['error'=>'Error occurred']);
     }
   }
 
@@ -214,12 +214,12 @@ class SalesRep extends User
 
       ActivityLog::notifySuperAdmins($request->user()->full_name . ' updated the sales rep account for ' . $salesRep->full_name);
 
-      return back()->withSuccess('Sales rep account updated');
+      return back()->withFlash(['success'=>'Sales rep account updated']);
     } catch (Throwable $e) {
       if (app()->environment() == 'local') {
-        return back()->withError($e->getMessage());
+        return back()->withFlash(['error'=>$e->getMessage()]);
       }
-      return back()->withError('Error occurred');
+      return back()->withFlash(['error'=>'Error occurred']);
     }
   }
 
@@ -229,7 +229,7 @@ class SalesRep extends User
 
     $salesRep->delete();
 
-    return back()->withSuccess('User account suspended');
+    return back()->withFlash(['success'=>'User account suspended']);
   }
 
   public function restoreSalesRep($id)
@@ -240,7 +240,7 @@ class SalesRep extends User
 
     ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $salesRep->email);
 
-    return back()->withSuccess('User account reactivated');
+    return back()->withFlash(['success'=>'User account reactivated']);
   }
 
   public function deleteSalesRep(self $salesRep)
@@ -249,7 +249,7 @@ class SalesRep extends User
 
     $salesRep->forceDelete();
 
-    return back()->withSuccess('User account deleted');
+    return back()->withFlash(['success'=>'User account deleted']);
   }
 
   public function scopeSocialMedia($query)

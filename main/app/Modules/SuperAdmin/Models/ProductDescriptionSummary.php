@@ -71,12 +71,12 @@ class ProductDescriptionSummary extends Model
       $product_desc_summary = self::create($request->validated());
       if ($request->isApi())
         return response()->json((new ProductDescriptionSummaryTransformer)->basic($product_desc_summary), 201);
-      return back()->withSuccess('Product Model Description has been created');
+      return back()->withFlash(['success'=>'Product Model Description has been created']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product description summary not created');
       if ($request->isApi())
         return response()->json(['err' => 'Product description summary not created'], 500);
-      return back()->withError('Product description summary not created');
+      return back()->withFlash(['error'=>['Product description summary not created']]);
     }
   }
 
@@ -92,12 +92,12 @@ class ProductDescriptionSummary extends Model
 
       if ($request->isApi())
         return response()->json([], 204);
-      return back()->withSuccess('Product Model Description has been updated');
+      return back()->withFlash(['success'=>'Product Model Description has been updated']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product description summary not updated');
       if ($request->isApi())
         return response()->json(['err' => 'Product description summary not updated'], 500);
-      return back()->withSuccess('Product Model Description not updated');
+      return back()->withFlash(['success'=>'Product Model Description not updated']);
     }
   }
 }

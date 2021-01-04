@@ -74,12 +74,12 @@ class ProcessorSpeed extends BaseModel
       Cache::forget('processorSpeeds');
 
       if ($request->isApi()) return response()->json((new ProcessorSpeedTransformer)->basic($processor_speed), 201);
-      return back()->withSuccess('Processor speed created. <br/> Products can now be created under this processor speed');
+      return back()->withFlash(['success'=>'Processor speed created. <br/> Products can now be created under this processor speed']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Processor Speed not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Processor Speed not created'], 500);
-      return back()->withError('Processor speed creation failed');
+      return back()->withFlash(['error'=>['Processor speed creation failed']]);
     }
   }
 
@@ -100,11 +100,11 @@ class ProcessorSpeed extends BaseModel
       if ($request->isApi()) {
         return response()->json([], 204);
       }
-      return back()->withSuccess('Updated');
+      return back()->withFlash(['success'=>'Updated']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Processor Speed not updated');
       if ($request->isApi()) return response()->json(['err' => 'Processor Speed not updated'], 500);
-      return back()->withError('Processor Speed update failed');
+      return back()->withFlash(['error'=>['Processor Speed update failed']]);
     }
   }
 

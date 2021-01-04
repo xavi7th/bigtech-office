@@ -98,12 +98,12 @@ class StorageSize extends BaseModel
       Cache::forget('storageSizes');
 
       if ($request->isApi()) return response()->json((new StorageSizeTransformer)->basic($storage_size), 201);
-      return back()->withSuccess('Storage Size created. <br/> Products of this storage size can now be created.');
+      return back()->withFlash(['success'=>'Storage Size created. <br/> Products of this storage size can now be created.']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Storage size not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Storage size not created'], 500);
-      return back()->withSuccess('Storage size not created');
+      return back()->withFlash(['success'=>'Storage size not created']);
     }
   }
 
@@ -121,12 +121,12 @@ class StorageSize extends BaseModel
 
 
       if ($request->isApi()) return response()->json([], 204);
-      return back()->withSuccess('Storage size updated.');
+      return back()->withFlash(['success'=>'Storage size updated.']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Storage size not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Storage size not created'], 500);
-      return back()->withSuccess('Storage size not created');
+      return back()->withFlash(['success'=>'Storage size not created']);
     }
   }
 

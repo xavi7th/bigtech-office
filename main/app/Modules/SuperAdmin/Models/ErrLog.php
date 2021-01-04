@@ -84,7 +84,7 @@ class ErrLog extends BaseModel
   {
     self::old()->delete();
 
-    return back()->withSuccess('Error logs cleared');
+    return back()->withFlash(['success'=>'Error logs cleared']);
   }
 
   public function scopeOld($query)

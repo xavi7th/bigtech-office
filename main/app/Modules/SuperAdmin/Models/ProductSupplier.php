@@ -72,11 +72,11 @@ class ProductSupplier extends BaseModel
       ]);
 
       if ($request->isApi()) return response()->json((new ProductSupplierTransformer)->basic($product_supplier), 201);
-      return back()->withSuccess('Success');
+      return back()->withFlash(['success'=>'Success']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product supplier not created');
       if ($request->isApi()) return response()->json(['err' => 'Product supplier not created'], 500);
-      return back()->withError('Product supplier not created');
+      return back()->withFlash(['error'=>['Product supplier not created']]);
     }
   }
 
@@ -95,11 +95,11 @@ class ProductSupplier extends BaseModel
       $productSupplier->save();
 
       if ($request->isApi()) return response()->json([], 204);
-      return back()->withSuccess('Success');
+      return back()->withFlash(['success'=>'Success']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product supplier not updated');
       if ($request->isApi()) return response()->json(['err' => 'Product supplier not updated'], 500);
-      return back()->withError('Product supplier not updated');
+      return back()->withFlash(['error'=>['Product supplier not updated']]);
     }
   }
 

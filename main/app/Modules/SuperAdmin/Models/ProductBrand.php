@@ -104,11 +104,11 @@ class ProductBrand extends BaseModel
       if ($request->isApi())
         return response()->json((new ProductBrandTransformer)->basic($product_brand), 201);
 
-      return back()->withSuccess('Product brand created. <br/> Products can now be created under this brand');
+      return back()->withFlash(['success'=>'Product brand created. <br/> Products can now be created under this brand']);
     } catch (\Throwable $th) {
       if ($request->isApi())
         return response()->json(['err' => 'Brand creation failed'], 500);
-      return back()->withError('Brand creation failed');
+      return back()->withFlash(['error'=>['Brand creation failed']]);
     }
   }
 
@@ -130,14 +130,14 @@ class ProductBrand extends BaseModel
       if ($request->isApi())
         return response()->json([], 204);
 
-      return back()->withSuccess('Product brand updated. <br/> All products under this brand will reflect this new name');
+      return back()->withFlash(['success'=>'Product brand updated. <br/> All products under this brand will reflect this new name']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Brand not updated');
       if ($request->isApi())
 
         return response()->json(['err' => 'Brand not updated'], 500);
 
-      return back()->withError('Brand update failed');
+      return back()->withFlash(['error'=>['Brand update failed']]);
     }
   }
 
@@ -150,7 +150,7 @@ class ProductBrand extends BaseModel
     $productBrand->delete();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Deleted');
+    return back()->withFlash(['success'=>'Deleted']);
   }
 
 

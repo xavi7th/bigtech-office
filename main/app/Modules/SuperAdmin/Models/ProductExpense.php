@@ -121,7 +121,7 @@ class ProductExpense extends BaseModel
       $product_expense = $product->product_expenses()->create($request->only(['amount', 'reason']));
 
       if ($request->isApi()) return response()->json((new ProductExpenseTransformer)->basic($product_expense), 201);
-      return back()->withSuccess('Expense created');
+      return back()->withFlash(['success'=>'Expense created']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'ProductExpense not created');
       return response()->json(['err' => 'ProductExpense not created'], 500);
@@ -142,7 +142,7 @@ class ProductExpense extends BaseModel
       $swapDeal_expense = $swapDeal->product_expenses()->create($request->only(['amount', 'reason']));
 
       if ($request->isApi()) return response()->json((new ProductExpenseTransformer)->basic($swapDeal_expense), 201);
-      return back()->withSuccess('Expense created');
+      return back()->withFlash(['success'=>'Expense created']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'ProductExpense not created');
       return response()->json(['err' => 'ProductExpense not created'], 500);

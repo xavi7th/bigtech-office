@@ -182,12 +182,12 @@ class CompanyBankAccount extends BaseModel
       ]);
 
       if ($request->isApi()) return response()->json((new CompanyBankAccountTransformer)->basic($account), 201);
-      return back()->withSuccess('Bank Account created. <br/> Payments can now be created under this bank account');
+      return back()->withFlash(['success'=>'Bank Account created. <br/> Payments can now be created under this bank account']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Company Account not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Account details NOT updated'], 500);
-      return back()->withError('Account creation failed');
+      return back()->withFlash(['error'=>['Account creation failed']]);
     }
   }
 
@@ -204,12 +204,12 @@ class CompanyBankAccount extends BaseModel
       $companyBankAccount->save();
 
       if ($request->isApi())  return response()->json([], 204);
-      return back()->withSuccess('Bank Account updated. <br/> Payments can now be created under this bank account');
+      return back()->withFlash(['success'=>'Bank Account updated. <br/> Payments can now be created under this bank account']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Account details NOT updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Account details NOT updated'], 500);
-      return back()->withError('Account creation failed');
+      return back()->withFlash(['error'=>['Account creation failed']]);
     }
   }
 
@@ -218,7 +218,7 @@ class CompanyBankAccount extends BaseModel
     $companyBankAccount->delete();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Account suspended and will no longer be available to users as a payment option');
+    return back()->withFlash(['success'=>'Account suspended and will no longer be available to users as a payment option']);
 
   }
 
@@ -233,7 +233,7 @@ class CompanyBankAccount extends BaseModel
     if ($request->isApi()) {
       return response()->json([], 204);
     } else {
-      return back()->withSuccess('Account restored and has become available to users as a payment option');
+      return back()->withFlash(['success'=>'Account restored and has become available to users as a payment option']);
     }
   }
 

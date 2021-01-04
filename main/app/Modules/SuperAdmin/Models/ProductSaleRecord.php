@@ -322,7 +322,7 @@ class ProductSaleRecord extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin(auth()->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
-      // return back()->withError('Receipt generation failed');
+      // return back()->withFlash(['error'=>['Receipt generation failed']]);
     }
 
     /**
@@ -335,7 +335,7 @@ class ProductSaleRecord extends BaseModel
       dd($th);
       ErrLog::notifyAdmin(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
       // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
-      // return back()->withError('Failed to send receipt to user  ' . $product->app_user->emai);
+      // return back()->withFlash(['error'=>['Failed to send receipt to user  ' . $product->app_user->emai]]);
     }
 
 
@@ -352,7 +352,7 @@ class ProductSaleRecord extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
+    return back()->withFlash(['success'=>'Product has been marked as sold. It will no longer be available in stock']);
   }
 
   public function getSaleRecordTransactions(self $sales_record)

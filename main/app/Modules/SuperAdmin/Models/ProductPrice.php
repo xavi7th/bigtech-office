@@ -158,17 +158,17 @@ class ProductPrice extends BaseModel
         $product_price->load('product_color', 'product_grade', 'product_model', 'product_supplier', 'storage_size', 'product_batch')
       ), 201);
 
-      return back()->withSuccess('Product Price created for this batch');
+      return back()->withFlash(['success'=>'Product Price created for this batch']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product price not created');
 
       if ($th->getCode() == 23000) {
         if ($request->isApi()) return response()->json(['err' => 'This item´s price has been created for this batch already. If you want to make corrections, edit it instead.'], 500);
-        return back()->withError('This item´s price has been created for this batch already. If you want to make corrections, edit it instead.');
+        return back()->withFlash(['error'=>['This item´s price has been created for this batch already. If you want to make corrections, edit it instead.']]);
       }
 
       if ($request->isApi()) return response()->json(['err' => 'Product price not created'], 500);
-      return back()->withError('Product price not created');
+      return back()->withFlash(['error'=>['Product price not created']]);
     }
   }
 
@@ -199,11 +199,11 @@ class ProductPrice extends BaseModel
       $productPrice->save();
 
       if ($request->isApi()) return response()->json([], 204);
-      return back()->withSuccess('Updated successfully');
+      return back()->withFlash(['success'=>'Updated successfully']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Batch price not updated');
       if ($request->isApi()) return response()->json(['err' => 'Batch price not updated'], 500);
-      return back()->withError('Batch Price not updated');
+      return back()->withFlash(['error'=>['Batch Price not updated']]);
     }
   }
 

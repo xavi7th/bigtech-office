@@ -74,12 +74,12 @@ class StorageType extends BaseModel
       Cache::forget('storageTypes');
 
       if ($request->isApi())       return response()->json((new StorageTypeTransformer)->basic($storageType), 201);
-      return back()->withSuccess('Storage type created. <br/> Products can now be created under this storage type');
+      return back()->withFlash(['success'=>'Storage type created. <br/> Products can now be created under this storage type']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Storage type not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Storage type not created'], 500);
-      return back()->withError('Type creation failed');
+      return back()->withFlash(['error'=>['Type creation failed']]);
     }
   }
 
@@ -95,12 +95,12 @@ class StorageType extends BaseModel
       Cache::forget('storageTypes');
 
       if ($request->isApi()) return response()->json([], 204);
-      return back()->withSuccess('Storage type created. <br/> Products can now be created under this type');
+      return back()->withFlash(['success'=>'Storage type created. <br/> Products can now be created under this type']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Storage type not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Storage type not created'], 500);
-      return back()->withError('Type creation failed');
+      return back()->withFlash(['error'=>['Type creation failed']]);
     }
   }
 

@@ -74,12 +74,12 @@ class ProductGrade extends BaseModel
       Cache::forget('productGrades');
 
       if ($request->isApi()) return response()->json((new ProductGradeTransformer)->basic($product_grade), 201);
-      return back()->withSuccess('Product grade created. <br/> Products can now be created under this grade');
+      return back()->withFlash(['success'=>'Product grade created. <br/> Products can now be created under this grade']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product grade not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Product grade not created'], 500);
-      return back()->withError('Grade creation failed');
+      return back()->withFlash(['error'=>['Grade creation failed']]);
     }
   }
 
@@ -95,12 +95,12 @@ class ProductGrade extends BaseModel
       Cache::forget('productGrades');
 
       if ($request->isApi()) return response()->json([], 204);
-      return back()->withSuccess('Product grade updated. <br/> Products can now be created under this brand');
+      return back()->withFlash(['success'=>'Product grade updated. <br/> Products can now be created under this brand']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product grade not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Product grade not updated'], 500);
-      return back()->withError('product grade update failed');
+      return back()->withFlash(['error'=>['product grade update failed']]);
     }
   }
 }

@@ -175,7 +175,7 @@ class ProductModel extends BaseModel
         if ($request->isApi()) {
           # code...
           return response()->json((new ProductModelTransformer)->basic($product_model), 201);
-        } else return back()->withSuccess('New product model created. Add some images to it');
+        } else return back()->withFlash(['success'=>'New product model created. Add some images to it']);
       } catch (\Throwable $th) {
         dd($th);
         ErrLog::notifyAdmin($request->user(), $th, 'Product model not created');
@@ -206,7 +206,7 @@ class ProductModel extends BaseModel
       if ($request->isApi()) {
         return response()->json([], 204);
       }
-      return back()->withSuccess('Updated');
+      return back()->withFlash(['success'=>'Updated']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Model not updated');
       return response()->json(['err' => 'Model not updated'], 500);
@@ -229,9 +229,9 @@ class ProductModel extends BaseModel
     if ($request->isApi())
       return response()->json($tests, 201);
     if (empty($tests['attached']) && empty($tests['detached']) && empty($tests['updated'])) {
-      return back()->withError('Nothing was updated');
+      return back()->withFlash(['error'=>['Nothing was updated']]);
     } else {
-      return back()->withSuccess('Product tests were updated successfully');
+      return back()->withFlash(['success'=>'Product tests were updated successfully']);
     }
   }
 
@@ -256,7 +256,7 @@ class ProductModel extends BaseModel
       return response()->json((new ProductModelTransformer)->transformImage($image), 201);
     }
 
-    return back()->withSuccess('Image created');
+    return back()->withFlash(['success'=>'Image created']);
   }
 
   public function deleteProductModelImage(Request $request,  $id)
@@ -265,7 +265,7 @@ class ProductModel extends BaseModel
     if ($request->isApi()) {
       return response()->json([], 204);
     }
-    return back()->withSuccess('Deleted');
+    return back()->withFlash(['success'=>'Deleted']);
   }
 
   public function commentOnProductModel(Request $request, self $productModel)
@@ -281,7 +281,7 @@ class ProductModel extends BaseModel
 
     if ($request->isApi())
       return response()->json((new UserCommentTransformer)->detailed($comment), 201);
-    return back()->withSuccess('Created');
+    return back()->withFlash(['success'=>'Created']);
   }
 
 

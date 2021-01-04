@@ -119,11 +119,11 @@ class OtherExpense extends BaseModel
       ]);
 
       if ($request->isApi()) return response()->json((new OtherExpenseTransformer)->basic($expense), 201);
-      return back()->withSuccess('Expense Record created. ');
+      return back()->withFlash(['success'=>'Expense Record created. ']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Expense record not created');
       if ($request->isApi()) return response()->json(['err' => 'Expense record not created'], 500);
-      return back()->withError('Could not create expense record. Try again');
+      return back()->withFlash(['error'=>['Could not create expense record. Try again']]);
     }
   }
 

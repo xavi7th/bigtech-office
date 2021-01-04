@@ -170,11 +170,11 @@ class Reseller extends BaseModel
       Cache::forget('resellers');
 
       if ($request->isApi()) return response()->json((new ResellerTransformer)->basic($reseller), 201);
-      return back()->withSuccess('Success');
+      return back()->withFlash(['success'=>'Success']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Reseller not created');
       if ($request->isApi()) return response()->json(['err' => 'Reseller not created'], 500);
-      return back()->withError('Error');
+      return back()->withFlash(['error'=>['Error']]);
     }
   }
 
@@ -193,11 +193,11 @@ class Reseller extends BaseModel
       $reseller->save();
 
       if ($request->isApi()) return response()->json([], 204);
-      return back()->withSuccess('Success');
+      return back()->withFlash(['success'=>'Success']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Reseller not updated');
       if ($request->isApi()) return response()->json(['err' => 'Reseller not updated'], 500);
-      return back()->withError('Error');
+      return back()->withFlash(['error'=>['Error']]);
     }
   }
 
@@ -285,7 +285,7 @@ class Reseller extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
-    return back()->withSuccess('Done. Product has been removed from stock list');
+    return back()->withFlash(['success'=>'Done. Product has been removed from stock list']);
   }
 
   public function resellerReturnProduct(Request $request, self $reseller, $product_uuid)
@@ -294,7 +294,7 @@ class Reseller extends BaseModel
     try {
       $product = Product::whereProductUuid($product_uuid)->firstOr(fn () => SwapDeal::whereProductUuid($product_uuid)->firstOrFail());
     } catch (ModelNotFoundException $th) {
-      return back()->withError('The product you are trying to return to shelf does not exist');
+      return back()->withFlash(['error'=>['The product you are trying to return to shelf does not exist']]);
     }
 
     /**
@@ -357,7 +357,7 @@ class Reseller extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
-    return back()->withSuccess('The product has been marked as returned and is back in the stock list');
+    return back()->withFlash(['success'=>'The product has been marked as returned and is back in the stock list']);
   }
 
   public function markProductAsSold(Request $request, self $reseller, $product_uuid)
@@ -455,6 +455,6 @@ class Reseller extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
-    return back()->withSuccess('Product marked as sold to reseller');
+    return back()->withFlash(['success'=>'Product marked as sold to reseller']);
   }
 }

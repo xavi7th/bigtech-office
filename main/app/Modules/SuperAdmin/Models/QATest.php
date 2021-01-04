@@ -95,12 +95,12 @@ class QATest extends BaseModel
       Cache::forget('qaTests');
 
       if ($request->isApi()) return response()->json((new QATestTransformer)->basic($qaTest), 201);
-      return back()->withSuccess('QA Test created. <br/> Product models can now be assigned this test');
+      return back()->withFlash(['success'=>'QA Test created. <br/> Product models can now be assigned this test']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'QA Test not created');
 
       if ($request->isApi()) return response()->json(['err' => 'QA Test not created'], 500);
-      return back()->withError('Test creation failed');
+      return back()->withFlash(['error'=>['Test creation failed']]);
     }
   }
 
@@ -116,12 +116,12 @@ class QATest extends BaseModel
       Cache::forget('qaTests');
 
       if ($request->isApi()) return response()->json([], 204);
-      return back()->withSuccess('QA Test updated. <br/> Product models can now be assigned this test');
+      return back()->withFlash(['success'=>'QA Test updated. <br/> Product models can now be assigned this test']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'QA test name not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'QA test name not updated'], 500);
-      return back()->withError('Test update failed');
+      return back()->withFlash(['error'=>['Test update failed']]);
     }
   }
 }

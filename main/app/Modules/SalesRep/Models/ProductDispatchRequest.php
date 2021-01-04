@@ -162,7 +162,7 @@ class ProductDispatchRequest extends Model
     $request->user()->product_dispatch_requests()->create($request->validated());
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('A request has been sent to the dispatch unit');
+    return back()->withFlash(['success'=>'A request has been sent to the dispatch unit']);
   }
 
   public function getDispatchRequests(Request $request)
@@ -197,7 +197,7 @@ class ProductDispatchRequest extends Model
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product removed from stock list and scheduled for delivery');
+    return back()->withFlash(['success'=>'Product removed from stock list and scheduled for delivery']);
   }
 
   public function deleteDispatchRequest(Request $request, self $productDispatchRequest)
@@ -222,7 +222,7 @@ class ProductDispatchRequest extends Model
 
     DB::commit();
 
-    return back()->withSuccess('Dispatch request deleted. Kindly inform ' . $productDispatchRequest->online_rep->full_name . ' that you discarded one of their requests if they are not aware');
+    return back()->withFlash(['success'=>'Dispatch request deleted. Kindly inform ' . $productDispatchRequest->online_rep->full_name . ' that you discarded one of their requests if they are not aware']);
   }
 
   protected static function boot()

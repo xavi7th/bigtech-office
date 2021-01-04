@@ -85,7 +85,7 @@ class ProductColor extends BaseModel
 
       if ($request->isApi())
         return response()->json((new ProductColorTransformer)->basic($product_color), 201);
-      return back()->withSuccess('Product color created. <br/> Products can now be created under this color');
+      return back()->withFlash(['success'=>'Product color created. <br/> Products can now be created under this color']);
     } catch (\Throwable $th) {
       if ($th instanceof QueryException) {
         if ($th->errorInfo[1] === 1062) {
@@ -95,7 +95,7 @@ class ProductColor extends BaseModel
       ErrLog::notifyAdmin(auth()->user(), $th, 'Color creation failed');
       if ($request->isApi())
         return response()->json(['err' => 'Color creation failed'], 500);
-      return back()->withError('Color creation failed');
+      return back()->withFlash(['error'=>['Color creation failed']]);
     }
   }
 
@@ -115,13 +115,13 @@ class ProductColor extends BaseModel
 
       if ($request->isApi())
         return response()->json([], 204);
-      return back()->withSuccess('Product color updated. <br/> Products can now be created under this color');
+      return back()->withFlash(['success'=>'Product color updated. <br/> Products can now be created under this color']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Color not updated');
 
       if ($request->isApi())
         return response()->json(['err' => 'Color not updated'], 500);
-      return back()->withError('Color update failed');
+      return back()->withFlash(['error'=>['Color update failed']]);
     }
   }
 

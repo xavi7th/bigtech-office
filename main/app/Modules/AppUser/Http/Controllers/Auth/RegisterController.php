@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Modules\AppUser\Transformers\AppUserTransformer;
 use App\Modules\AppUser\Http\Requests\RegistrationValidation;
 use App\Modules\AppUser\Notifications\CoreSavingsInitialised;
+use Tymon\JWTAuth\JWTGuard;
 
 class RegisterController extends Controller
 {
@@ -149,7 +150,7 @@ class RegisterController extends Controller
      */
 
     DB::commit();
-    return redirect()->route('app.login')->withSuccess('Account Created');
+    return redirect()->route('app.login')->withFlash(['success'=>'Account Created']);
     return $this->respondWithToken();
   }
 
@@ -167,12 +168,12 @@ class RegisterController extends Controller
       'access_token' => $this->apiToken,
       'token_type' => 'bearer',
       'expires_in' => $this->apiGuard()->factory()->getTTL() * 60,
-      'user' => (new AppUserTransformer)->basic($user = auth()->user()),
+      'user' => (new AppUserTransformer)->transformBasic($user = auth()->user()),
     ], 201);
   }
 
 
-  protected function apiGuard()
+  protected function apiGuard():JWTGuard
   {
     return Auth::guard('api_user');
   }

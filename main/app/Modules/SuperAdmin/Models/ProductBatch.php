@@ -147,11 +147,11 @@ class ProductBatch extends BaseModel
       ]);
 
       if ($request->isApi()) return response()->json((new ProductBatchTransformer)->basic($product_batch), 201);
-      return back()->withSuccess('New batch created');
+      return back()->withFlash(['success'=>'New batch created']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Batch not created');
       if ($request->isApi()) return response()->json(['err' => 'Batch not created'], 500);
-      return back()->withError('Batch not created');
+      return back()->withFlash(['error'=>['Batch not created']]);
     }
   }
 

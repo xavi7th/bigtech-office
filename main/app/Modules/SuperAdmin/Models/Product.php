@@ -531,7 +531,7 @@ class Product extends BaseModel
       ])->all());
 
       if ($request->isApi()) return response()->json($product, 201);
-      return back()->withSuccess('Product created');
+      return back()->withFlash(['success'=>'Product created']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Product not created');
       return response()->json(['err' => 'Product not created'], 500);
@@ -573,7 +573,7 @@ class Product extends BaseModel
         if ($th->getCode() == 23000) {
           ErrLog::notifyAdminAndFail($request->user(), $th, 'Local Product not created');
           if ($request->isApi()) return response()->json(['err' => 'Product not created'], 500);
-          return back()->withError('Product not created');
+          return back()->withFlash(['error'=>['Product not created']]);
         } else {
           throw_if(true, $th);
         }
@@ -582,11 +582,11 @@ class Product extends BaseModel
       DB::commit();
 
       if ($request->isApi()) return response()->json($product, 201);
-      return back()->withSuccess('Product created');
+      return back()->withFlash(['success'=>'Product created']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Product not created');
       if ($request->isApi()) return response()->json(['err' => 'Product not created'], 500);
-      return back()->withError('Product not created');
+      return back()->withFlash(['error'=>['Product not created']]);
     }
   }
 
@@ -651,7 +651,7 @@ class Product extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product returned back to the stock list');
+    return back()->withFlash(['success'=>'Product returned back to the stock list']);
   }
 
   public function updateProductStatus(Request $request, self $product)
@@ -689,7 +689,7 @@ class Product extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Status updated');
+    return back()->withFlash(['success'=>'Status updated']);
   }
 
   public function markProductAsUndergoingQA(Request $request, self $product)
@@ -701,7 +701,7 @@ class Product extends BaseModel
     $product->save();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product has been marked as undergoing QA.');
+    return back()->withFlash(['success'=>'Product has been marked as undergoing QA.']);
   }
 
 
@@ -730,7 +730,7 @@ class Product extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create product sales record ' . $request->email], 500);
-      return back()->withError('Could not create product sales record. Try again');
+      return back()->withFlash(['error'=>['Could not create product sales record. Try again']]);
     }
 
     /**
@@ -755,7 +755,7 @@ class Product extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create account profile for ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create account profile for ' . $request->email], 500);
-      return back()->withError('Could not create account profile for buyer. Try again');
+      return back()->withFlash(['error'=>['Could not create account profile for buyer. Try again']]);
     }
 
     /**
@@ -773,7 +773,7 @@ class Product extends BaseModel
       list($id_url, $receipt_url) = SwapDeal::store_documents($request);
       if (!SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url)) {
         if ($request->isApi()) return response()->json(['err' => 'Transaction not completed. The swap details could not be created'], 500);
-        return back()->withError('Transaction not completed. The swap details could not be created');
+        return back()->withFlash(['error'=>['Transaction not completed. The swap details could not be created']]);
       }
     }
 
@@ -790,7 +790,7 @@ class Product extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
+    return back()->withFlash(['success'=>'Product has been marked as sold. It will no longer be available in stock']);
   }
 
   public function commentOnProduct(CreateProductCommentValidation $request, self $product)
@@ -802,7 +802,7 @@ class Product extends BaseModel
     ]);
 
     if ($request->isApi()) return response()->json($comment, 201);
-    return back()->withSuccess('Comment created. ');
+    return back()->withFlash(['success'=>'Comment created. ']);
   }
 
   public function deleteLocalProduct(Request $request, self $product)
@@ -812,7 +812,7 @@ class Product extends BaseModel
 
     $product->forceDelete();
 
-    return back()->withSuccess('Deleted');
+    return back()->withFlash(['success'=>'Deleted']);
   }
 
   public function getApplicableProductQATests(Request $request, self $product)
@@ -847,7 +847,7 @@ class Product extends BaseModel
     $tests = $product->qa_tests()->sync($filtered);
 
     if ($request->isApi()) return response()->json($tests, 201);
-    return back()->withSuccess('Updated Test Results');
+    return back()->withFlash(['success'=>'Updated Test Results']);
   }
 
   public function commentOnProductQATestResults(CreateProductCommentValidation $request, self $product)
@@ -859,7 +859,7 @@ class Product extends BaseModel
     ]);
 
     if ($request->isApi()) return response()->json((new UserCommentTransformer)->detailed($comment), 201);
-    return back()->withSuccess('Product created');
+    return back()->withFlash(['success'=>'Product created']);
   }
 
   public function scopeInStock($query)

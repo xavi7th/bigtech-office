@@ -357,10 +357,10 @@ class SwapDeal extends BaseModel
 
     if ($this->create_swap_record($request, $id_url, $receipt_url)) {
       if ($request->isApi()) return response()->json([], 201);
-      return back()->withSuccess('Swap deal created');
+      return back()->withFlash(['success'=>'Swap deal created']);
     } else {
       if ($request->isApi()) return response()->json(['err' => 'Swap Deal not created'], 500);
-      return back()->withError('Swap Deal not created');
+      return back()->withFlash(['error'=>['Swap Deal not created']]);
     }
   }
 
@@ -373,11 +373,11 @@ class SwapDeal extends BaseModel
       $swapDeal->save();
 
       if ($request->isApi()) return response()->json([], 204);
-      return back()->withSuccess('Details updated');
+      return back()->withFlash(['success'=>'Details updated']);
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin(auth()->user(), $th, 'Swap details not updated');
       if ($request->isApi()) return response()->json(['err' => 'Swap details not updated'], 500);
-      return back()->withError('Details not updated');
+      return back()->withFlash(['error'=>['Details not updated']]);
     }
   }
 
@@ -390,7 +390,7 @@ class SwapDeal extends BaseModel
     ]);
 
     if ($request->isApi()) return response()->json($comment, 201);
-    return back()->withSuccess('Comment created. ');
+    return back()->withFlash(['success'=>'Comment created. ']);
   }
 
   public function returnProductToStock(Request $request, self $swapDeal)
@@ -420,7 +420,7 @@ class SwapDeal extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product returned back to the stock list');
+    return back()->withFlash(['success'=>'Product returned back to the stock list']);
   }
 
   public function markSwapDealAsSold(MarkProductAsSoldValidation $request, self $swapDeal)
@@ -450,7 +450,7 @@ class SwapDeal extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create product sales record ' . $request->email], 500);
-      return back()->withError('Could not create product sales record. Try again');
+      return back()->withFlash(['error'=>['Could not create product sales record. Try again']]);
     }
 
     /**
@@ -474,7 +474,7 @@ class SwapDeal extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create account profile for ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create account profile for ' . $request->email], 500);
-      return back()->withError('Could not create account profile for buyer. Try again');
+      return back()->withFlash(['error'=>['Could not create account profile for buyer. Try again']]);
     }
 
     /**
@@ -492,7 +492,7 @@ class SwapDeal extends BaseModel
       list($id_url, $receipt_url) = SwapDeal::store_documents($request);
       if (!SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url)) {
         if ($request->isApi()) return response()->json(['err' => 'Transaction not completed. The swap details could not be created'], 500);
-        return back()->withError('Transaction not completed. The swap details could not be created');
+        return back()->withFlash(['error'=>['Transaction not completed. The swap details could not be created']]);
       }
     }
 
@@ -509,7 +509,7 @@ class SwapDeal extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
+    return back()->withFlash(['success'=>'Product has been marked as sold. It will no longer be available in stock']);
   }
 
   /**
@@ -571,7 +571,7 @@ class SwapDeal extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
-      // return back()->withError('Receipt generation failed');
+      // return back()->withFlash(['error'=>['Receipt generation failed']]);
     }
 
     /**
@@ -582,7 +582,7 @@ class SwapDeal extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdmin($request->user(), $th, 'Failed to send receipt to user', $swapDeal->app_user->email);
       // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
-      // return back()->withError('Failed to send receipt to user  ' . $product->app_user->emai);
+      // return back()->withFlash(['error'=>['Failed to send receipt to user  ' . $product->app_user->emai]]);
     }
 
 
@@ -599,7 +599,7 @@ class SwapDeal extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Product has been marked as sold. It will no longer be available in stock');
+    return back()->withFlash(['success'=>'Product has been marked as sold. It will no longer be available in stock']);
   }
 
   public function updateSwapDealStatus(Request $request, self $swapDeal)
@@ -637,7 +637,7 @@ class SwapDeal extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withSuccess('Status updated');
+    return back()->withFlash(['success'=>'Status updated']);
   }
 
   public function scopeUntested($query)

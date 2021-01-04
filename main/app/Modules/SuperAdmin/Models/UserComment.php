@@ -94,7 +94,7 @@ class UserComment extends Model
   {
     $userComment->delete();
 
-    return back()->withSuccess('Comment deleted');
+    return back()->withlash(['success'=>'Comment deleted']);
   }
 
   public function getProductBatchComments(ProductBatch $product_batch)
