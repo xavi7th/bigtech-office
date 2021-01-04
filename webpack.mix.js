@@ -39,6 +39,7 @@ mix.webpackConfig({
 
 mix
 	.options({
+    processCssUrls: false,
 		fileLoaderDirs: {
 			images: 'img'
 		},
