@@ -5,7 +5,7 @@
     // import FlashMessage from "@usershared/FlashMessage";
     let {default: FlashMessage} =  import('@usershared/FlashMessage');
 
-    $: ({ flash } = $page);
+    $: ({ flash } = $page.props);
 
 </script>
 

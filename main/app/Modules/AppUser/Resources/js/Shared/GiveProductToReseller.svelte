@@ -5,7 +5,7 @@
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
   import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ flash, errors } = $page);
+  $: ({ flash, errors } = $page.props);
 
   export let resellers = [],
     productToGiveReseller;

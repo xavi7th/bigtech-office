@@ -5,7 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
 
 
-  $: ({ auth } = $page);
+  $: ({ auth } = $page.props);
 
   export let productsWithResellers;
 </script>

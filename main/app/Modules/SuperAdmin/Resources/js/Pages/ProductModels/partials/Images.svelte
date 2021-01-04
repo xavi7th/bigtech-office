@@ -28,7 +28,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import { page } from "@inertiajs/inertia-svelte";
 
-  $: ({ flash } = $page);
+  $: ({ flash } = $page.props);
 
   let deleteModelImage = id => {
     swal

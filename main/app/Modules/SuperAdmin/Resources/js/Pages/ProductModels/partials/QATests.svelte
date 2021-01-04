@@ -2,7 +2,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import { page } from "@inertiajs/inertia-svelte";
 
-  $: ({ flash, errors } = $page);
+  $: ({ flash, errors } = $page.props);
 
   export let qaTests,
     productQaTests = [],

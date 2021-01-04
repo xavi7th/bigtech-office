@@ -7,7 +7,7 @@
 
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
 
-  $: ({ auth, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page.props);
 
   export let dispatch_requests = [];
 

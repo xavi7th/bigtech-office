@@ -8,7 +8,7 @@
   import { getErrorString, toCurrency } from "@public-assets/js/bootstrap";
   import { __dirname } from "lodash/_freeGlobal";
 
-  $: ({ errors, auth, flash } = $page);
+  $: ({ errors, auth, flash } = $page.props);
 
   let details = {},
     files;

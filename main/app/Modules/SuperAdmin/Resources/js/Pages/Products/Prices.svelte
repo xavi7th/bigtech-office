@@ -18,7 +18,7 @@
 <Layout
   title="View Product Prices for Batch {productBatchWithPriceDetails.batch_number}">
   <div class="row vertical-gap">
-   {#if $page.auth.user.isAccountant}
+   {#if $page.props.auth.user.isAccountant}
       <div class="col-12">
       <InertiaLink
         href={route('accountant.products.create_batch_price', productBatchWithPriceDetails.batch_number)}
@@ -55,7 +55,7 @@
                 <td>{price.cost_price}</td>
                 <td>
                   {price.proposed_selling_price}
-                    {#if $page.auth.user.isAccountant}
+                    {#if $page.props.auth.user.isAccountant}
                       <InertiaLink
                       href={route('accountant.prices.edit_page', price.id)}
                       class="btn btn-link">

@@ -7,7 +7,7 @@
 
     export let models,brands,colors,grades,suppliers,storage_sizes, price;
 
-    $: ({ flash,errors } = $page);
+    $: ({ flash,errors } = $page.props);
 
   let updateBatchPrice = () => {
     BlockToast.fire({

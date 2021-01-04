@@ -9,7 +9,7 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
   import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
 
-  $: ({ auth, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page.props);
 
   export let swapDeals = [],
     resellers = [],

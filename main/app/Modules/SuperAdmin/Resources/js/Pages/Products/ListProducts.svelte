@@ -9,7 +9,7 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
 
 
-  $: ({ auth, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page.props);
 
   export let onlineReps = [],
     products = [],

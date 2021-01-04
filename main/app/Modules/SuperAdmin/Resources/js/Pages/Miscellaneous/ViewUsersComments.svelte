@@ -6,7 +6,7 @@
     import { onMount } from "svelte";
 
 
-    $: ({ errors, auth } = $page);
+    $: ({ errors, auth } = $page.props);
     let activeComments = {},
         activeUserName = null;
 

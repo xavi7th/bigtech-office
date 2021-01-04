@@ -9,9 +9,9 @@
   import Footer from "@superadmin-shared/Partials/Footer";
   import PageLoader from "@public-shared/PageLoader.svelte";
 
-  $: ({ app, routes, flash } = $page);
+  $: ({ app, routes, flash } = $page.props);
 
-  console.log($page);
+
 
   let routesInitialized = false,
     isMounted = false;

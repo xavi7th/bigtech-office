@@ -5,7 +5,7 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
 
 
-  $: ({ auth, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page.props);
 
   export let batches = [];
   let batch_number, auto_generate, order_date;

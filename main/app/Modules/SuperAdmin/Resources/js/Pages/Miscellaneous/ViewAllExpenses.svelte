@@ -5,7 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  $: ({ errors, auth, flash } = $page);
+  $: ({ errors, auth, flash } = $page.props);
 
   export let dailyExpenses = [];
 </script>

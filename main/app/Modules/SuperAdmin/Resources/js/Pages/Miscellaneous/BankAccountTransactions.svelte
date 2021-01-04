@@ -4,7 +4,7 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import { onMount, tick } from "svelte";
 
-  $: ({ auth } = $page);
+  $: ({ auth } = $page.props);
 
   export let companyAccount = [],
     date,

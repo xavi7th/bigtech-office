@@ -6,7 +6,7 @@
 
   export let paymentRecords = [];
 
-  $: ({ app } = $page);
+  $: ({ app } = $page.props);
 </script>
 
 <style>

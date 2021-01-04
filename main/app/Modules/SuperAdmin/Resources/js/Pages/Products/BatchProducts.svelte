@@ -6,7 +6,7 @@
 
   import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ auth } = $page);
+  $: ({ auth } = $page.props);
 
   export let batchWithProducts;
 
@@ -34,11 +34,11 @@
             }
           )
             .then(() => {
-              if ($page.flash.success) {
+              if ($page.props.flash.success) {
                 return true;
-              } else if ($page.flash.error || _.size($page.errors) > 0) {
+              } else if ($page.props.flash.error || _.size($page.props.errors) > 0) {
                 throw new Error(
-                  $page.flash.error || getErrorString($page.errors)
+                  $page.props.flash.error || getErrorString($page.props.errors)
                 );
               }
             })
@@ -54,10 +54,10 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if ($page.flash.success) {
+        } else if ($page.props.flash.success) {
           ToastLarge.fire({
             title: "Successful!",
-            html: $page.flash.success
+            html: $page.props.flash.success
           });
         }
       });
@@ -71,13 +71,13 @@
       preserveScroll: true
     })
       .then(() => {
-        if ($page.flash.success) {
+        if ($page.props.flash.success) {
           ToastLarge.fire({
             title: "Successful!",
-            html: $page.flash.success
+            html: $page.props.flash.success
           });
-        } else if ($page.flash.error || _.size($page.errors) > 0) {
-          throw new Error($page.flash.error || getErrorString($page.errors));
+        } else if ($page.props.flash.error || _.size($page.props.errors) > 0) {
+          throw new Error($page.props.flash.error || getErrorString($page.props.errors));
         }
       })
       .catch(error => {
@@ -117,7 +117,7 @@
                   <span
                     class:d-none={!batchWithProducts.is_local}>{product.supplier}</span>
                   <br />
-                  {#if $page.auth.user.isSuperAdmin && batchWithProducts.is_local && product.status !== 'sold' && product.status !== 'sale confirmed'}
+                  {#if $page.props.auth.user.isSuperAdmin && batchWithProducts.is_local && product.status !== 'sold' && product.status !== 'sale confirmed'}
                     <button
                       class="btn btn-danger btn-xs"
                       on:click={() => {

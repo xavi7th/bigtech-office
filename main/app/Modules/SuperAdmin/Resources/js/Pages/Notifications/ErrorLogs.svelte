@@ -5,7 +5,7 @@
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
 
-  $: ({ flash, errors } = $page);
+  $: ({ flash, errors } = $page.props);
 
   export let errLogs = [];
   let fullErrorMessage;

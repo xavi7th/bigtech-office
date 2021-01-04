@@ -5,7 +5,7 @@
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
 import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ flash, errors } = $page);
+  $: ({ flash, errors } = $page.props);
 
   export let companyAccounts = [],
     productToMarkAsPaid;
@@ -78,7 +78,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
         only: ["flash", "errors", "officeBranch", "products", "salesRecords"]
       }
     ).then(() => {
-      if ($page.flash.success) {
+      if ($page.props.flash.success) {
         ToastLarge.fire({
           title: "Successful!",
           html: flash.success
@@ -92,7 +92,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
 
         jQuery('#enterProductPaymentDetails').modal('hide');
 
-      } else if ($page.flash.error || _.size(errors) > 0) {
+      } else if ($page.props.flash.error || _.size(errors) > 0) {
         ToastLarge.fire({
           title: "Oops!",
           html: flash.error || getErrorString(errors),

@@ -6,7 +6,7 @@ import { displayTableSum, getErrorString, toCurrency } from "@public-assets/js/b
   import { onMount, tick } from "svelte";
 
 
-  $: ({ auth } = $page);
+  $: ({ auth } = $page.props);
 
   export let salesRecords = [],
     date,

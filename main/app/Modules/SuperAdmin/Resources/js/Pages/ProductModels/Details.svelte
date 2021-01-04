@@ -14,7 +14,7 @@
 
   export let description, files, comment;
 
-  $: ({ auth, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page.props);
 
   export let productModel = {
       images: [],

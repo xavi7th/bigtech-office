@@ -5,7 +5,7 @@
 
   import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ auth, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page.props);
 
   let details = {};
   export let productWithExpenses,
@@ -45,7 +45,7 @@
     });
   };
 
-  $: ({ app } = $page);
+  $: ({ app } = $page.props);
 </script>
 
 <Layout title="Expenses for {product.identifier}">

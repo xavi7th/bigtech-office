@@ -6,7 +6,7 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
 
-  $: ({ flash, errors, auth } = $page);
+  $: ({ flash, errors, auth } = $page.props);
 
   export let swapDeal = {},
     userComment,

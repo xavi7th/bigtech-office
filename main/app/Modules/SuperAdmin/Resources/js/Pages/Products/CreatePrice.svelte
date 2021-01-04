@@ -12,7 +12,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
         product_batch_id: batch.id
     };
 
-    $: ({ flash,errors } = $page);
+    $: ({ flash,errors } = $page.props);
 
 
   let createBatchPrice = () => {

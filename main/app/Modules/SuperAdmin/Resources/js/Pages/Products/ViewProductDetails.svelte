@@ -6,7 +6,7 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
 import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
 
-  $: ({ auth, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page.props);
 
   export let productDetails = {},
     productComments = [];

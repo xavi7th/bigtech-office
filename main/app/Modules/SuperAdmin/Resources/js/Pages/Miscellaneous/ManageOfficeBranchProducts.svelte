@@ -8,7 +8,7 @@
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
   import { AuthenticatorAssertionResponse } from "lodash/_freeGlobal";
 
-  $: ({ auth, flash, errors } = $page);
+  $: ({ auth, flash, errors } = $page.props);
   export let onlineReps = [],
     salesChannel = [],
     officeBranch = {

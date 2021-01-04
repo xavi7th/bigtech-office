@@ -7,7 +7,7 @@
 
   import { getErrorString, toCurrency } from "@public-assets/js/bootstrap";
 
-  $: ({ errors, flash } = $page);
+  $: ({ errors, flash } = $page.props);
 
   let details = {},
     files, salesRepStatistics={};

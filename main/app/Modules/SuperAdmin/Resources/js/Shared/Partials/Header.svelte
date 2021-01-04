@@ -47,7 +47,7 @@
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false">
-            <img src={$page.auth.user.avatar || '/img/avatar-1.png'} alt="" />
+            <img src={$page.props.auth.user.avatar || '/img/avatar-1.png'} alt="" />
           </a>
           <ul class="nav dropdown-menu">
             <!-- <li>

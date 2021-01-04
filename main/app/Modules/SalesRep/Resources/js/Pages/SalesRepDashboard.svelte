@@ -7,7 +7,7 @@
 import { onMount, tick } from "svelte";
 import { toCurrency } from "@public-assets/js/bootstrap";
 
-    $: ({ flash, auth } = $page);
+    $: ({ flash, auth } = $page.props);
     export let salesStatistics = {}
 
     onMount(async () => {

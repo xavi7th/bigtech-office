@@ -5,7 +5,7 @@
     import { onMount } from "svelte";
 
 
-    $: ({ errors, auth } = $page);
+    $: ({ errors, auth } = $page.props);
     onMount(() => {});
 </script>
 

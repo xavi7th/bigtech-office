@@ -16,7 +16,7 @@
 
   import { afterUpdate } from "svelte";
 
-  $: ({ errors, app } = $page);
+  $: ({ errors, app } = $page.props);
 
   afterUpdate(() => {
     svg4everybody();

@@ -11,7 +11,7 @@
 
   $: ({ app } = $page.props);
 
-  console.log($page);
+
 
   export let isAuth = true,
     title = app.name;

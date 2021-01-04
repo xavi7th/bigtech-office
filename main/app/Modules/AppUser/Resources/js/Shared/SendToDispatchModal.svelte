@@ -40,10 +40,10 @@ $: details.product_description = productToSendToDispatch;
             }
           )
             .then(() => {
-              if ($page.flash.success) {
+              if ($page.props.flash.success) {
                 return true;
-              } else if ($page.flash.error || _.size($page.errors) > 0) {
-                throw new Error($page.flash.error || getErrorString($page.errors));
+              } else if ($page.props.flash.error || _.size($page.props.errors) > 0) {
+                throw new Error($page.props.flash.error || getErrorString($page.props.errors));
               }
             })
             .catch(error => {
@@ -58,13 +58,13 @@ $: details.product_description = productToSendToDispatch;
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if ($page.flash.success) {
+        } else if ($page.props.flash.success) {
           details = {
             sales_channel_id: null
           };
           ToastLarge.fire({
             title: "Successful!",
-            html: $page.flash.success
+            html: $page.props.flash.success
           });
         }
       });

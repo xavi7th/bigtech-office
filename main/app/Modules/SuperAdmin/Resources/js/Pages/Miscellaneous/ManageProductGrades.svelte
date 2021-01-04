@@ -6,7 +6,7 @@
 
   import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ errors, flash,auth } = $page);
+  $: ({ errors, flash,auth } = $page.props);
 
   let productGradeName, productGradeId;
 

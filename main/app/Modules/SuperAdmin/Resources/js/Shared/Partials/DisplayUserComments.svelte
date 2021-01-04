@@ -31,10 +31,10 @@ import { getErrorString } from "@public-assets/js/bootstrap";
             }
           )
             .then(() => {
-              if ($page.flash.success) {
+              if ($page.props.flash.success) {
                 return true;
-              } else if ($page.flash.error || _.size($page.errors) > 0) {
-                throw new Error($page.flash.error || getErrorString($page.errors));
+              } else if ($page.props.flash.error || _.size($page.props.errors) > 0) {
+                throw new Error($page.props.flash.error || getErrorString($page.props.errors));
               }
             })
             .catch(error => {
@@ -49,10 +49,10 @@ import { getErrorString } from "@public-assets/js/bootstrap";
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if ($page.flash.success) {
+        } else if ($page.props.flash.success) {
           ToastLarge.fire({
             title: "Successful!",
-            html: $page.flash.success
+            html: $page.props.flash.success
           });
         }
       });
@@ -71,7 +71,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
               <small class="media-subtitle">{comment.user}</small>
               <span class="media-time">{comment.date}</span>
             </span>
-           {#if $page.auth.user.isSuperAdmin}
+           {#if $page.props.auth.user.isSuperAdmin}
               <button
               class="btn btn-danger btn-xs"
               on:click={() => {

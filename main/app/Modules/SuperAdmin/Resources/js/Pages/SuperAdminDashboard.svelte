@@ -6,7 +6,7 @@
 
 import { onMount } from "svelte";
 
-    $: ({ flash } = $page);
+    $: ({ flash } = $page.props);
 
 </script>
 

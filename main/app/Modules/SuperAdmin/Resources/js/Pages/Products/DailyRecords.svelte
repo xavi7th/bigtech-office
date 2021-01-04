@@ -5,7 +5,7 @@
 
   export let dailyRecords = [];
 
-  $: ({ app } = $page);
+  $: ({ app } = $page.props);
 </script>
 
 <Layout title="Daily Records">

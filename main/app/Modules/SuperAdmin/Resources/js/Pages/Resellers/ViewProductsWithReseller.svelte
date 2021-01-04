@@ -8,7 +8,7 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
   import { afterUpdate, onMount } from "svelte";
 
-  $: ({ errors, auth, flash } = $page);
+  $: ({ errors, auth, flash } = $page.props);
 
   export let resellerWithProducts = {};
   let sellingPrice, productToMarkAsSold;

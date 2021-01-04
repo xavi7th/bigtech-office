@@ -9,9 +9,9 @@
   import PageLoader from "@public-shared/PageLoader.svelte";
   import PageTitle from "@superadmin-shared/Partials/PageTitle.svelte";
 
-  $: ({ app, routes, flash } = $page);
+  $: ({ app, routes, flash } = $page.props);
 
-  console.log($page);
+
 
   let routesInitialized = false,
     isMounted = false;

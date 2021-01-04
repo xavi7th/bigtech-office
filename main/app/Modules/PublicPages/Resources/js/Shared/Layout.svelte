@@ -10,7 +10,7 @@
   import { onMount } from "svelte";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
 
-  $: ({ errors, auth, isInertiaRequest, isMobile, isDesktop } = $page);
+  $: ({ errors, auth, isInertiaRequest, isMobile, isDesktop } = $page.props);
   let isLoaded = false,
     pageLoaded = false;
 
@@ -18,7 +18,7 @@
     isLoaded = true;
   });
 
-  console.log($page);
+
 </script>
 
 <svelte:window

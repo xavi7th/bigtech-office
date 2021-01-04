@@ -5,7 +5,7 @@
   import FlashMessage from "@usershared/FlashMessage";
 
 
-  $: ({ auth, errors, flash } = $page);
+  $: ({ auth, errors, flash } = $page.props);
 
   export let productModels = [],
     productBrands = [],

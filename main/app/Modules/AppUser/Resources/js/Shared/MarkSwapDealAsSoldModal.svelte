@@ -5,7 +5,7 @@
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
   import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ flash, errors, auth } = $page);
+  $: ({ flash, errors, auth } = $page.props);
 
   export let onlineReps = [],
     salesChannel = [],

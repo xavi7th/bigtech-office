@@ -7,7 +7,7 @@
 
   import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ errors, auth, flash } = $page);
+  $: ({ errors, auth, flash } = $page.props);
 
   let storageTypeName, storageTypeId;
 

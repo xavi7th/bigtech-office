@@ -6,7 +6,7 @@
     import { getErrorString } from "@public-assets/js/bootstrap";
 
 
-    $: ({ flash, errors } = $page);
+    $: ({ flash, errors } = $page.props);
 
     let details = {}, files
 

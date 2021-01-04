@@ -8,7 +8,7 @@
   import { getErrorString } from "@public-assets/js/bootstrap";
   import { __dirname } from "lodash/_freeGlobal";
 
-  $: ({ errors, auth, flash } = $page);
+  $: ({ errors, auth, flash } = $page.props);
 
   let productSupplierObj = {
     is_local:false
