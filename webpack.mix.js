@@ -155,3 +155,7 @@ if (!mix.inProduction()) {
 if (!mix.inProduction()) {
   // mix.bundleAnalyzer();
 }
+
+mix.after(webpackStats => {
+    console.log(Object.keys(webpackStats.compilation.assets));
+});

@@ -115,7 +115,7 @@ class LoginController extends Controller
       $user->verified_at = now();
       $user->save();
 
-      return back()->withFlash(['success' => 204]);
+      return back()->withFlash(['success' => "Password set successfully! Login using your new credentials"]);
     }
     return back()->withFlash(['error'=>'Unauthorised']);
   }
@@ -214,7 +214,7 @@ class LoginController extends Controller
         /**
          * ?Watch out for this 401 on the client side and trigger a password reset
          */
-        return back()->withFlash(['error'=>401]);
+        return back()->withFlash(['action_required'=>true]);
       }
     }
   }

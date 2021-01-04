@@ -3,8 +3,8 @@
   import FlashMessage from "@usershared/FlashMessage.svelte";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import { getErrorString } from "@public-assets/js/bootstrap";
-  $: ({ errors, flash } = $page.props);
+
+  $: ({ errors } = $page.props);
 
   let details = {
       remember: true
@@ -20,79 +20,58 @@
       formSubmitted = true;
       BlockToast.fire({ text: "Accessing your dashboard..." });
 
-      e.target.classList.remove("was-validated");
-
-      Inertia.post(route("app.login"), details).then(() => {
-        swal.close();
-        if (_.size(errors) !== 0) {
+      Inertia.post(route("app.login"), details,{
+        onBefore: visit =>{
           e.target.classList.remove("was-validated");
-          // emailField.setCustomValidity("There are errors on your form");
-        } else if (flash.error == 401) {
-          swal
-            .fire({
-              title: "One more thing!",
-              text: `This seems to be your first login. You need to supply a password`,
-              icon: "info"
-            })
-            .then(() => {
-              swal
-                .fire({
-                  title: "Enter a password",
-                  input: "text",
-                  inputAttributes: {
-                    autocapitalize: "off",
-                    autocomplete: false,
-                    placeholder: "New password"
-                  },
-                  showCancelButton: true,
-                  confirmButtonText: "Set Password",
-                  showLoaderOnConfirm: true,
-                  preConfirm: pw => {
-                    if (!pw) {
-                      swal.showValidationMessage(
-                        `You must provide a password for your account`
-                      );
-                      return false;
-                    }
-                    return Inertia.post(route("app.password.new"), {
-                      pw,
-                      email: details.email
-                    })
-                      .then(() => {
-                        if (flash.error || _.size(errors) > 0) {
-                          throw new Error(
-                            flash.error || getErrorString(errors)
-                          );
-                        } else {
-                          swal.close();
-                          return { rsp: true };
-                        }
+        },
+        onSuccess: page => {
+          if (page.props.flash.action_required) {
+            swal
+              .fire({
+                title: "One more thing!",
+                text: `This seems to be your first login. You need to supply a password`,
+                icon: "info"
+              })
+              .then(() => {
+                swal
+                  .fire({
+                    title: "Enter a password",
+                    input: "text",
+                    inputAttributes: {
+                      autocapitalize: "off",
+                      autocomplete: false,
+                      placeholder: "New password"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Set Password",
+                    showLoaderOnConfirm: true,
+                    preConfirm: pw => {
+                      if (!pw) {
+                        swal.showValidationMessage(
+                          `You must provide a password for your account`
+                        );
+                        return false;
+                      }
+                      return Inertia.post(route("app.password.new"), {
+                        pw,
+                        email: details.email
                       })
-                      .catch(error => {
-                        swal.showValidationMessage(`Request failed: ${error}`);
+                    },
+                    allowOutsideClick: () => !swal.isLoading()
+                  })
+                  .then(result => {
+                    if (result.dismiss) {
+                      swal.fire({
+                        title: "Cancelled",
+                        text: "You can´t login without setting a password",
+                        icon: "info"
                       });
-                  },
-                  allowOutsideClick: () => !swal.isLoading()
-                })
-                .then(result => {
-                  if (flash.success == 204) {
-                    swal.fire({
-                      title: `Success`,
-                      text:
-                        "Password set successfully! Login using your new credentials",
-                      icon: "success"
-                    });
-                  } else if (result.dismiss) {
-                    swal.fire({
-                      title: "Cancelled",
-                      text: "You can´t login without setting a password",
-                      icon: "info"
-                    });
-                  }
-                });
-            });
+                    }
+                  });
+              });
+          }
         }
-      });
+      })
     }
   };
 </script>
@@ -136,7 +115,7 @@
           bind:value={details.email}
           placeholder="Email" />
         {#if errors.email}
-          <FlashMessage formError={errors.email[0]} />
+          <FlashMessage formError={errors.email} />
         {/if}
       </div>
       <div class="col-12">
@@ -149,7 +128,7 @@
           bind:value={details.password}
           placeholder="Password" />
         {#if errors.password}
-          <FlashMessage formError={errors.password[0]} />
+          <FlashMessage formError={errors.password} />
         {/if}
       </div>
       <div class="col-sm-6">
