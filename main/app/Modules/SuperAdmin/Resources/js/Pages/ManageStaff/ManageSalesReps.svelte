@@ -1,13 +1,9 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { getErrorString, toCurrency } from "@public-assets/js/bootstrap";
-
-  $: ({ errors, flash } = $page.props);
+  import { toCurrency } from "@public-assets/js/bootstrap";
 
   let details = {},
     files, salesRepStatistics={};
@@ -34,28 +30,15 @@
         preserveState: true,
         preserveScroll: true,
         only: ["flash", "errors", "salesReps"],
+        onSuccess: () =>{
+          details = {};
+          files = undefined;
+        },
         headers: {
           "Content-Type": "multipart/form-data"
         }
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        details = {};
-        files = undefined;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let updateSalesRep = () => {
@@ -81,29 +64,16 @@
         preserveState: true,
         preserveScroll: true,
         only: ["flash", "errors", "salesReps"],
+        onSuccess: () => {
+          jQuery('#updateSalesRep').modal('hide');
+          details = {};
+          files = undefined;
+        },
         headers: {
           "Content-Type": "multipart/form-data"
         }
       }
-    ).then(() => {
-      if (flash.success) {
-        details = {};
-        files = undefined;
-        jQuery('#updateSalesRep').modal('hide');
-
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let suspendSalesRep = id => {
@@ -131,16 +101,6 @@
               only: ["flash", "errors", "salesReps"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -150,11 +110,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -184,16 +139,6 @@
               only: ["flash", "errors", "salesReps"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -203,11 +148,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -219,7 +159,6 @@
   <div class="row vertical-gap">
     <div class="col-lg-4 col-xl-4 order-1 order-lg-0">
       <form class="#" on:submit|preventDefault={createSalesRep}>
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
@@ -354,7 +293,6 @@
       <form
         on:submit|preventDefault={updateSalesRep}
         id="updateSalesRepForm">
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">

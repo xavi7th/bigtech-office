@@ -1,11 +1,11 @@
 <script>
-  import { remember, page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { remember, page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import FlashMessage from "@usershared/FlashMessage";
 
 
-  $: ({ auth, flash, errors } = $page.props);
+  $: ({ errors } = $page.props);
 
   export let productBrands = [],
     productCategories = [];
@@ -32,29 +32,20 @@
       route("multiaccess.product_models.create_product_model"),
       formData,
       {
+        onSuccess: () =>{
+          files = null;
+          details = {
+            product_brand_id: null,
+            product_category_id: null,
+            name: null,
+            img: null
+          };
+        },
         headers: {
           "Content-Type": "multipart/form-data"
         }
       }
-    ).then(() => {
-      // swal.close();
-      if (flash.success) {
-        files = null;
-        details = {
-          product_brand_id: null,
-          product_category_id: null,
-          name: null,
-          img: null
-        };
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success,
-          timer: 10000
-        });
-      } else {
-        swal.close();
-      }
-    });
+    )
   };
 
 </script>
@@ -79,7 +70,7 @@
               </select>
             </div>
             {#if errors.product_brand_id}
-              <FlashMessage formError={errors.product_brand_id[0]} />
+              <FlashMessage formError={errors.product_brand_id} />
             {/if}
           </div>
           <div class="col-6">
@@ -96,7 +87,7 @@
               </select>
             </div>
             {#if errors.product_category_id}
-              <FlashMessage formError={errors.product_category_id[0]} />
+              <FlashMessage formError={errors.product_category_id} />
             {/if}
           </div>
 
@@ -109,7 +100,7 @@
               id="model-name"
               placeholder="Enter Model Name" />
             {#if errors.name}
-              <FlashMessage formError={errors.name[0]} />
+              <FlashMessage formError={errors.name} />
             {/if}
           </div>
           <div class="col-6">
@@ -119,10 +110,10 @@
               class="form-control"
               accept="image/*"
               bind:files
-              on:change={() => (details.img = files[0])}
+              on:change={() => (details.img = files)}
               id="model-image" />
             {#if errors.img}
-              <FlashMessage formError={errors.img[0]} />
+              <FlashMessage formError={errors.img} />
             {/if}
           </div>
           <div class="col-12">

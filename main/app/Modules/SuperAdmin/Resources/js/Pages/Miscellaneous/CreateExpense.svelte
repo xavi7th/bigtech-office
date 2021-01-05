@@ -1,13 +1,9 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
-  import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ errors, auth, flash } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let dailyExpenses = [];
   let details = {};
@@ -23,25 +19,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "dailyExpenses"]
+        only: ["flash", "errors", "dailyExpenses"],
+        onSuccess: () =>{
+          details = {};
+        }
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        details = {};
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   // let updateDailyExpense = () => {
@@ -55,25 +38,12 @@
   //     {
   //       preserveState: true,
   //       preserveScroll: true,
-  //       only: ["flash", "errors", "dailyExpenses"]
+  //       only: ["flash", "errors", "dailyExpenses"],
+  //       onSuccess: () => {
+  //          details = {};
+  //       }
   //     }
-  //   ).then(() => {
-  //     if (flash.success) {
-  //       details = {};
-
-  //       ToastLarge.fire({
-  //         title: "Successful!",
-  //         html: flash.success
-  //       });
-  //     } else {
-  //       ToastLarge.fire({
-  //         title: "Oops!",
-  //         html: flash.error || getErrorString(errors),
-  //         timer: 10000,
-  //         icon: "error"
-  //       });
-  //     }
-  //   });
+  //   )
   // };
 
   // let deleteDailyExpense = id => {
@@ -101,32 +71,8 @@
   //             only: ["flash", "errors", "dailyExpenses"]
   //           }
   //         )
-  //           .then(() => {
-  //             if (flash.success) {
-  //               return true;
-  //             } else {
-  //               throw new Error(flash.error || getErrorString(errors));
-  //             }
-  //           })
-  //           .catch(error => {
-  //             swal.showValidationMessage(`Request failed: ${error}`);
-  //           });
   //       }
   //     })
-  //     .then(result => {
-  //       if (result.dismiss && result.dismiss == "cancel") {
-  //         swal.fire(
-  //           "Canceled!",
-  //           "You canceled the action. Nothing was changed",
-  //           "info"
-  //         );
-  //       } else if (flash.success) {
-  //         ToastLarge.fire({
-  //           title: "Successful!",
-  //           html: flash.success
-  //         });
-  //       }
-  //     });
   // };
 </script>
 
@@ -135,7 +81,6 @@
     {#if auth.user.isAccountant}
       <div class="col-lg-4 col-xl-4">
         <form class="#" on:submit|preventDefault={createDailyExpense}>
-          <FlashMessage />
 
           <div class="row vertical-gap sm-gap">
             <div class="col-12">

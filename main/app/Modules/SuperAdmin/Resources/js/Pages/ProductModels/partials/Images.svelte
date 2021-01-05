@@ -18,17 +18,13 @@
           "Content-Type": "multipart/form-data"
         }
       }
-    ).then(() => {
-      // swal.close();
-    });
+    )
   }
 </script>
 
 <script>
   import { Inertia } from "@inertiajs/inertia";
   import { page } from "@inertiajs/inertia-svelte";
-
-  $: ({ flash } = $page.props);
 
   let deleteModelImage = id => {
     swal
@@ -54,17 +50,6 @@
               only: ["flash", "errors", "productModel"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                console.log(errors);
-                throw new Error(flash.error);
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {

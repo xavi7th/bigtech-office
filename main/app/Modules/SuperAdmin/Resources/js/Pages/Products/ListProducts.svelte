@@ -6,10 +6,9 @@
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
-  import { getErrorString } from "@public-assets/js/bootstrap";
 
 
-  $: ({ auth, flash, errors } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let onlineReps = [],
     products = [],
@@ -36,16 +35,6 @@
               only: ["flash", "errors", "products"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -55,11 +44,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };

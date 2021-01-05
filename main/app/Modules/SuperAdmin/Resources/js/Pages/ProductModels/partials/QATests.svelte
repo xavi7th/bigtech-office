@@ -1,8 +1,5 @@
 <script>
   import { Inertia } from "@inertiajs/inertia";
-  import { page } from "@inertiajs/inertia-svelte";
-
-  $: ({ flash, errors } = $page.props);
 
   export let qaTests,
     productQaTests = [],
@@ -53,11 +50,12 @@
             {
               preserveState: true,
               preserveScroll: true,
-              only: ["flash", "errors", "productModel"]
+              only: ["flash", "errors", "productModel"],
+              onSuccess: () =>{
+                isQaTestsModified = false;
+              },
             }
-          ).then(() => {
-            isQaTestsModified = false;
-          })
+          )
         }
       })
       .then(result => {

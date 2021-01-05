@@ -1,8 +1,7 @@
 <script>
 import { Inertia } from "@inertiajs/inertia";
-
 import { page } from "@inertiajs/inertia-svelte";
-import { getErrorString } from "@public-assets/js/bootstrap";
+
   export let comments = [];
 
   let deleteComment = comment => {
@@ -30,16 +29,6 @@ import { getErrorString } from "@public-assets/js/bootstrap";
               preserveScroll: true,
             }
           )
-            .then(() => {
-              if ($page.props.flash.success) {
-                return true;
-              } else if ($page.props.flash.error || _.size($page.props.errors) > 0) {
-                throw new Error($page.props.flash.error || getErrorString($page.props.errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -49,11 +38,6 @@ import { getErrorString } from "@public-assets/js/bootstrap";
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if ($page.props.flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: $page.props.flash.success
-          });
         }
       });
 

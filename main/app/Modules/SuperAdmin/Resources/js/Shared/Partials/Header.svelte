@@ -1,17 +1,5 @@
 <script>
-  import { Inertia } from "@inertiajs/inertia";
-
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import { location } from "lodash/_freeGlobal";
-
-
-  let logoutUser = () => {
-    BlockToast.fire("Securing your dashboard ...");
-
-    Inertia.post(route("app.logout")).then(() => {
-      location.reload();
-    });
-  };
+  import { page, inertia } from "@inertiajs/inertia-svelte";
 </script>
 
 <style>
@@ -78,23 +66,13 @@
               </a>
             </li> -->
             <li>
-              <button class="nav-link btn btn-link" on:click={logoutUser}>
+              <button class="nav-link btn btn-link" href="{ route("app.logout") }" use:inertia="{{ method: 'post' }}" type="button">
                 <span
                   data-feather="log-out"
                   class="rui-icon rui-icon-stroke-1_5" />
                 <span>Logout</span>
                 <span class="rui-nav-circle" />
               </button>
-              <!-- <InertiaLink
-                method="post"
-                href={route('app.logout')}
-                class="nav-link">
-                <span
-                  data-feather="log-out"
-                  class="rui-icon rui-icon-stroke-1_5" />
-                <span>Logout</span>
-                <span class="rui-nav-circle" />
-              </InertiaLink> -->
             </li>
           </ul>
         </li>

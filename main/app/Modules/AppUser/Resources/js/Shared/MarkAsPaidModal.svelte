@@ -1,11 +1,6 @@
 <script>
-  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage.svelte";
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
-import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ flash, errors } = $page.props);
 
   export let companyAccounts = [],
     productToMarkAsPaid;
@@ -75,40 +70,22 @@ import { getErrorString } from "@public-assets/js/bootstrap";
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "officeBranch", "products", "salesRecords"]
+        only: ["flash", "errors", "officeBranch", "products", "salesRecords"],
+        onSuccess: () => {
+          payment_records = [];
+          bankRecords = [];
+          bankRecords[0] = null;
+          paymentRecords = [];
+          numOfBanks = 1;
+
+          jQuery('#enterProductPaymentDetails').modal('hide');
+        }
       }
-    ).then(() => {
-      if ($page.props.flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        payment_records = [];
-        bankRecords = [];
-        bankRecords[0] = null;
-        paymentRecords = [];
-        numOfBanks = 1;
-
-        jQuery('#enterProductPaymentDetails').modal('hide');
-
-      } else if ($page.props.flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      } else {
-        swal.close();
-      }
-    });
+    );
   };
 </script>
 
 <Modal modalId="enterProductPaymentDetails" modalTitle="Enter Payment Details">
-
-  <FlashMessage />
 
   <div class="row vertical-gap sm-gap">
 

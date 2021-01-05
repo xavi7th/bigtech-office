@@ -2,10 +2,9 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { getErrorString } from "@public-assets/js/bootstrap";
 
 
-  $: ({ auth, flash, errors } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let batches = [];
   let batch_number, auto_generate, order_date;
@@ -23,23 +22,7 @@
         preserveScroll: true,
         only: ["flash", "errors", "batches"]
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      } else {
-        swal.close();
-      }
-    });
+    )
   };
 </script>
 

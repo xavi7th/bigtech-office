@@ -1,8 +1,5 @@
 <script>
 import { Inertia } from "@inertiajs/inertia";
-import { page } from "@inertiajs/inertia-svelte";
-
-$: ({ errors, flash } = $page.props);
 
   export let product_statuses = [],
     product = {};

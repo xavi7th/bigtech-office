@@ -24,25 +24,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "qaTests"]
+        only: ["flash", "errors", "qaTests"],
+        onSuccess: () =>{
+          qaTestName = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        qaTestName = null;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let updateQaTest = () => {
@@ -58,25 +45,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "qaTests"]
+        only: ["flash", "errors", "qaTests"],
+         onSuccess: () =>{
+          qaTestName = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        qaTestName = null;
-
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let deleteQaTest = id => {
@@ -104,16 +78,6 @@
               only: ["flash", "errors", "qaTests"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -123,11 +87,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -140,7 +99,6 @@
     <div class="col-lg-4 col-xl-4">
 
       <form class="#" on:submit|preventDefault={createQaTest}>
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
@@ -220,7 +178,6 @@
   <div slot="modals">
     <Modal modalId="updateQaTest" modalTitle="Update QA Test">
       <form class="#" on:submit|preventDefault={updateQaTest}>
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">

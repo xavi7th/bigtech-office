@@ -2,14 +2,10 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import FlashMessage from "@usershared/FlashMessage";
-
-  import { getErrorString } from "@public-assets/js/bootstrap";
-  import { afterUpdate, onMount } from "svelte";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
   import UpdateProductStatus from "@superadmin-shared/Partials/UpdateProductStatus.svelte";
 
-  $: ({ auth, errors, flash } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let product = {},
     comments = [],
@@ -37,27 +33,13 @@
       {
         preserveState: false,
         preserveScroll: true,
-        only: ["flash", "errors", "product"]
+        only: ["flash", "errors", "product"],
+        onSuccess: () =>{
+          parsedResults = [];
+          comment = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        parsedResults = [];
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      } else {
-        swal.close();
-      }
-    });
+    )
   };
 
   let testResult = test => {
@@ -68,27 +50,6 @@
     }
   };
 
-  afterUpdate(() => {
-    if (flash.success) {
-      ToastLarge.fire({
-        title: "Successful!",
-        html: flash.success
-      });
-      delete flash.success;
-      comment = null;
-    } else if (flash.error || _.size(errors) > 0) {
-      ToastLarge.fire({
-        title: "Oops!",
-        html: flash.error || getErrorString(errors),
-        timer: 10000,
-        icon: "error"
-      });
-      delete flash.error;
-      errors = null;
-    } else {
-      swal.close();
-    }
-  });
 </script>
 
 <style>

@@ -1,13 +1,12 @@
 <script>
   import { Inertia } from "@inertiajs/inertia";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
   import Icon from "@superadmin-shared/Partials/TableSortIcon";
-  import { getErrorString } from "@public-assets/js/bootstrap";
 
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
 
-  $: ({ auth, flash, errors } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let dispatch_requests = [];
 
@@ -40,16 +39,6 @@
               only: ["flash", "errors", "dispatch_requests"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else if (flash.error || _.size(errors) > 0) {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -59,11 +48,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -100,16 +84,6 @@
               only: ["flash", "errors", "dispatch_requests"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else if (flash.error || _.size(errors) > 0) {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -119,12 +93,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success,
-            timer: 10000
-          });
         }
       });
   };

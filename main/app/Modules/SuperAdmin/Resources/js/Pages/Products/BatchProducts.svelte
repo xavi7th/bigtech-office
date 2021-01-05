@@ -2,9 +2,6 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import FlashMessage from "@usershared/FlashMessage";
-
-  import { getErrorString } from "@public-assets/js/bootstrap";
 
   $: ({ auth } = $page.props);
 
@@ -33,18 +30,6 @@
               preserveScroll: true
             }
           )
-            .then(() => {
-              if ($page.props.flash.success) {
-                return true;
-              } else if ($page.props.flash.error || _.size($page.props.errors) > 0) {
-                throw new Error(
-                  $page.props.flash.error || getErrorString($page.props.errors)
-                );
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -54,11 +39,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if ($page.props.flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: $page.props.flash.success
-          });
         }
       });
   };
@@ -70,19 +50,6 @@
       preserveState: true,
       preserveScroll: true
     })
-      .then(() => {
-        if ($page.props.flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: $page.props.flash.success
-          });
-        } else if ($page.props.flash.error || _.size($page.props.errors) > 0) {
-          throw new Error($page.props.flash.error || getErrorString($page.props.errors));
-        }
-      })
-      .catch(error => {
-        swal.showValidationMessage(`Request failed: ${error}`);
-      });
   };
 </script>
 

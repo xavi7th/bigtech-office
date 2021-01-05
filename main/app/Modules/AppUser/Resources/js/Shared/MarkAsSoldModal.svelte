@@ -1,11 +1,9 @@
 <script>
   import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage.svelte";
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
-  import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ auth, flash, errors } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let onlineReps = [],
     salesChannel = [],
@@ -76,19 +74,15 @@
             {
               preserveState: true,
               preserveScroll: true,
-              only: ["flash", "errors", "officeBranch", "products"]
+              only: ["flash", "errors", "officeBranch", "products"],
+              onSuccess: () =>{
+                 details = {
+                  online_rep_id: null,
+                  sales_channel_id: null
+                };
+              }
             }
           )
-            .then(() => {
-              if ($page.props.flash.success) {
-                return true;
-              } else if ($page.props.flash.error || _.size($page.props.errors) > 0) {
-                throw new Error($page.props.flash.error || getErrorString($page.props.errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -98,22 +92,12 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if ($page.props.flash.success) {
-          details = {
-            online_rep_id: null,
-            sales_channel_id: null
-          };
-          ToastLarge.fire({
-            title: "Successful!",
-            html: $page.props.flash.success
-          });
         }
       });
   };
 </script>
 
 <Modal modalId="enterSalesDetails" modalTitle="Enter Sales Details">
-  <FlashMessage />
 
   <div class="row vertical-gap sm-gap">
     <div class="col-12">

@@ -1,11 +1,9 @@
 <script>
   import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage.svelte";
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
-  import { getErrorString } from "@public-assets/js/bootstrap";
 
-  $: ({ flash, errors, auth } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let onlineReps = [],
     salesChannel = [],
@@ -80,16 +78,6 @@
               only: ["flash", "errors", "swapDeals"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -99,19 +87,12 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
 </script>
 
 <Modal modalId="enterSwapSalesDetails" modalTitle="Enter Sales Details">
-  <FlashMessage />
-
   <div class="row vertical-gap sm-gap">
     <div class="col-12">
       <input

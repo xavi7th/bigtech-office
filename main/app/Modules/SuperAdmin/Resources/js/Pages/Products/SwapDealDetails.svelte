@@ -2,11 +2,9 @@
   import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-
-  import { getErrorString } from "@public-assets/js/bootstrap";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
 
-  $: ({ flash, errors, auth } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let swapDeal = {},
     userComment,
@@ -25,23 +23,7 @@
         preserveScroll: true,
         only: ["flash", "errors", "swapDeal"]
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      } else {
-        swal.close();
-      }
-    });
+    )
   };
 
   let commentOnSwapDeal = uuid => {
@@ -55,25 +37,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "swapDeal"]
+        only: ["flash", "errors", "swapDeal"],
+        onSuccess: () =>{
+          userComment = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        userComment = null;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let updateSwapDealStatus = () => {
@@ -89,26 +58,7 @@
         preserveScroll: true,
         only: ["flash", "errors", "swapDeal"]
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-        delete flash.success;
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-        delete flash.error;
-        errors = null;
-      } else {
-        swal.close();
-      }
-    });
+    )
   };
 </script>
 

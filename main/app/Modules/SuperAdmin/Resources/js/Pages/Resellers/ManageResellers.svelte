@@ -1,13 +1,10 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ errors, auth, flash } = $page.props);
+  $: ({ auth } = $page.props);
 
   let details = {},
     currentReseller = {},
@@ -29,26 +26,13 @@
       preserveState: true,
       preserveScroll: true,
       only: ["flash", "errors", "resellers"],
+      onSuccess: () =>{
+          details = {};
+      },
       headers: {
         "Content-Type": "multipart/form-data"
       }
-    }).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        details = {};
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    })
   };
 
   let updateReseller = () => {
@@ -71,27 +55,14 @@
         preserveState: true,
         preserveScroll: true,
         only: ["flash", "errors", "resellers"],
+        onSuccess: () =>{
+          currentReseller = {};
+        },
         headers: {
           "Content-Type": "multipart/form-data"
         }
       }
-    ).then(() => {
-      if (flash.success) {
-        currentReseller = {};
-
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let deleteReseller = id => {
@@ -119,16 +90,6 @@
               only: ["flash", "errors", "resellers"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -138,11 +99,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -161,7 +117,6 @@
     {#if auth.user.isSuperAdmin}
       <div class="col-lg-4 col-xl-4">
         <form class="#" on:submit|preventDefault={createReseller}>
-          <FlashMessage />
 
           <div class="row vertical-gap sm-gap">
             <div class="col-12">
@@ -290,7 +245,6 @@
   </div>
   <div slot="modals">
     <Modal modalId="updateReseller" modalTitle="Update Reseller">
-      <FlashMessage />
 
       <div class="row vertical-gap sm-gap">
         <div class="col-12">

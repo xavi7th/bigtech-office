@@ -1,13 +1,10 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ errors, auth, flash } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let productStatuses = [];
 
@@ -26,25 +23,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "productStatuses"]
+        only: ["flash", "errors", "productStatuses"],
+        onSuccess: () =>{
+          productStatusName = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        productStatusName = null;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let updateProductStatus = () => {
@@ -60,25 +44,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "productStatuses"]
+        only: ["flash", "errors", "productStatuses"],
+         onSuccess: () =>{
+          productStatusName = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        productStatusName = null;
-
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let deleteProductStatus = id => {
@@ -106,16 +77,6 @@
               only: ["flash", "errors", "productStatuses"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -125,11 +86,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -142,7 +98,6 @@
     <div class="col-lg-4 col-xl-4">
 
       <form class="#" on:submit|preventDefault={createProductStatus}>
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
@@ -221,7 +176,6 @@
   <div slot="modals">
     <Modal modalId="updateProductStatus" modalTitle="Update Status">
       <form class="#" on:submit|preventDefault={updateProductStatus}>
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">

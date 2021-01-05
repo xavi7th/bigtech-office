@@ -1,13 +1,10 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ errors, auth, flash } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let productBrands = [];
 
@@ -31,28 +28,15 @@
         preserveState: true,
         preserveScroll: true,
         only: ["flash", "errors", "productBrands"],
+        onSuccess: () =>{
+          files = null;
+          brandName = null;
+        },
         headers: {
           "Content-Type": "multipart/form-data"
         }
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        files = null;
-        brandName = null;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let updateProductBrand = () => {
@@ -74,28 +58,15 @@
         preserveState: true,
         preserveScroll: true,
         only: ["flash", "errors", "productBrands"],
+        onSuccess: () =>{
+          files = null;
+          brandName = null;
+        },
         headers: {
           "Content-Type": "multipart/form-data"
         }
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        files = null;
-        brandName = null;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let deleteBrand = id => {
@@ -123,16 +94,6 @@
               only: ["flash", "errors", "productBrands"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -142,11 +103,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -166,9 +122,6 @@
           <div
             class="d-flex align-items-center justify-content-between flex-column
               mb-25">
-            {#each Object.entries(errors) as [err], idx}
-              <FlashMessage msg={err[0]} />
-            {/each}
           </div>
 
           <div class="row vertical-gap sm-gap">

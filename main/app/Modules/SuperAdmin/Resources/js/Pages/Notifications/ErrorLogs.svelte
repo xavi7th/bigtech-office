@@ -1,11 +1,7 @@
 <script>
   import { Inertia } from "@inertiajs/inertia";
-  import { page } from "@inertiajs/inertia-svelte";
-  import { getErrorString } from "@public-assets/js/bootstrap";
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-
-  $: ({ flash, errors } = $page.props);
 
   export let errLogs = [];
   let fullErrorMessage;
@@ -21,16 +17,6 @@
             preserveScroll: true,
             only: ["flash", "errors", "errLogs"]
           })
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else if (flash.error || _.size(errors) > 0) {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -40,11 +26,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };

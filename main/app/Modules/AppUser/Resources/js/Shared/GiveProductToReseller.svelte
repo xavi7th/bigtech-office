@@ -1,11 +1,6 @@
 <script>
-  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage.svelte";
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ flash, errors } = $page.props);
 
   export let resellers = [],
     productToGiveReseller;
@@ -26,34 +21,17 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "products", 'swapDeals']
+        only: ["flash", "errors", "products", 'swapDeals'],
+        onSuccess: () => {
+          resellerToGiveProduct = null;
+          productToGiveReseller = null;
+        }
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        resellerToGiveProduct = null;
-        productToGiveReseller = null;
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      } else {
-        swal.close();
-      }
-    });
+    );
   };
 </script>
 
 <Modal modalId="giveProductToReseller" modalTitle="Select Reseller">
-
-  <FlashMessage />
 
   <div class="row vertical-gap sm-gap">
 

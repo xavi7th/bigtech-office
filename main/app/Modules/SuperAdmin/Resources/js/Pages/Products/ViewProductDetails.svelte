@@ -2,11 +2,9 @@
   import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
+  import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
-
-  $: ({ auth, flash, errors } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let productDetails = {},
     productComments = [];
@@ -24,25 +22,12 @@ import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "productComments"]
+        only: ["flash", "errors", "productComments"],
+         onSuccess: () =>{
+          userComment = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        userComment = null;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 </script>
 

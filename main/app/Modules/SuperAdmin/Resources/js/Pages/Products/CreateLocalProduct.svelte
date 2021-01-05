@@ -1,11 +1,6 @@
 <script>
-  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ flash, errors } = $page.props);
 
   export let models,
     brands,
@@ -30,22 +25,6 @@
       preserveState: true,
       preserveScroll: true,
       only: ["flash", "errors"]
-    }).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      } else {
-        swal.close();
-      }
     });
   };
 </script>

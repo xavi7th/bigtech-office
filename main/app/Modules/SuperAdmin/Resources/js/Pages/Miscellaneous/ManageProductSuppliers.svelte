@@ -1,14 +1,7 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
-
-  import { getErrorString } from "@public-assets/js/bootstrap";
-  import { __dirname } from "lodash/_freeGlobal";
-
-  $: ({ errors, auth, flash } = $page.props);
 
   let productSupplierObj = {
     is_local:false
@@ -28,25 +21,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "productSuppliers"]
+        only: ["flash", "errors", "productSuppliers"],
+        onSuccess: () =>{
+          productSupplierObj.name = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        productSupplierObj.name = null;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let updateProductSupplier = () => {
@@ -63,27 +43,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "productSuppliers"]
+        only: ["flash", "errors", "productSuppliers"],
+        onSuccess: () =>{
+          productSupplierObj = {};
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        productSupplierObj = {};
-
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else if (flash.error || _.size(errors)) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      } else {
-        swal.close();
-      }
-    });
+    )
   };
 
   let deleteProductSupplier = id => {
@@ -111,16 +76,6 @@
               only: ["flash", "errors", "productSuppliers"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -130,11 +85,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -146,7 +96,6 @@
   <div class="row vertical-gap">
     <div class="col-lg-4 col-xl-4">
       <form class="#" on:submit|preventDefault={createProductSupplier}>
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
@@ -234,7 +183,6 @@
   </div>
   <div slot="modals">
     <Modal modalId="updateProductSupplier" modalTitle="Update Product Supplier">
-      <FlashMessage />
 
       <div class="row vertical-gap sm-gap">
         <div class="col-12">

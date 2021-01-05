@@ -2,13 +2,9 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-  import { afterUpdate, onMount } from "svelte";
-
-  $: ({ errors, auth, flash } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let resellerWithProducts = {};
   let sellingPrice, productToMarkAsSold;
@@ -41,19 +37,12 @@
             {
               preserveState: true,
               preserveScroll: true,
-              only: ["flash", "errors", "resellerWithProducts"]
+              only: ["flash", "errors", "resellerWithProducts"],
+              onSuccess: () =>{
+                sellingPrice = null;
+              },
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`${error}`);
-            });
         }
       })
       .then(result => {
@@ -63,35 +52,10 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          sellingPrice = null;
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
-        } else {
-          swal.close();
         }
       });
   };
 
-  onMount(() => {
-    if (flash.error || _.size(errors) > 0) {
-      ToastLarge.fire({
-        title: "Oops!",
-        html: flash.error || getErrorString(errors),
-        timer: 10000,
-        icon: "error"
-      });
-    } else if (flash.success) {
-      ToastLarge.fire({
-        title: "Completed!",
-        html: flash.success,
-        timer: 3000,
-        icon: "success"
-      });
-    }
-  });
 </script>
 
 <Layout title="Manage Resellers">
@@ -222,7 +186,6 @@
   <div slot="modals">
     {#if auth.user.isStockKeeper}
       <Modal modalId="enterProductSellingPrice" modalTitle="Enter Selling Price">
-      <FlashMessage />
 
       <div class="row vertical-gap sm-gap">
         <div class="col-12">

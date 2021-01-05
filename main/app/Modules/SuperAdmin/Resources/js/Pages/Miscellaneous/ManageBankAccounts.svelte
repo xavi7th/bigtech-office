@@ -1,14 +1,10 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { getErrorString, toCurrency } from "@public-assets/js/bootstrap";
-  import { __dirname } from "lodash/_freeGlobal";
-
-  $: ({ errors, auth, flash } = $page.props);
+  import { toCurrency } from "@public-assets/js/bootstrap";
 
   let details = {},
     files;
@@ -35,28 +31,15 @@
         preserveState: true,
         preserveScroll: true,
         only: ["flash", "errors", "bankAccounts"],
+        onSuccess: () =>{
+          details = {};
+          files = undefined;
+        },
         headers: {
           "Content-Type": "multipart/form-data"
         }
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        details = {};
-        files = undefined;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let updateBankAccount = () => {
@@ -82,28 +65,15 @@
         preserveState: true,
         preserveScroll: true,
         only: ["flash", "errors", "bankAccounts"],
+        onSuccess: () =>{
+          details = {};
+          files = undefined;
+        },
         headers: {
           "Content-Type": "multipart/form-data"
         }
       }
-    ).then(() => {
-      if (flash.success) {
-        details = {};
-        files = undefined;
-
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let suspendBankAccount = id => {
@@ -131,16 +101,6 @@
               only: ["flash", "errors", "bankAccounts"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -150,11 +110,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -184,16 +139,6 @@
               only: ["flash", "errors", "bankAccounts"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -203,11 +148,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -228,7 +168,6 @@
   <div class="row vertical-gap">
     <div class="col-lg-4 col-xl-4 order-1 order-lg-0">
       <form class="#" on:submit|preventDefault={createBankAccount}>
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">
@@ -392,7 +331,6 @@
       <form
         on:submit|preventDefault={updateBankAccount}
         id="updateBankAccountForm">
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">

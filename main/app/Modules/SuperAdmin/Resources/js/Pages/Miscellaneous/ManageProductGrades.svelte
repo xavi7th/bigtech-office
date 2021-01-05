@@ -1,12 +1,10 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ errors, flash,auth } = $page.props);
+  $: ({ auth } = $page.props);
 
   let productGradeName, productGradeId;
 
@@ -25,23 +23,7 @@
         preserveScroll: true,
         only: ["flash", "errors", "productGrades"]
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        productGradeName = null;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let updateProductGrade = () => {
@@ -57,25 +39,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "productGrades"]
+        only: ["flash", "errors", "productGrades"],
+        onSuccess: () =>{
+          productGradeName = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        productGradeName = null;
-
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let deleteProductGrade = id => {
@@ -103,16 +72,6 @@
               only: ["flash", "errors", "productGrades"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -122,11 +81,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };

@@ -1,53 +1,31 @@
 <script>
-    import { page } from "@inertiajs/inertia-svelte";
     import { Inertia } from "@inertiajs/inertia";
     import Layout from "@superadmin-shared/SuperAdminLayout";
-    import FlashMessage from "@usershared/FlashMessage";
-    import { getErrorString } from "@public-assets/js/bootstrap";
-
-
-    $: ({ flash, errors } = $page.props);
 
     let details = {}, files
 
     let createDirectSwapDeal = ()=>{
       BlockToast.fire({
-      text: "Creating reseller ..."
-    });
+        text: "Creating reseller ..."
+      });
 
-    let formData = new FormData();
+      let formData = new FormData();
 
-    _.forEach(details, (val, key) => {
-      formData.append(key, val);
-    });
+      _.forEach(details, (val, key) => {
+        formData.append(key, val);
+      });
 
-    Inertia.post(route("stockkeeper.products.create_swap_deal"), formData, {
-      preserveState: true,
-      preserveScroll: true,
-      only: ["flash", "errors"],
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    }).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        details = {};
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-      else{
-        swal.close()
-      }
-    });
+      Inertia.post(route("stockkeeper.products.create_swap_deal"), formData, {
+        preserveState: true,
+        preserveScroll: true,
+        only: ["flash", "errors"],
+        onSuccess: () =>{
+            details = {};
+        },
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
     }
 
 

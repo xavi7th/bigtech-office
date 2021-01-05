@@ -1,13 +1,10 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+  import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ errors, auth, flash } = $page.props);
+  $: ({ auth } = $page.props);
 
   let storageTypeName, storageTypeId;
 
@@ -24,25 +21,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "storageTypes"]
+        only: ["flash", "errors", "storageTypes"],
+        onSuccess: () =>{
+          storageTypeName = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        storageTypeName = null;
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let updateStorageType = () => {
@@ -58,25 +42,12 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "storageTypes"]
+        only: ["flash", "errors", "storageTypes"],
+        onSuccess: () =>{
+          storageTypeName = null;
+        },
       }
-    ).then(() => {
-      if (flash.success) {
-        storageTypeName = null;
-
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-      } else {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      }
-    });
+    )
   };
 
   let deleteStorageType = id => {
@@ -104,16 +75,6 @@
               only: ["flash", "errors", "storageTypes"]
             }
           )
-            .then(() => {
-              if (flash.success) {
-                return true;
-              } else {
-                throw new Error(flash.error || getErrorString(errors));
-              }
-            })
-            .catch(error => {
-              swal.showValidationMessage(`Request failed: ${error}`);
-            });
         }
       })
       .then(result => {
@@ -123,11 +84,6 @@
             "You canceled the action. Nothing was changed",
             "info"
           );
-        } else if (flash.success) {
-          ToastLarge.fire({
-            title: "Successful!",
-            html: flash.success
-          });
         }
       });
   };
@@ -140,7 +96,6 @@
     {#if auth.user.isAdmin}
       <div class="col-lg-4 col-xl-4">
         <form class="#" on:submit|preventDefault={createStorageType}>
-          <FlashMessage />
 
           <div class="row vertical-gap sm-gap">
             <div class="col-12">
@@ -223,7 +178,6 @@
   <div slot="modals">
     <Modal modalId="updateStorageType" modalTitle="Update Storage Type">
       <form class="#" on:submit|preventDefault={updateStorageType}>
-        <FlashMessage />
 
         <div class="row vertical-gap sm-gap">
           <div class="col-12">

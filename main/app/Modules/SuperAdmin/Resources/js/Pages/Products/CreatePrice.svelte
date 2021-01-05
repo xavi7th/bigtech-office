@@ -1,19 +1,12 @@
 <script>
-    import { page, InertiaLink } from "@inertiajs/inertia-svelte";
     import { Inertia } from "@inertiajs/inertia";
     import Layout from "@superadmin-shared/SuperAdminLayout";
-    import FlashMessage from "@usershared/FlashMessage";
-
-import { getErrorString } from "@public-assets/js/bootstrap";
 
     export let batch,models,brands,colors,grades,suppliers,storage_sizes;
 
     let details = {
         product_batch_id: batch.id
     };
-
-    $: ({ flash,errors } = $page.props);
-
 
   let createBatchPrice = () => {
     BlockToast.fire({
@@ -28,24 +21,7 @@ import { getErrorString } from "@public-assets/js/bootstrap";
         preserveScroll: true,
         only: ["flash", "errors", 'batch']
       }
-    ).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 10000,
-          icon: "error"
-        });
-      } else {
-        swal.close();
-      }
-    });
+    )
   };
 
 </script>

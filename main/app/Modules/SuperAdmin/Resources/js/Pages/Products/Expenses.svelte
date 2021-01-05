@@ -3,9 +3,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ auth, flash, errors } = $page.props);
+  $: ({ auth } = $page.props);
 
   let details = {};
   export let productWithExpenses,
@@ -23,29 +21,12 @@
     Inertia.post(url, details, {
       preserveState: true,
       preserveScroll: true,
-      only: ["flash", "errors", "productWithExpenses"]
-    }).then(() => {
-      if (flash.success) {
-        ToastLarge.fire({
-          title: "Successful!",
-          html: flash.success
-        });
-
-        details = {};
-      } else if (flash.error || _.size(errors) > 0) {
-        ToastLarge.fire({
-          title: "Oops!",
-          html: flash.error || getErrorString(errors),
-          timer: 5000,
-          icon: "error"
-        });
-      } else {
-        swal.close();
-      }
-    });
+      only: ["flash", "errors", "productWithExpenses"],
+       onSuccess: () =>{
+          details = {};
+      },
+    })
   };
-
-  $: ({ app } = $page.props);
 </script>
 
 <Layout title="Expenses for {product.identifier}">
