@@ -1,4 +1,4 @@
-@import '@public-assets/sass/vendor/nprogress';
+// @import '@public-assets/sass/vendor/nprogress';
 @import './vendor/bootstrap-custom';
 // @import './vendor/OverlayScrollbars';
 @import './vendor/yaybar';
@@ -53,4 +53,8 @@ dl.phpdebugbar-widgets-kvlist dt {
 
 .swal2-actions.swal2-loading .swal2-styled.swal2-confirm {
 	min-width: 37px;
+}
+
+.dataTables_paginate .paginate_button {
+	padding: 3px !important;
 }

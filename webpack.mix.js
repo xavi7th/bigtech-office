@@ -2,22 +2,23 @@ const mix = require('laravel-mix');
 const autoPreprocess = require('svelte-preprocess');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const dotenvExpand = require('dotenv-expand');
+var path = require('path');
 
 require('laravel-mix-imagemin');
 require('laravel-mix-svelte');
 require('laravel-mix-bundle-analyzer');
+require('laravel-mix-purgecss');
 
 // dotenvExpand(require('dotenv')
 // 	.config({
 // 		path: __dirname + '/main/.env',
 // 		debug: true
 // 	}));
-
-// console.log(process.env);
-
 let fs = require('fs-extra');
 let modules = fs.readdirSync('./main/app/Modules');
 // let siteUrl = process.env.APP_URL.replace(/(^\w+:|^)\/\//, '');
+
+// console.log(process.env);
 
 if (modules && modules.length > 0) {
 	modules.forEach((module) => {
@@ -133,6 +134,24 @@ mix
   //     ],
 	// 	}
 	// )
+  // .purgeCss({
+  // 	enabled: true,
+  // 	extend: {
+  // 		content: [
+  //       path.join(__dirname, "main/app/Modules/**/*.php"),
+  //       // path.join(__dirname, "main/app/Modules/**/*.html"),
+  //       // path.join(__dirname, "main/app/Modules/**/*.js"),
+  //       path.join(__dirname, "main/app/Modules/**/*.svelte"),
+  //     ],
+  // 		safelist: {
+  // 			standard: [/[pP]aginat(e|ion)/, /active/, /page/, /disabled/, /^dt-/],
+  // 			deep: [/[dD]ata[tT]able/],
+  // 			greedy: [/^dt/]
+  // 		},
+  // 		rejected: true,
+  // 		variables: true
+  // 	}
+  // })
 	.then(() => {
 		const _ = require('lodash');
 

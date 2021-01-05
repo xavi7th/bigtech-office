@@ -23,6 +23,7 @@
 		"laravel-mix": "^6.0",
 		"laravel-mix-bundle-analyzer": "^1.0.5",
 		"laravel-mix-imagemin": "^1.0.3",
+		"laravel-mix-purgecss": "^6.0.0",
 		"laravel-mix-svelte": "0.1.5",
 		"postcss": "^8.2.2",
 		"postcss-fixes": "^2.0.1",
