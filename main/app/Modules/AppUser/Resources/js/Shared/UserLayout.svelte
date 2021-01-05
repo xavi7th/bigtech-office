@@ -11,8 +11,6 @@
 
   $: ({ app } = $page.props);
 
-
-
   export let isAuth = true,
     title = app.name;
   let isLoaded = false;

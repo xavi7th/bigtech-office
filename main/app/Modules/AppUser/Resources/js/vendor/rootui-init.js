@@ -8,6 +8,7 @@
  * License: You must have a valid license purchased only from ThemeForest (the above link) in order to legally use the theme for your project.
  * Copyright 2019.
  */
+console.log('init-2');
 ! function(e) {
     var t = {};
 

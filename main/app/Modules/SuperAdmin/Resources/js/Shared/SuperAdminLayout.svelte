@@ -4,7 +4,6 @@
   import { fly } from "svelte/transition";
   import Sidebar from "@superadmin-shared/Partials/Sidebar";
   import Header from "@superadmin-shared/Partials/Header";
-  // let {default: Sidebar} = import('@superadmin-shared/Partials/Sidebar.svelte');
   import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
   import PageTitle from "@superadmin-shared/Partials/PageTitle";
   import Footer from "@superadmin-shared/Partials/Footer";
