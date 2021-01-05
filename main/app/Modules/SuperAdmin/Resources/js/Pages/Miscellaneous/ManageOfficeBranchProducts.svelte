@@ -2,13 +2,9 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
   import Icon from "@superadmin-shared/Partials/TableSortIcon.svelte";
-
-  import { getErrorString } from "@public-assets/js/bootstrap";
-  import { onMount } from "svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
-  import { AuthenticatorAssertionResponse } from "lodash/_freeGlobal";
 
-  $: ({ auth, flash, errors } = $page.props);
+  $: ({ auth} = $page.props);
   export let onlineReps = [],
     salesChannel = [],
     officeBranch = {
@@ -17,23 +13,6 @@
 
   let productToMarkAsSold;
 
-  onMount(() => {
-    if (flash.success) {
-      ToastLarge.fire({
-        title: "Successful!",
-        html: flash.success
-      });
-
-      details = {};
-    } else if (flash.error || _.size(errors) > 0) {
-      ToastLarge.fire({
-        title: "Oops!",
-        html: flash.error || getErrorString(errors),
-        timer: 10000,
-        icon: "error"
-      });
-    }
-  });
 </script>
 
 <Layout title={`${officeBranch.city}´s Stock List`}>

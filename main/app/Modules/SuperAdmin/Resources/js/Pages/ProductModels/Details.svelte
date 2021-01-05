@@ -5,16 +5,13 @@
   import Images, { addImage } from "./partials/Images.svelte";
   import Comments, { createModelComment } from "./partials/Comments.svelte";
   import QaTests from "./partials/QATests.svelte";
-  import DescriptionSummary, {
-    createModelDescription,
-    updateModelDescription
-  } from "./partials/DescriptionSummary.svelte";
+  import DescriptionSummary, { createModelDescription, updateModelDescription } from "./partials/DescriptionSummary.svelte";
   import ModelSummary from "./partials/ModelSummary.svelte";
-  import { onMount, afterUpdate } from "svelte";
+  import { onMount } from "svelte";
 
   export let description, files, comment;
 
-  $: ({ auth, flash, errors } = $page.props);
+  $: ({ auth } = $page.props);
 
   export let productModel = {
       images: [],
@@ -24,46 +21,6 @@
 
   onMount(() => {
     description = productModel.descriptionSummary;
-  });
-
-  afterUpdate(() => {
-    if (flash.success) {
-      Toast.fire({
-        title: "Successful!",
-        text: flash.success
-      }).then(() => {
-        description = null;
-        comment = null;
-        flash.success = null;
-      });
-    } else if (flash.error) {
-      ToastLarge.fire({
-        title: "Oops!",
-        html: flash.error,
-        icon: "error"
-      }).then(() => {
-        flash.error = null;
-      });
-    } else if (_.size(errors) > 0) {
-      if (_.isString(errors)) {
-        var errs = errors;
-      } else if (_.size(errors) == 1) {
-        var errs = _.reduce(errors, function(val, n) {
-          return val.join("<br>") + "<br>" + n;
-        })[0];
-      } else {
-        var errs = _.reduce(errors, function(val, n) {
-          return (_.isString(val) ? val : val.join("<br>")) + "<br>" + n;
-        });
-      }
-      ToastLarge.fire({
-        title: "Oops",
-        html: errs,
-        icon: "error"
-      });
-    } else {
-      swal.close();
-    }
   });
 
   let activeComment;
