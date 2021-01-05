@@ -205,15 +205,13 @@ class LoginController extends Controller
     } else {
       if ($user->is_verified()) {
         if ($request->isApi()) return response()->json($this->respondWithToken(), 202);
+        return Inertia::location(route($user->getDashboardRoute()));
         return redirect()->route($user->getDashboardRoute())->withFlash(['success' => 202]);
         // return redirect()->intended(route($user->getDashboardRoute()))->withFlash(['success' => 202]);
       } else {
         $this->logout($request);
-        if ($request->isApi()) return response()->json(['unverified' => 'Unverified user'], 401);
 
-        /**
-         * ?Watch out for this 401 on the client side and trigger a password reset
-         */
+        if ($request->isApi()) return response()->json(['unverified' => 'Unverified user'], 401);
         return back()->withFlash(['action_required'=>true]);
       }
     }

@@ -1,5 +1,5 @@
 <script>
-  import { afterUpdate, beforeUpdate, onMount, tick } from "svelte";
+  import { onMount, tick } from "svelte";
   import { page } from "@inertiajs/inertia-svelte";
   import { fly } from "svelte/transition";
   import Sidebar from "@superadmin-shared/Partials/Sidebar";
@@ -7,27 +7,13 @@
   import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
   import PageTitle from "@superadmin-shared/Partials/PageTitle";
   import Footer from "@superadmin-shared/Partials/Footer";
-  import PageLoader from "@public-shared/PageLoader.svelte";
 
-  $: ({ app, routes, flash } = $page.props);
+  $: ({ app, routes } = $page.props);
 
-
-
-  let routesInitialized = false,
-    isMounted = false;
+  let isMounted = false;
   export let title;
 
-  beforeUpdate(() => {
-    if (flash.success == 202) {
-      location.reload();
-    }
-    else{
-      routesInitialized = true;
-    }
-  })
-
   onMount(async () => {
-
     isMounted = true;
 
     await tick();
@@ -41,9 +27,6 @@
     objectFitImages();
   });
 
-  afterUpdate(() => {
-    document.querySelector("#app").removeAttribute("data-page");
-  });
 </script>
 
 <style lang="scss">
@@ -51,19 +34,21 @@
     position: relative;
   }
 
-  :global(.dataTables_paginate) {
-    @media (max-width: 767px) {
-      margin-top: 20px;
-      position: relative;
-    }
-      :global(.paginate_button) {
+   :global{
+    .dataTables_paginate {
+      @media (max-width: 767px) {
+        margin-top: 20px;
+        position: relative;
+      }
+      .paginate_button {
         margin: 5px;
         padding: 0;
       }
+    }
   }
 </style>
 
-{#if routesInitialized}
+
 <div
   data-spy="scroll"
   data-target=".rui-page-sidebar"
@@ -93,9 +78,6 @@
   {/if}
 </div>
 
-{:else}
-  <PageLoader />
-{/if}
 
 {#if isMounted}
   <script src="/js/user-dashboard-init.js"></script>

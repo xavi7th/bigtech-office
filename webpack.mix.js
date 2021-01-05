@@ -1,13 +1,23 @@
 const mix = require('laravel-mix');
 const autoPreprocess = require('svelte-preprocess');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const dotenvExpand = require('dotenv-expand');
 
 require('laravel-mix-imagemin');
 require('laravel-mix-svelte');
 require('laravel-mix-bundle-analyzer');
 
+// dotenvExpand(require('dotenv')
+// 	.config({
+// 		path: __dirname + '/main/.env',
+// 		debug: true
+// 	}));
+
+// console.log(process.env);
+
 let fs = require('fs-extra');
 let modules = fs.readdirSync('./main/app/Modules');
+// let siteUrl = process.env.APP_URL.replace(/(^\w+:|^)\/\//, '');
 
 if (modules && modules.length > 0) {
 	modules.forEach((module) => {
@@ -52,7 +62,11 @@ mix
 				calc: false,
 				cssDeclarationSorter: true
 			})
-		],
+    ],
+    //  hmrOptions: {
+    //  	host: siteUrl,
+    //  	port: 8081 // Can't use 443 here because address already in use
+    //  }
 	})
 	.svelte({
 		dev: !mix.inProduction(),
