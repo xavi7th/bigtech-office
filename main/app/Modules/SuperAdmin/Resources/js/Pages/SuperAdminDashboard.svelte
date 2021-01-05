@@ -1,13 +1,5 @@
 <script>
-    import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-    import { Inertia } from "@inertiajs/inertia";
     import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
-    import FlashMessage from "@usershared/FlashMessage";
-
-import { onMount } from "svelte";
-
-    $: ({ flash } = $page.props);
-
 </script>
 
 <Layout title="Super Admin Dashboard">

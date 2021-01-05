@@ -51,15 +51,17 @@
     position: relative;
   }
 
-  :global(.dataTables_paginate) {
-    @media (max-width: 767px) {
-      margin-top: 20px;
-      position: relative;
-    }
-      :global(.paginate_button) {
+  :global{
+    .dataTables_paginate {
+      @media (max-width: 767px) {
+        margin-top: 20px;
+        position: relative;
+      }
+      .paginate_button {
         margin: 5px;
         padding: 0;
       }
+    }
   }
 </style>
 

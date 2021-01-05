@@ -1,5 +1,5 @@
 <script>
-  import { afterUpdate, beforeUpdate, onMount, tick } from "svelte";
+  import { beforeUpdate, onMount, tick } from "svelte";
   import { page } from "@inertiajs/inertia-svelte";
   import { fly } from "svelte/transition";
   import Sidebar from "@superadmin-shared/Partials/Sidebar";
@@ -41,9 +41,6 @@
     objectFitImages();
   });
 
-  afterUpdate(() => {
-    document.querySelector("#app").removeAttribute("data-page");
-  });
 </script>
 
 <style lang="scss">
