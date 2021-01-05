@@ -3,8 +3,8 @@
   import { page } from "@inertiajs/inertia-svelte";
   import { fly } from "svelte/transition";
   import Sidebar from "@superadmin-shared/Partials/Sidebar";
-  import Header from "@superadmin-shared/Partials/Header";
-  import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
+  import Header from "@superadmin-shared/Partials/Header.svelte";
+  import MobileHeader from "@superadmin-shared/Partials/MobileHeader.svelte";
   import Footer from "@superadmin-shared/Partials/Footer";
   import PageLoader from "@public-shared/PageLoader.svelte";
   import PageTitle from "@superadmin-shared/Partials/PageTitle.svelte";

@@ -36,7 +36,7 @@
       </a>
       <ul class="dropdown-menu nav">
         <li>
-          <button class="nav-link btn btn-link" href="{ route("app.logout") }" use:inertia="{{ method: 'post' }}" type="button">
+          <button class="nav-link btn btn-link" use:inertia="{{ href: route("app.logout"), method: 'post' }}" type="button">
             <span
               data-feather="log-out"
               class="rui-icon rui-icon-stroke-1_5" />

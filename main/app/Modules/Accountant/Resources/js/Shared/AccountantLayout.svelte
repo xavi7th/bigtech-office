@@ -11,8 +11,6 @@
 
   $: ({ app, routes, flash } = $page.props);
 
-
-
   let routesInitialized = false,
     isMounted = false;
   export let title;
