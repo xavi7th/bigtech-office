@@ -2,7 +2,27 @@ import { App } from '@inertiajs/inertia-svelte'
 import { InertiaProgress } from '@inertiajs/progress'
 import { Inertia } from "@inertiajs/inertia";
 
-window._ = require('lodash');
+window._ = {
+	compact: require('lodash/compact'),
+	each: require('lodash/each'),
+	endsWith: require('lodash/endsWith'),
+	every: require('lodash/every'),
+	find: require('lodash/find'),
+	forEach: require('lodash/forEach'),
+	isEqual: require('lodash/isEqual'),
+	isString: require('lodash/isString'),
+	map: require('lodash/map'),
+	omit: require('lodash/omit'),
+	pullAt: require('lodash/pullAt'),
+	reduce: require('lodash/reduce'),
+	size: require('lodash/size'),
+	split: require('lodash/split'),
+	startsWith: require('lodash/startsWith'),
+	takeRight: require('lodash/takeRight'),
+	truncate: require('lodash/truncate'),
+	uniq: require('lodash/uniq'),
+}
+// window._ = require('lodash')
 window.swal = require('sweetalert2')
 
 /**

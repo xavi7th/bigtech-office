@@ -115,7 +115,6 @@ class SuperAdminController extends Controller
 
   public function index(Request $request)
   {
-    auth()->logout();
     return Inertia::render('SuperAdmin,SuperAdminDashboard', $this->getDashboardStatistics())->withViewData([
       'title' => 'Hello theEects',
       'metaDesc' => ' This page is ...'
