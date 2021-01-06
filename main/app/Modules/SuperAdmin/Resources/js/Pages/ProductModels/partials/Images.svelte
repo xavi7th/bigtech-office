@@ -1,5 +1,6 @@
 <script context="module">
-  export function addImage(id, img) {
+
+  export function addImage(id, img, userType) {
     BlockToast.fire({
       text: "Uploading image ..."
     });
@@ -8,7 +9,7 @@
     formData.append("img", img);
 
     Inertia.post(
-      route("multiaccess.product_models.create_model_image", id),
+      route(userType + ".multiaccess.product_models.create_model_image", id),
       formData,
       {
         preserveState: true,
@@ -43,7 +44,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("multiaccess.product_models.delete_model_image", id),
+            route($page.auth.user.user_type + ".multiaccess.product_models.delete_model_image", id),
             {
               preserveState: true,
               preserveScroll: true,

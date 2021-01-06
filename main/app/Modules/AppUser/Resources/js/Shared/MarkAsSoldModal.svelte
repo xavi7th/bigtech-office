@@ -69,7 +69,7 @@
             }
           );
           return Inertia.post(
-            route("multiaccess.products.mark_as_sold", productToMarkAsSold),
+            route(auth.user.user_type + ".multiaccess.products.mark_as_sold", productToMarkAsSold),
             formData,
             {
               preserveState: true,

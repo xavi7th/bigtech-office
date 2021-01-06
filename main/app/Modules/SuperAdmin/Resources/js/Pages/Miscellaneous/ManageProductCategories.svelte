@@ -21,7 +21,7 @@
     formData.append("name", categoryName);
 
     Inertia.post(
-      route("multiaccess.miscellaneous.create_product_category"),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.create_product_category"),
       formData,
       {
         preserveState: true,
@@ -47,7 +47,7 @@
     formData.append("_method", "PUT");
 
     Inertia.post(
-      route("multiaccess.miscellaneous.edit_product_category", categoryId),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.edit_product_category", categoryId),
       formData,
       {
         preserveState: true,
@@ -82,7 +82,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("multiaccess.miscellaneous.delete_product_category", id),
+            route(auth.user.user_type + ".multiaccess.miscellaneous.delete_product_category", id),
             {
               preserveState: true,
               preserveScroll: true,

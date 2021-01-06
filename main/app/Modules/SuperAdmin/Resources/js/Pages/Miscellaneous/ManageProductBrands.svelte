@@ -22,7 +22,7 @@
     formData.append("name", brandName);
 
     Inertia.post(
-      route("multiaccess.product_brands.create_product_brand"),
+      route(auth.user.user_type + ".multiaccess.product_brands.create_product_brand"),
       formData,
       {
         preserveState: true,
@@ -52,7 +52,7 @@
     formData.append("_method", "PUT");
 
     Inertia.post(
-      route("multiaccess.product_brands.edit_product_brand", brandId),
+      route(auth.user.user_type + ".multiaccess.product_brands.edit_product_brand", brandId),
       formData,
       {
         preserveState: true,
@@ -87,7 +87,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("multiaccess.product_brands.delete_product_brand", id),
+            route(auth.user.user_type + ".multiaccess.product_brands.delete_product_brand", id),
             {
               preserveState: true,
               preserveScroll: true,

@@ -2,10 +2,9 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
 
-
   export let dailyRecords = [];
 
-  $: ({ app } = $page.props);
+  $: ({ auth } = $page.props);
 </script>
 
 <Layout title="Daily Records">
@@ -58,7 +57,7 @@
                   </td>
                   <td>
                     <InertiaLink
-                      href={route('multiaccess.product_sales_records.daily', day)}>
+                      href={route(auth.user.user_type + '.multiaccess.product_sales_records.daily', day)}>
                       <strong>
                         <u>Sales</u>
                       </strong>
@@ -69,7 +68,7 @@
                   </td>
                   <td>
                     <InertiaLink
-                      href={route('multiaccess.products.daily_expenses', day)}>
+                      href={route(auth.user.user_type + '.multiaccess.products.daily_expenses', day)}>
                       <strong>
                         <u>Product Expenses</u>
                       </strong>
@@ -80,7 +79,7 @@
                   </td>
                   <td>
                     <InertiaLink
-                      href={route('multiaccess.miscellaneous.daily_expenses', day)}>
+                      href={route(auth.user.user_type + '.multiaccess.miscellaneous.daily_expenses', day)}>
                       <strong>
                         <u>Other Expenses</u>
                       </strong>

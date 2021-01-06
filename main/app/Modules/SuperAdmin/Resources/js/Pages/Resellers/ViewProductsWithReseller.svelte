@@ -161,14 +161,14 @@
                     {#if product.is_swap_transaction}
                       <InertiaLink
                         type="button"
-                        href={route('multiaccess.products.swap_deal_details', product.uuid)}
+                        href={route(auth.user.user_type + '.multiaccess.products.swap_deal_details', product.uuid)}
                         class="btn btn-primary btn-xs btn-sm text-nowrap">
                         View Product
                       </InertiaLink>
                     {:else}
                       <InertiaLink
                         type="button"
-                        href={route('multiaccess.products.view_product_details', product.uuid)}
+                        href={route(auth.user.user_type + '.multiaccess.products.view_product_details', product.uuid)}
                         class="btn btn-primary btn-xs btn-sm text-nowrap">
                         View Product
                       </InertiaLink>

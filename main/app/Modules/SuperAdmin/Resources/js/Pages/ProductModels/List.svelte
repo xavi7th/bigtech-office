@@ -19,17 +19,12 @@
     BlockToast.fire({
       text: "Updating product model details ..."
     });
-    let formData = new FormData();
 
     details._method = "PUT";
 
-    _.forEach(details, (val, key) => {
-      formData.append(key, val);
-    });
-
     Inertia.post(
-      route("multiaccess.product_models.edit_product_model", details.id),
-      formData,
+      route(auth.user.user_type + ".multiaccess.product_models.edit_product_model", details.id),
+      details,
       {
         preserveState: true,
         preserveScroll: true,
@@ -63,7 +58,7 @@
               <th class="p-0">
                {#if auth.user.isAdmin}
                   <InertiaLink
-                  href={route('multiaccess.product_models.create_product_model')}
+                  href={route(auth.user.user_type + '.multiaccess.product_models.create_product_model')}
                   class="btn btn-brand m-10">
                   <span>Create Product Model</span>
                 </InertiaLink>
@@ -94,7 +89,7 @@
                       <span>Edit</span>
                     </button>
                     <InertiaLink
-                      href={route('multiaccess.product_models.details', model.id)}
+                      href={route(auth.user.user_type + '.multiaccess.product_models.details', model.id)}
                       class="btn btn-brand btn-sm">
                       <span>Details</span>
                       <span class="badge badge-light">
@@ -210,7 +205,7 @@
                 class="form-control"
                 accept="image/*"
                 bind:files
-                on:change={() => (details.img = files)}
+                on:change={() => (details.img = files[0])}
                 id="model-image" />
               {#if errors.img}
                 <FlashMessage formError={errors.img} />

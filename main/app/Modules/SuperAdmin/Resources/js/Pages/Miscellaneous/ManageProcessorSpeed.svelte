@@ -14,7 +14,7 @@
     });
 
     Inertia.post(
-      route("multiaccess.miscellaneous.create_processor_speed"),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.create_processor_speed"),
       {
         speed: processorSpeedName
       },
@@ -35,7 +35,7 @@
     });
 
     Inertia.put(
-      route("multiaccess.miscellaneous.edit_processor_speed", processorSpeedId),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.edit_processor_speed", processorSpeedId),
       {
         speed: processorSpeedName
       },
@@ -68,7 +68,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("multiaccess.miscellaneous.delete_processor_speed", id),
+            route(auth.user.user_type + ".multiaccess.miscellaneous.delete_processor_speed", id),
             {
               preserveState: true,
               preserveScroll: true,

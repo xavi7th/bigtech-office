@@ -29,11 +29,13 @@ class StockKeeperController extends Controller
           SwapDeal::stockKeeperRoutes();
         });
 
-        Product::multiAccessRoutes();
-        SwapDeal::multiAccessRoutes();
-        ProductBatch::multiAccessRoutes();
-        ProductExpense::multiAccessRoutes();
-        Reseller::multiAccessRoutes();
+        Route::name('stockkeeper.')->group(function () {
+          Product::multiAccessRoutes();
+          SwapDeal::multiAccessRoutes();
+          ProductBatch::multiAccessRoutes();
+          ProductExpense::multiAccessRoutes();
+          Reseller::multiAccessRoutes();
+        });
       });
     });
   }

@@ -29,10 +29,12 @@ class QualityControlController extends Controller
           SwapDeal::qualityControlRoutes();
         });
 
-        Product::multiAccessRoutes();
-        SwapDeal::multiAccessRoutes();
-        ProductBatch::multiAccessRoutes();
-        ProductExpense::multiAccessRoutes();
+        Route::name('qualitycontrol.')->group(function () {
+          Product::multiAccessRoutes();
+          SwapDeal::multiAccessRoutes();
+          ProductBatch::multiAccessRoutes();
+          ProductExpense::multiAccessRoutes();
+        });
       });
     });
   }

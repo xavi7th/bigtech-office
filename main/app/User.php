@@ -172,31 +172,31 @@ class User extends Authenticatable implements JWTSubject
   public function getUserType()
   {
     if ($this->isAccountant()) {
-      return ['isAccountant' => true];
+      return ['isAccountant' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isAdmin()) {
-      return ['isAdmin' => true];
+      return ['isAdmin' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isSuperAdmin()) {
-      return ['isSuperAdmin' => true];
+      return ['isSuperAdmin' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isSocialMediaRep()) {
       return [
-        'isSocialMediaRep' => true,
-        'isOnlineSalesRep' => true
+        'isSocialMediaRep' => true, 'user_type' => strtolower($this->getType()),
+        'isOnlineSalesRep' => true, 'user_type' => strtolower($this->getType())
       ];
     } elseif ($this->isWalkInRep()) {
-      return ['isWalkInRep' => true];
+      return ['isWalkInRep' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isCallCenterRep()) {
       return [
-        'isCallCenterRep' => true,
-        'isOnlineSalesRep' => true
+        'isCallCenterRep' => true, 'user_type' => strtolower($this->getType()),
+        'isOnlineSalesRep' => true, 'user_type' => strtolower($this->getType())
       ];
     } elseif ($this->isStockKeeper()) {
-      return ['isStockKeeper' => true];
+      return ['isStockKeeper' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isQualityControl()) {
-      return ['isQualityControl' => true];
+      return ['isQualityControl' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isDispatchAdmin()) {
-      return ['isDispatchAdmin' => true];
+      return ['isDispatchAdmin' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isWebAdmin()) {
-      return ['isWebAdmin' => true];
+      return ['isWebAdmin' => true, 'user_type' => strtolower($this->getType())];
     }
   }
 

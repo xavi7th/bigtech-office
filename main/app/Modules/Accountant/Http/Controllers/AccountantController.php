@@ -34,14 +34,16 @@ class AccountantController extends Controller
           ProductPrice::accountantRoutes();
           ProductBatch::accountantRoutes();
         });
-        Product::multiAccessRoutes();
-        SwapDeal::multiAccessRoutes();
-        ProductHistory::multiAccessRoutes();
-        ProductBatch::multiAccessRoutes();
-        ProductExpense::multiAccessRoutes();
-        ProductSaleRecord::multiAccessRoutes();
-        OtherExpense::multiAccessRoutes();
-        Reseller::multiAccessRoutes();
+        Route::name('acccountant.')->group(function () {
+          Product::multiAccessRoutes();
+          SwapDeal::multiAccessRoutes();
+          ProductHistory::multiAccessRoutes();
+          ProductBatch::multiAccessRoutes();
+          ProductExpense::multiAccessRoutes();
+          ProductSaleRecord::multiAccessRoutes();
+          OtherExpense::multiAccessRoutes();
+          Reseller::multiAccessRoutes();
+        });
       });
     });
   }

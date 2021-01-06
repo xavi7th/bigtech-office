@@ -75,41 +75,44 @@ class SuperAdminController extends Controller
         ErrLog::superAdminRoutes();
       });
 
+      Route::name('superadmin.')->group(function () {
 
+        Product::multiAccessRoutes();
 
-      ProductBrand::multiAccessRoutes();
+        ProductBrand::multiAccessRoutes();
 
-      ProductModel::multiAccessRoutes();
+        ProductModel::multiAccessRoutes();
 
-      ProductHistory::multiAccessRoutes();
+        ProductHistory::multiAccessRoutes();
 
-      ProductExpense::multiAccessRoutes();
+        ProductExpense::multiAccessRoutes();
 
-      OtherExpense::multiAccessRoutes();
+        OtherExpense::multiAccessRoutes();
 
-      ProductBatch::multiAccessRoutes();
+        ProductBatch::multiAccessRoutes();
 
-      ProductSaleRecord::multiAccessRoutes();
+        ProductSaleRecord::multiAccessRoutes();
 
-      StorageSize::multiAccessRoutes();
+        StorageSize::multiAccessRoutes();
 
-      StorageType::multiAccessRoutes();
+        StorageType::multiAccessRoutes();
 
-      ProductColor::multiAccessRoutes();
+        ProductColor::multiAccessRoutes();
 
-      ProductGrade::multiAccessRoutes();
+        ProductGrade::multiAccessRoutes();
 
-      ProductCategory::multiAccessRoutes();
+        ProductCategory::multiAccessRoutes();
 
-      ProcessorSpeed::multiAccessRoutes();
+        ProcessorSpeed::multiAccessRoutes();
 
-      ProductStatus::multiAccessRoutes();
+        ProductStatus::multiAccessRoutes();
 
-      SalesChannel::multiAccessRoutes();
+        SalesChannel::multiAccessRoutes();
 
-      QATest::multiAccessRoutes();
+        QATest::multiAccessRoutes();
 
-      ProductDescriptionSummary::multiAccessRoutes();
+        ProductDescriptionSummary::multiAccessRoutes();
+      });
     });
   }
 

@@ -17,7 +17,7 @@
     });
 
     Inertia.post(
-      route("multiaccess.miscellaneous.create_qa_test"),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.create_qa_test"),
       {
         name: qaTestName
       },
@@ -38,7 +38,7 @@
     });
 
     Inertia.put(
-      route("multiaccess.miscellaneous.edit_qa_test", qaTestId),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.edit_qa_test", qaTestId),
       {
         name: qaTestName
       },
@@ -71,7 +71,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("multiaccess.miscellaneous.delete_qa_test", id),
+            route(auth.user.user_type + ".multiaccess.miscellaneous.delete_qa_test", id),
             {
               preserveState: true,
               preserveScroll: true,

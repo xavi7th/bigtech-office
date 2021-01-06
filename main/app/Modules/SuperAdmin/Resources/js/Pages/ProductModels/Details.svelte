@@ -153,7 +153,7 @@
         disabled={!files}
         class="btn btn-brand"
         on:click={() => {
-          addImage(productModel.id, files[0]);
+          addImage(productModel.id, files[0], auth.user.user_type);
         }}>
         Add Image
       </button>

@@ -14,7 +14,7 @@
     });
 
     Inertia.post(
-      route("multiaccess.miscellaneous.create_storage_size"),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.create_storage_size"),
       {
         size: storageSizeName
       },
@@ -35,7 +35,7 @@
     });
 
     Inertia.put(
-      route("multiaccess.miscellaneous.edit_storage_size", storageSizeId),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.edit_storage_size", storageSizeId),
       {
         size: storageSizeName
       },
@@ -68,7 +68,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("multiaccess.miscellaneous.delete_storage_size", id),
+            route(auth.user.user_type + ".multiaccess.miscellaneous.delete_storage_size", id),
             {
               preserveState: true,
               preserveScroll: true,

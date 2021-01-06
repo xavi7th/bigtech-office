@@ -37,24 +37,26 @@ class AdminController extends Controller
           Route::get('/', [self::class, 'index'])->name('admin.dashboard')->defaults('ex', __e('a', 'home', true));
         });
 
-        Product::multiAccessRoutes();
-        ProductHistory::multiAccessRoutes();
-        ProductBatch::multiAccessRoutes();
-        ProductModel::multiAccessRoutes();
-        ProductBrand::multiAccessRoutes();
-        SwapDeal::multiAccessRoutes();
-        Reseller::multiAccessRoutes();
-        ProductColor::multiAccessRoutes();
-        ProductGrade::multiAccessRoutes();
-        ProductCategory::multiAccessRoutes();
-        ProductStatus::multiAccessRoutes();
-        SalesChannel::multiAccessRoutes();
-        QATest::multiAccessRoutes();
-        ProcessorSpeed::multiAccessRoutes();
-        StorageSize::multiAccessRoutes();
-        StorageType::multiAccessRoutes();
-        OtherExpense::multiAccessRoutes();
-        ProductDescriptionSummary::multiAccessRoutes();
+        Route::name('admin.')->group(function () {
+          Product::multiAccessRoutes();
+          ProductHistory::multiAccessRoutes();
+          ProductBatch::multiAccessRoutes();
+          ProductModel::multiAccessRoutes();
+          ProductBrand::multiAccessRoutes();
+          SwapDeal::multiAccessRoutes();
+          Reseller::multiAccessRoutes();
+          ProductColor::multiAccessRoutes();
+          ProductGrade::multiAccessRoutes();
+          ProductCategory::multiAccessRoutes();
+          ProductStatus::multiAccessRoutes();
+          SalesChannel::multiAccessRoutes();
+          QATest::multiAccessRoutes();
+          ProcessorSpeed::multiAccessRoutes();
+          StorageSize::multiAccessRoutes();
+          StorageType::multiAccessRoutes();
+          OtherExpense::multiAccessRoutes();
+          ProductDescriptionSummary::multiAccessRoutes();
+        });
       });
     });
   }

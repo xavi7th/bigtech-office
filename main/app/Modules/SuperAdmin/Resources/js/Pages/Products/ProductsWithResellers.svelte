@@ -1,9 +1,6 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import FlashMessage from "@usershared/FlashMessage";
-
 
   $: ({ auth } = $page.props);
 
@@ -40,14 +37,14 @@
                     {#if product.is_swap_deal}
                       <InertiaLink
                         type="button"
-                        href={route('multiaccess.products.swap_deal_details', product.uuid)}
+                        href={route(auth.user.user_type + '.multiaccess.products.swap_deal_details', product.uuid)}
                         class="btn btn-primary btn-xs btn-sm">
                         Details
                       </InertiaLink>
                     {:else}
                       <InertiaLink
                         type="button"
-                        href={route('multiaccess.products.view_product_details', product.uuid)}
+                        href={route(auth.user.user_type + '.multiaccess.products.view_product_details', product.uuid)}
                         class="btn btn-primary btn-xs btn-sm">
                         Details
                       </InertiaLink>

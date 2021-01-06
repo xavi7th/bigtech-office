@@ -104,7 +104,7 @@ class ProductModel extends BaseModel
       $gen = function ($namespace, $name = null) {
         return 'multiaccess.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductModels'])->name($gen('models'))->defaults('ex', __e('ss,a,w', 'git-branch', false))->middleware('auth:super_admin,admin,web_admin');
+      Route::get('', [self::class, 'getProductModels'])->name($gen('models.manage_product_models'))->defaults('ex', __e('ss,a,w', 'git-branch', false))->middleware('auth:super_admin,admin,web_admin');
       Route::match(['post', 'get'], 'create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss,a', 'git-branch', true))->middleware('auth:super_admin,admin');
       Route::get('{productModel}', [self::class, 'getProductModelDetails'])->name($gen('models', '.details'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,admin,web_admin');
       Route::put('{productModel}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,admin,web_admin');

@@ -1,5 +1,7 @@
 <script>
   import { Inertia } from "@inertiajs/inertia";
+	import { page } from '@inertiajs/inertia-svelte'
+
 
   export let qaTests,
     productQaTests = [],
@@ -41,7 +43,7 @@
         preConfirm: () => {
           return Inertia.put(
             route(
-              "multiaccess.product_models.update_model_qa_tests",
+              $page.auth.user.user_type + ".multiaccess.product_models.update_model_qa_tests",
               productModelId
             ),
             {

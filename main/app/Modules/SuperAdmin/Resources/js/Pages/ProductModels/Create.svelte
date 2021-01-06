@@ -22,15 +22,10 @@
     BlockToast.fire({
       text: "Creating model ..."
     });
-    let formData = new FormData();
-
-    _.forEach(_.omit(details, ["set", "update", "subscribe"]), (val, key) => {
-      formData.append(key, val);
-    });
 
     Inertia.post(
-      route("multiaccess.product_models.create_product_model"),
-      formData,
+      route(auth.user.user_type + ".multiaccess.product_models.create_product_model"),
+      details,
       {
         onSuccess: () =>{
           files = null;
@@ -110,7 +105,7 @@
               class="form-control"
               accept="image/*"
               bind:files
-              on:change={() => (details.img = files)}
+              on:change={() => (details.img = files[0])}
               id="model-image" />
             {#if errors.img}
               <FlashMessage formError={errors.img} />

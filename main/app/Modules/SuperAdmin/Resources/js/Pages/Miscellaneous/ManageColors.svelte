@@ -14,7 +14,7 @@
     });
 
     Inertia.post(
-      route("multiaccess.miscellaneous.create_product_color"),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.create_product_color"),
       { name: colorName },
       {
         preserveState: true,
@@ -37,7 +37,7 @@
     formData.append("_method", "PUT");
 
     Inertia.post(
-      route("multiaccess.miscellaneous.edit_product_color", colorId),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.edit_product_color", colorId),
       formData,
       {
         preserveState: true,

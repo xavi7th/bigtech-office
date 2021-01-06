@@ -5,7 +5,7 @@
     });
 
     Inertia.post(
-      route("multiaccess.product_descriptions.create_product_desc"),
+      route(auth.user.user_type + ".multiaccess.product_descriptions.create_product_desc"),
       {
         description_summary: desc,
         product_model_id: id
@@ -27,7 +27,7 @@
     });
 
     Inertia.put(
-      route("multiaccess.product_descriptions.edit_product_desc", id),
+      route(auth.user.user_type + ".multiaccess.product_descriptions.edit_product_desc", id),
       {
         description_summary: desc
         // product_model_id: id

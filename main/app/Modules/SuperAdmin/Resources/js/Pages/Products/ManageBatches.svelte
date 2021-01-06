@@ -105,14 +105,14 @@
                   {#if auth.user.isStockKeeper || auth.user.isQualityControl || auth.user.isAdmin || auth.user.isSuperAdmin || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
-                      href={route('multiaccess.products.by_batch', batch.batch_number)}
+                      href={route(auth.user.user_type + '.multiaccess.products.by_batch', batch.batch_number)}
                       class="btn btn-brand mr-5 btn-xs">
                       Devices
                     </InertiaLink>
                   {/if}
                   {#if auth.user.isSuperAdmin || auth.user.isAccountant}
                     <InertiaLink
-                      href={route('multiaccess.products.prices_by_batch', batch.batch_number)}
+                      href={route(auth.user.user_type + '.multiaccess.products.prices_by_batch', batch.batch_number)}
                       class="btn btn-dark mr-5 btn-xs">
                       Prices
                     </InertiaLink>

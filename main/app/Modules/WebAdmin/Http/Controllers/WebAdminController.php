@@ -23,10 +23,13 @@ class WebAdminController extends Controller
         Route::group(['middleware' => ['auth:web_admin']], function () {
           Route::get('/', [self::class, 'index'])->name('webadmin.dashboard')->defaults('ex', __e('w', 'home', true));
         });
-        Product::multiAccessRoutes();
-        ProductModel::multiAccessRoutes();
-        ProductBrand::multiAccessRoutes();
-        ProductDescriptionSummary::multiAccessRoutes();
+
+        Route::name('webadmin.')->group(function () {
+          Product::multiAccessRoutes();
+          ProductModel::multiAccessRoutes();
+          ProductBrand::multiAccessRoutes();
+          ProductDescriptionSummary::multiAccessRoutes();
+        });
       });
     });
   }
@@ -37,6 +40,7 @@ class WebAdminController extends Controller
    */
   public function index(Request $request)
   {
+    // dd(collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName()));
     return Inertia::render('WebAdmin,WebAdminDashboard');
   }
 }

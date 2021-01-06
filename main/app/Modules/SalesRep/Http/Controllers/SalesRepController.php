@@ -12,6 +12,7 @@ use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
+use App\Modules\SuperAdmin\Models\SuperAdmin;
 
 class SalesRepController extends Controller
 {
@@ -24,8 +25,10 @@ class SalesRepController extends Controller
         ProductDispatchRequest::salesRepRoutes();
       });
 
-      Product::multiAccessRoutes();
-      SwapDeal::multiAccessRoutes();
+      Route::name('salesrep.')->group(function () {
+        Product::multiAccessRoutes();
+        SwapDeal::multiAccessRoutes();
+      });
     });
   }
 

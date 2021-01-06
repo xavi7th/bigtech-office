@@ -32,7 +32,7 @@
     });
 
     Inertia.post(
-      route("multiaccess.products.comment_on_swap_deal", uuid),
+      route(auth.user.user_type + ".multiaccess.products.comment_on_swap_deal", uuid),
       { comment: userComment },
       {
         preserveState: true,

@@ -95,7 +95,7 @@
                 <td class="nowrap">
                   <InertiaLink
                     type="button"
-                    href={route('multiaccess.products.swap_deal_details', product.uuid)}
+                    href={route(auth.user.user_type + '.multiaccess.products.swap_deal_details', product.uuid)}
                     class="btn btn-primary btn-xs">
                     Details
                   </InertiaLink>
@@ -103,7 +103,7 @@
                   {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
-                      href={route('multiaccess.miscellaneous.view_swap_history', product.uuid)}
+                      href={route(auth.user.user_type + '.multiaccess.miscellaneous.view_swap_history', product.uuid)}
                       class="btn btn-info btn-xs btn-sm">
                       History
                     </InertiaLink>

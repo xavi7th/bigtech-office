@@ -68,7 +68,7 @@
           );
           return Inertia.post(
             route(
-              "multiaccess.products.mark_swap_as_sold",
+              auth.user.user_type + ".multiaccess.products.mark_swap_as_sold",
               productToMarkAsSold
             ),
             formData,

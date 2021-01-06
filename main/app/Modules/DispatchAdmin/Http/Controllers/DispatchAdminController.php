@@ -26,8 +26,10 @@ class DispatchAdminController extends Controller
           SwapDeal::dispatchAdminRoutes();
           ProductDispatchRequest::dispatchAdminRoutes();
         });
-        Product::multiAccessRoutes();
-        SwapDeal::multiAccessRoutes();
+        Route::name('dispatchadmin.')->group(function () {
+          Product::multiAccessRoutes();
+          SwapDeal::multiAccessRoutes();
+        });
       });
     });
   }

@@ -14,7 +14,7 @@
     });
 
     Inertia.post(
-      route("multiaccess.miscellaneous.create_product_grade"),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.create_product_grade"),
       {
         grade: productGradeName
       },
@@ -32,7 +32,7 @@
     });
 
     Inertia.put(
-      route("multiaccess.miscellaneous.edit_product_grade", productGradeId),
+      route(auth.user.user_type + ".multiaccess.miscellaneous.edit_product_grade", productGradeId),
       {
         grade: productGradeName
       },
@@ -65,7 +65,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
-            route("multiaccess.miscellaneous.delete_product_grade", id),
+            route(auth.user.user_type + ".multiaccess.miscellaneous.delete_product_grade", id),
             {
               preserveState: true,
               preserveScroll: true,

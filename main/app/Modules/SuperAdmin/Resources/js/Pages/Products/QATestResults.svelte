@@ -182,7 +182,7 @@
                     aria-disabled="true"
                     tabindex="-1"
                     role="button"
-                    href={route('multiaccess.products.comment_on_qa_test', product.uuid)}
+                    href={route(auth.user.user_type + '.multiaccess.products.comment_on_qa_test', product.uuid)}
                     only={['comments', 'flash', 'errors']}
                     preserveScroll
                     data={{ comment }}

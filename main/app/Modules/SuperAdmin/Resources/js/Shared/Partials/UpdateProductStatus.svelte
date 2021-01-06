@@ -1,5 +1,6 @@
 <script>
-import { Inertia } from "@inertiajs/inertia";
+  import { Inertia } from "@inertiajs/inertia";
+	import { page } from "@inertiajs/inertia-svelte";
 
   export let product_statuses = [],
     product = {};
@@ -10,7 +11,7 @@ import { Inertia } from "@inertiajs/inertia";
     });
 
     Inertia.put(
-      route("multiaccess.products.update_product_status", product.uuid),
+      route($page.auth.user.user_type + ".multiaccess.products.update_product_status", product.uuid),
       { product_status_id: product.product_status_id },
       {
         preserveState: true,

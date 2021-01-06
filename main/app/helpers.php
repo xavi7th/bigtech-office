@@ -489,7 +489,8 @@ if (!function_exists('get_related_routes')) {
        * eg all products.* get lumped into one array
        */
       collect($tmp)->map(function ($route, $key) use (&$routes) {
-        return $routes[Str::of($key)->after('.')->before('.')->title()->__toString()][] = $route;
+        return $routes[Str::title(Str::of($key)->explode('.')->take(-2)->first())][] = $route;
+        // return $routes[Str::of($key)->after('.')->before('.')->title()->__toString()][] = $route;
       });
       return $routes;
     }

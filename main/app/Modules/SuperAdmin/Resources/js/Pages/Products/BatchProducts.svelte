@@ -108,14 +108,14 @@
                   {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
-                      href={route('multiaccess.products.view_product_details', product.uuid)}
+                      href={route(auth.user.user_type + '.multiaccess.products.view_product_details', product.uuid)}
                       class="btn btn-primary btn-xs btn-sm">
                       Details
                     </InertiaLink>
 
                     <InertiaLink
                       type="button"
-                      href={route('multiaccess.miscellaneous.view_product_history', product.uuid)}
+                      href={route(auth.user.user_type + '.multiaccess.miscellaneous.view_product_history', product.uuid)}
                       class="btn btn-info btn-xs btn-sm">
                       History
                     </InertiaLink>
@@ -124,13 +124,13 @@
                   {#if auth.user.isQualityControl || auth.user.isAdmin || auth.user.isSuperAdmin}
                     <InertiaLink
                       type="button"
-                      href={route('multiaccess.products.qa_test_results', product.uuid)}
+                      href={route(auth.user.user_type + '.multiaccess.products.qa_test_results', product.uuid)}
                       class="btn btn-dark btn-xs">
                       Test/Result
                     </InertiaLink>
                     {#if auth.user.isQualityControl}
                       <InertiaLink
-                        href={route('multiaccess.products.expenses', product.uuid)}
+                        href={route(auth.user.user_type + '.multiaccess.products.expenses', product.uuid)}
                         class="btn btn-warning btn-xs text-nowrap">
                         Record Expense
                       </InertiaLink>
