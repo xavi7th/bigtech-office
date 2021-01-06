@@ -70,7 +70,8 @@ class CreateLocalSupplierProductValidation extends FormRequest
       'stocked_by' => auth()->id(),
       'stocker_type' => get_class(auth()->user()),
       'office_branch_id' => OfficeBranch::head_office_id(),
-      'product_batch_id' => $this->localSupplierId = ProductBatch::local_supplied_id()
+      'product_batch_id' => $this->localSupplierId = ProductBatch::local_supplied_id(),
+      'is_local' => true
     ]);
   }
 

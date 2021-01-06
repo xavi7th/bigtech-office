@@ -13,7 +13,6 @@ use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
-use App\Modules\AppUser\Models\ProductReceipt;
 use Illuminate\Database\QueryException;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
@@ -21,6 +20,7 @@ use App\Modules\SuperAdmin\Models\QATest;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
@@ -43,6 +43,7 @@ use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductSupplier;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
+use App\Modules\SuperAdmin\Models\LocalProductPrice;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
@@ -75,7 +76,7 @@ class Product extends BaseModel
   protected $fillable = [
     'product_category_id', 'product_model_id', 'product_brand_id', 'product_batch_id', 'product_color_id', 'product_grade_id',
     'product_supplier_id', 'storage_size_id', 'imei', 'serial_no', 'model_no', 'product_uuid', 'processor_speed_id', 'ram_size_id',
-    'storage_type_id', 'stocked_by', 'stocker_type', 'office_branch_id', 'product_status_id'
+    'storage_type_id', 'stocked_by', 'stocker_type', 'office_branch_id', 'product_status_id', 'is_local'
   ];
 
   protected $casts = [
@@ -223,6 +224,11 @@ class Product extends BaseModel
     ]);
   }
 
+  public function localProductPrice()
+  {
+    return $this->hasOne(LocalProductPrice::class);
+  }
+
   public function storage_size()
   {
     return $this->belongsTo(StorageSize::class);
@@ -265,7 +271,7 @@ class Product extends BaseModel
     }
   }
 
-  public function shortDescription()
+  public function shortDescription(): string
   {
     return $this->product_color->color . ' ' . $this->product_model->name . ' ' . $this->storage_size->human_size . ' ' . $this->primary_identifier();
   }
@@ -326,13 +332,26 @@ class Product extends BaseModel
 
   public function getCostPriceAttribute()
   {
-    return is_numeric($this->product_price->cost_price)  ?
+    switch ($this->is_local):
+      case true:
+        is_numeric($this->localProductPrice->cost_price)  ? $this->product_expenses_sum() + (float)$this->localProductPrice->cost_price : $this->localProductPrice->cost_price;
+        break;
+      default:
+
+      return is_numeric($this->product_price->cost_price)  ?
           $this->product_expenses_sum() + (float)$this->product_price->cost_price : $this->product_price->cost_price;
+    endswitch;
   }
 
   public function getProposedSellingPriceAttribute()
   {
+    switch ($this->is_local):
+      case true:
+        return is_numeric($this->localProductPrice->proposed_selling_price) ? $this->localProductPrice->proposed_selling_price : $this->localProductPrice->proposed_selling_price;
+        break;
+      default:
         return is_numeric($this->product_price->proposed_selling_price) ? $this->product_price->proposed_selling_price : $this->product_price->proposed_selling_price;
+    endswitch;
   }
 
   static function superAdminRoutes()
@@ -565,10 +584,10 @@ class Product extends BaseModel
 
       try {
         /**
-         * create the product price record
+         * create the local product price record
          */
 
-        ProductPrice::create(collect($request->validated())->merge(['product_batch_id' => $request->localSupplierId])->all());
+        $product->localProductPrice()->create($request->validated());
       } catch (QueryException $th) {
         if ($th->getCode() == 23000) {
           ErrLog::notifyAdminAndFail($request->user(), $th, 'Local Product not created');
@@ -583,6 +602,7 @@ class Product extends BaseModel
 
       if ($request->isApi()) return response()->json($product, 201);
       return back()->withFlash(['success'=>'Product created']);
+
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Product not created');
       if ($request->isApi()) return response()->json(['err' => 'Product not created'], 500);
@@ -890,6 +910,11 @@ class Product extends BaseModel
   public function scopeUntested($query)
   {
     return $query->where('product_status_id', ProductStatus::justArrivedId())->orWhere('product_status_id', ProductStatus::undergoingQaId())->orWhere('product_status_id', ProductStatus::outForRepairsId())->orWhere('product_status_id', ProductStatus::rtoId())->orWhere('product_status_id', ProductStatus::backFromRepairsId())->orWhere('product_status_id', ProductStatus::qaFailedId());
+  }
+
+  public function scopeLocal($query)
+  {
+    return $query->where('product_batch_id', ProductBatch::local_supplied_id());
   }
 
   protected static function boot()
