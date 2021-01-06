@@ -327,12 +327,12 @@ class Product extends BaseModel
   public function getCostPriceAttribute()
   {
     return is_numeric($this->product_price->cost_price)  ?
-      to_naira($this->product_expenses_sum() + (float)$this->product_price->cost_price) : $this->product_price->cost_price;
+          $this->product_expenses_sum() + (float)$this->product_price->cost_price : $this->product_price->cost_price;
   }
 
   public function getProposedSellingPriceAttribute()
   {
-    return is_numeric($this->product_price->proposed_selling_price) ? to_naira($this->product_price->proposed_selling_price) : $this->product_price->proposed_selling_price;
+        return is_numeric($this->product_price->proposed_selling_price) ? $this->product_price->proposed_selling_price : $this->product_price->proposed_selling_price;
   }
 
   static function superAdminRoutes()
