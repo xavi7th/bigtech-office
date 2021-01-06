@@ -167,8 +167,6 @@ class Reseller extends BaseModel
         $reseller = self::create($request->validated());
       }
 
-      Cache::forget('resellers');
-
       if ($request->isApi()) return response()->json((new ResellerTransformer)->basic($reseller), 201);
       return back()->withFlash(['success'=>'Success']);
     } catch (\Throwable $th) {
@@ -456,5 +454,15 @@ class Reseller extends BaseModel
 
     if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
     return back()->withFlash(['success'=>'Product marked as sold to reseller']);
+  }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function ($reseller) {
+      Cache::forget('resellers');
+    });
   }
 }
