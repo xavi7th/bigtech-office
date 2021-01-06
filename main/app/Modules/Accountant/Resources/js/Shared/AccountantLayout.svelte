@@ -6,7 +6,6 @@
   import Header from "@superadmin-shared/Partials/Header";
   import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
   import Footer from "@superadmin-shared/Partials/Footer";
-  import PageLoader from "@public-shared/PageLoader.svelte";
   import PageTitle from "@superadmin-shared/Partials/PageTitle.svelte";
 
   $: ({ app, routes } = $page.props);

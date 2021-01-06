@@ -53,6 +53,8 @@
   };
 </script>
 
+<svelte:window on:popstate={ Inertia.reload({only:['batchWithProducts']}) }></svelte:window>
+
 <Layout title="Products In Batch: {batchWithProducts.batch_number}">
   <div class="row vertical-gap">
     <div class="col-lg-12 col-xl-12">

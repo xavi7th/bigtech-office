@@ -49,6 +49,8 @@
   };
 </script>
 
+<svelte:window on:popstate={ Inertia.reload() }></svelte:window>
+
 <Layout title="Stock List">
   <div class="row vertical-gap">
     <div class="col-lg-12 col-xl-12">

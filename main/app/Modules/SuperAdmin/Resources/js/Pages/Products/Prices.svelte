@@ -1,4 +1,6 @@
 <script>
+import { Inertia } from '@inertiajs/inertia';
+
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
 
@@ -14,6 +16,8 @@
     text-transform: capitalize;
   }
 </style>
+
+<svelte:window on:popstate={ Inertia.reload({only:['productBatchWithPriceDetails']}) }></svelte:window>
 
 <Layout
   title="View Product Prices for Batch {productBatchWithPriceDetails.batch_number}">
