@@ -34,7 +34,8 @@ class AccountantController extends Controller
           ProductPrice::accountantRoutes();
           ProductBatch::accountantRoutes();
         });
-        Route::name('acccountant.')->group(function () {
+
+        Route::name('accountant.')->group(function () {
           Product::multiAccessRoutes();
           SwapDeal::multiAccessRoutes();
           ProductHistory::multiAccessRoutes();
