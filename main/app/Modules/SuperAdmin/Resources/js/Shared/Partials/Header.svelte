@@ -29,6 +29,7 @@
       <ul class="nav rui-navbar-right">
         <li
           class="dropdown dropdown-hover dropdown-triangle dropdown-keep-open">
+          <span class="navbar-text mr-20">{$page.props.auth.user.full_name}</span>
           <a
             class="dropdown-item rui-navbar-avatar mnr-6"
             href

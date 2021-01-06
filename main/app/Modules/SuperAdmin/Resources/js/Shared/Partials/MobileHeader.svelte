@@ -1,5 +1,5 @@
 <script>
-  import { inertia } from "@inertiajs/inertia-svelte";
+  import { inertia, page } from "@inertiajs/inertia-svelte";
 </script>
 
 <style>
@@ -26,6 +26,7 @@
         width="45" />
     </a>
     <div class="dropdown dropdown-triangle">
+      <span class="navbar-text mr-10">{$page.props.auth.user.full_name}</span>
       <a
         class="dropdown-item rui-navbar-avatar"
         href
