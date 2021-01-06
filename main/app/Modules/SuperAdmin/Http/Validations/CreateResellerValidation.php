@@ -22,7 +22,7 @@ class CreateResellerValidation extends FormRequest
       'business_name' => $this->isMethod("PUT") ? Rule::unique('resellers')->ignore($this->route('reseller')->business_name, 'business_name') : 'required|unique:resellers,business_name',
       'ceo_name' => $this->isMethod("PUT") ? 'string|max:50' : 'required|string|max:50',
       'address' =>  $this->isMethod("PUT") ? 'string'  : 'required|string',
-      'img' =>  'nullable|file|image',
+      'img' =>  'nullable|image|mimes:jpeg,png,jpg,gif,svg',
       'phone' =>  $this->isMethod("PUT") ? 'regex:/^[\+]?[0-9\Q()\E\s-]+$/i' : 'required|regex:/^[\+]?[0-9\Q()\E\s-]+$/i',
     ];
   }

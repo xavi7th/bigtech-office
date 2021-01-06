@@ -171,7 +171,7 @@ class SalesRep extends User
     $validated = $request->validate([
       'full_name' => 'required|string|max:20',
       'email' => 'required|email|max:50|unique:sales_reps,email',
-      'avatar' => 'nullable|file|image',
+      'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
       'password' => ''
     ]);
 
@@ -201,7 +201,7 @@ class SalesRep extends User
     $validated = $request->validate([
       'full_name' => 'required|string|max:20',
       'email' => 'required|email|max:50|unique:sales_reps,email,' . $salesRep->id,
-      'avatar' => 'nullable|file|image',
+      'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
     ]);
 
     if ($request->hasFile('avatar')) {

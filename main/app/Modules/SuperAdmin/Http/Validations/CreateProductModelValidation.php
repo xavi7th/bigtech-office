@@ -23,14 +23,14 @@ class CreateProductModelValidation extends FormRequest
         'product_brand_id' =>  'required|exists:product_brands,id',
         'name' => 'required|unique:product_models,name',
         'product_category_id' => 'required|exists:product_categories,id',
-        'img' => 'required|file|image',
+        'img' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
       ];
     } else if ($this->isMethod('PUT')) {
       return [
         'product_brand_id' =>   'exists:product_brands,id',
         'name' => ['required',  Rule::unique('product_models')->ignore($this->route('productModel')->name, 'name')],
         'product_category_id' =>  'exists:product_categories,id',
-        'img' => 'bail|nullable|file|image',
+        'img' => 'bail|nullable|image|mimes:jpeg,png,jpg,gif,svg',
       ];
     } else {
       return [];
