@@ -32,24 +32,26 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-    // $schedule->command('inspire')->hourly();
+    $schedule->command('inspire')->everyMinute();
 
 
     $schedule->command('database:backup')
     ->daily()
-    ->emailOutputTo('xavi7th@gmail.com')
+    // ->emailOutputTo('xavi7th@gmail.com')
     ->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/1database-backup-log.cson')
       ->onFailure(function () {
         // ActivityLog::notifyAdmins('Compounding due interests of target savings failed to complete successfully');
       });
 
-    // $schedule->job(new SendLoginNotification(AppUser::find(1)))->emailOutputTo('xavi7th@gmail.com')->everyFiveMinutes();
+    $schedule->command('local_price:migrate')
+    ->everyMinute()
+    ->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/migrate-log.cson');
 
     /**
      * !See the explanation in ./explanation.cson
      */
     if (app()->environment('local')) {
-      $schedule->command('queue:work --once --queue=high,low,default')->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/queue-jobs.cson');
+      $schedule->command('queue:work --stop-when-empty --queue=high,low,default')->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/queue-jobs.cson');
     } else {
       $schedule->command('queue:restart')->hourly();
       $schedule->command('queue:work --sleep=3 --timeout=900 --queue=high,default,low')->runInBackground()->withoutOVerlapping()->everyMinute();
