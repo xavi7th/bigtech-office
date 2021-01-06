@@ -191,7 +191,8 @@ Inertia.on('error', (e) => {
     html: getErrorString( e.detail.errors ),
     icon: "error",
     timer:10000, //milliseconds
-    footer: `Our support email: &nbsp;&nbsp;&nbsp; <a target="_blank" href="mailto:hello@smartmonie.ng">hello@smartmonie.ng</a>`,
+    footer:
+    	`Our support email: &nbsp;&nbsp;&nbsp; <a target="_blank" href="mailto:hello@theelects.com">hello@theelects.com</a>`,
   } );
 })
 
