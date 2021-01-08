@@ -138,6 +138,7 @@ class LoginController extends Controller
     $request->session()->invalidate();
 
     if ($request->isApi()) return response()->json(['LOGGED_OUT' => true], 200);
+    return Inertia::location(route('app.login.show'));
     return redirect()->route('app.login.show');
   }
 
