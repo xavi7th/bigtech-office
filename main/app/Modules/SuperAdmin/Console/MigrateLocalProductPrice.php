@@ -59,12 +59,13 @@ class MigrateLocalProductPrice extends Command
       ]);
       $product->product_price()->delete();
       $product->is_local = true;
+      $product::unsetEventDispatcher();
       $product->save();
 
       dump('********************* Final Stage **************************\n', $product->load('localProductPrice', 'product_price', 'product_expenses')->toArray());
     }
     dump(collect($this->notification)->implode(',' . PHP_EOL));
-    // Admin::find(1)->notify(new GenericAdminNotification('Processed database backup', collect($this->notification)->implode(', ' . PHP_EOL)));
+      // Admin::find(1)->notify(new GenericAdminNotification('Processed database backup', collect($this->notification)->implode(', ' . PHP_EOL)));
     // });
   }
 }
