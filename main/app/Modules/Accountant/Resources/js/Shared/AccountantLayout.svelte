@@ -7,6 +7,7 @@
   import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
   import Footer from "@superadmin-shared/Partials/Footer";
   import PageTitle from "@superadmin-shared/Partials/PageTitle.svelte";
+  import Search from '@superadmin-shared/Partials/Search.svelte';
 
   $: ({ app, routes } = $page.props);
 
@@ -74,6 +75,7 @@
     </div>
 
     <slot name="modals" />
+    <Search />
   {/if}
 </div>
 

@@ -41,11 +41,11 @@ class SuperAdminController extends Controller
   {
     Route::group(['middleware' => ['web'], 'prefix' => SuperAdmin::DASHBOARD_ROUTE_PREFIX], function () {
 
-      Product::multiAccessRoutes();
+      // Product::multiAccessRoutes();
 
-      Reseller::multiAccessRoutes();
+      // Reseller::multiAccessRoutes();
 
-      SwapDeal::multiAccessRoutes();
+      // SwapDeal::multiAccessRoutes();
 
 
       Route::group(['middleware' => ['auth:super_admin']], function () {
@@ -78,6 +78,10 @@ class SuperAdminController extends Controller
       Route::name('superadmin.')->group(function () {
 
         Product::multiAccessRoutes();
+
+        Reseller::multiAccessRoutes();
+
+        SwapDeal::multiAccessRoutes();
 
         ProductBrand::multiAccessRoutes();
 

@@ -4,6 +4,7 @@ namespace App\Modules\SuperAdmin\Models;
 
 use App\BaseModel;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -98,6 +99,11 @@ class ProductModel extends BaseModel
     return 'product model: ' . $this->name;
   }
 
+  public function getImgThumbUrlAttribute(): string
+  {
+    return Str::of($this->img_url)->replace(Str::of($this->img_url)->dirname(), Str::of($this->img_url)->dirname() . '/thumb');
+  }
+
   public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'product-models'], function () {
@@ -170,7 +176,7 @@ class ProductModel extends BaseModel
           'name' => $request->name,
           'product_brand_id' => $request->product_brand_id,
           'product_category_id' => $request->product_category_id,
-          'img_url' => compress_image_upload('img', 'product_models_images/', null, 800)['img_url'],
+          'img_url' => compress_image_upload('img', 'product_models_images/', 'product_models_images/thumb/', 800, true, 150)['img_url'],
         ]);
         if ($request->isApi()) {
           # code...
@@ -196,7 +202,7 @@ class ProductModel extends BaseModel
       }
 
       if ($request->hasFile('img')) {
-        $productModel->img_url = compress_image_upload('img', 'product_models_images/', null, 800)['img_url'];
+        $productModel->img_url = compress_image_upload('img', 'product_models_images/', 'product_models_images/thumb/', 800, true, 150)['img_url'];
       }
 
       $productModel->save();

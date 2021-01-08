@@ -27,6 +27,9 @@
     <div class="rui-navbar-content">
       <ul class="nav" />
       <ul class="nav rui-navbar-right">
+        <li class="nav-item">
+          <a class="d-flex" data-fancybox data-touch="false" data-close-existing="true" data-src="#search" data-auto-focus="true" href="javascript:;"><span class="btn btn-custom-round"><span data-feather="search" class="rui-icon rui-icon-stroke-1_5"></span></span></a>
+        </li>
         <li
           class="dropdown dropdown-hover dropdown-triangle dropdown-keep-open">
           <span class="navbar-text mr-20">{$page.props.auth.user.full_name}</span>

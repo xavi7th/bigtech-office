@@ -4,6 +4,7 @@ import { Inertia } from "@inertiajs/inertia";
 
 window._ = {
 	compact: require('lodash/compact'),
+	debounce: require('lodash/debounce'),
 	each: require('lodash/each'),
 	endsWith: require('lodash/endsWith'),
 	every: require('lodash/every'),
@@ -113,7 +114,7 @@ window.ToastLarge = swal.mixin({
 	title: 'To be implemented!',
 	html: 'I will close in <b></b> milliseconds.',
 	timer: 3000,
-	timerProgressBar: true,
+  timerProgressBar: true,
 	onBeforeOpen: () => {
 		swal.showLoading()
 	},
@@ -175,7 +176,8 @@ Inertia.on('success', (e) => {
       title: "Success",
       html: e.detail.page.props.flash.success,
       icon: "success",
-      timer: 3000
+      timer: 3000,
+      	allowEscapeKey: true
     } );
   }
   else {

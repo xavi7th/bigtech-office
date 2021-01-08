@@ -65,6 +65,18 @@ class ProductTransformer
     ];
   }
 
+  public function searchResults(Product $product)
+  {
+    return [
+      'uuid' => (string)$product->product_uuid,
+      'model' => (string)$product->product_model->name,
+      'identifier' => (string)$product->primary_identifier(),
+      'color' => (string)$product->product_color->name,
+      'storage_size' => (string)$product->storage_size->human_size,
+      'img' => (string)$product->product_model->img_thumb_url,
+    ];
+  }
+
   public function detailed(Product $product)
   {
     return [
