@@ -118,6 +118,10 @@ class SwapDeal extends BaseModel
 
   protected $apennds = ['id_thumb_url', 'receipt_thumb_url'];
 
+  protected $casts = [
+    'product_status_id' => 'int'
+  ];
+
   public function primary_identifier(): string
   {
     switch (true) {

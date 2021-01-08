@@ -176,7 +176,7 @@ Inertia.on('success', (e) => {
       title: "Success",
       html: e.detail.page.props.flash.success,
       icon: "success",
-      timer: 3000,
+      timer: 1000,
       	allowEscapeKey: true
     } );
   }
