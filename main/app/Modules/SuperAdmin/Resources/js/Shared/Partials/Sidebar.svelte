@@ -1,5 +1,5 @@
 <script>
-  import { InertiaLink } from "@inertiajs/inertia-svelte";
+  import { InertiaLink, page } from "@inertiajs/inertia-svelte";
   export let routes;
 </script>
 
@@ -7,7 +7,7 @@
   <div class="yay-wrap-menu">
     <div class="yaybar-wrap">
       <ul>
-        <li class="yay-label">Menu Items</li>
+        <li class="yay-label text-capitalize">{$page.props.auth.user.user_type} Menu</li>
         {#each Object.entries(routes) as [route_name, route_cont]}
           {#if route_cont.length == 1}
             <li class:yay-item-active={route().current(route_cont[0].name)}>
