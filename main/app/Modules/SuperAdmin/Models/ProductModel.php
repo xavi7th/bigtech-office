@@ -54,6 +54,7 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereProductCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read string $img_thumb_url
  */
 class ProductModel extends BaseModel
 {

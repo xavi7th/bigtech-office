@@ -320,9 +320,9 @@ class ProductSaleRecord extends BaseModel
     try {
       $receipt = $product->generateReceipt($amountPaid);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth()->user(), $th, 'Receipt generation failed');
+      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
-      // return back()->withFlash(['error'=>['Receipt generation failed']]);
+      return back()->withFlash(['error' => ['Receipt generation failed']]);
     }
 
     /**
@@ -333,9 +333,9 @@ class ProductSaleRecord extends BaseModel
       $product->app_user->notify(new ProductReceiptNotification($receipt));
     } catch (\Throwable $th) {
       dd($th);
-      ErrLog::notifyAdmin(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
+      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
       // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
-      // return back()->withFlash(['error'=>['Failed to send receipt to user  ' . $product->app_user->emai]]);
+      return back()->withFlash(['error' => ['Failed to send receipt to user  ' . $product->app_user->emai]]);
     }
 
 
