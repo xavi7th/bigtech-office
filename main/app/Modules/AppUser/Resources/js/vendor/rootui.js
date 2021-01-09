@@ -80,8 +80,8 @@ console.log('init-1');
 				/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/g.test(window.navigator.userAgent || window.navigator
 					.vendor || window.opera));
 		"ontouchstart" in window || window.DocumentTouch && (document, window.DocumentTouch);
-a("html")
-	.addClass(o ? "is-mobile" : "is-desktop");
+		a("html")
+			.addClass(o ? "is-mobile" : "is-desktop");
 		var r = a(window),
 			s = a(document),
 			l = a(".main-page-wrap"),
@@ -92,7 +92,7 @@ a("html")
 		function h() {
 			u = r.outerWidth(), c = r.height(), d = s.height()
 		}
-h(), r.on("resize load orientationchange", h);
+		h(), r.on("resize load orientationchange", h);
 		var p, f = [];
 
 		function g() {
@@ -528,9 +528,11 @@ h(), r.on("resize load orientationchange", h);
 					});
 			}
 
-			function o() {
+      function o() {
 				t.data("yaybar")
-					.hideYay()
+          .hideYay()
+        t.parent()
+        	.addClass('yay-hide')
 			}
 
 			function c() {
@@ -599,6 +601,28 @@ h(), r.on("resize load orientationchange", h);
 					}))
 				}))
 		}
+		/** This hides the menu on load on mobile devices */
+		function ut() {
+			var t = 0,
+				e = !1;
+			r.on("init.yaybar", (function(t) {
+				var n = a(t.target)
+					.data("yaybar"),
+					i = n.showYay,
+					o = n.hideYay;
+				n.showYay = function() {
+					e = !0, i.call(n)
+				}, n.hideYay = function() {
+					e = !0, o.call(n)
+				}
+			})), r.on("resize", (function() {
+				e ? e = !1 : (t ? (clearTimeout(t), t = null) : l.addClass("rui-no-transition"), t = setTimeout((
+					function() {
+						l.removeClass("rui-no-transition"), t = null
+					}), 200))
+			})), l.removeClass("rui-no-transition")
+		}
+
 		function ct(t, e) {
 			for (var n = 0; n < e.length; n++) {
 				var i = e[n];
@@ -713,8 +737,8 @@ h(), r.on("resize load orientationchange", h);
             }, {
 				key: "initPluginSwiper",
 				value: function() {
-          return;
-          // return at.call(this)
+					return;
+					// return at.call(this)
 				}
             }]) && ct(e.prototype, n), a && ct(e, a), t
 		}();

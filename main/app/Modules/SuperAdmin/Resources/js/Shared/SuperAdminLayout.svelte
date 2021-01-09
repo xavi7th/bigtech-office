@@ -58,9 +58,9 @@
   class:yay-hide={$page.isMobile}
   >
 
+  <Sidebar {routes} />
   <Header />
   <MobileHeader />
-  <Sidebar {routes} />
   {#if isMounted}
     <div
       class="rui-page content-wrap"
