@@ -15,6 +15,7 @@ use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Reseller;
+use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Traits\Commentable;
 use Illuminate\Validation\ValidationException;
@@ -139,6 +140,18 @@ class SwapDeal extends BaseModel
     }
   }
 
+  public function productReceipt()
+  {
+    return $this->morphOne(ProductReceipt::class, 'product')->latest();
+  }
+
+  public function product_model()
+  {
+    return $this->belongsTo(ProductModel::class)->withDefault(function ($product_model, $swap_deal) {
+      $product_model->name = $swap_deal->description;
+    });
+  }
+
   public function product_histories()
   {
     return $this->morphMany(ProductHistory::class, 'product')->latest();
@@ -172,7 +185,7 @@ class SwapDeal extends BaseModel
 
   public function swapped_deal_device()
   {
-    return $this->morphMany(self::class, 'swapped_with');
+    return $this->morphOne(self::class, 'swapped_with');
   }
 
   public function swapped_with()
@@ -238,6 +251,17 @@ class SwapDeal extends BaseModel
       compress_image_upload('id_card', 'swap-deal-documents/' . now()->toDateString() . '/', 'swap-deal-documents/' . now()->toDateString() . '/thumbs/', 800, true, 50)['img_url'],
       compress_image_upload('receipt', 'swap-deal-documents/' . now()->toDateString() . '/', 'swap-deal-documents/' . now()->toDateString() . '/thumbs/', 800, true, 50)['img_url'],
     ];
+  }
+
+  public function generateReceipt(float $amount): ProductReceipt
+  {
+    return $this->productReceipt()->create([
+      'user_email' => $this->app_user->email,
+      'user_phone' => $this->app_user->phone,
+      'user_address' => $this->app_user->address,
+      'user_city' => $this->app_user->city,
+      'amount_paid' => $amount
+    ]);
   }
 
   static function create_swap_record(object $request, string $id_url, string $receipt_url)

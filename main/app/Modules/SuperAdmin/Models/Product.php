@@ -158,7 +158,7 @@ class Product extends BaseModel
 
   public function productReceipt()
   {
-    return $this->hasOne(ProductReceipt::class);
+    return $this->morphOne(ProductReceipt::class, 'product')->latest();
   }
 
   public function swapped_deal_device()

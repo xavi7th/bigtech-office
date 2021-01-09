@@ -54,7 +54,7 @@ class ProductReceipt extends Model
 
   public function product()
   {
-    return $this->belongsTo(Product::class);
+    return $this->morphTo();
   }
 
   public function appUser()
@@ -69,6 +69,7 @@ class ProductReceipt extends Model
 
     static::creating(function (self $productReceipt) {
       $productReceipt->order_ref = (string)Str::random();
+      $productReceipt->product_type = (string)get_class($productReceipt->product);
     });
 
     // static::saved(function ($product) {
