@@ -105,53 +105,53 @@ mix
 	.extract()
 	// .imagemin(
 	// 	[
-	// 		{
-	// 			from: '**/img/**/**.*',
-	// 			to: 'img/[folder]/[name].[ext]',
-	// 			toType: 'template',
+	// 			{
+	// 				from: '**/img/**/**.*',
+	// 				to: 'img/[folder]/[name].[ext]',
+	// 				toType: 'template',
 	//    },
-	// 		{
-	// 			from: '**/img/**.*',
-	// 			to: 'img/[name].[ext]',
-	// 			toType: 'template',
+	// 			{
+	// 				from: '**/img/**.*',
+	// 				to: 'img/[name].[ext]',
+	// 				toType: 'template',
 	//    }
 	//   ], {
-	// 		context: './main/app/Modules',
-	// 	}, {
-	// 		optipng: null,
-	// 		// optipng: {
-	// 		// 	optimizationLevel: 7
-	// 		// },
-	// 		jpegtran: null,
-	// 		plugins: [
-  //       // require('imagemin-mozjpeg')({
+	// 			context: './main/app/Modules',
+	// 		}, {
+	// 			// optipng: null,
+	// 			optipng: {
+	// 				optimizationLevel: 7
+	// 			},
+	// 			jpegtran: null,
+	// 			plugins: [
+	//       require('imagemin-mozjpeg')({
+	// 					quality: 75,
+	// 					progressive: true,
+	// 				}),
+	//       // require('imagemin-webp')({
 	// 			// 	quality: 75,
-	// 			// 	progressive: true,
 	// 			// }),
-  //       require('imagemin-webp')({
-	// 				quality: 75,
-	// 			}),
   //     ],
-	// 	}
-	// )
-  // .purgeCss({
-  // 	enabled: true,
-  // 	extend: {
-  // 		content: [
-  //       path.join(__dirname, "main/app/Modules/**/*.php"),
-  //       // path.join(__dirname, "main/app/Modules/**/*.html"),
-  //       // path.join(__dirname, "main/app/Modules/**/*.js"),
-  //       path.join(__dirname, "main/app/Modules/**/*.svelte"),
-  //     ],
-  // 		safelist: {
-  // 			standard: [/[pP]aginat(e|ion)/, /active/, /page/, /disabled/, /^dt-/],
-  // 			deep: [/[dD]ata[tT]able/],
-  // 			greedy: [/^dt/]
-  // 		},
-  // 		rejected: true,
-  // 		variables: true
-  // 	}
-  // })
+	// 		}
+	// 	)
+	.purgeCss({
+		enabled: true,
+		extend: {
+			content: [
+        path.join(__dirname, "main/app/Modules/**/*.php"),
+        // path.join(__dirname, "main/app/Modules/**/*.html"),
+        // path.join(__dirname, "main/app/Modules/**/*.js"),
+        path.join(__dirname, "main/app/Modules/**/*.svelte"),
+      ],
+			safelist: {
+				standard: [/[pP]aginat(e|ion)/, /active/, /page/, /disabled/, /^dt-/],
+				deep: [/[dD]ata[tT]able/],
+				greedy: [/^dt/, /yay/]
+			},
+			rejected: true,
+			variables: true
+		}
+	})
 	.then(() => {
 		const _ = require('lodash');
 
@@ -185,10 +185,10 @@ if (!mix.inProduction()) {
 	mix.sourceMaps();
 }
 
-if (!mix.inProduction()) {
-  // mix.bundleAnalyzer();
+if (mix.inProduction()) {
+	mix.bundleAnalyzer();
 }
 
-mix.after(webpackStats => {
-    console.log(Object.keys(webpackStats.compilation.assets));
-});
+// mix.after(webpackStats => {
+//     console.log(Object.keys(webpackStats.compilation.assets));
+// });
