@@ -89,6 +89,18 @@ class ProductPrice extends BaseModel
     'proposed_selling_price'
   ];
 
+  protected $casts = [
+    'product_batch_id' => 'int',
+    'product_color_id' => 'int',
+    'product_grade_id' => 'int',
+    'product_supplier_id' => 'int',
+    'storage_size_id' => 'int',
+    'product_brand_id' => 'int',
+    'product_model_id' => 'int',
+    'cost_price' => 'float',
+    'proposed_selling_price' => 'float',
+  ];
+
   public function product_batch()
   {
     return $this->belongsTo(ProductBatch::class);
