@@ -9,14 +9,14 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * The Artisan commands provided by your application.
-     *
-     * @var array
-     */
-    protected $commands = [
-        //
-    ];
+  /**
+   * The Artisan commands provided by your application.
+   *
+   * @var array
+   */
+  protected $commands = [
+    //
+  ];
 
   public function bootstrap()
   {
@@ -24,28 +24,22 @@ class Kernel extends ConsoleKernel
     // Travel::to('11months 25 days 12:00am');
   }
 
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
-    protected function schedule(Schedule $schedule)
-    {
-    $schedule->command('inspire')->everyMinute();
-
+  /**
+   * Define the application's command schedule.
+   *
+   * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+   * @return void
+   */
+  protected function schedule(Schedule $schedule)
+  {
 
     $schedule->command('database:backup')
-    ->daily()
-    // ->emailOutputTo('xavi7th@gmail.com')
-    ->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/1database-backup-log.cson')
+      ->daily()
+      // ->emailOutputTo('xavi7th@gmail.com')
+      ->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/1database-backup-log.cson')
       ->onFailure(function () {
         // ActivityLog::notifyAdmins('Compounding due interests of target savings failed to complete successfully');
       });
-
-    $schedule->command('local_price:migrate')
-    ->everyMinute()
-    ->sendOutputTo(Module::getModulePath('SuperAdmin/Console') . '/migrate-log.cson');
 
     /**
      * !See the explanation in ./explanation.cson
@@ -56,21 +50,20 @@ class Kernel extends ConsoleKernel
       $schedule->command('queue:restart')->hourly();
       $schedule->command('queue:work --sleep=3 --timeout=900 --queue=high,default,low')->runInBackground()->withoutOVerlapping()->everyMinute();
     }
-
-    }
-
+  }
 
 
-    /**
-     * Register the commands for the application.
-     *
-     * @return void
-     */
-    protected function commands()
-    {
-        $this->load(__DIR__.'/Commands');
+
+  /**
+   * Register the commands for the application.
+   *
+   * @return void
+   */
+  protected function commands()
+  {
+    $this->load(__DIR__ . '/Commands');
     $this->load(Module::getModulePath('SuperAdmin/Console'));
 
-        require base_path('routes/console.php');
-    }
+    require base_path('routes/console.php');
+  }
 }

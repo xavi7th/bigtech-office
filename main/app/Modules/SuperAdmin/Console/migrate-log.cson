@@ -1,7 +1,7 @@
 "********************* Initial Stage **************************\n"
 array:27 [
   "id" => 4
-  "app_user_id" => null
+  "app_user_id" => 1
   "product_category_id" => 2
   "product_model_id" => 11
   "product_brand_id" => 2
@@ -17,14 +17,14 @@ array:27 [
   "serial_no" => null
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
-  "sold_at" => null
+  "product_status_id" => 10
+  "sold_at" => "2021-01-10 15:41:46"
   "product_uuid" => "c6628a8f-2ffe-43c8-96bc-298dbdeafe16"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-11-03T17:08:07.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:38.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -51,14 +51,14 @@ array:27 [
   "serial_no" => "Fhlcpq8amltj"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "d4f87902-2d1d-4922-ac1b-c7a02eb805dd"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T22:36:49.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:38.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -85,14 +85,14 @@ array:27 [
   "serial_no" => "FH7XL4X7KDV1"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "dcd57b31-a383-4b50-a40f-ca6fa1406e6b"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T22:42:09.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:38.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -119,14 +119,14 @@ array:27 [
   "serial_no" => "Fhlxc1yfkdt7"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "f2051548-a69f-453d-a33a-acbdbdfa9b6b"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T22:43:08.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:38.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -153,14 +153,14 @@ array:27 [
   "serial_no" => "Fhlxd5fjkdt8"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "fe7fa0cb-3e31-420b-899a-928ecdf6a31a"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T23:04:28.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:38.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -187,14 +187,14 @@ array:27 [
   "serial_no" => "FH7xdcr8kdt8"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "38c0c270-fdca-4033-a28b-f62ae55ab437"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T23:06:43.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:38.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -221,14 +221,14 @@ array:27 [
   "serial_no" => "D92X90LMKDT8"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "c51ae60a-6faa-4957-873a-5db5055fa055"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T23:13:28.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:38.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -255,14 +255,14 @@ array:27 [
   "serial_no" => "Co2qd166fvh7"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "3329d95e-27a7-4ccc-ac10-3b5fb0e18cb6"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T23:29:16.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:38.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -289,14 +289,14 @@ array:27 [
   "serial_no" => null
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "168b62b0-980e-4fab-a774-1c99e65be6de"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T23:32:55.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:38.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -323,14 +323,14 @@ array:27 [
   "serial_no" => "Co2s1khgfvh5"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "bbe19285-e003-425b-af03-e25857519ac3"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T23:37:11.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -357,14 +357,14 @@ array:27 [
   "serial_no" => "Co2l24bufh51"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "e79a6a13-8227-4fd7-b45a-b6ef081383b9"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-02T23:38:55.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -391,14 +391,14 @@ array:27 [
   "serial_no" => null
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "2725153f-ecbd-48e5-aa23-1d100fd9ce8b"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-03T19:59:32.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -425,14 +425,14 @@ array:27 [
   "serial_no" => "D92x83n2kdt8"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "ba9c3719-02aa-4e30-8445-fa446048b81b"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-04T17:10:47.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -459,14 +459,14 @@ array:27 [
   "serial_no" => "A2291h4hdgv4vq1rg"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "9e5b967f-b24a-41a3-995a-ede3fe888f49"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-04T17:41:03.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -493,14 +493,14 @@ array:27 [
   "serial_no" => null
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "fd83709b-71ca-430b-98fd-c639d1fffc2d"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-04T17:43:50.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0
@@ -527,14 +527,830 @@ array:27 [
   "serial_no" => "Co2qv58nfvh7"
   "model_no" => null
   "is_local" => 1
-  "product_status_id" => 1
+  "product_status_id" => 6
   "sold_at" => null
   "product_uuid" => "175d1c3a-60c8-4ec5-ac9a-23d5497594ff"
   "stocked_by" => 2
   "stocker_type" => "App\Modules\Accountant\Models\Accountant"
   "office_branch_id" => 1
   "created_at" => "2020-12-06T01:12:45.000000Z"
-  "updated_at" => "2021-01-06T22:35:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 563
+  "app_user_id" => 52
+  "product_category_id" => 2
+  "product_model_id" => 22
+  "product_brand_id" => 1
+  "product_batch_id" => 1
+  "product_color_id" => 2
+  "product_grade_id" => 3
+  "product_supplier_id" => 15
+  "storage_size_id" => 4
+  "ram_size_id" => 13
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "355327090928548"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 8
+  "sold_at" => "2020-12-21 17:16:51"
+  "product_uuid" => "8317cab4-1c68-4f99-8383-829d3076c1e0"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2020-12-10T21:19:16.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 564
+  "app_user_id" => null
+  "product_category_id" => 2
+  "product_model_id" => 8
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 14
+  "product_supplier_id" => 17
+  "storage_size_id" => 10
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "352896112097766"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 6
+  "sold_at" => null
+  "product_uuid" => "6099de04-593e-417e-927c-73cf381db0ad"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2020-12-10T21:41:51.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 680
+  "app_user_id" => null
+  "product_category_id" => 2
+  "product_model_id" => 39
+  "product_brand_id" => 1
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 9
+  "product_supplier_id" => 12
+  "storage_size_id" => 4
+  "ram_size_id" => 7
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "352620111480868"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 6
+  "sold_at" => null
+  "product_uuid" => "2faf0eb1-2be2-4e56-99e0-12ea1c37a80f"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2020-12-16T22:46:24.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 681
+  "app_user_id" => null
+  "product_category_id" => 2
+  "product_model_id" => 14
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 9
+  "product_supplier_id" => 11
+  "storage_size_id" => 4
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "353057113994811"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 6
+  "sold_at" => null
+  "product_uuid" => "381d0503-680d-43f4-ad9f-25f7a35b9e7b"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2020-12-17T18:44:17.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 682
+  "app_user_id" => null
+  "product_category_id" => 2
+  "product_model_id" => 14
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 12
+  "product_grade_id" => 9
+  "product_supplier_id" => 11
+  "storage_size_id" => 4
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "353054112171023"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 6
+  "sold_at" => null
+  "product_uuid" => "0c03d6ef-2a1d-4c32-9e97-590a156c2ebb"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2020-12-17T19:02:22.000000Z"
+  "updated_at" => "2021-01-10T13:30:39.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 683
+  "app_user_id" => null
+  "product_category_id" => 2
+  "product_model_id" => 14
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 31
+  "product_grade_id" => 9
+  "product_supplier_id" => 11
+  "storage_size_id" => 4
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "356375231121362"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 6
+  "sold_at" => null
+  "product_uuid" => "95b6658e-83cd-47f4-923c-c3939501b87a"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2020-12-17T19:03:32.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 686
+  "app_user_id" => null
+  "product_category_id" => 2
+  "product_model_id" => 14
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 9
+  "product_supplier_id" => 11
+  "storage_size_id" => 11
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "354112721842867"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 6
+  "sold_at" => null
+  "product_uuid" => "23037a2e-e2b7-427e-9cf1-b78cb258f4af"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2020-12-17T19:07:15.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 924
+  "app_user_id" => 59
+  "product_category_id" => 7
+  "product_model_id" => 81
+  "product_brand_id" => 19
+  "product_batch_id" => 1
+  "product_color_id" => 12
+  "product_grade_id" => 9
+  "product_supplier_id" => 18
+  "storage_size_id" => 20
+  "ram_size_id" => 20
+  "storage_type_id" => 6
+  "processor_speed_id" => 11
+  "imei" => null
+  "serial_no" => "GG0564jkoo28405"
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-07 21:56:39"
+  "product_uuid" => "3d8958fc-deab-4434-b782-1aa6fa647487"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-07T17:21:22.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 925
+  "app_user_id" => 81
+  "product_category_id" => 2
+  "product_model_id" => 22
+  "product_brand_id" => 1
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 6
+  "product_supplier_id" => 20
+  "storage_size_id" => 10
+  "ram_size_id" => 13
+  "storage_type_id" => 3
+  "processor_speed_id" => 11
+  "imei" => "356575095344512"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-08 04:13:54"
+  "product_uuid" => "8158a3cc-0c2d-49a5-aab2-cb8c322836fb"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-07T17:50:45.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 941
+  "app_user_id" => 70
+  "product_category_id" => 3
+  "product_model_id" => 93
+  "product_brand_id" => 7
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 6
+  "product_supplier_id" => 20
+  "storage_size_id" => 3
+  "ram_size_id" => 6
+  "storage_type_id" => 1
+  "processor_speed_id" => 9
+  "imei" => null
+  "serial_no" => "8rxfzw2"
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-07 23:12:43"
+  "product_uuid" => "c6d9e33d-1163-4497-8024-f31659874dc6"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-07T19:12:48.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 942
+  "app_user_id" => 72
+  "product_category_id" => 3
+  "product_model_id" => 94
+  "product_brand_id" => 6
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 4
+  "product_supplier_id" => 15
+  "storage_size_id" => 15
+  "ram_size_id" => 6
+  "storage_type_id" => 1
+  "processor_speed_id" => 12
+  "imei" => null
+  "serial_no" => "Cnd8281kly"
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-07 23:20:40"
+  "product_uuid" => "01b98826-ded6-49c6-b85c-4df8d1d1a04d"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-07T19:19:27.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 949
+  "app_user_id" => 74
+  "product_category_id" => 7
+  "product_model_id" => 81
+  "product_brand_id" => 19
+  "product_batch_id" => 1
+  "product_color_id" => 2
+  "product_grade_id" => 9
+  "product_supplier_id" => 18
+  "storage_size_id" => 20
+  "ram_size_id" => 20
+  "storage_type_id" => 6
+  "processor_speed_id" => 11
+  "imei" => null
+  "serial_no" => "GG0561jk0198532"
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-07 23:41:14"
+  "product_uuid" => "519c1a7f-3e1f-412a-81b5-b213bfb17dbf"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-07T21:13:22.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 972
+  "app_user_id" => 71
+  "product_category_id" => 3
+  "product_model_id" => 97
+  "product_brand_id" => 7
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 1
+  "product_supplier_id" => 21
+  "storage_size_id" => 15
+  "ram_size_id" => 8
+  "storage_type_id" => 2
+  "processor_speed_id" => 7
+  "imei" => null
+  "serial_no" => "JTVHS32"
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-07 23:15:30"
+  "product_uuid" => "09f39081-57f7-44fa-9fd1-57d7683a1f4a"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-07T21:43:12.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1035
+  "app_user_id" => 83
+  "product_category_id" => 3
+  "product_model_id" => 33
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 16
+  "product_grade_id" => 3
+  "product_supplier_id" => 22
+  "storage_size_id" => 4
+  "ram_size_id" => 7
+  "storage_type_id" => 1
+  "processor_speed_id" => 15
+  "imei" => null
+  "serial_no" => "C1MQM442G943"
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-08 17:28:47"
+  "product_uuid" => "b1e1edf1-b4f8-460f-b6c8-137bf7ef3498"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-08T16:13:00.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1036
+  "app_user_id" => 85
+  "product_category_id" => 2
+  "product_model_id" => 8
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 19
+  "product_grade_id" => 9
+  "product_supplier_id" => 23
+  "storage_size_id" => 4
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "352894113144166"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-08 19:59:32"
+  "product_uuid" => "44628fd0-30ba-421e-92a9-e2d819180938"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-08T17:45:01.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1037
+  "app_user_id" => null
+  "product_category_id" => 3
+  "product_model_id" => 99
+  "product_brand_id" => 6
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 3
+  "product_supplier_id" => 33
+  "storage_size_id" => 21
+  "ram_size_id" => 8
+  "storage_type_id" => 2
+  "processor_speed_id" => 2
+  "imei" => null
+  "serial_no" => "CNU420C7SZ"
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 6
+  "sold_at" => null
+  "product_uuid" => "a1d6ffff-95a0-474e-b7d9-a0c6f2f03325"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-08T19:45:51.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1039
+  "app_user_id" => null
+  "product_category_id" => 2
+  "product_model_id" => 8
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 5
+  "product_supplier_id" => 12
+  "storage_size_id" => 10
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "352901114178083"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 6
+  "sold_at" => null
+  "product_uuid" => "022f05e6-1c39-4f9e-8c30-08f584ed6cb3"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-09T16:53:40.000000Z"
+  "updated_at" => "2021-01-10T13:30:40.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1040
+  "app_user_id" => null
+  "product_category_id" => 2
+  "product_model_id" => 8
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 31
+  "product_grade_id" => 5
+  "product_supplier_id" => 12
+  "storage_size_id" => 10
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "356803113257155"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 12
+  "sold_at" => null
+  "product_uuid" => "e8c823c8-3911-4580-b630-dbb0d39e2728"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-09T16:54:37.000000Z"
+  "updated_at" => "2021-01-10T13:30:41.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1041
+  "app_user_id" => 198
+  "product_category_id" => 2
+  "product_model_id" => 3
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 6
+  "product_supplier_id" => 31
+  "storage_size_id" => 4
+  "ram_size_id" => 9
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "356554081039576"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-10 02:46:16"
+  "product_uuid" => "fca4780f-06f8-4122-ad46-3c39badbc1ec"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-09T17:47:44.000000Z"
+  "updated_at" => "2021-01-10T13:30:41.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1043
+  "app_user_id" => 168
+  "product_category_id" => 2
+  "product_model_id" => 8
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 6
+  "product_supplier_id" => 18
+  "storage_size_id" => 10
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "352911110306554"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 8
+  "sold_at" => "2021-01-09 22:20:00"
+  "product_uuid" => "c0ff2bef-6df4-4c66-8f88-f1eca6185d84"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-09T17:50:50.000000Z"
+  "updated_at" => "2021-01-10T13:30:41.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1045
+  "app_user_id" => 201
+  "product_category_id" => 2
+  "product_model_id" => 3
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 24
+  "product_grade_id" => 6
+  "product_supplier_id" => 31
+  "storage_size_id" => 4
+  "ram_size_id" => 12
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "356563081019256"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-10 02:46:55"
+  "product_uuid" => "40137590-717d-4c91-a32d-736dd5e6c911"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-09T18:13:03.000000Z"
+  "updated_at" => "2021-01-10T13:30:41.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1046
+  "app_user_id" => 195
+  "product_category_id" => 2
+  "product_model_id" => 8
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 19
+  "product_grade_id" => 9
+  "product_supplier_id" => 23
+  "storage_size_id" => 10
+  "ram_size_id" => 8
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => "356812116440031"
+  "serial_no" => null
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-10 02:12:44"
+  "product_uuid" => "db80b7c9-958f-4a38-a5de-c4a2a33f5253"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-09T18:18:15.000000Z"
+  "updated_at" => "2021-01-10T13:30:41.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1047
+  "app_user_id" => 196
+  "product_category_id" => 2
+  "product_model_id" => 81
+  "product_brand_id" => 19
+  "product_batch_id" => 1
+  "product_color_id" => 3
+  "product_grade_id" => 9
+  "product_supplier_id" => 23
+  "storage_size_id" => 20
+  "ram_size_id" => 20
+  "storage_type_id" => 4
+  "processor_speed_id" => 11
+  "imei" => null
+  "serial_no" => "gg0717kk0119777"
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-10 02:18:03"
+  "product_uuid" => "2bc2476e-046a-4323-ac08-03a176ee4e51"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-09T18:21:37.000000Z"
+  "updated_at" => "2021-01-10T13:30:41.000000Z"
+  "deleted_at" => null
+  "product_price" => array:2 [
+    "cost_price" => 0
+    "proposed_selling_price" => 0
+  ]
+]
+"********************* This is already a processed local product. Skipping.... **************************\n. \n"
+"********************* Initial Stage **************************\n"
+array:27 [
+  "id" => 1048
+  "app_user_id" => 169
+  "product_category_id" => 7
+  "product_model_id" => 92
+  "product_brand_id" => 2
+  "product_batch_id" => 1
+  "product_color_id" => 20
+  "product_grade_id" => 9
+  "product_supplier_id" => 20
+  "storage_size_id" => 20
+  "ram_size_id" => 20
+  "storage_type_id" => 6
+  "processor_speed_id" => 12
+  "imei" => null
+  "serial_no" => "gn1dkf6zlx2y"
+  "model_no" => null
+  "is_local" => 1
+  "product_status_id" => 10
+  "sold_at" => "2021-01-09 22:21:31"
+  "product_uuid" => "264b3180-0c86-4189-9d99-d08ee8cbf39e"
+  "stocked_by" => 2
+  "stocker_type" => "App\Modules\Accountant\Models\Accountant"
+  "office_branch_id" => 1
+  "created_at" => "2021-01-09T21:11:58.000000Z"
+  "updated_at" => "2021-01-10T13:30:41.000000Z"
   "deleted_at" => null
   "product_price" => array:2 [
     "cost_price" => 0

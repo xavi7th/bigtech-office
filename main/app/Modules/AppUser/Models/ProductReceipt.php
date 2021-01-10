@@ -45,6 +45,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|ProductReceipt withoutTrashed()
  * @mixin \Eloquent
  * @property-read Product $product
+ * @property string $product_type
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductReceipt whereProductType($value)
  */
 class ProductReceipt extends Model
 {

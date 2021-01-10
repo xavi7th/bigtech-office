@@ -107,6 +107,8 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
  * @mixin \Eloquent
  * @property-read ProductDispatchRequest|null $dispatch_request
+ * @property-read ProductReceipt|null $productReceipt
+ * @property-read \App\Modules\SuperAdmin\Models\ProductModel $product_model
  */
 class SwapDeal extends BaseModel
 {
