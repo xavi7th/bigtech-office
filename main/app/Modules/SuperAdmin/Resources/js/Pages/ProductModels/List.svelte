@@ -46,13 +46,16 @@
   };
 </script>
 
+<svelte:window on:popstate={ Inertia.reload() }></svelte:window>
+
 <Layout title="Product Models">
   <div class="row vertical-gap">
     <div class="col-12">
 
       <div class="table-responsive-md">
+        <!-- svelte-ignore missing-declaration -->
         <table
-          class="rui-datatable table table-striped table-bordered table-sm" data-order=''>
+          class="rui-datatable table table-striped table-bordered table-sm" data-order='' use:initialiseDatatable>
           <thead>
             <tr>
               <th class="p-0">
