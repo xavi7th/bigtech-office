@@ -80,7 +80,8 @@ class Product extends BaseModel
   ];
 
   protected $casts = [
-    'product_status_id' => 'int'
+    'product_status_id' => 'int',
+    'is_local' => 'bool',
   ];
 
   public function app_user()
@@ -334,12 +335,11 @@ class Product extends BaseModel
   {
     switch ($this->is_local):
       case true:
-        is_numeric($this->localProductPrice->cost_price)  ? $this->product_expenses_sum() + (float)$this->localProductPrice->cost_price : $this->localProductPrice->cost_price;
+        return is_numeric($this->localProductPrice->cost_price)  ? $this->product_expenses_sum() + (float)$this->localProductPrice->cost_price : $this->localProductPrice->cost_price;
         break;
       default:
-
-      return is_numeric($this->product_price->cost_price)  ?
-          $this->product_expenses_sum() + (float)$this->product_price->cost_price : $this->product_price->cost_price;
+        return is_numeric($this->product_price->cost_price)  ?
+        $this->product_expenses_sum() + (float)$this->product_price->cost_price : $this->product_price->cost_price;
     endswitch;
   }
 

@@ -97,8 +97,8 @@ class ProductTransformer
       'status' => (string)$product->product_status->status,
       'uuid' => (string)$product->product_uuid,
       'buyer' => (new AppUserTransformer)->transformBasic($product->app_user),
-      'cost_price' => $product->cost_price,
-      'selling_price' => $product->proposed_selling_price,
+      'cost_price' => (float)$product->cost_price,
+      'selling_price' => (float)$product->proposed_selling_price,
       'img' => (string)$product->product_model->img_url,
     ];
   }
