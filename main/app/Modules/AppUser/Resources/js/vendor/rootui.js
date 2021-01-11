@@ -531,7 +531,6 @@ console.log('init-1');
       function o() {
 				t.data("yaybar")
           .hideYay()
-        console.log(t.parent());
         t.parent()
         	.addClass('yay-hide')
 			}

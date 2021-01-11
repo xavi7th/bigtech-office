@@ -14,6 +14,9 @@ html.rui-nightmode {
 
 
 /* PLACE YOUR CUSTOM STYLES IN THIS FILE */
+.rui-page {
+	position: relative;
+}
 
 .rui-widget.rui-widget-total {
 	min-height: 100px;
@@ -55,6 +58,14 @@ dl.phpdebugbar-widgets-kvlist dt {
 	min-width: 37px;
 }
 
-.dataTables_paginate .paginate_button {
-	padding: 3px !important;
+.dataTables_paginate {
+	@media (max-width: 767px) {
+		margin-top: 20px;
+		position: relative;
+	}
+
+	.paginate_button {
+		margin: 5px;
+		padding: 3px;
+	}
 }

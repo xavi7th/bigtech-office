@@ -2,12 +2,9 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import { page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
-  import FlashMessage from "@usershared/FlashMessage";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { getErrorString } from "@public-assets/js/bootstrap";
-
-  $: ({ errors, auth, flash } = $page.props);
+  $: ({ auth } = $page.props);
 
   let qaTestName, qaTestId;
 

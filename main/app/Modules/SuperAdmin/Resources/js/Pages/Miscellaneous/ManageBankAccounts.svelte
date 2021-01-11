@@ -4,7 +4,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
 
-  import { toCurrency } from "@public-assets/js/bootstrap";
+  import { toCurrency } from "@public-shared/helpers";
 
   let details = {},
     files;

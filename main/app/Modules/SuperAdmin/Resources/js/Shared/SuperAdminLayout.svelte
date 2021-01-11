@@ -1,5 +1,5 @@
 <script>
-  import { onMount, tick } from "svelte";
+  import { onMount } from "svelte";
   import { page } from "@inertiajs/inertia-svelte";
   import { fly } from "svelte/transition";
   import Sidebar from "@superadmin-shared/Partials/Sidebar";
@@ -16,40 +16,11 @@
 
   onMount(async () => {
     isMounted = true;
-
-    await tick();
-    jQuery(".rui-datatable").DataTable({
-       destroy: true,
-      order: [[2, "desc"]],
-      dom: "<lfB<t><ip>>",
-      buttons: ["excel", "pdf"]
-      // responsive: true
-    });
-    objectFitImages();
   });
 
 </script>
 
-<style lang="scss">
-  .rui-page {
-    position: relative;
-  }
-
-   :global{
-    .dataTables_paginate {
-      @media (max-width: 767px) {
-        margin-top: 20px;
-        position: relative;
-      }
-      .paginate_button {
-        margin: 5px;
-        padding: 0;
-      }
-    }
-  }
-</style>
-
-
+<!-- svelte-ignore missing-declaration -->
 <div
   data-spy="scroll"
   data-target=".rui-page-sidebar"
@@ -76,9 +47,6 @@
 
     <slot name="modals" />
     <Search />
-
-
-
   {/if}
 </div>
 

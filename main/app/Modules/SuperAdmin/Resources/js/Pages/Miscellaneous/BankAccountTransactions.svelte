@@ -1,26 +1,11 @@
 <script>
-  import { page } from "@inertiajs/inertia-svelte";
-  import { toCurrency, displayTableSum } from "@public-assets/js/bootstrap";
+  import { toCurrency } from "@public-shared/helpers";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { onMount, tick } from "svelte";
-
-  $: ({ auth } = $page.props);
 
   export let companyAccount = [],
     date,
     companyAccountTransactions = [];
 
-  onMount(async () => {
-    await tick();
-    jQuery(".rui-datatabl").DataTable({
-      destroy: true,
-      order: [[2, "desc"]],
-      dom: "<lfB<t><ip>>",
-      buttons: ["excel", "pdf"],
-      footerCallback: displayTableSum(4)
-      // responsive: true
-    });
-  });
 </script>
 
 <Layout
@@ -28,7 +13,8 @@
   <div class="row vertical-gap">
     <div class="col-lg-12 col-xl-12">
       <div class="table-responsive-md">
-        <table class="rui-datatabl table table-striped">
+        <!-- svelte-ignore missing-declaration -->
+        <table class="rui-datatabl table table-striped" use:initialiseDatatable>
           <thead class="thead-dark">
             <tr>
               <th scope="col">#</th>

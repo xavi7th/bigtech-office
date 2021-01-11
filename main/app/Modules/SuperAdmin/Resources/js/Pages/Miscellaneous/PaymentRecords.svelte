@@ -1,12 +1,9 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-  import { toCurrency } from "@public-assets/js/bootstrap";
+  import { toCurrency } from "@public-shared/helpers";
   import Layout from "@superadmin-shared/SuperAdminLayout";
 
-
   export let paymentRecords = [];
-
-  $: ({ app } = $page.props);
 </script>
 
 <style>

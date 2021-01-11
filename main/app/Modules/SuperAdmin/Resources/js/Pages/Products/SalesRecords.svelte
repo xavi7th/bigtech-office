@@ -1,10 +1,8 @@
 <script>
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
-import { displayTableSum, getErrorString, toCurrency } from "@public-assets/js/bootstrap";
+  import { toCurrency } from "@public-shared/helpers";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
-  import { onMount, tick } from "svelte";
-
 
   $: ({ auth } = $page.props);
 
@@ -12,25 +10,14 @@ import { displayTableSum, getErrorString, toCurrency } from "@public-assets/js/b
     date,
     companyAccounts = [];
   let productToMarkAsPaid;
-
-  onMount(async () => {
-    await tick();
-    jQuery(".rui-datatabl").DataTable({
-      destroy: true,
-      order: [[2, "desc"]],
-      dom: "<lfB<t><ip>>",
-      buttons: ["excel", "pdf"],
-      footerCallback: displayTableSum(4)
-      // responsive: true
-    });
-  });
 </script>
 
 <Layout title="Sales Records | {date}">
   <div class="row vertical-gap">
     <div class="col-lg-12 col-xl-12">
       <div class="table-responsive-md">
-        <table class="rui-datatabl table table-striped">
+        <!-- svelte-ignore missing-declaration -->
+        <table class="rui-datatabl table table-striped" use:initialiseDatatable={{callBackColumn:4}}>
           <thead class="thead-dark">
             <tr>
               <th scope="col">#</th>
