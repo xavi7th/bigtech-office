@@ -10,7 +10,7 @@
 <Layout title="SalesRep Dashboard">
   <div class="rui-swiper" data-swiper-initialslide="2" data-swiper-loop="false" data-swiper-grabcursor="true"
       data-swiper-center="true" data-swiper-slides="auto" data-swiper-gap="30" data-swiper-speed="400">
-					<div class="swiper-container">
+      <div class="swiper-container" use:initialiseSwiper>
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <div class="rui-widget rui-widget-chart">
