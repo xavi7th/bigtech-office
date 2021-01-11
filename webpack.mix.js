@@ -146,7 +146,7 @@ mix
 			safelist: {
 				standard: [/[pP]aginat(e|ion)/, /active/, /page/, /disabled/, /^dt-/],
 				deep: [/[dD]ata[tT]able/],
-				greedy: [/^dt/, /yay/, /fancy/]
+				greedy: [/^dt/, /yay/, /fancy/, /modal/]
 			},
 			rejected: true,
 			variables: true
