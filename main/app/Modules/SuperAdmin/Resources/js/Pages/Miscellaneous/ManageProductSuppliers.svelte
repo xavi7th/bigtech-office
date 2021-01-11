@@ -124,8 +124,7 @@
           <div class="col-12">
             <button
               type="submit"
-              class="btn btn-success btn-long"
-              disabled={!productSupplierObj.name}>
+              class="btn btn-success btn-long">
               <span class="text">Create</span>
             </button>
           </div>
@@ -153,7 +152,7 @@
                 <td class="d-flex justify-content-between align-content-center">
                   <!-- <button
                     type="button"
-                    class="btn btn-danger btn-xs"
+                    class="btn btn-warning btn-xs"
                     on:click={() => {
                       deleteProductSupplier(productSupplier.id);
                     }}>
