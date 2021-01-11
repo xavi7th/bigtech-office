@@ -37,6 +37,7 @@
         onSuccess: () =>{
           parsedResults = [];
           comment = null;
+          testResultUpdated = false;
         },
       }
     )
