@@ -10,12 +10,13 @@
 <Layout title="SalesRep Dashboard">
   <div class="rui-swiper" data-swiper-initialslide="2" data-swiper-loop="false" data-swiper-grabcursor="true"
       data-swiper-center="true" data-swiper-slides="auto" data-swiper-gap="30" data-swiper-speed="400">
+      <!-- svelte-ignore missing-declaration -->
       <div class="swiper-container" use:initialiseSwiper>
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <div class="rui-widget rui-widget-chart">
               <div class="rui-widget-chart-info">
-										<div class="rui-widget-title h2">{auth.user.isOnlineRep  ? salesStatistics.today_online_sales_count : salesStatistics.today_walk_in_sales_count}</div><small class="rui-widget-subtitle">Today Sales Count</small>
+                <div class="rui-widget-title h2">{auth.user.isOnlineSalesRep  ? salesStatistics.today_online_sales_count : salesStatistics.today_walk_in_sales_count}</div><small class="rui-widget-subtitle">Today Sales Count</small>
               </div>
               <div class="rui-chartjs-container">
                 <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
@@ -26,7 +27,7 @@
           <div class="swiper-slide">
             <div class="rui-widget rui-widget-chart">
               <div class="rui-widget-chart-info">
-										<div class="rui-widget-title h2">{auth.user.isOnlineRep  ? toCurrency(salesStatistics.today_online_sales_amount) : toCurrency(salesStatistics.today_walk_in_sales_amount)}</div><small class="rui-widget-subtitle">Sales Today</small>
+                <div class="rui-widget-title h2">{auth.user.isOnlineSalesRep  ? toCurrency(salesStatistics.today_online_sales_amount) : toCurrency(salesStatistics.today_walk_in_sales_amount)}</div><small class="rui-widget-subtitle">Sales Today</small>
               </div>
               <div class="rui-chartjs-container">
                 <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
@@ -37,7 +38,7 @@
           <div class="swiper-slide">
             <div class="rui-widget rui-widget-chart">
               <div class="rui-widget-chart-info">
-										<div class="rui-widget-title h2">{auth.user.isOnlineRep  ? toCurrency(salesStatistics.today_online_sales_bonus_amount) : toCurrency(salesStatistics.today_walk_in_sales_bonus_amount)}</div><small class="rui-widget-subtitle">Bonus Today</small>
+                <div class="rui-widget-title h2">{auth.user.isOnlineSalesRep  ? toCurrency(salesStatistics.today_online_sales_bonus_amount) : toCurrency(salesStatistics.today_walk_in_sales_bonus_amount)}</div><small class="rui-widget-subtitle">Bonus Today</small>
               </div>
               <div class="rui-chartjs-container">
                 <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
@@ -48,7 +49,7 @@
           <div class="swiper-slide rui-swiper-slide-total">
             <div class="rui-widget rui-widget-chart rui-widget-total">
               <div class="rui-widget-chart-info">
-										<div class="rui-widget-title h1">{auth.user.isOnlineRep  ? toCurrency(salesStatistics.total_online_sales_amount) : toCurrency(salesStatistics.total_walk_in_sales_amount)}</div>
+                <div class="rui-widget-title h1">{auth.user.isOnlineSalesRep  ? toCurrency(salesStatistics.total_online_sales_amount) : toCurrency(salesStatistics.total_walk_in_sales_amount)}</div>
                 <small class="rui-widget-subtitle">Total Sales</small>
               </div>
               <div class="rui-widget-total-chart">
@@ -59,7 +60,7 @@
           <div class="swiper-slide">
             <div class="rui-widget rui-widget-chart">
               <div class="rui-widget-chart-info">
-										<div class="rui-widget-title h2">{auth.user.isOnlineRep  ? salesStatistics.monthly_online_sales_count : salesStatistics.monthly_walk_in_sales_count}</div><small class="rui-widget-subtitle">Monthly Sales Count</small>
+                <div class="rui-widget-title h2">{auth.user.isOnlineSalesRep  ? salesStatistics.monthly_online_sales_count : salesStatistics.monthly_walk_in_sales_count}</div><small class="rui-widget-subtitle">Monthly Sales Count</small>
               </div>
               <div class="rui-chartjs-container">
                 <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
@@ -70,7 +71,7 @@
           <div class="swiper-slide">
             <div class="rui-widget rui-widget-chart">
               <div class="rui-widget-chart-info">
-										<div class="rui-widget-title h2">{auth.user.isOnlineRep  ? toCurrency(salesStatistics.monthly_online_sales_amount) : toCurrency(salesStatistics.monthly_walk_in_sales_amount)}</div><small class="rui-widget-subtitle">Monthly Sales</small>
+                <div class="rui-widget-title h2">{auth.user.isOnlineSalesRep  ? toCurrency(salesStatistics.monthly_online_sales_amount) : toCurrency(salesStatistics.monthly_walk_in_sales_amount)}</div><small class="rui-widget-subtitle">Monthly Sales</small>
               </div>
               <div class="rui-chartjs-container">
                 <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
@@ -81,7 +82,7 @@
           <div class="swiper-slide">
             <div class="rui-widget rui-widget-chart">
               <div class="rui-widget-chart-info">
-										<div class="rui-widget-title h2">{auth.user.isOnlineRep  ? toCurrency(salesStatistics.monthly_online_sales_bonus_amount) : toCurrency(salesStatistics.monthly_walk_in_sales_bonus_amount)}</div><small class="rui-widget-subtitle">Monthly Bonus</small>
+                <div class="rui-widget-title h2">{auth.user.isOnlineSalesRep  ? toCurrency(salesStatistics.monthly_online_sales_bonus_amount) : toCurrency(salesStatistics.monthly_walk_in_sales_bonus_amount)}</div><small class="rui-widget-subtitle">Monthly Bonus</small>
               </div>
               <div class="rui-chartjs-container">
                 <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
