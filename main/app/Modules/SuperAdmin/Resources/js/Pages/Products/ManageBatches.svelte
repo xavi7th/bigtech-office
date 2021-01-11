@@ -3,7 +3,6 @@
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
 
-
   $: ({ auth } = $page.props);
 
   export let batches = [];
@@ -98,6 +97,11 @@
                   <span class="badge badge-pill badge-dark">
                     {batch.num_of_products}
                   </span>
+                  {#if auth.user.isQualityControl}
+                     <span class="badge badge-pill badge-danger">
+                      {batch.num_of_untested_products}
+                    </span>
+                  {/if}
                 </td>
                 <td class="text-nowrap">
                   {new Date(batch.order_date).toDateString()}

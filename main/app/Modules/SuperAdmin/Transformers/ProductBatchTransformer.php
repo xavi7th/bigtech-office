@@ -52,7 +52,8 @@ class ProductBatchTransformer
       'id' => (int)$productBatch->id,
       'batch_number' => $productBatch->batch_number,
       'order_date' => $productBatch->order_date,
-      'num_of_products' => $productBatch->products()->count()
+      'num_of_products' => $productBatch->products()->count(),
+      'num_of_untested_products' => $productBatch->products()->untested()->count()
     ];
   }
 
