@@ -11,6 +11,7 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -168,7 +169,7 @@ class ProductDispatchRequest extends Model
   public function getDispatchRequests(Request $request)
   {
     return Inertia::render('DispatchAdmin,ViewDispatchRequests', [
-      'dispatch_requests' => fn () => Cache::rememberForever('dispatchRequests', fn () => (new ProductDispatcgRequestTransformer)->collectionTransformer(self::with('online_rep')->get(), 'basic')),
+      'dispatch_requests' => fn () => Cache::rememberForever('dispatchRequests', fn () => (new ProductDispatcgRequestTransformer)->collectionTransformer(self::unprocessed()->with('online_rep')->latest()->get(), 'basic')),
     ]);
   }
 
@@ -223,6 +224,11 @@ class ProductDispatchRequest extends Model
     DB::commit();
 
     return back()->withFlash(['success'=>'Dispatch request deleted. Kindly inform ' . $productDispatchRequest->online_rep->full_name . ' that you discarded one of their requests if they are not aware']);
+  }
+
+  public function scopeUnprocessed(Builder $query)
+  {
+    return $query->whereNull('sold_at');
   }
 
   protected static function boot()
