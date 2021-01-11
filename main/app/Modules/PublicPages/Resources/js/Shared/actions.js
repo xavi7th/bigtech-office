@@ -1,7 +1,11 @@
 import { toCurrency } from "@public-shared/helpers";
+import { Inertia } from "@inertiajs/inertia";
 import objectFitImages from 'object-fit-images';
 
 const displayTableSum = (tableColumn) => {
+		if (!tableColumn) {
+			return;
+		}
 	return function(row, data, start, end, display) {
 		var api = this.api(),
 			data;
@@ -252,4 +256,31 @@ export const initialiseSwiper = (elem, params = {}) => {
 
 export const initialiseObjectFitImages = (elem, params = {}) => {
 	var rsp = objectFitImages();
+}
+
+export const reloadOnPopState = (elem, params = {}) => {
+	console.log(params);
+
+	// if (params.reloadFor.includes(params.currentUserType)) {
+
+	function reloadPage() {
+		console.log('fired');
+		Inertia.reload({
+			preserveState: true,
+			preserveScroll: true,
+			only: params.reloadData,
+		})
+	}
+
+	console.log(window);
+
+	window.addEventListener('popstate', reloadPage)
+
+	return {
+		destroy() {
+			window.removeEventListener('popstate', reloadPage)
+		}
+	}
+
+	// }
 }
