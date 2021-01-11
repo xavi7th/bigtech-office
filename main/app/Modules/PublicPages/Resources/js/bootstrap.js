@@ -96,15 +96,13 @@ Inertia.on('progress', (event) => {
 })
 
 Inertia.on('success', (e) => {
-  console.log(e);
   if (e.detail.page.props.flash.success) {
-    console.log(`Successfully made a visit to ${e.detail.page.url}`)
     ToastLarge.fire( {
       title: "Success",
       html: e.detail.page.props.flash.success,
       icon: "success",
       timer: 1000,
-      	allowEscapeKey: true
+      allowEscapeKey: true
     } );
   }
   else {

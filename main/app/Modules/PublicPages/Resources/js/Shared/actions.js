@@ -2,7 +2,6 @@ import { toCurrency } from "@public-shared/helpers";
 import objectFitImages from 'object-fit-images';
 
 const displayTableSum = (tableColumn) => {
-	console.log(tableColumn);
 	return function(row, data, start, end, display) {
 		var api = this.api(),
 			data;
@@ -230,7 +229,6 @@ export const initialiseDonutChart = () => {
  * @param { Object } params extra initialisation parameters passed to the action
  */
 export const initialiseDatatable = (elem, params = {}) => {
-	console.log(params);
 	let table = jQuery(elem)
 		.DataTable({
 			destroy: true,
@@ -253,7 +251,5 @@ export const initialiseSwiper = (elem, params = {}) => {
 }
 
 export const initialiseObjectFitImages = (elem, params = {}) => {
-	console.log('objectFitImages element: ' + elem);
 	var rsp = objectFitImages();
-	console.log('objectFitImages: ' + rsp);
 }
