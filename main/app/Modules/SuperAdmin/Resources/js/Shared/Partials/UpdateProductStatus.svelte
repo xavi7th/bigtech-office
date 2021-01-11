@@ -11,7 +11,7 @@
     });
 
     Inertia.put(
-      route($page.auth.user.user_type + ".multiaccess.products.update_product_status", product.uuid),
+      route($page.props.auth.user.user_type + ".multiaccess.products.update_product_status", product.uuid),
       { product_status_id: product.product_status_id },
       {
         preserveState: true,
