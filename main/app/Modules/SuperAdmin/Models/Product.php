@@ -727,7 +727,6 @@ class Product extends BaseModel
 
   public function markProductAsSold(MarkProductAsSoldValidation $request, self $product)
   {
-
     DB::beginTransaction();
 
     /**
@@ -735,6 +734,20 @@ class Product extends BaseModel
      */
     $product->product_status_id = ProductStatus::soldId();
     $product->sold_at = now();
+
+    /**
+     * Mark dispatch requests as sold.
+     */
+    if ($request->user()->isDispatchAdmin()) {
+      try {
+        $product->dispatch_request->sold_at = now();
+        $product->dispatch_request->save();
+      } catch (\Throwable $th) {
+        ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not mark dispatch request as processed ' . $request->email);
+        if ($request->isApi()) return response()->json(['err' => 'Could not mark dispatch request as processed ' . $request->email], 500);
+        return back()->withFlash(['error'=>['Could not mark dispatch request as processed.' . $th->getMessage()]]);
+      }
+    }
 
     /**
      * Create a sales record for the product
