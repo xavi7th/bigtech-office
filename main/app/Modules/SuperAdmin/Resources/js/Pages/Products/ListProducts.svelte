@@ -55,8 +55,9 @@
   <div class="row vertical-gap">
     <div class="col-lg-12 col-xl-12">
       <div class="table-responsive-md">
+        <!-- svelte-ignore missing-declaration -->
         <table
-          class="rui-datatable table table-striped table-bordered table-sm" data-order='[0, "asc"]'>
+          class="rui-datatable table table-striped table-bordered table-sm" data-order='[0, "asc"]' use:initialiseDatatable>
           <thead class="thead-dark">
             <tr>
               <th scope="col">
