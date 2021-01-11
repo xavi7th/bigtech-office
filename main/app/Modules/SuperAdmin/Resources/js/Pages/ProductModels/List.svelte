@@ -22,7 +22,7 @@
 
     details._method = "PUT";
 
-    Inertia.post(
+    Inertia.put(
       route(auth.user.user_type + ".multiaccess.product_models.edit_product_model", details.id),
       details,
       {
