@@ -1,11 +1,11 @@
 <script context="module">
-  export function createModelDescription(id, desc) {
+  export function createModelDescription(id, desc, userType) {
     BlockToast.fire({
       text: "Adding description to product model ..."
     });
 
     Inertia.post(
-      route(auth.user.user_type + ".multiaccess.product_descriptions.create_product_desc"),
+      route(userType + ".multiaccess.product_descriptions.create_product_desc"),
       {
         description_summary: desc,
         product_model_id: id
@@ -21,13 +21,13 @@
     );
   }
 
-  export function updateModelDescription(id, desc) {
+  export function updateModelDescription(id, desc, userType) {
     BlockToast.fire({
       text: "Updating description ..."
     });
 
     Inertia.put(
-      route(auth.user.user_type + ".multiaccess.product_descriptions.edit_product_desc", id),
+      route(userType + ".multiaccess.product_descriptions.edit_product_desc", id),
       {
         description_summary: desc
         // product_model_id: id

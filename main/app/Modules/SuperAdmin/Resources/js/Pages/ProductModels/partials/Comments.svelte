@@ -1,11 +1,11 @@
 <script context="module">
-  export function createModelComment(id, comment) {
+  export function createModelComment(id, comment, userType) {
     BlockToast.fire({
       text: "Creating comment ..."
     });
 
     Inertia.post(
-      route(auth.user.user_type + ".multiaccess.product_models.comment_on_model", id),
+      route(userType + ".multiaccess.product_models.comment_on_model", id),
       { comment },
       {
         preserveState: true,

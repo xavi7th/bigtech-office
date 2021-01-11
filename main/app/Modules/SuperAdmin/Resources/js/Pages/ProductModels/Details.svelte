@@ -141,7 +141,7 @@
         class="btn btn-brand"
         slot="footer-buttons"
         on:click={() => {
-          createModelComment(productModel.id, comment);
+          createModelComment(productModel.id, comment, auth.user.user_type);
         }}>
         Add Comment
       </button>
@@ -173,7 +173,7 @@
           <button
             class="btn btn-brand"
             on:click={() => {
-              createModelDescription(productModel.id, description);
+              createModelDescription(productModel.id, description, auth.user.user_type);
             }}>
             Add Description
           </button>
@@ -181,7 +181,7 @@
           <button
             class="btn btn-warning"
             on:click={() => {
-              updateModelDescription(productModel.id, description);
+              updateModelDescription(productModel.id, description, auth.user.user_type);
             }}>
             Update Description
           </button>

@@ -7,7 +7,6 @@
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
 
-
   $: ({ auth } = $page.props);
 
   export let onlineReps = [],

@@ -43,7 +43,7 @@
         preConfirm: () => {
           return Inertia.put(
             route(
-              $page.auth.user.user_type + ".multiaccess.product_models.update_model_qa_tests",
+              $page.props.auth.user.user_type + ".multiaccess.product_models.update_model_qa_tests",
               productModelId
             ),
             {

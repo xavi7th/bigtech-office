@@ -2,6 +2,9 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
+	import { page } from '@inertiajs/inertia-svelte'
+
+  $: ({auth} = $page.props);
 
   let salesChannelName, salesChannelId;
 
