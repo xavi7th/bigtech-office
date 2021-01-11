@@ -20,7 +20,7 @@ mix.scripts([
         __dirname + '/Resources/js/vendor/feather.min.js',
         // __dirname + '/Resources/js/vendor/jquery.overlayScrollbars.min.js',
         __dirname + '/Resources/js/vendor/yaybar.js',
-        __dirname + '/Resources/js/vendor/ofi.min.js',
+        // __dirname + '/Resources/js/vendor/ofi.min.js',
         __dirname + '/Resources/js/vendor/jquery.fancybox.min.js',
         __dirname + '/Resources/js/vendor/swiper.min.js',
         __dirname + '/Resources/js/vendor/Chart.min.js',
