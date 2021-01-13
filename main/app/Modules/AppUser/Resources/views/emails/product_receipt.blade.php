@@ -2154,7 +2154,7 @@
                                                             <tbody>
                                                               <tr>
                                                                 <td>1</td>
-                                                                <td>{{ $receipt->product->product_model->name }}</td>
+                                                                <td>{{ $receipt->product->full_name }}</td>
                                                                 <td>{{ $receipt->product->primary_identifier() }}</td>
                                                                 <td>{{ to_naira($receipt->amount_paid) }}</td>
                                                               </tr>
