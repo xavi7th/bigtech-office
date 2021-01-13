@@ -42,7 +42,8 @@
   <div class="row vertical-gap">
     <div class="col-12">
       <div class="table-responsive">
-        <table class="table table-bordered rui-datatable" data-order="[]">
+        <!-- svelte-ignore missing-declaration -->
+        <table class="table table-bordered rui-datatable" data-order="[]" use:initialiseDatatable>
           <thead class="thead-dark">
             <tr>
               <th scope="col">
