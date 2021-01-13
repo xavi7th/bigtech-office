@@ -239,7 +239,6 @@ class ProductSaleRecord extends BaseModel
 
   /**
    * !This belongs to accountants only
-   * @param Product $product The product to mark as sold
    */
   public function confirmSaleRecord(Request $request, self $productSaleRecord)
   {
@@ -256,6 +255,9 @@ class ProductSaleRecord extends BaseModel
       }
     }
 
+    /**
+     * @var Product $product
+     */
     $product = $productSaleRecord->product;
 
     $status_id = ProductStatus::saleConfirmedId();

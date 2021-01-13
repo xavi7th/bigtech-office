@@ -60,17 +60,10 @@
         confirmButtonText: "Yes, carry on!",
         showLoaderOnConfirm: true,
         preConfirm: () => {
-          let formData = new FormData();
 
-          _.forEach(
-            _.omit(details, ["set", "update", "subscribe"]),
-            (val, key) => {
-              formData.append(key, val);
-            }
-          );
           return Inertia.post(
             route(auth.user.user_type + ".multiaccess.products.mark_as_sold", productToMarkAsSold),
-            formData,
+            details,
             {
               preserveState: true,
               preserveScroll: true,
@@ -176,7 +169,7 @@
     {#if !auth.user.isDispatchAdmin}
       <div class="col-12">
         <select class="custom-select" bind:value={details.online_rep_id}>
-          <option selected>Select Online Rep</option>
+          <option selected value={null}>Select Online Rep</option>
           {#each onlineReps as rep}
             <option value={rep.id}>{rep.full_name}</option>
           {/each}
