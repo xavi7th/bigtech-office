@@ -767,7 +767,7 @@ class Product extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create product sales record ' . $request->email], 500);
-      return back()->withFlash(['error'=>['Could not create product sales record. Try again']]);
+      return back()->withFlash(['error'=>['Could not create product sales record. Try again' . $th->getMessage()]]);
     }
 
     /**
@@ -792,7 +792,7 @@ class Product extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create account profile for ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create account profile for ' . $request->email], 500);
-      return back()->withFlash(['error'=>['Could not create account profile for buyer. Try again']]);
+      return back()->withFlash(['error'=>['Could not create account profile for buyer. Try again' . $th->getMessage()]]);
     }
 
     /**
@@ -810,7 +810,7 @@ class Product extends BaseModel
       list($id_url, $receipt_url) = SwapDeal::store_documents($request);
       if (!SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url)) {
         if ($request->isApi()) return response()->json(['err' => 'Transaction not completed. The swap details could not be created'], 500);
-        return back()->withFlash(['error'=>['Transaction not completed. The swap details could not be created']]);
+        return back()->withFlash(['error'=>['Transaction not completed. The swap details could not be created' . $th->getMessage()]]);
       }
     }
 
@@ -827,7 +827,7 @@ class Product extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withFlash(['success'=>'Product has been marked as sold. It will no longer be available in stock']);
+    return back()->withFlash(['success'=>'Product has been marked as sold. It will no longer be available in stock' . $th->getMessage()]);
   }
 
   public function commentOnProduct(CreateProductCommentValidation $request, self $product)
