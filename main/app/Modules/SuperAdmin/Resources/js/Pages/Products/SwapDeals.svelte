@@ -6,6 +6,7 @@
   import MarkSwapDealAsSoldModal from "@usershared/MarkSwapDealAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
+  import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
 
@@ -91,7 +92,7 @@
                   </span>
                  {/if}
                 </td>
-                <td>{product.selling_price}</td>
+                <td>{toCurrency(product.selling_price)}</td>
                 <td class="nowrap">
                   <InertiaLink
                     type="button"
@@ -113,7 +114,7 @@
                     {#if product.status == 'in stock'}
                       <button
                         on:click={() => {
-                          productToSendToDispatch = `Awoof Device: ${product.description}, Price: ${product.selling_price}`;
+                          productToSendToDispatch = `Awoof Device: ${product.description}, Price: ${toCurrency(product.selling_price)}`;
                         }}
                         type="button"
                         data-toggle="modal"

@@ -6,6 +6,7 @@
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
+import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
 
@@ -91,7 +92,7 @@
                     <strong class="small font-weight-bold badge badge-brand">{product.status}</strong>
                   {/if}
                 </td>
-                <td>{product.selling_price}</td>
+                <td>{toCurrency(product.selling_price)}</td>
                 <td>
                   {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
                     <InertiaLink

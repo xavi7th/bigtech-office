@@ -1,4 +1,6 @@
 <script>
+import { toCurrency } from '@public-shared/helpers';
+
   import Layout from "@superadmin-shared/SuperAdminLayout";
 
   export let expenses, date;
@@ -34,8 +36,8 @@
                     STATUS: {expense.product.status}
                   </span>
                 </td>
-                <td>{expense.product.cost_price}</td>
-                <td>{expense.amount}</td>
+                <td>{toCurrency(expense.product.cost_price)}</td>
+                <td>{toCurrency(expense.amount)}</td>
                 <td>{expense.reason}</td>
               </tr>
             {/each}

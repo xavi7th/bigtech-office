@@ -3,6 +3,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
+  import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
 
@@ -117,12 +118,12 @@
             </tr>
             <tr>
               <td class="text-primary"><strong>Swap Value</strong></td>
-              <th scope="row"><strong>{swapDeal.swap_value}</strong></th>
+              <th scope="row"><strong>{toCurrency(swapDeal.swap_value)}</strong></th>
             </tr>
             {#if auth.user.isSuperAdmin || auth.user.isAccountant}
               <tr>
                 <td class="text-primary"><strong>Sold At</strong></td>
-                <th scope="row"><strong>{swapDeal.sold_at}</strong></th>
+                <th scope="row"><strong>{toCurrency(swapDeal.sold_at)}</strong></th>
               </tr>
             {/if}
             <tr>
@@ -144,7 +145,7 @@
           {/if}
           <tr>
             <td class="text-primary"><strong>Selling Price</strong></td>
-            <th scope="row"><strong>{swapDeal.selling_price}</strong></th>
+            <th scope="row"><strong>{toCurrency(swapDeal.selling_price)}</strong></th>
           </tr>
 
           <tr>

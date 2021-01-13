@@ -3,6 +3,7 @@
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
   import Icon from "@superadmin-shared/Partials/TableSortIcon.svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
+  import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
   export let onlineReps = [],
@@ -53,8 +54,8 @@
                 <th scope="row">{idx + 1}</th>
                 <td>{product.model}</td>
                 <td>{product.identifier}</td>
-                <td>{product.cost_price}</td>
-                <td>{product.selling_price}</td>
+                <td>{toCurrency(product.cost_price)}</td>
+                <td>{toCurrency(product.selling_price)}</td>
                 <td>
                   {#if auth.user.isSuperAdmin}
                     <InertiaLink

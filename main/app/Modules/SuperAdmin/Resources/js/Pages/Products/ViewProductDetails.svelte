@@ -3,6 +3,7 @@
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
+import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
 
@@ -71,8 +72,8 @@
               </td>
               <th scope="row">
                 <strong>
-                  {productDetails.buyer.first_name} ({productDetails.email} from
-                  {productDetails.city})
+                  {productDetails.buyer.first_name} ({productDetails.buyer.email} from
+                  {productDetails.buyer.city})
                 </strong>
               </th>
             </tr>
@@ -82,7 +83,7 @@
               <strong>Cost Price</strong>
             </td>
             <th scope="row">
-              <strong>{productDetails.cost_price}</strong>
+              <strong>{toCurrency(productDetails.cost_price)}</strong>
             </th>
           </tr>
          {/if}
@@ -91,7 +92,7 @@
               <strong>Selling Price</strong>
             </td>
             <th scope="row">
-              <strong>{productDetails.selling_price}</strong>
+              <strong>{toCurrency(productDetails.selling_price)}</strong>
             </th>
           </tr>
           <tr>

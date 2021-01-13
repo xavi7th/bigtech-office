@@ -2,6 +2,7 @@
 import { Inertia } from '@inertiajs/inertia';
 
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
+import { toCurrency } from '@public-shared/helpers';
   import Layout from "@superadmin-shared/SuperAdminLayout";
 
 
@@ -50,15 +51,15 @@ import { Inertia } from '@inertiajs/inertia';
             </tr>
           </thead>
           <tbody>
-            {#each productBatchWithPriceDetails.prices as price, idx}
+            {#each productBatchWithPriceDetails.prices as product, idx}
               <tr>
                 <th scope="row">{idx + 1}</th>
-                <td>{price.color} {price.model} {price.storage_size}</td>
-                <td>{price.supplier}</td>
-                <td>{price.grade}</td>
-                <td>{price.cost_price}</td>
+                <td>{product.color} {product.model} {product.storage_size}</td>
+                <td>{product.supplier}</td>
+                <td>{product.grade}</td>
+                <td>{toCurrency(product.cost_price)}</td>
                 <td>
-                  {price.proposed_selling_price}
+                  {toCurrency(product.proposed_selling_price)}
                     {#if $page.props.auth.user.isAccountant}
                       <InertiaLink
                       href={route('accountant.prices.edit_page', price.id)}

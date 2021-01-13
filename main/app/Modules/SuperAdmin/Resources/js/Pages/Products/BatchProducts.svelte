@@ -2,6 +2,7 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
+import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
 
@@ -98,14 +99,14 @@
                 <td>{product.product_expenses_sum}</td>
                 {#if auth.user.isSuperAdmin || auth.user.isAccountant}
                   <td>
-                    {product.cost_price}
+                    {toCurrency(product.cost_price)}
                     <span class="d-none">
                       {#if product.is_today}
                         TODAY
                       {:else if product.is_yersteday}Yesterday{/if}
                     </span>
                   </td>
-                  <td>{product.selling_price}</td>
+                  <td>{toCurrency(product.selling_price)}</td>
                 {/if}
                 <td>
                   {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
