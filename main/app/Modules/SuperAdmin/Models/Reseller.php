@@ -361,6 +361,9 @@ class Reseller extends BaseModel
   public function markProductAsSold(Request $request, self $reseller, $product_uuid)
   {
     try {
+      /**
+      * @var Product $product
+      */
       $product = Product::whereProductUuid($product_uuid)->firstOr(fn () => SwapDeal::whereProductUuid($product_uuid)->firstOrFail());
     } catch (ModelNotFoundException $th) {
       return generate_422_error('The product you are trying to mark as sold does not exist');
@@ -403,7 +406,7 @@ class Reseller extends BaseModel
       ]);
 
       /**
-       * Update the entry in the product reseller table to reflect returned
+       * Update the entry in the product reseller table to reflect sold
        */
       if ($product instanceof Product) {
         $reseller->products()->where('product_id', $product->id)->update([
@@ -433,8 +436,8 @@ class Reseller extends BaseModel
      */
     $product->product_sales_record()->create([
       'selling_price' => $request->selling_price,
-      'sales_rep_id' => SalesRep::defaultSystemAccountId(),
-      'online_rep_id' => SalesRep::defaultSystemAccountId(),
+      'sales_rep_id' => $request->user()->id,
+      'online_rep_id' => null,
       'sales_channel_id' => SalesChannel::resellerId(),
     ]);
 
