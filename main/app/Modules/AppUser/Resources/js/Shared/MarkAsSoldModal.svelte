@@ -72,7 +72,8 @@
                  details = {
                   online_rep_id: null,
                   sales_channel_id: null
-                };
+                }
+                jQuery('#enterSalesDetails').modal('hide');
               }
             }
           )

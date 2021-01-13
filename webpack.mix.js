@@ -9,13 +9,14 @@ require('laravel-mix-svelte');
 require('laravel-mix-bundle-analyzer');
 require('laravel-mix-purgecss');
 
+let fs = require('fs-extra');
+let modules = fs.readdirSync('./main/app/Modules');
+
 // dotenvExpand(require('dotenv')
 // 	.config({
 // 		path: __dirname + '/main/.env',
 // 		debug: true
 // 	}));
-let fs = require('fs-extra');
-let modules = fs.readdirSync('./main/app/Modules');
 // let siteUrl = process.env.APP_URL.replace(/(^\w+:|^)\/\//, '');
 
 // console.log(process.env);
@@ -192,3 +193,27 @@ if (mix.inProduction()) {
 // mix.after(webpackStats => {
 //     console.log(Object.keys(webpackStats.compilation.assets));
 // });
+
+mix.browserSync({
+  proxy:'romzynew.test/login',
+  // Disable UI completely
+  // ui: false,
+  // files: [
+  //   "wp-content/themes/**/*.css",
+  //   {
+  //       match: ["wp-content/themes/**/*.php"],
+  //       fn:    function (event, file) {
+  //           /** Custom event handler **/
+  //       }
+  //   }
+  // ],
+  // ghostMode: {
+  //   clicks: true,
+  //   forms: true,
+  //   scroll: false
+  // },
+  // notify: false,
+  // reloadDelay: 2000,
+  // // Don't append timestamps to injected files
+  // timestamps: false
+})
