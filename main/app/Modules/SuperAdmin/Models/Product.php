@@ -313,7 +313,7 @@ class Product extends BaseModel
   public function generateReceipt(float $amount): ProductReceipt
   {
     /** If there is no app_user attached to the product, it is most likely a reseller sale **/
-    if ($this->is_sold() && $this->app_user->first_name = 'Not Sold') {
+    if ($this->is_sold() && $this->app_user->first_name == 'Not Sold') {
       return new ProductReceipt;
     }
     return $this->productReceipt()->create([
