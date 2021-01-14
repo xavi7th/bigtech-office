@@ -25,6 +25,7 @@
 		"nwidart/laravel-modules": "^7.1",
 		"orangehill/iseed": "^2.6",
 		"rachidlaasri/travel": "^1.0",
+		"spatie/laravel-ray": "^1.4",
 		"tightenco/ziggy": "^1.0",
 		"tymon/jwt-auth": "^1.0",
 		"wewowweb/laravel-svelte-preset": "^0.1.8"

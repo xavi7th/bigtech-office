@@ -214,7 +214,7 @@
             <tr>
               <th scope="col">S/No</th>
               <th scope="col">Name/Email</th>
-              <th scope="col">Today's Bonus</th>
+              <th scope="col">Monthly Bonus</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -228,7 +228,11 @@
                   <span>{salesRep.email}</span>
                 </td>
                 <td class="text-nowrap">
-                  {(toCurrency(salesRep.statistics.today_online_sales_bonus_amount))} / {(toCurrency(salesRep.statistics.today_walk_in_sales_bonus_amount))}
+                  {#if salesRep.is_online_sales_rep}
+                    {(toCurrency(salesRep.statistics.monthly_online_sales_bonus_amount))}
+                  {:else}
+                     {(toCurrency(salesRep.statistics.monthly_walk_in_sales_bonus_amount))}
+                  {/if}
                 </td>
                 <td class="d-flex justify-content-between align-content-center">
                    <button
@@ -239,6 +243,7 @@
                     on:click={() => {
                       salesRepStatistics = salesRep.statistics;
                       salesRepStatistics.full_name = salesRep.full_name;
+                      salesRepStatistics.is_online_sales_rep = salesRep.is_online_sales_rep;
                     }}>
                     Statistics
                   </button>
@@ -339,18 +344,29 @@
 {#if salesRepStatistics.full_name}
     <Modal modalId="viewSalesRepStatistics" modalTitle="{salesRepStatistics.full_name}´s Sales Statistics">
       <ul class="list-group">
-          <li class="list-group-item list-group-item-warning">Today's Online Sales Amount: { toCurrency(salesRepStatistics.today_online_sales_amount) }</li>
-          <li class="list-group-item list-group-item-warning">Today's Walk In Sales Amount: { toCurrency(salesRepStatistics.today_walk_in_sales_amount) }</li>
-          <li class="list-group-item list-group-item-primary">Today's Online Bonus Amount: { toCurrency(salesRepStatistics.today_online_sales_bonus_amount) }</li>
-          <li class="list-group-item list-group-item-primary">Today's Walk In Bonus Amount: { toCurrency(salesRepStatistics.today_walk_in_sales_bonus_amount) }</li>
-          <li class="list-group-item list-group-item-secondary">Today's Online Sales Count: {salesRepStatistics.today_online_sales_count}</li>
-          <li class="list-group-item list-group-item-secondary">Today's Walk In Sales Count: {salesRepStatistics.today_walk_in_sales_count}</li>
-          <li class="list-group-item list-group-item-success">Total's Online Sales Amount: { toCurrency(salesRepStatistics.total_online_sales_amount) }</li>
-          <li class="list-group-item list-group-item-success">Total's Walk In Sales Amount: { toCurrency(salesRepStatistics.total_walk_in_sales_amount) }</li>
-          <li class="list-group-item list-group-item-info">Total's Online Sales Bonus Amount: { toCurrency(salesRepStatistics.total_online_sales_bonus_amount) }</li>
-          <li class="list-group-item list-group-item-info">Total's Walk In Sales Bonus Amount: { toCurrency(salesRepStatistics.total_walk_in_sales_bonus_amount) }</li>
-          <li class="list-group-item list-group-item-danger">Total Online Sales Count: {salesRepStatistics.total_online_sales_count}</li>
-          <li class="list-group-item list-group-item-danger">Total Walk In Sales Count: {salesRepStatistics.total_walk_in_sales_count}</li>
+        {#if salesRepStatistics.is_online_sales_rep}
+          <li class="list-group-item list-group-item-secondary">Today's Sales Count: {salesRepStatistics.today_online_sales_count}</li>
+          <li class="list-group-item list-group-item-primary">Today's Bonus Amount: { toCurrency(salesRepStatistics.today_online_sales_bonus_amount) }</li>
+          <li class="list-group-item list-group-item-warning">Today's Sales Amount: { toCurrency(salesRepStatistics.today_online_sales_amount) }</li>
+          <li class="list-group-item list-group-item-secondary">Monthly Sales Count: {salesRepStatistics.monthly_online_sales_count}</li>
+          <li class="list-group-item list-group-item-primary">Monthly Bonus Amount: { toCurrency(salesRepStatistics.monthly_online_sales_bonus_amount) }</li>
+          <li class="list-group-item list-group-item-warning">Monthly Sales Amount: { toCurrency(salesRepStatistics.monthly_online_sales_amount) }</li>
+          <li class="list-group-item list-group-item-danger">Total Sales Count: {salesRepStatistics.total_online_sales_count}</li>
+          <li class="list-group-item list-group-item-info">Total's Sales Bonus Amount: { toCurrency(salesRepStatistics.total_online_sales_bonus_amount) }</li>
+          <li class="list-group-item list-group-item-success">Total's Sales Amount: { toCurrency(salesRepStatistics.total_online_sales_amount) }</li>
+        {:else}
+          <li class="list-group-item list-group-item-secondary">Today's Sales Count: {salesRepStatistics.today_walk_in_sales_count}</li>
+          <li class="list-group-item list-group-item-primary">Today's Bonus Amount: { toCurrency(salesRepStatistics.today_walk_in_sales_bonus_amount) }</li>
+          <li class="list-group-item list-group-item-warning">Today's Sales Amount: { toCurrency(salesRepStatistics.today_walk_in_sales_amount) }</li>
+          <li class="list-group-item list-group-item-secondary">Monthly Sales Count: {salesRepStatistics.monthly_walk_in_sales_count}</li>
+          <li class="list-group-item list-group-item-primary">Monthly Bonus Amount: { toCurrency(salesRepStatistics.monthly_walk_in_sales_bonus_amount) }</li>
+          <li class="list-group-item list-group-item-warning">Monthly Sales Amount: { toCurrency(salesRepStatistics.monthly_walk_in_sales_amount) }</li>
+          <li class="list-group-item list-group-item-danger">Total Sales Count: {salesRepStatistics.total_walk_in_sales_count}</li>
+          <li class="list-group-item list-group-item-info">Total's Sales Bonus Amount: { toCurrency(salesRepStatistics.total_walk_in_sales_bonus_amount) }</li>
+          <li class="list-group-item list-group-item-success">Total's Sales Amount: { toCurrency(salesRepStatistics.total_walk_in_sales_amount) }</li>
+        {/if}
+
+
       </ul>
     </Modal>
 {/if}

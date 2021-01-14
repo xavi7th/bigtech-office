@@ -140,6 +140,10 @@ class SalesRep extends User
   public function getAllSalesReps(Request $request)
   {
 
+    ray()->clearScreen();
+    ray()->showQueries();
+    ray(now()->month);
+
     $salesReps =
       // Cache::rememberForever('allSalesReps', fn() =>
       (new SalesRepTransformer)->collectionTransformer(
@@ -150,6 +154,14 @@ class SalesRep extends User
           'walkInSalesRecords AS total_walk_in_sales_amount' => fn ($query) => $query->select(DB::raw('SUM(selling_price)')),
           'onlineSalesRecords AS total_online_sales_bonus_amount' => fn ($query) => $query->select(DB::raw('SUM(online_rep_bonus)')),
           'walkInSalesRecords AS total_walk_in_sales_bonus_amount' => fn ($query) => $query->select(DB::raw('SUM(walk_in_rep_bonus)')),
+
+          'onlineSalesRecords AS monthly_online_sales_amount' => fn ($query) => $query->thisMonth()->select(DB::raw('SUM(selling_price)')),
+          'walkInSalesRecords AS monthly_walk_in_sales_amount' => fn ($query) => $query->thisMonth()->select(DB::raw('SUM(selling_price)')),
+          'onlineSalesRecords AS monthly_online_sales_bonus_amount' => fn ($query) => $query->thisMonth()->select(DB::raw('SUM(online_rep_bonus)')),
+          'walkInSalesRecords AS monthly_walk_in_sales_bonus_amount' => fn ($query) => $query->thisMonth()->select(DB::raw('SUM(walk_in_rep_bonus)')),
+          'onlineSalesRecords AS monthly_online_sales_count' => fn ($query) => $query->thisMonth(),
+          'walkInSalesRecords AS monthly_walk_in_sales_count' => fn ($query) => $query->thisMonth(),
+
           'onlineSalesRecords AS today_online_sales_count' => fn ($query) => $query->today(),
           'walkInSalesRecords AS today_walk_in_sales_count' => fn ($query) => $query->today(),
           'onlineSalesRecords AS today_online_sales_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(selling_price)')),
@@ -160,7 +172,11 @@ class SalesRep extends User
         'transformForSuperAdminViewSalesReps'
       );
     // });
-    // dd($salesReps);
+
+    ray()->stopShowingQueries();
+
+    ray($salesReps);
+
     if ($request->isApi())  return response()->json($salesReps, 200);
     return Inertia::render('SuperAdmin,ManageStaff/ManageSalesReps', compact('salesReps'));
 
