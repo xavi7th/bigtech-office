@@ -119,6 +119,20 @@ use App\Modules\PublicPages\Notifications\SendPasswordResetNotification;
  * @method static \Illuminate\Database\Eloquent\Builder|AppUser wherePaystackNubanBank($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AppUser wherePaystackNubanName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereVerifiedAt($value)
+ * @property string $name
+ * @property string $unenc_password
+ * @property string $ref_id
+ * @property string $acc_type_color
+ * @property string $currency
+ * @property string|null $btc_wallet
+ * @property int $force_logout
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereAccTypeColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereBtcWallet($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereForceLogout($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereRefId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereUnencPassword($value)
  */
 class AppUser extends User
 {

@@ -31,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereFirstName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereMessage($value)
+ * @property string $name
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereName($value)
  */
 class Message extends Model
 {
