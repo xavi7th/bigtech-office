@@ -29,7 +29,15 @@ task('app:change_release_path', function () {
 
 desc('copy shared files');
 task('app:shared:copy', function () {
+    upload('.env.example', '{{deploy_path}}/shared/main');
     upload('.env', '{{deploy_path}}/shared/main');
+    run('mv -f {{deploy_path}}/shared/main/.env.example {{deploy_path}}/shared/main/.env');
+    run('unlink {{deploy_path}}/shared/public_html/mix-manifest.json');
+    upload('../public_html/css/', '{{deploy_path}}/shared/public_html/css');
+    upload('../public_html/js/', '{{deploy_path}}/shared/public_html/js');
+    upload('../public_html/fonts/', '{{deploy_path}}/shared/public_html/fonts');
+    upload('../public_html/img/', '{{deploy_path}}/shared/public_html/img');
+    upload('../public_html/mix-manifest.json', '{{deploy_path}}/shared/public_html');
 });
 
 

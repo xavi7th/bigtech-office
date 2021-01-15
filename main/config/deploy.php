@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => 'first_install',
+    'default' => 'routine',
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +39,6 @@ return [
         'firstdeploy:shared',
         'deploy:shared',
         'app:custom_deploy_vendor',
-        // 'deploy:vendors',
         'hook:build',
         'deploy:writable',
         'hook:ready',
@@ -49,6 +48,22 @@ return [
         'firstdeploy:cleanup',
         'hook:done',
       ],
+      'routine' => [
+         'hook:start',
+        'deploy:prepare',
+        'deploy:lock',
+        'deploy:release',
+        'deploy:update_code',
+        'deploy:shared',
+        'app:custom_deploy_vendor',
+        'hook:build',
+        'deploy:writable',
+        'hook:ready',
+        'deploy:symlink',
+        'deploy:unlock',
+        'cleanup',
+        'hook:done',
+      ]
     ],
 
     /*
@@ -129,7 +144,14 @@ return [
         'composer_options' => 'install --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader',
         'http_user' => 'kortjwxc',
         'writable_mode' => 'chmod',
-        'shared_files' => ['main/.env', 'main/.env.example']
+        'shared_files' => ['main/.env', 'main/.env.example', 'public_html/mix-manifest.json'],
+        'shared_dirs' => [
+          'main/storage',
+          'public_html/css',
+          'public_html/js',
+          'public_html/fonts',
+          'public_html/img',
+          ],
 
         // 'branch' => 'releases'
     ],
