@@ -24,7 +24,7 @@ export const toCurrency = (amount, currencySymbol = '₦') => {
 		console.log(amount);
 		return 'Invalid Amount';
 	}
-	return currencySymbol + amount.toFixed(2)
+	return currencySymbol + Number(amount).toFixed(2)
 		.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
 
 	var p = Number(amount)
