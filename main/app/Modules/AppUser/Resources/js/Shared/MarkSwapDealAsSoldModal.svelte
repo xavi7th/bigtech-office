@@ -15,7 +15,7 @@
     },
     files;
 
-  $: if (dispatchDetails) {
+  $: if (!_.isEmpty(dispatchDetails)) {
     details.selling_price = dispatchDetails.proposed_selling_price;
     details.first_name = dispatchDetails.customer_first_name;
     details.last_name = dispatchDetails.customer_last_name;

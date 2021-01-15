@@ -13,6 +13,7 @@ window._ = {
 	every: require('lodash/every'),
 	find: require('lodash/find'),
 	forEach: require('lodash/forEach'),
+	isEmpty: require('lodash/isEmpty'),
 	isEqual: require('lodash/isEqual'),
 	isString: require('lodash/isString'),
 	map: require('lodash/map'),
