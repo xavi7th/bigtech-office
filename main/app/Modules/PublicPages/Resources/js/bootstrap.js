@@ -165,7 +165,7 @@ Inertia.on('finish', (e) => {
  * @param {*} table
  * @param {Object} options
  */
-$.fn.dataTable.Debounce = function(table, options) {
+window.$ && ($.fn.dataTable.Debounce = function(table, options) {
 	var tableId = table.settings()[0].sTableId;
 	$('.dataTables_filter input[aria-controls="' + tableId + '"]') // select the correct input field
 		.off() // Unbind previous default bindings
@@ -175,7 +175,7 @@ $.fn.dataTable.Debounce = function(table, options) {
 				.draw();
 			return;
 		}, options.delay || 1000))); // Set delay in milliseconds
-}
+})
 
 function delay(callback, ms) {
 	var timer = 0;
