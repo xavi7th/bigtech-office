@@ -1,7 +1,7 @@
 import { App } from '@inertiajs/inertia-svelte'
 import { InertiaProgress } from '@inertiajs/progress'
 import { Inertia } from "@inertiajs/inertia";
-import { initialiseDatatable, initialiseSwiper } from "@public-shared/actions";
+import { initialiseDatatable, initialiseSwiper, initialiseServerSideDatatable } from "@public-shared/actions";
 import { getErrorString, mediaHandler } from "@public-shared/helpers";
 
 window.swal = require('sweetalert2')
@@ -28,6 +28,7 @@ window._ = {
 	uniq: require('lodash/uniq'),
 }
 window.initialiseDatatable = initialiseDatatable;
+window.initialiseServerSideDatatable = initialiseServerSideDatatable;
 window.initialiseSwiper = initialiseSwiper;
 window.Toast = swal.mixin({
 	toast: true,
@@ -147,6 +148,46 @@ Inertia.on('exception', (event) => {
 Inertia.on('finish', (e) => {
   // console.log(e);
 })
+
+/**
+ * This should solve everyone's problem. The code below only executes the server side search once a user has stopped typing
+ * and 1 second has transpired. Courtesy goes to https://stackoverflow.com/a/1909508 for the delay function. Just as an FYI,
+ * I elected on using the older delay function in my example below, as the new function from 2019-05-16 does not support Internet Explorer.
+ *
+ * I took pjdarch 's function and turned it into a feature plugin.
+ * Then, after you 've instantiated your DataTable, you need to create a new instance of the feature on a given table:
+ *
+ * var table = $("#table_selector").DataTable();
+ * var debounce = new $.fn.dataTable.Debounce(table);
+ *
+ * I am using this thus in my actions
+ *
+ * @param {*} table
+ * @param {Object} options
+ */
+$.fn.dataTable.Debounce = function(table, options) {
+	var tableId = table.settings()[0].sTableId;
+	$('.dataTables_filter input[aria-controls="' + tableId + '"]') // select the correct input field
+		.off() // Unbind previous default bindings
+		.on('input', (delay(function(e) { // Bind our desired behavior
+			table.search($(this)
+					.val())
+				.draw();
+			return;
+		}, options.delay || 1000))); // Set delay in milliseconds
+}
+
+function delay(callback, ms) {
+	var timer = 0;
+	return function() {
+		var context = this,
+			args = arguments;
+		clearTimeout(timer);
+		timer = setTimeout(function() {
+			callback.apply(context, args);
+		}, ms || 0);
+	};
+}
 
 let { isMobile, isDesktop } = mediaHandler();
 

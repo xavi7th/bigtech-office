@@ -249,6 +249,77 @@ export const initialiseDatatable = (elem, params = {}) => {
 		// }
 	};
 }
+export const oldInitialiseServerSideDatatable = (elem, params = {}) => {
+
+	console.table(params);
+
+	let table = jQuery(elem)
+		.DataTable({
+			destroy: true,
+			processing: true,
+			serverSide: true,
+			searchDelay: 2000,
+			order: [[2, "desc"]],
+			dom: "<lfB<t><ip>>",
+			buttons: ["excel", "pdf"],
+			rowId: 'uuid',
+			columns: [
+				{ "data": "uuid" },
+				{ "data": "model" },
+				{ "data": "identifier" },
+				{ "data": "selling_price" },
+				{
+					"data": 'return',
+					render: function(data, type, row, meta) {
+						console.log(data, type, row, meta);
+						return ` <button
+                        type="button"
+                        on:click={() => {
+                          returnToStock(${row.uuid});
+                        }}
+                        class="btn btn-orange btn-xs btn-sm text-nowrap">
+                        Return to Stock
+                      </button>`
+					}
+        },
+				// { "data": "status" },
+				// { "data": "storage_size" },
+				// { "data": "supplier" },
+      ],
+			responsive: params.responsive || false,
+			footerCallback: displayTableSum(params.callBackColumn),
+			infoCallback: function(settings, start, end, max, total, pre) {
+				// console.log(settings, start, end, max, total, pre);
+				var api = this.api();
+				var pageInfo = api.page.info();
+				return pre;
+				return 'Showing ' + start + ' to ' + end + ' of ' + total + ' results';
+				return 'Page ' + (pageInfo.page + 1) + ' of ' + pageInfo.pages;
+			},
+			ajax: {
+				url: params.dataUrl,
+				// type: "POST",
+				data: function(d) {
+					d.myKey = "myValue";
+					// d.custom = $('#myInput').val();
+					// etc
+				}
+			}
+		});
+
+	let debounce = new $.fn.dataTable.Debounce(table, { delay: params.delay });
+
+	return {
+		// destroy() {
+		// 	table.destroy();
+		// }
+	};
+}
+
+export const initialiseServerSideDatatable = (elem, params = {}) => {
+	console.log(params);
+	params.data = []
+}
 
 export const initialiseSwiper = (elem, params = {}) => {
 	var mySwiper = new Swiper(elem)

@@ -69,3 +69,24 @@ dl.phpdebugbar-widgets-kvlist dt {
 		padding: 3px;
 	}
 }
+
+.is-searching {
+
+	position: relative;
+
+	&:before {
+		content: "Processing...";
+		display: flex;
+		position: absolute;
+		max-height: 100vh;
+		height: 100%;
+		width: 100%;
+		background: rgba($color: #000000, $alpha: 0.52);
+		top: 0;
+		left: 0;
+		z-index: 10;
+		color: white;
+		align-items: center;
+		justify-content: center;
+	}
+}

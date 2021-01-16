@@ -45,6 +45,10 @@ class PublicPagesServiceProvider extends ServiceProvider
     Request::macro('isApi', function () {
       return ($this->ajax() || $this->expectsJson()) && !$this->header('X-Inertia');
     });
+
+    Request::macro('isInertia', function () {
+      return (bool)$this->header('X-Inertia');
+    });
   }
 
   /**

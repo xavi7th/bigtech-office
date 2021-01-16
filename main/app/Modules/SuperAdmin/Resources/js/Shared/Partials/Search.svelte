@@ -10,8 +10,7 @@
       }
 
       Inertia.get(route($page.props.auth.user.user_type + '.multiaccess.products.find_product'), {
-        q:searchQuery,
-        search_key:'imei'
+        searchQuery
       },{
         only:['flash', 'errors'],
         onBefore: visit => isSearching = true,

@@ -432,32 +432,36 @@ class Product extends BaseModel
 
   public function findProduct(Request $request)
   {
-    if (!($request->q)) return generate_422_error('Enter your search parameters');
-    $products = self::where('imei', 'LIKE', '%' . $request->q . '%')->orWhere('serial_no', 'LIKE', '%' . $request->q . '%')->orWhere('model_no', 'LIKE', '%' . $request->q . '%')->get();
+    if (!($request->searchQuery)) return generate_422_error('Enter your search parameters');
+
+    if (!$request->searchKey) $products = self::where('imei', 'LIKE', '%' . $request->q . '%')->orWhere('serial_no', 'LIKE', '%' . $request->q . '%')->orWhere('model_no', 'LIKE', '%' . $request->q . '%')->get();
 
     return back()->withFlash(["search_results" => (new ProductTransformer)->collectionTransformer($products, 'searchResults')]);
   }
 
   public function getProducts(Request $request)
   {
+    $searchKey = $request->searchKey == 'product_name' ? 'product_model_id' : $request->searchKey;
+    $searchQuery = $request->searchKey == 'product_name' ? ProductModel::where('name', 'LIKE', '%' . $request->searchQuery . '%')->pluck('id')->toArray() : $request->searchQuery;
+
     /**
      * ! Filter list based on logged in user.
      */
 
     if ($request->user()->isStockKeeper()) {
-      $products = fn () => Cache::rememberForever('stockKeeperProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isSalesRep()) {
-      $products = fn () => Cache::rememberForever('salesRepProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isQualityControl()) {
-      $products = fn () => Cache::rememberForever('qualityControlProducts', fn () => (new ProductTransformer)->collectionTransformer(self::untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isDispatchAdmin()) {
-      $products = fn () => Cache::rememberForever('dispatchAdminProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier', 'dispatch_request'])->get(), 'dispatchListing'));
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier', 'dispatch_request'])->take(10)->get(), 'dispatchListing');
     } elseif ($request->user()->isWebAdmin()) {
-      $products = fn () => Cache::rememberForever('webAdminProducts', fn () => (new ProductTransformer)->collectionTransformer(self::inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isAccountant()) {
-      $products = fn () => Cache::rememberForever('accountantProducts', fn () => (new ProductTransformer)->collectionTransformer(self::sold()->orWhere->saleConfirmed()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->sold()->orWhere->saleConfirmed()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin()) {
-      $products = fn () => Cache::rememberForever('products', fn () => (new ProductTransformer)->collectionTransformer(self::with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'productsListing'));
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
     } else {
       $products = collect([]);
     }
@@ -932,6 +936,11 @@ class Product extends BaseModel
   public function scopeLocal($query)
   {
     return $query->where('product_batch_id', ProductBatch::local_supplied_id());
+  }
+
+  public function scopeSearch($query, $searchIndex, $searchParam)
+  {
+    return $searchParam ? (is_array($searchParam) ? $query->whereIn($searchIndex, $searchParam) : $query->where($searchIndex, 'LIKE', '%' . $searchParam . '%')) : $query;
   }
 
   protected static function boot()

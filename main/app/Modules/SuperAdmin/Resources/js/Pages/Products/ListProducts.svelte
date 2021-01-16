@@ -2,11 +2,11 @@
   import { Inertia } from "@inertiajs/inertia";
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
-  import Icon from "@superadmin-shared/Partials/TableSortIcon";
+  import SearchComponent from "@superadmin-shared/Partials/SearchComponent.svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
   import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import SendToDispatchModal from "@usershared/SendToDispatchModal.svelte";
-import { toCurrency } from '@public-shared/helpers';
+  import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
 
@@ -18,7 +18,9 @@ import { toCurrency } from '@public-shared/helpers';
   let productToMarkAsSold,
     productToGiveReseller,
     productToSendToDispatch,
-    dispatchDetails;
+    dispatchDetails,
+    searchKeys={'imei': 'IMEI','serial_no':'Serial No','model_no':'Model No', 'product_name':'Product Name'},
+    isSearching = false;
 
   let returnToStock = product => {
     swalPreconfirm
@@ -56,26 +58,39 @@ import { toCurrency } from '@public-shared/helpers';
     <div class="col-lg-12 col-xl-12">
       <div class="table-responsive-md">
         <!-- svelte-ignore missing-declaration -->
+        <SearchComponent dataKey='products' url={route($page.props.auth.user.user_type + '.multiaccess.products.find_product')} {searchKeys} on:isSearching={e => isSearching = e.detail}/>
         <table
-          class="rui-datatable table table-striped table-bordered table-sm" data-order='[0, "asc"]' use:initialiseDatatable>
+          class="rui-datatable table table-striped table-bordered table-sm" data-order='[0, "asc"]' class:is-searching={isSearching}>
           <thead class="thead-dark">
             <tr>
               <th scope="col">
                 #
-                <Icon />
               </th>
               <th scope="col">
                 Device
-                <Icon />
               </th>
               <th scope="col">
                 Product ID
-                <Icon />
               </th>
               <th scope="col">Selling Price</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
+          <tfoot class="thead-dark">
+            <tr>
+              <th scope="col">
+                #
+              </th>
+              <th scope="col">
+                Device
+              </th>
+              <th scope="col">
+                Product ID
+              </th>
+              <th scope="col">Selling Price</th>
+              <th scope="col">Action</th>
+            </tr>
+          </tfoot>
           <tbody>
             {#each products as product, idx}
               <tr>
