@@ -62,7 +62,7 @@ import { toCurrency } from '@public-shared/helpers';
                   {toCurrency(product.proposed_selling_price)}
                     {#if $page.props.auth.user.isAccountant}
                       <InertiaLink
-                      href={route('accountant.prices.edit_page', price.id)}
+                      href={route('accountant.prices.edit_page', product.id)}
                       class="btn btn-link">
                       Edit
                     </InertiaLink>
