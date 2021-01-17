@@ -23,7 +23,7 @@
               <th scope="col">#</th>
               <th scope="col">Model</th>
               <th scope="col">Sales Rep</th>
-              <th scope="col">Ideal Price</th>
+              <th scope="col">Cost Price</th>
               <th scope="col">Sale Price</th>
               <th scope="col">Channel</th>
               <th scope="col">Confirmer</th>
@@ -49,7 +49,7 @@
                   {record.primary_identifier}
                 </td>
                 <td>{record.sales_rep} <br /> {record.online_rep}</td>
-                <td>{toCurrency(record.proposed_selling_price)}</td>
+                <td>{toCurrency(record.cost_price)}</td>
                 <td>{toCurrency(record.selling_price)}</td>
                 <td>{record.sales_channel}</td>
                 <td>
