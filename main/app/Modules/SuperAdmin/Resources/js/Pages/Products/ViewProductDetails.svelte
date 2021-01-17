@@ -62,7 +62,7 @@
             </td>
             <th scope="row">
               <strong>{productDetails.status}</strong>
-              {#if productDetails.product_receipt_ref_no}
+              {#if productDetails.product_receipt_ref_no && (auth.user.isAccountant || auth.user.isSuperAdmin)}
                 <span><a target="_blank" class="small" href="{route(auth.user.user_type + '.multiaccess.products.receipt', productDetails.product_receipt_ref_no)}">Receipt</a></span>
                 <span><button class="btn btn-xs btn-info" use:inertia="{{ href: route(auth.user.user_type + '.multiaccess.products.resend_receipt', productDetails.uuid), method: 'post' }}">Resend Receipt</button></span>
               {/if}
