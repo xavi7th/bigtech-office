@@ -12,7 +12,8 @@
     <div class="row vertical-gap">
       <div class="col-lg-12 col-xl-12">
         <div class="table-responsive-md">
-          <table class="rui-datatable table table-striped">
+          <!-- svelte-ignore missing-declaration -->
+          <table class="rui-datatable table table-striped" use:initialiseDatatable>
             <thead class="thead-dark">
               <tr>
                 <th scope="col">
