@@ -9,9 +9,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
+use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\AppUser\Http\Controllers\Auth\LoginController;
 use App\Modules\AppUser\Http\Controllers\Auth\RegisterController;
+use App\Modules\AppUser\Notifications\ProductReceiptNotification;
 
 class AppUserController extends Controller
 {
@@ -77,6 +79,12 @@ class AppUserController extends Controller
   public function previewReceipt(Request $request, ProductReceipt $productReceipt)
   {
     return view('appuser::emails.product_receipt', ['receipt' => $productReceipt->load('product.app_user', 'product.product_model', 'product.swapped_deal_device')]);
+  }
+
+  public function resendReceipt(Request $request, Product $product)
+  {
+    $product->app_user->notify(new ProductReceiptNotification($product->productReceipt));
+    return back()->withFlash(['success' => 'Receipt sign']);
   }
 
   public function previewProduct(Request $request)

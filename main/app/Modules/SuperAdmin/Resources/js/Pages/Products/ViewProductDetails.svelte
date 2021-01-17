@@ -1,9 +1,9 @@
 <script>
-  import { page } from "@inertiajs/inertia-svelte";
+  import { page, inertia } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
-import { toCurrency } from '@public-shared/helpers';
+  import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
 
@@ -62,6 +62,10 @@ import { toCurrency } from '@public-shared/helpers';
             </td>
             <th scope="row">
               <strong>{productDetails.status}</strong>
+              {#if productDetails.product_receipt_ref_no}
+                <span><a target="_blank" class="small" href="{route(auth.user.user_type + '.multiaccess.products.receipt', productDetails.product_receipt_ref_no)}">Receipt</a></span>
+                <span><button class="btn btn-xs btn-info" use:inertia="{{ href: route(auth.user.user_type + '.multiaccess.products.resend_receipt', productDetails.uuid), method: 'post' }}">Resend Receipt</button></span>
+              {/if}
             </th>
           </tr>
          {#if auth.user.isAccountant || auth.user.isSuperAdmin}

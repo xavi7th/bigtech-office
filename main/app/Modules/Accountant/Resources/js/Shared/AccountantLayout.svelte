@@ -8,6 +8,7 @@
   import Footer from "@superadmin-shared/Partials/Footer";
   import PageTitle from "@superadmin-shared/Partials/PageTitle.svelte";
   import Search from '@superadmin-shared/Partials/Search.svelte';
+  import PageLoader from '@public-shared/PageLoader.svelte';
 
   $: ({ app, routes } = $page.props);
 
@@ -47,6 +48,8 @@
 
     <slot name="modals" />
     <Search />
+  {:else}
+    <PageLoader />
   {/if}
 </div>
 

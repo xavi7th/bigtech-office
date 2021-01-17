@@ -81,6 +81,7 @@ class ProductTransformer
   {
     return [
       'id' => (int)$product->id,
+      'product_receipt_ref_no' => optional($product->productReceipt)->order_ref,
       'location' => (string)$product->location->city,
       'color' => (string)$product->product_color->name,
       'grade' => (string)$product->product_grade->grade,

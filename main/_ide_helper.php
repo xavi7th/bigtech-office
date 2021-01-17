@@ -10132,6 +10132,16 @@
         {
                         return \Illuminate\Http\Request::isApi();
         }
+                    /**
+         * 
+         *
+         * @see \App\Modules\PublicPages\Providers\PublicPagesServiceProvider::register()
+         * @static 
+         */ 
+        public static function isInertia()
+        {
+                        return \Illuminate\Http\Request::isInertia();
+        }
          
     }
             /**
@@ -16336,6 +16346,16 @@
         public static function isApi()
         {
                         return \Illuminate\Http\Request::isApi();
+        }
+                    /**
+         * 
+         *
+         * @see \App\Modules\PublicPages\Providers\PublicPagesServiceProvider::register()
+         * @static 
+         */ 
+        public static function isInertia()
+        {
+                        return \Illuminate\Http\Request::isInertia();
         }
          
     }

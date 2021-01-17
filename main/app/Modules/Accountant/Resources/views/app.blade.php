@@ -8,17 +8,20 @@
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400%7cOpen+Sans:300,400,600%7cPT+Serif:400i">
 	<link rel="icon" type="image/png" href="/img/favicon.png">
+
 	@routes(['accountant','auth', 'public', 'multiaccess'])
+
 </head>
 
 <body>
+
 	@inertia
 
 	<script src="{{ mix('/js/manifest.js') }}" defer async></script>
 	<script src="{{ mix('/js/vendor.js') }}" defer async></script>
 	<script src="{{ mix('js/accountant.js') }}" defer></script>
-  <link rel="stylesheet" href="{{ mix('css/dashboard-app.css') }}">
-  <link rel="stylesheet" href="{{ mix('css/accountant-app.css') }}">
+	<link rel="stylesheet" href="{{ mix('css/dashboard-app.css') }}">
+	<link rel="stylesheet" href="{{ mix('css/accountant-app.css') }}">
 
 </body>
 

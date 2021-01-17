@@ -4,6 +4,7 @@ namespace App\Modules\SuperAdmin\Models;
 
 use Cache;
 use App\BaseModel;
+use App\Modules\AppUser\Http\Controllers\AppUserController;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -416,6 +417,8 @@ class Product extends BaseModel
 
       Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss,a,ac,d,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,admin,dispatch_admin,web_admin,accountant');
       Route::get('/search', [self::class, 'findProduct'])->name($p('find_product'))->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+      Route::get('/receipt/{productReceipt:order_ref}', [AppUserController::class, 'previewReceipt'])->name($p('receipt'))->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+      Route::post('/receipt/{product:product_uuid}', [AppUserController::class, 'resendReceipt'])->name($p('resend_receipt'))->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name($p('daily_records'))->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('ss,sk,a,ac', 'archive'))->middleware('auth:super_admin,stock_keeper,admin,accountant');
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss,a,ac', 'archive', true))->middleware('auth:super_admin,admin,accountant');
@@ -475,7 +478,7 @@ class Product extends BaseModel
 
   public function getProductDetails(Request $request, Product $product)
   {
-    $productDetails = $product->load([
+    $productDetails = $product->load(['productReceipt',
       'product_color',
       'product_grade',
       'product_model',
