@@ -5,7 +5,7 @@ namespace App\Modules\SuperAdmin\Transformers;
 use App\User;
 use App\Modules\SuperAdmin\Transformers\AdminActivityLogTransformer;
 
-class AdminUserTransformer
+class SuperAdminAppUserTransformer
 {
   public function collectionTransformer($collection, $transformerMethod)
   {
@@ -52,7 +52,8 @@ class AdminUserTransformer
   {
     return [
       'id' => $user->id,
-      'name' => $user->full_name,
+      'first_name' => $user->first_name,
+      'last_name' => $user->last_name,
       'email' => $user->email,
     ];
   }
@@ -61,7 +62,7 @@ class AdminUserTransformer
   {
     return [
       'id' => $user->id,
-      'name' => $user->full_name,
+      'full_name' => $user->full_name,
       'email' => $user->email,
       'activities' => (new AdminActivityLogTransformer)->collectionTransformer($user->activities, 'basicTransform')['activities']
     ];
@@ -79,8 +80,8 @@ class AdminUserTransformer
       'acc_type' => (string)$user->acc_type,
       'acc_num' => (string)$user->acc_num,
       'address' => (string)$user->address,
-      'is_verified' => (boolean)$user->is_verified(),
-      'is_processed' => (boolean)$user->is_processed,
+      'is_verified' => (bool)$user->is_verified(),
+      'is_processed' => (bool)$user->is_processed,
     ];
   }
 }

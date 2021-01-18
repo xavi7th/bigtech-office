@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Http\Controllers;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
@@ -41,13 +42,6 @@ class SuperAdminController extends Controller
   {
     Route::group(['middleware' => ['web'], 'prefix' => SuperAdmin::DASHBOARD_ROUTE_PREFIX], function () {
 
-      // Product::multiAccessRoutes();
-
-      // Reseller::multiAccessRoutes();
-
-      // SwapDeal::multiAccessRoutes();
-
-
       Route::group(['middleware' => ['auth:super_admin']], function () {
 
         Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss,a', 'home', true));
@@ -71,6 +65,8 @@ class SuperAdminController extends Controller
         CompanyBankAccount::superAdminRoutes();
 
         OfficeBranch::superAdminRoutes();
+
+        AppUser::superAdminRoutes();
 
         ErrLog::superAdminRoutes();
       });

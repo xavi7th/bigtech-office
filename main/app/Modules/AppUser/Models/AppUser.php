@@ -4,6 +4,7 @@ namespace App\Modules\AppUser\Models;
 
 use App\User;
 use Carbon\Carbon;
+use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,7 @@ use App\Modules\AppUser\Notifications\ProfileEdited;
 use App\Modules\AppUser\Transformers\AppUserTransformer;
 use App\Modules\PublicPages\Notifications\AccountCreated;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
+use App\Modules\SuperAdmin\Transformers\SuperAdminAppUserTransformer;
 use App\Modules\AppUser\Http\Validations\AppUserUpdateProfileValidation;
 use App\Modules\PublicPages\Notifications\SendPasswordResetNotification;
 
@@ -227,16 +229,18 @@ class AppUser extends User
   }
 
 
-  static function routes()
+  static function superAdminRoutes()
   {
-    Route::group([], function () {
-      Route::get('app-users', [self::class, 'getAllAppUsers'])->middleware('auth:admin,normal_admin,account_officer');
+    Route::name('superadmin.appusers.')->prefix('app-users')->group(function () {
+      Route::get('', [self::class, 'getAllAppUsers'])->name('view_users')->defaults('ex', __e('ss', 'user', false));
 
-      Route::put('app-user/{app_user}/suspend', [self::class, 'suspendAppUser'])->middleware('auth:account_officer');
+      Route::put('{app_user}/update', [self::class, 'updateAppUser'])->name('update_user')->defaults('ex', __e('ss', 'user', true));
 
-      Route::put('app-user/{id}/restore', [self::class, 'unsuspendAppUser'])->middleware('auth:account_officer');
+      Route::put('{app_user}/suspend', [self::class, 'suspendAppUser'])->name('suspend_users')->defaults('ex', __e('ss', 'user', true));
 
-      Route::delete('app-user/{app_user}/delete', [self::class, 'deleteAppUserAccount'])->middleware('auth:admin');
+      Route::put('{id}/restore', [self::class, 'unsuspendAppUser'])->name('restore_users')->defaults('ex', __e('ss', 'user', true));
+
+      Route::delete('{app_user}/delete', [self::class, 'deleteAppUserAccount'])->name('delete_user')->defaults('ex', __e('ss', 'user', true));
     });
   }
 
@@ -315,9 +319,14 @@ class AppUser extends User
     return self::$editableProperties;
   }
 
-  public function getAllAppUsers()
+  public function getAllAppUsers(Request $request)
   {
-    return (new AdminUserTransformer)->collectionTransformer(self::withTrashed()->get(), 'transformForAdminViewAppUsers');
+    $searchKey = $request->searchKey;
+    $searchQuery = $request->searchQuery;
+
+    return Inertia::render('SuperAdmin,AppUser/ManageAppUsers', [
+      'app_users' => (new SuperAdminAppUserTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->withTrashed()->get(), 'basic')
+    ]);
   }
 
   public function createAppUser()
@@ -341,6 +350,11 @@ class AppUser extends User
       }
       return response()->json(['rsp' => 'error occurred'], 500);
     }
+  }
+
+  public function updateAppUser(Request $request, self $appUser)
+  {
+    ray($appUser);
   }
 
   public function suspendAppUser(self $app_user)
@@ -369,5 +383,10 @@ class AppUser extends User
     ActivityLog::logUserActivity('Card User account deleted permanently. Card user details: ' . $app_user->email);
 
     return response()->json(['rsp' => true], 204);
+  }
+
+  public function scopeSearch($query, $searchIndex, $searchParam)
+  {
+    return $searchParam ? (is_array($searchParam) ? $query->whereIn($searchIndex, $searchParam) : $query->where($searchIndex, 'LIKE', '%' . $searchParam . '%')) : $query;
   }
 }
