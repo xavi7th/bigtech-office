@@ -9,38 +9,19 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\SuperAdmin\Models\ReturnedLocalProduct;
 use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductSupplier
- *
- * @property int $id
- * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductSupplier onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductSupplier withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductSupplier withoutTrashed()
- * @mixin \Eloquent
- * @property int $is_local
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereIsLocal($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier foreign()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier local()
- */
 class ProductSupplier extends BaseModel
 {
   use SoftDeletes;
 
   protected $fillable = ['name', 'is_local'];
+
+  public function returnedLocalProducts()
+  {
+    return $this->hasMany(ReturnedLocalProduct::class);
+  }
 
   public static function superAdminRoutes()
   {

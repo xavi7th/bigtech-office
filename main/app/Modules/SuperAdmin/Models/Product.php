@@ -77,7 +77,7 @@ class Product extends BaseModel
   protected $fillable = [
     'product_category_id', 'product_model_id', 'product_brand_id', 'product_batch_id', 'product_color_id', 'product_grade_id',
     'product_supplier_id', 'storage_size_id', 'imei', 'serial_no', 'model_no', 'product_uuid', 'processor_speed_id', 'ram_size_id',
-    'storage_type_id', 'stocked_by', 'stocker_type', 'office_branch_id', 'product_status_id', 'is_local'
+    'storage_type_id', 'stocked_by', 'stocker_type', 'office_branch_id', 'product_status_id', 'is_local', 'is_paid'
   ];
 
   protected $casts = [
@@ -363,7 +363,7 @@ class Product extends BaseModel
   {
     Route::group(['prefix' => 'products'], function () {
       Route::name('superadmin.products.')->group(function () {
-        Route::delete('local-product/{product:product_uuid}/delete', [self::class, 'deleteLocalProduct'])->name('delete_local_product')->defaults('ex', __e('ac', 'archive'));
+        Route::put('local-product/{product:product_uuid}/mark-paid', [self::class, 'markLocalProductPaid'])->name('mark_local_product_as_paid')->defaults('ex', __e('ss', 'archive'));
       });
     });
   }
@@ -374,6 +374,7 @@ class Product extends BaseModel
       Route::name('accountant.products.')->group(function () {
         Route::get('local-product/create', [self::class, 'showCreateLocalProductForm'])->name('create_local_product')->defaults('ex', __e('ac', 'archive'));
         Route::post('local-product/create', [self::class, 'createLocalSupplierProduct'])->name('create_local')->defaults('ex', __e('ac', 'archive'));
+        Route::delete('local-product/{product:product_uuid}/delete', [self::class, 'deleteLocalSupplierProduct'])->name('delete_local_product')->defaults('ex', __e('ac', 'archive'));
       });
     });
   }
@@ -409,27 +410,23 @@ class Product extends BaseModel
 
   static function multiAccessRoutes()
   {
-    Route::group(['prefix' => 'products'], function () {
-
-      $p = function ($name) {
-        return 'multiaccess.products.' . $name;
-      };
-
-      Route::get('/', [self::class, 'getProducts'])->name($p('view_products'))->defaults('ex', __e('ss,a,ac,d,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,admin,dispatch_admin,web_admin,accountant');
-      Route::get('/search', [self::class, 'findProduct'])->name($p('find_product'))->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
-      Route::get('/receipt/{productReceipt:order_ref}', [AppUserController::class, 'previewReceipt'])->name($p('receipt'))->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
-      Route::post('/receipt/{product:product_uuid}', [AppUserController::class, 'resendReceipt'])->name($p('resend_receipt'))->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
-      Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name($p('daily_records'))->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
-      Route::get('resellers', [self::class, 'getProductsWithResellers'])->name($p('products_with_resellers'))->defaults('ex', __e('ss,sk,a,ac', 'archive'))->middleware('auth:super_admin,stock_keeper,admin,accountant');
-      Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name($p('view_product_details'))->defaults('ex', __e('ss,a,ac', 'archive', true))->middleware('auth:super_admin,admin,accountant');
-      Route::put('{product}/edit', [self::class, 'editProduct'])->name($p('edit_product'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
-      Route::put('{product}/location', [self::class, 'updateProductLocation'])->name($p('edit_product_location'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
-      Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name($p('qa_test_results'))->defaults('ex', __e('ss,q,a', null, true))->middleware('auth:quality_control,admin,super_admin,accountant');
-      Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name($p('mark_as_sold'))->defaults('ex', __e('ss,d', null, true))->middleware('auth:sales_rep,dispatch_admin');
-      Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name($p('update_product_status'))->defaults('ex', __e('ss,q', null, true))->middleware('auth:super_admin,quality_control');
-      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name($p('comment_on_product'))->defaults('ex', __e('ss,a,ac,d,sk', null, true))->middleware('auth:super_admin,admin,accountant');
-      Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name($p('applicable_qa_tests'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
-      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name($p('comment_on_qa_test'))->defaults('ex', __e('ss,d,q', null, true))->middleware('auth:super_admin,stock_keeper,quality_control');
+    Route::name('multiaccess.products.')->prefix('products')->group(function () {
+      Route::get('', [self::class, 'getProducts'])->name('view_products')->defaults('ex', __e('ss,a,ac,d,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,admin,dispatch_admin,web_admin,accountant');
+      Route::get('local-supplier-products', [self::class, 'getLocalProducts'])->name('pending_local_products')->defaults('ex', __e('ss,ac', 'box'))->middleware('auth:super_admin,accountant');
+      Route::get('search', [self::class, 'findProduct'])->name('find_product')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+      Route::get('receipt/{productReceipt:order_ref}', [AppUserController::class, 'previewReceipt'])->name('receipt')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+      Route::post('/receipt/{product:product_uuid}', [AppUserController::class, 'resendReceipt'])->name('resend_receipt')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+      Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
+      Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,sk,a,ac', 'archive'))->middleware('auth:super_admin,stock_keeper,admin,accountant');
+      Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac', 'archive', true))->middleware('auth:super_admin,admin,accountant');
+      Route::put('{product}/edit', [self::class, 'editProduct'])->name('edit_product')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
+      Route::put('{product}/location', [self::class, 'updateProductLocation'])->name('edit_product_location')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
+      Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name('qa_test_results')->defaults('ex', __e('ss,q,a', null, true))->middleware('auth:quality_control,admin,super_admin,accountant');
+      Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('ss,d', null, true))->middleware('auth:sales_rep,dispatch_admin');
+      Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name('update_product_status')->defaults('ex', __e('ss,q', null, true))->middleware('auth:super_admin,quality_control');
+      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->defaults('ex', __e('ss,a,ac,d,sk', null, true))->middleware('auth:super_admin,admin,accountant');
+      Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name('applicable_qa_tests')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
+      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->defaults('ex', __e('ss,d,q', null, true))->middleware('auth:super_admin,stock_keeper,quality_control');
     });
   }
 
@@ -474,6 +471,24 @@ class Product extends BaseModel
 
     if ($request->isApi()) return  response()->json($products, 200);
     return Inertia::render('SuperAdmin,Products/ListProducts', compact('products', 'salesChannel', 'resellers', 'onlineReps'));
+  }
+
+  public function getLocalProducts(Request $request)
+  {
+    $searchKey = $request->searchKey == 'product_name' ? 'product_model_id' : $request->searchKey;
+    $searchQuery = $request->searchKey == 'product_name' ? ProductModel::where('name', 'LIKE', '%' . $request->searchQuery . '%')->pluck('id')->toArray() : $request->searchQuery;
+
+    if ($request->user()->isAccountant()) {
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::local()->notPaid()->search($searchKey, $searchQuery)->where(fn ($query) => $query->inStock()->orWhere->untested()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'localProductsListing');
+    } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin()) {
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::local()->notPaid()->search($searchKey, $searchQuery)->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'localProductsListing');
+    } else {
+      $products = fn () => collect([]);
+    }
+
+    // ray($products());
+    if ($request->isApi()) return  response()->json($products, 200);
+    return Inertia::render('SuperAdmin,Products/ListLocalProducts', compact('products'));
   }
 
   public function getProductDetails(Request $request, Product $product)
@@ -619,6 +634,29 @@ class Product extends BaseModel
       if ($request->isApi()) return response()->json(['err' => 'Product not created'], 500);
       return back()->withFlash(['error'=>['Product not created']]);
     }
+  }
+
+  public function markLocalProductPaid(Request $request, self $product)
+  {
+    $product->is_paid = true;
+    $product->save();
+
+    return back()->withFlash(['success' => 'Marked as paid']);
+  }
+
+  public function deleteLocalSupplierProduct(Request $request, self $product)
+  {
+    /**
+     * Create a record of returning this product
+     */
+
+    $product->product_supplier->returnedLocalProducts()->create([
+      'product_description' => $product->full_name . ' ' . $product->primary_identifier()
+    ]);
+
+    $product->forceDelete();
+
+    return back()->withFlash(['success' => 'Deleted']);
   }
 
   public function editProduct(CreateProductValidation $request, self $product)
@@ -938,7 +976,17 @@ class Product extends BaseModel
 
   public function scopeLocal($query)
   {
-    return $query->where('product_batch_id', ProductBatch::local_supplied_id());
+    return $query->whereIsLocal(true);
+  }
+
+  public function scopePaid($query)
+  {
+    return $query->whereIsLocal(true)->whereIsPaid(true);
+  }
+
+  public function scopeNotPaid($query)
+  {
+    return $query->whereIsLocal(true)->whereIsPaid(false);
   }
 
   public function scopeSearch($query, $searchIndex, $searchParam)
