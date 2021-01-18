@@ -1,4 +1,4 @@
-import { toCurrency } from "@public-shared/helpers";
+import { mediaHandler, toCurrency } from "@public-shared/helpers";
 import { Inertia } from "@inertiajs/inertia";
 import objectFitImages from 'object-fit-images';
 
@@ -235,7 +235,9 @@ export const initialiseDonutChart = () => {
 export const initialiseDatatable = (elem, params = {}) => {
 	let table = jQuery(elem)
 		.DataTable({
-			destroy: true,
+      destroy: true,
+      stateSave: true,
+      	stateDuration: 60 * 60 * 1,
 			order: [[2, "desc"]],
 			dom: "<lfB<t><ip>>",
 			buttons: ["excel", "pdf"],
@@ -249,6 +251,30 @@ export const initialiseDatatable = (elem, params = {}) => {
 		// }
 	};
 }
+export const initialiseBasicDataTable = (elem, params = {}) => {
+	let { isMobile, isDesktop } = mediaHandler()
+	let table = jQuery(elem)
+		.DataTable({
+			destroy: true,
+			paging: false,
+			responsive: params.responsive || false,
+			lengthChange: false,
+			ordering: false,
+			scrollY: isDesktop ? 500 : 300,
+			scrollCollapse: true,
+			searching: false,
+			stateSave: true,
+			stateDuration: 60 * 60 * 1,
+			info: false
+		});
+
+	return {
+		// destroy() {
+		// 	table.destroy();
+		// }
+	};
+}
+
 export const oldInitialiseServerSideDatatable = (elem, params = {}) => {
 
 	console.table(params);

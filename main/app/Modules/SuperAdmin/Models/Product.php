@@ -458,7 +458,7 @@ class Product extends BaseModel
     } elseif ($request->user()->isQualityControl()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isDispatchAdmin()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier', 'dispatch_request'])->take(10)->get(), 'dispatchListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->orWhere->outForDelivery()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier', 'dispatch_request'])->get(), 'dispatchListing');
     } elseif ($request->user()->isWebAdmin()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isAccountant()) {

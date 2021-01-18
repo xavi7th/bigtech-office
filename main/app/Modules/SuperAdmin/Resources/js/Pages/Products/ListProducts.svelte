@@ -56,11 +56,11 @@
 <Layout title="Stock List">
   <div class="row vertical-gap">
     <div class="col-lg-12 col-xl-12">
-      <div class="table-responsive-md">
+      <SearchComponent dataKey='products' {searchKeys} on:isSearching={e => isSearching = e.detail}/>
+      <div class="table-responsive-md" class:is-searching={isSearching} >
         <!-- svelte-ignore missing-declaration -->
-        <SearchComponent dataKey='products' url={route($page.props.auth.user.user_type + '.multiaccess.products.find_product')} {searchKeys} on:isSearching={e => isSearching = e.detail}/>
         <table
-          class="rui-datatable table table-striped table-bordered table-sm" data-order='[0, "asc"]' class:is-searching={isSearching}>
+          class="rui-datatable table table-striped table-bordered table-sm" data-order='[0, "asc"]' use:initialiseBasicDataTable>
           <thead class="thead-dark">
             <tr>
               <th scope="col">
