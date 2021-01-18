@@ -86,12 +86,13 @@ class ProductSupplier extends BaseModel
       return generate_422_error('Specify a new product supplier to change this to');
     }
 
-    if (self::where('name', $request->name)->exists()) {
+    if (self::where('name', $request->name)->where('name', '<>', $productSupplier->name)->exists()) {
       return generate_422_error('This supplier already exists');
     }
 
     try {
       $productSupplier->name = $request->name;
+      $productSupplier->is_local = $request->is_local ?? false;
       $productSupplier->save();
 
       if ($request->isApi()) return response()->json([], 204);
