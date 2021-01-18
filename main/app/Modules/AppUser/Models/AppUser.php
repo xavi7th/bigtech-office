@@ -21,6 +21,7 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 use App\Modules\SuperAdmin\Transformers\SuperAdminAppUserTransformer;
 use App\Modules\AppUser\Http\Validations\AppUserUpdateProfileValidation;
 use App\Modules\PublicPages\Notifications\SendPasswordResetNotification;
+use App\Modules\SuperAdmin\Http\Validations\UpdateAppUserDetailsValidation;
 
 /**
  * App\Modules\AppUser\Models\AppUser
@@ -234,7 +235,7 @@ class AppUser extends User
     Route::name('superadmin.appusers.')->prefix('app-users')->group(function () {
       Route::get('', [self::class, 'getAllAppUsers'])->name('view_users')->defaults('ex', __e('ss', 'user', false));
 
-      Route::put('{app_user}/update', [self::class, 'updateAppUser'])->name('update_user')->defaults('ex', __e('ss', 'user', true));
+      Route::put('{appUser}/update', [self::class, 'updateAppUser'])->name('update_user')->defaults('ex', __e('ss', 'user', true));
 
       Route::put('{app_user}/suspend', [self::class, 'suspendAppUser'])->name('suspend_users')->defaults('ex', __e('ss', 'user', true));
 
@@ -352,9 +353,11 @@ class AppUser extends User
     }
   }
 
-  public function updateAppUser(Request $request, self $appUser)
+  public function updateAppUser(UpdateAppUserDetailsValidation $request, self $appUser)
   {
-    ray($appUser);
+    $appUser->update($request->validated());
+
+    return back()->withFlash(['success' => 'User details updated']);
   }
 
   public function suspendAppUser(self $app_user)

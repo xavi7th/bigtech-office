@@ -168,7 +168,7 @@
             {#each app_users as appUser}
               <tr>
                 <td>{appUser.id}</td>
-                <td>{appUser.first_name} {appUser.last_name}</td>
+                <td>{appUser.first_name} {appUser.last_name || ''}</td>
                 <td class="text-nowrap">
                   <span>{appUser.email}</span>
                 </td>
