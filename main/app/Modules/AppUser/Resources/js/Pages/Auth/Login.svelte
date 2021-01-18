@@ -9,7 +9,17 @@
   let details = {
       remember: true
     },
-    formSubmitted = false;
+    formSubmitted = false, capsOn = false;
+
+  let detectCaps = (e) =>{
+    console.log(e);
+    console.log(e.getModifierState("CapsLock"));
+    if (e.getModifierState("CapsLock")) {
+      capsOn = true;
+    } else {
+      capsOn = false;
+    }
+  }
 
   let handleLogin = e => {
     if (e.target.checkValidity() === false) {
@@ -126,7 +136,11 @@
           class:is-invalid={errors.password}
           id="password"
           bind:value={details.password}
+          on:keypress={detectCaps}
           placeholder="Password" />
+        {#if capsOn}
+          <span class="text-warning mt-10 d-block text-center">NOTE: Capslock is on</span>
+        {/if}
         {#if errors.password}
           <FlashMessage formError={errors.password} />
         {/if}
