@@ -437,7 +437,7 @@ class Product extends BaseModel
   {
     if (!($request->searchQuery)) return generate_422_error('Enter your search parameters');
 
-    if (!$request->searchKey) $products = self::where('imei', 'LIKE', '%' . $request->q . '%')->orWhere('serial_no', 'LIKE', '%' . $request->q . '%')->orWhere('model_no', 'LIKE', '%' . $request->q . '%')->get();
+    $products = self::where('imei', 'LIKE', '%' . $request->searchQuery . '%')->orWhere('serial_no', 'LIKE', '%' . $request->searchQuery . '%')->orWhere('model_no', 'LIKE', '%' . $request->searchQuery . '%')->get();
 
     return back()->withFlash(["search_results" => (new ProductTransformer)->collectionTransformer($products, 'searchResults')]);
   }
