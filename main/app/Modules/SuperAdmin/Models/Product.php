@@ -275,7 +275,7 @@ class Product extends BaseModel
 
   public function shortDescription(): string
   {
-    return $this->product_color->color . ' ' . $this->product_model->name . ' ' . $this->storage_size->human_size . ' ' . $this->primary_identifier();
+    return $this->product_color->name . ' ' . $this->product_model->name . ' ' . $this->storage_size->human_size . ' ' . $this->primary_identifier();
   }
 
   public function just_arrived(): bool
@@ -333,7 +333,7 @@ class Product extends BaseModel
 
   public function getFullNameAttribute()
   {
-    return $this->product_color->color . ' ' . $this->product_model->name . ' ' . $this->storage_size->human_size;
+    return $this->product_color->name . ' ' . $this->product_model->name . ' ' . $this->storage_size->human_size;
   }
 
   public function getCostPriceAttribute()
