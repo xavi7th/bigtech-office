@@ -872,7 +872,7 @@ class Product extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withFlash(['success'=>'Product has been marked as sold. It will no longer be available in stock' . $th->getMessage()]);
+    return back()->withFlash(['success' => 'Product has been marked as sold. It will no longer be available in stock']);
   }
 
   public function commentOnProduct(CreateProductCommentValidation $request, self $product)
