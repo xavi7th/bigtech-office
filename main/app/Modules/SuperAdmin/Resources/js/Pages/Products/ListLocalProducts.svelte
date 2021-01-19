@@ -114,9 +114,7 @@
               <tr>
                 <th scope="row">{idx + 1}</th>
                 <td>
-                  <span class="text-capitalize">{product.color}</span>
-                  {product.model}
-                  {product.storage_size}
+                  <span class="text-capitalize">{product.full_name}</span>
                   <br>
                   {product.identifier}
                   <strong class="small font-weight-bold badge badge-dark">{product.status}</strong>

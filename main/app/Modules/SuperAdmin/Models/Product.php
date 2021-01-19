@@ -306,11 +306,6 @@ class Product extends BaseModel
     return $this->product_status_id === ProductStatus::inStockId();
   }
 
-  public function is_from_local_supplier(): bool
-  {
-    return $this->product_batch_id === ProductBatch::local_supplied_id();
-  }
-
   public function generateReceipt(float $amount): ProductReceipt
   {
     /** If there is no app_user attached to the product, it is most likely a reseller sale **/
@@ -331,9 +326,14 @@ class Product extends BaseModel
     return $this->product_status_id === ProductStatus::withResellerId();
   }
 
+  public function getDisplayGradeAttribute(): ?string
+  {
+    return Str::contains($this->product_grade->grade, ['new', 'New', 'open', 'Open']) ? $this->product_grade->grade : null;
+  }
+
   public function getFullNameAttribute()
   {
-    return $this->product_color->name . ' ' . $this->product_model->name . ' ' . $this->storage_size->human_size;
+    return $this->display_grade . ' ' . $this->product_color->name . ' ' . $this->product_model->name . ' ' . $this->storage_size->human_size;
   }
 
   public function getCostPriceAttribute()
@@ -449,19 +449,19 @@ class Product extends BaseModel
      */
 
     if ($request->user()->isStockKeeper()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isSalesRep()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isQualityControl()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isDispatchAdmin()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->inStock()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier', 'dispatch_request'])->get(), 'dispatchListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->inStock()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'dispatch_request'])->get(), 'dispatchListing');
     } elseif ($request->user()->isWebAdmin()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isAccountant()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->sold()->orWhere->saleConfirmed()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->sold()->orWhere->saleConfirmed()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->take(10)->get(), 'productsListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } else {
       $products = collect([]);
     }
@@ -889,7 +889,7 @@ class Product extends BaseModel
 
   public function deleteLocalProduct(Request $request, self $product)
   {
-    if (!$product->is_from_local_supplier()) throw ValidationException::withMessages(['err' => "You can only delete products from local suppliers."])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+    if (!$product->is_local) throw ValidationException::withMessages(['err' => "You can only delete products from local suppliers."])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
     if ($product->is_sold()) throw ValidationException::withMessages(['err' => "This product has been marked as sold already. You cannot delete it any more"])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
 
     $product->forceDelete();

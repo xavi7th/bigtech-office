@@ -85,7 +85,7 @@
                     <img src="{product.img}" alt="">
                   </span>
                   <span class="media-body">
-                    <span class="media-title">{product.color} {product.model} {product.storage_size}</span>
+                    <span class="media-title">{product.full_name}</span>
                     <small class="media-subtitle">{product.identifier}</small>
                   </span>
                 </InertiaLink>

@@ -36,33 +36,28 @@ class ProductTransformer
     ];
   }
 
-  public function productsListing(Product $product)
-  {
-    return [
-      'uuid' => (string)$product->product_uuid,
-      'model' => (string)$product->product_model->name,
-      'identifier' => (string)$product->primary_identifier(),
-      'selling_price' => $product->proposed_selling_price,
-      'color' => (string)$product->product_color->name,
-      'status' => $product->product_status->status,
-      'storage_size' => (string)$product->storage_size->human_size,
-      'supplier' => (string)$product->product_supplier->name
-    ];
-  }
-
   public function localProductsListing(Product $product)
   {
     return [
       'uuid' => (string)$product->product_uuid,
-      'color' => (string)$product->product_color->name,
-      'model' => (string)$product->product_model->name,
+      'full_name' => (string)$product->full_name,
       'identifier' => (string)$product->primary_identifier(),
       'cost_price' => (float)$product->cost_price,
       'selling_price' => (float)$product->proposed_selling_price,
       'status' => (string)$product->product_status->status,
-      'storage_size' => (string)$product->storage_size->human_size,
       'supplier' => (string)$product->product_supplier->name,
       'is_paid' => (bool)$product->is_paid,
+    ];
+  }
+
+  public function productsListing(Product $product)
+  {
+    return [
+      'uuid' => (string)$product->product_uuid,
+      'full_name' => (string)$product->full_name,
+      'identifier' => (string)$product->primary_identifier(),
+      'selling_price' => $product->proposed_selling_price,
+      'status' => $product->product_status->status,
     ];
   }
 
@@ -70,13 +65,10 @@ class ProductTransformer
   {
     return [
       'uuid' => (string)$product->product_uuid,
-      'model' => (string)$product->product_model->name,
+      'full_name' => (string)$product->full_name,
       'identifier' => (string)$product->primary_identifier(),
-      'selling_price' => $product->proposed_selling_price,
-      'color' => (string)$product->product_color->name,
+      'selling_price' => (float)$product->proposed_selling_price,
       'status' => $product->product_status->status,
-      'storage_size' => (string)$product->storage_size->human_size,
-      'supplier' => (string)$product->product_supplier->name,
       'dispatch_request' => $product->dispatch_request
     ];
   }
@@ -85,10 +77,8 @@ class ProductTransformer
   {
     return [
       'uuid' => (string)$product->product_uuid,
-      'model' => (string)$product->product_model->name,
+      'full_name' => (string)$product->full_name,
       'identifier' => (string)$product->primary_identifier(),
-      'color' => (string)$product->product_color->name,
-      'storage_size' => (string)$product->storage_size->human_size,
       'img' => (string)$product->product_model->img_thumb_url,
     ];
   }

@@ -95,11 +95,7 @@
             {#each products as product, idx}
               <tr>
                 <th scope="row">{idx + 1}</th>
-                <td>
-                  <span class="text-capitalize">{product.color}</span>
-                  {product.model}
-                  {product.storage_size}
-                </td>
+                <td class="text-capitalize">{product.full_name}</td>
                 <td>
                   {product.identifier}
                   {#if auth.user.isAdmin || auth.user.isSuperAdmin}
@@ -159,7 +155,7 @@
                     {#if product.status == 'in stock'}
                       <button
                         on:click={() => {
-                          productToSendToDispatch = `Device: ${product.color}  ${product.model} ${product.storage_size}`;
+                          productToSendToDispatch = `Device: ${product.full_name}`;
                         }}
                         type="button"
                         data-toggle="modal"
