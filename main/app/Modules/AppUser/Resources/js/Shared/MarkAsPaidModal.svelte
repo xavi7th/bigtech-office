@@ -26,14 +26,11 @@
   let markProductAsPaid = () => {
     /** ! Make sure the form was properly filled **/
     let isValid = true,
-      payment_records = {},
+      payment_records = [],
       errMsg = "";
 
     _.each(bankRecords, (val, key) => {
-      if (_.uniq(bankRecords).length !== bankRecords.length) {
-        isValid = false;
-        errMsg = "You selected an account twice. Correct your selections";
-      } else if (
+      if (
         _.compact(bankRecords).length == 0 ||
         _.compact(paymentRecords).length == 0
       ) {
@@ -61,7 +58,10 @@
     });
 
     _.each(bankRecords, (val, key, coll) => {
-      payment_records[bankRecords[key]] = { amount: paymentRecords[key] };
+      payment_records.push({
+        amount: paymentRecords[key] ,
+        company_bank_id: bankRecords[key]
+      });
     });
 
     Inertia.post(

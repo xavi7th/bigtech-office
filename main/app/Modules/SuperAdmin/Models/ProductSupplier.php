@@ -12,6 +12,33 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ReturnedLocalProduct;
 use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
 
+/**
+ * App\Modules\SuperAdmin\Models\ProductSupplier
+ *
+ * @property int $id
+ * @property string $name
+ * @property int $is_local
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|ReturnedLocalProduct[] $returnedLocalProducts
+ * @property-read int|null $returned_local_products_count
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier foreign()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier local()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductSupplier onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereIsLocal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|ProductSupplier withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ProductSupplier withoutTrashed()
+ * @mixin \Eloquent
+ */
 class ProductSupplier extends BaseModel
 {
   use SoftDeletes;

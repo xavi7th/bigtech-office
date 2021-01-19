@@ -25,7 +25,6 @@ window._ = {
 	startsWith: require('lodash/startsWith'),
 	takeRight: require('lodash/takeRight'),
 	truncate: require('lodash/truncate'),
-	uniq: require('lodash/uniq'),
 }
 window.initialiseDatatable = initialiseDatatable;
 window.initialiseBasicDataTable = initialiseBasicDataTable;

@@ -136,6 +136,7 @@ use App\Modules\SuperAdmin\Http\Validations\UpdateAppUserDetailsValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereRefId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AppUser whereUnencPassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AppUser search($searchIndex, $searchParam)
  */
 class AppUser extends User
 {

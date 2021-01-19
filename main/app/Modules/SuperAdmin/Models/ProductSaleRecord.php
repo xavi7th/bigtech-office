@@ -242,9 +242,10 @@ class ProductSaleRecord extends BaseModel
    */
   public function confirmSaleRecord(Request $request, self $productSaleRecord)
   {
-    // return (new ProductReceiptNotification(ProductReceipt::find(1)))->toMail(ProductReceipt::find(1)->appUser);
     $paymentRecords = $request->payment_records;
     $amountPaid = collect($paymentRecords)->sum('amount');
+    $bankAccounts = [];
+    $amounts = [];
 
     /**
      * !Remove any empty fields from input
@@ -253,6 +254,8 @@ class ProductSaleRecord extends BaseModel
       if (!is_numeric($key)) {
         unset($paymentRecords[$key]);
       }
+      $bankAccounts[$key] = CompanyBankAccount::find($value['company_bank_id']);
+      $amounts[$key] = ['amount' => $value['amount']];
     }
 
     /**
@@ -311,8 +314,7 @@ class ProductSaleRecord extends BaseModel
     /**
      * Record the bank account payments breakdown for this transaction
      */
-
-    $productSaleRecord->bank_account_payments()->sync($paymentRecords);
+    $productSaleRecord->bank_account_payments()->saveMany($bankAccounts, $amounts);
 
     /**
      * // generate the receipt and save it in the DB.
@@ -330,7 +332,6 @@ class ProductSaleRecord extends BaseModel
     /**
      * Send the user an email containing his receipt
      */
-
     try {
       $product->app_user->notify(new ProductReceiptNotification($receipt));
     } catch (\Throwable $th) {
@@ -354,7 +355,7 @@ class ProductSaleRecord extends BaseModel
     DB::commit();
 
     if ($request->isApi()) return response()->json([], 204);
-    return back()->withFlash(['success'=>'Product has been marked as sold. It will no longer be available in stock']);
+    return back()->withFlash(['success' => 'Product has been marked as paid and the customer has been sent their receipt']);
   }
 
   public function getSaleRecordTransactions(self $sales_record)

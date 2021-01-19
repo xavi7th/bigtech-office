@@ -363,7 +363,7 @@ class Product extends BaseModel
   {
     Route::group(['prefix' => 'products'], function () {
       Route::name('superadmin.products.')->group(function () {
-        Route::put('local-product/{product:product_uuid}/mark-paid', [self::class, 'markLocalProductPaid'])->name('mark_local_product_as_paid')->defaults('ex', __e('ss', 'archive'));
+        Route::put('local-product/{product:product_uuid}/mark-paid', [self::class, 'markLocalProductSupplierPaid'])->name('mark_local_product_as_paid')->defaults('ex', __e('ss', 'archive'));
       });
     });
   }
@@ -636,7 +636,7 @@ class Product extends BaseModel
     }
   }
 
-  public function markLocalProductPaid(Request $request, self $product)
+  public function markLocalProductSupplierPaid(Request $request, self $product)
   {
     $product->is_paid = true;
     $product->save();
