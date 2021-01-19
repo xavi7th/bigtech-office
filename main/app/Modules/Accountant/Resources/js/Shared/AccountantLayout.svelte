@@ -10,7 +10,7 @@
   import Search from '@superadmin-shared/Partials/Search.svelte';
   import PageLoader from '@public-shared/PageLoader.svelte';
 
-  $: ({ app, routes } = $page.props);
+  $: ({ app, routes, auth } = $page.props);
 
   let isMounted = false;
   export let title;
@@ -47,7 +47,9 @@
     </div>
 
     <slot name="modals" />
-    <Search />
+    {#if auth.user.isSuperAdmin || auth.user.isAccountant}
+      <Search />
+    {/if}
   {:else}
     <PageLoader />
   {/if}

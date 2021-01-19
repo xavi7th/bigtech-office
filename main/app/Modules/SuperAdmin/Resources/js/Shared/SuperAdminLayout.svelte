@@ -9,7 +9,7 @@
   import PageTitle from "@superadmin-shared/Partials/PageTitle";
   import Footer from "@superadmin-shared/Partials/Footer";
 
-  $: ({ app, routes } = $page.props);
+  $: ({ app, routes, auth } = $page.props);
 
   let isMounted = false;
   export let title;
@@ -46,7 +46,9 @@
     </div>
 
     <slot name="modals" />
-    <Search />
+    {#if auth.user.isSuperAdmin || auth.user.isAccountant}
+      <Search />
+    {/if}
   {/if}
 </div>
 
