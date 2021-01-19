@@ -44,7 +44,7 @@ class StorageSize extends BaseModel
   {
 
     switch (true) {
-      case $this->size <= 1:
+      case $this->size < 1:
         return $this->size * 1000 . 'MB';
         break;
       case $this->size < 1000:
