@@ -69,7 +69,7 @@
             </th>
           </tr>
          {#if auth.user.isAccountant || auth.user.isSuperAdmin}
-            {#if productDetails.status == 'sold'}
+            {#if productDetails.status == 'sold' || productDetails.status == 'sale confirmed'}
             <tr>
               <td class="text-primary">
                 <strong>Buyer</strong>
