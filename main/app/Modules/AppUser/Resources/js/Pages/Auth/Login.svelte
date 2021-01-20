@@ -12,8 +12,6 @@
     formSubmitted = false, capsOn = false;
 
   let detectCaps = (e) =>{
-    console.log(e);
-    console.log(e.getModifierState("CapsLock"));
     if (e.getModifierState("CapsLock")) {
       capsOn = true;
     } else {

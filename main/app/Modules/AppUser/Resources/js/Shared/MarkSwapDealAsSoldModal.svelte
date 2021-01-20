@@ -170,7 +170,7 @@
     {#if !auth.user.isDispatchAdmin}
       <div class="col-12">
         <select class="custom-select" bind:value={details.online_rep_id}>
-          <option selected>Select Online Rep</option>
+          <option selected value={null}>Select Online Rep</option>
           {#each onlineReps as rep}
             <option value={rep.id}>{rep.full_name}</option>
           {/each}
