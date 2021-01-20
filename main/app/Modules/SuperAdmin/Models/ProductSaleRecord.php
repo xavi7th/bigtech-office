@@ -6,6 +6,7 @@ use App\BaseModel;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -16,6 +17,7 @@ use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ActivityLog;
+use Illuminate\Validation\ValidationException;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
@@ -165,6 +167,7 @@ class ProductSaleRecord extends BaseModel
     Route::group(['prefix' => 'product-sales-records'], function () {
       Route::name('accountant.product_sales_records.')->group(function () {
         Route::post('{productSaleRecord}/confirm', [self::class, 'confirmSaleRecord'])->name('confirm_sale')->defaults('ex', __e('ac', null, true));
+        Route::put('{productSaleRecord}/swap-product', [self::class, 'swapSaleRecordProduct'])->name('swap_product')->defaults('ex', __e('ac', null, true));
       });
     });
   }
@@ -356,6 +359,81 @@ class ProductSaleRecord extends BaseModel
 
     if ($request->isApi()) return response()->json([], 204);
     return back()->withFlash(['success' => 'Product has been marked as paid and the customer has been sent their receipt']);
+  }
+
+  public function swapSaleRecordProduct(Request $request, self $productSaleRecord)
+  {
+    try {
+      /**
+     * @var Product
+     */
+      $newProduct = Product::inStock()->where($request->replacement_product_identifier_type, $request->replacement_product_identifier)->firstOr(fn() => SwapDeal::inStock()->where($request->replacement_product_identifier_type, $request->replacement_product_identifier)->firstOrFail());
+    } catch (\Throwable $th) {
+      throw ValidationException::withMessages(['err' => "The specified replacement product not found in the current stock list."])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @var Product
+     */
+    $oldProductToReplace = $productSaleRecord->product;
+
+    /**
+     * @var ProductReceipt
+     */
+    $oldProductReceipt = $oldProductToReplace->productReceipt;
+
+    // change the old product´s status to undergoing qa
+    $oldProductToReplace->product_status_id = ProductStatus::undergoingQaId();
+    $newProduct->product_status_id = ProductStatus::saleConfirmedId();
+
+    // enter a relevant history
+    ActivityLog::notifySuperAdmins($request->user()->full_name . ' replaced sold product with ' . $oldProductToReplace->primary_identifier() . ' with a new product with ' . $newProduct->primary_identifier());
+
+    // replace the appuser in old product with that in new product and nullify that of old
+    $newProduct->app_user()->associate($oldProductToReplace->app_user);
+    $oldProductToReplace->app_user()->dissociate();
+
+    // nullify the sold at of old and replace the sold at of new with current date
+    $oldProductToReplace->sold_at = null;
+    $newProduct->sold_at = now();
+
+    // update the product id of the sale record of the old product to the new one´s product id
+    $productSaleRecord->product_id = $newProduct->id;
+    $productSaleRecord->product_type = get_class($newProduct);
+    $productSaleRecord->selling_price = $request->replacement_product_amount ?? $productSaleRecord->selling_price;
+
+    // update the product_id of the old product´s receipt to the product_id of the new one
+
+    if (!$oldProductReceipt) {
+      try {
+        $receipt = $newProduct->generateReceipt($productSaleRecord->selling_price);
+      } catch (\Throwable $th) {
+        ErrLog::notifyAdminAndFail(auth()->user(), $th, 'New receipt generation failed');
+        return back()->withFlash(['error' => ['New Receipt generation failed']]);
+      }
+    }
+    else{
+      $oldProductReceipt->product_id = $newProduct->id;
+    }
+
+    /**
+     * Send the user an email containing his new receipt
+     */
+    try {
+      $newProduct->app_user->notify(new ProductReceiptNotification($newProduct->productReceipt));
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdmin($request->user(), $th, 'Failed to resend receipt to user', $newProduct->app_user->email);
+    }
+
+    $oldProductToReplace->save();
+    $newProduct->save();
+    $productSaleRecord->save();
+    optional($oldProductReceipt)->save();
+
+
+    DB::commit();
+
+    return back()->withFlash(['success' => 'Product has been swapped and the user has been sent their new receipt']);
   }
 
   public function getSaleRecordTransactions(self $sales_record)

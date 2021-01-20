@@ -194,26 +194,26 @@ if (mix.inProduction()) {
 //     console.log(Object.keys(webpackStats.compilation.assets));
 // });
 
-mix.browserSync({
-  proxy:'romzynew.test/login',
-  // Disable UI completely
-  // ui: false,
-  // files: [
-  //   "wp-content/themes/**/*.css",
-  //   {
-  //       match: ["wp-content/themes/**/*.php"],
-  //       fn:    function (event, file) {
-  //           /** Custom event handler **/
-  //       }
-  //   }
-  // ],
-  // ghostMode: {
-  //   clicks: true,
-  //   forms: true,
-  //   scroll: false
-  // },
-  // notify: false,
-  // reloadDelay: 2000,
-  // // Don't append timestamps to injected files
-  // timestamps: false
-})
+// mix.browserSync({
+//   proxy:'romzynew.test/login',
+//   // Disable UI completely
+//   // ui: false,
+//   // files: [
+//   //   "wp-content/themes/**/*.css",
+//   //   {
+//   //       match: ["wp-content/themes/**/*.php"],
+//   //       fn:    function (event, file) {
+//   //           /** Custom event handler **/
+//   //       }
+//   //   }
+//   // ],
+//   // ghostMode: {
+//   //   clicks: true,
+//   //   forms: true,
+//   //   scroll: false
+//   // },
+//   // notify: false,
+//   // reloadDelay: 2000,
+//   // // Don't append timestamps to injected files
+//   // timestamps: false
+// })

@@ -3,13 +3,14 @@
   import { toCurrency } from "@public-shared/helpers";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import MarkAsPaidModal from "@usershared/MarkAsPaidModal.svelte";
+  import ReplaceSalesRecordProductModal from '@accountant-shared/ReplaceSalesRecordProductModal.svelte';
 
   $: ({ auth } = $page.props);
 
   export let salesRecords = [],
     date,
     companyAccounts = [];
-  let productToMarkAsPaid;
+  let productToMarkAsPaid, productSaleRecordToReplaceProduct;
 </script>
 
 <Layout title="Sales Records | {date}">
@@ -66,6 +67,17 @@
                         {record.total_bank_payments_amount}
                       </span>
                     {/if}
+                    {#if auth.user.isAccountant}
+                     <button
+                        on:click={() => {
+                          productSaleRecordToReplaceProduct = record.id;
+                        }}
+                        data-toggle="modal"
+                        data-target="#replaceSalesRecordProduct"
+                        class="btn btn-danger btn-xs btn-sm">
+                        Replace Product
+                      </button>
+                      {/if}
                   {:else if auth.user.isAccountant}
                     <button
                       on:click={() => {
@@ -102,5 +114,6 @@
   </div>
   <div slot="modals">
     <MarkAsPaidModal {companyAccounts} {productToMarkAsPaid} />
+    <ReplaceSalesRecordProductModal {productSaleRecordToReplaceProduct}/>
   </div>
 </Layout>
