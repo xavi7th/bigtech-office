@@ -2193,7 +2193,6 @@
 																													<th style="width: 10px">#</th>
 																													<th>Description</th>
 																													<th>Device Identifier</th>
-																													<th style="width: 40px">Value</th>
 																												</tr>
 																											</thead>
 																											<tbody>
@@ -2203,8 +2202,6 @@
 																													</td>
 																													<td>
 																														{{ $receipt->product->swapped_deal_device->primary_identifier() }}
-																													</td>
-																													<td>{{ $receipt->product->swapped_deal_device->swap_value }}
 																													</td>
 																												</tr>
 																											</tbody>
