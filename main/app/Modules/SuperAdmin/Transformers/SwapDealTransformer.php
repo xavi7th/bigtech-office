@@ -38,6 +38,16 @@ class SwapDealTransformer
     ];
   }
 
+  public function searchResults(SwapDeal $swapDeal)
+  {
+    return [
+      'uuid' => (string)$swapDeal->product_uuid,
+      'full_name' => (string)$swapDeal->full_name,
+      'identifier' => (string)$swapDeal->primary_identifier(),
+      'img' => (string)$swapDeal->receipt_thumb_url,
+    ];
+  }
+
   public function detailed(SwapDeal $swapDeal): array
   {
     return [
