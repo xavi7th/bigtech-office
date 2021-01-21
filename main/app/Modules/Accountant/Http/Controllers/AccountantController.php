@@ -8,15 +8,16 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\Product;
-use App\Modules\Accountant\Models\Accountant;
-use App\Modules\SuperAdmin\Models\OtherExpense;
-use App\Modules\SuperAdmin\Models\ProductBatch;
-use App\Modules\SuperAdmin\Models\ProductExpense;
-use App\Modules\SuperAdmin\Models\ProductHistory;
-use App\Modules\SuperAdmin\Models\ProductPrice;
-use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
+use App\Modules\Accountant\Models\Accountant;
+use App\Modules\AppUser\Models\ProductReceipt;
+use App\Modules\SuperAdmin\Models\OtherExpense;
+use App\Modules\SuperAdmin\Models\ProductBatch;
+use App\Modules\SuperAdmin\Models\ProductPrice;
+use App\Modules\SuperAdmin\Models\ProductExpense;
+use App\Modules\SuperAdmin\Models\ProductHistory;
+use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 
 class AccountantController extends Controller
 {
@@ -44,6 +45,7 @@ class AccountantController extends Controller
           ProductSaleRecord::multiAccessRoutes();
           OtherExpense::multiAccessRoutes();
           Reseller::multiAccessRoutes();
+          ProductReceipt::multiAccessRoutes();
         });
       });
     });

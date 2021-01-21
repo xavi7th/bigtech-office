@@ -26,6 +26,7 @@ use App\Modules\SuperAdmin\Models\ResellerProduct;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
+use App\Modules\AppUser\Http\Controllers\AppUserController;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
@@ -59,18 +60,20 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
  * @property-read AppUser|null $app_user
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
  * @property-read int|null $comments_count
+ * @property-read ProductDispatchRequest|null $dispatch_request
  * @property-read string $id_thumb_url
  * @property-read string $receipt_thumb_url
+ * @property-read ProductReceipt|null $productReceipt
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductExpense[] $product_expenses
  * @property-read int|null $product_expenses_count
  * @property-read \Illuminate\Database\Eloquent\Collection|ProductHistory[] $product_histories
  * @property-read int|null $product_histories_count
+ * @property-read \App\Modules\SuperAdmin\Models\ProductModel $product_model
  * @property-read ProductSaleRecord|null $product_sales_record
  * @property-read ProductStatus $product_status
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
  * @property-read int|null $reseller_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|SwapDeal[] $swapped_deal_device
- * @property-read int|null $swapped_deal_device_count
+ * @property-read SwapDeal|null $swapped_deal_device
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $swapped_with
  * @property-read \Illuminate\Database\Eloquent\Collection|Reseller[] $with_resellers
  * @property-read int|null $with_resellers_count
@@ -106,9 +109,6 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
  * @mixin \Eloquent
- * @property-read ProductDispatchRequest|null $dispatch_request
- * @property-read ProductReceipt|null $productReceipt
- * @property-read \App\Modules\SuperAdmin\Models\ProductModel $product_model
  */
 class SwapDeal extends BaseModel
 {
@@ -245,6 +245,11 @@ class SwapDeal extends BaseModel
   public function getReceiptThumbUrlAttribute(): string
   {
     return Str::of($this->receipt_url)->replace(Str::of($this->receipt_url)->dirname(), Str::of($this->receipt_url)->dirname() . '/thumbs');
+  }
+
+  public function getFullNameAttribute()
+  {
+    return $this->description;
   }
 
   static function store_documents()

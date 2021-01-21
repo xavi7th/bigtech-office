@@ -81,10 +81,11 @@ class AppUserController extends Controller
     return view('appuser::emails.product_receipt', ['receipt' => $productReceipt->load('product.app_user', 'product.product_model', 'product.swapped_deal_device')]);
   }
 
-  public function resendReceipt(Request $request, Product $product)
+  public function resendReceipt(Request $request, ProductReceipt $productReceipt)
   {
-    $product->app_user->notify(new ProductReceiptNotification($product->productReceipt));
-    return back()->withFlash(['success' => 'Receipt sign']);
+    // dd($productReceipt->product->app_user);
+    $productReceipt->product->app_user->notify(new ProductReceiptNotification($productReceipt));
+    return back()->withFlash(['success' => 'Receipt sent']);
   }
 
   public function previewProduct(Request $request)

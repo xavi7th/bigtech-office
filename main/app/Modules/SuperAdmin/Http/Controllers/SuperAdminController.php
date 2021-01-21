@@ -5,15 +5,16 @@ namespace App\Modules\SuperAdmin\Http\Controllers;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
-use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
+use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
 use App\Modules\SuperAdmin\Models\UserComment;
@@ -47,71 +48,41 @@ class SuperAdminController extends Controller
         Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss,a', 'home', true));
 
         SalesRep::superAdminRoutes();
-
         Product::superAdminRoutes();
-
         ProductSaleRecord::superAdminRoutes();
-
         ProductSupplier::superAdminRoutes();
-
         ProductStatus::superAdminRoutes();
-
         Reseller::superAdminRoutes();
-
         UserComment::superAdminRoutes();
-
         // ProductQATestResult::superAdminRoutes();
-
         CompanyBankAccount::superAdminRoutes();
-
         OfficeBranch::superAdminRoutes();
-
         AppUser::superAdminRoutes();
-
         ErrLog::superAdminRoutes();
       });
 
       Route::name('superadmin.')->group(function () {
-
         Product::multiAccessRoutes();
-
         Reseller::multiAccessRoutes();
-
         SwapDeal::multiAccessRoutes();
-
         ProductBrand::multiAccessRoutes();
-
         ProductModel::multiAccessRoutes();
-
         ProductHistory::multiAccessRoutes();
-
         ProductExpense::multiAccessRoutes();
-
         OtherExpense::multiAccessRoutes();
-
         ProductBatch::multiAccessRoutes();
-
         ProductSaleRecord::multiAccessRoutes();
-
         StorageSize::multiAccessRoutes();
-
         StorageType::multiAccessRoutes();
-
         ProductColor::multiAccessRoutes();
-
         ProductGrade::multiAccessRoutes();
-
         ProductCategory::multiAccessRoutes();
-
         ProcessorSpeed::multiAccessRoutes();
-
         ProductStatus::multiAccessRoutes();
-
         SalesChannel::multiAccessRoutes();
-
         QATest::multiAccessRoutes();
-
         ProductDescriptionSummary::multiAccessRoutes();
+        ProductReceipt::multiAccessRoutes();
       });
     });
   }

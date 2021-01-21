@@ -1,5 +1,5 @@
 <script>
-  import { page } from "@inertiajs/inertia-svelte";
+  import { inertia, page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
@@ -93,6 +93,16 @@
             <td class="text-primary"><strong>Device ID</strong></td>
             <th scope="row"><strong>{swapDeal.identifier}</strong></th>
           </tr>
+          <tr>
+            <td class="text-primary"><strong>Status</strong></td>
+            <th scope="row">
+              <strong>{swapDeal.status}</strong>
+                {#if swapDeal.product_receipt_ref_no && (auth.user.isAccountant || auth.user.isSuperAdmin)}
+                <span><a target="_blank" class="small" href="{route(auth.user.user_type + '.multiaccess.products.receipt', swapDeal.product_receipt_ref_no)}">Receipt</a></span>
+                <span><button class="btn btn-xs btn-info" use:inertia="{{ href: route(auth.user.user_type + '.multiaccess.products.resend_receipt', swapDeal.product_receipt_ref_no), method: 'post' }}">Resend Receipt</button></span>
+              {/if}
+            </th>
+          </tr>
           {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
             <tr>
               <td class="text-primary"><strong>Seller Details</strong></td>
@@ -146,11 +156,6 @@
           <tr>
             <td class="text-primary"><strong>Selling Price</strong></td>
             <th scope="row"><strong>{toCurrency(swapDeal.selling_price)}</strong></th>
-          </tr>
-
-          <tr>
-            <td class="text-primary"><strong>Status</strong></td>
-            <th scope="row"><strong>{swapDeal.status}</strong></th>
           </tr>
         </tbody>
       </table>

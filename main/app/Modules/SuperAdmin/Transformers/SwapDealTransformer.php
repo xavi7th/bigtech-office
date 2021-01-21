@@ -52,6 +52,8 @@ class SwapDealTransformer
   public function detailed(SwapDeal $swapDeal): array
   {
     return [
+      'id' => (int)$swapDeal->id,
+      'product_receipt_ref_no' => optional($swapDeal->productReceipt)->order_ref,
       'description' => (string)$swapDeal->description,
       'seller_details' => (string)$swapDeal->owner_details,
       'identifier' => (string)$swapDeal->primary_identifier(),
