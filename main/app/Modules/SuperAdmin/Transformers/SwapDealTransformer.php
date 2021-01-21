@@ -45,6 +45,7 @@ class SwapDealTransformer
       'full_name' => (string)$swapDeal->full_name,
       'identifier' => (string)$swapDeal->primary_identifier(),
       'img' => (string)$swapDeal->receipt_thumb_url,
+      'is_swap' => (bool)true
     ];
   }
 

@@ -80,7 +80,7 @@
             <div class="col-12 pb-30">
               <h4>Products</h4>
               {#each searchResults as product}
-                <InertiaLink href={route($page.props.auth.user.user_type + '.multiaccess.products.view_product_details', product.uuid)} class="media media-success" on:click="{resetComponent}">
+                <InertiaLink href={product.is_swap ?  route($page.props.auth.user.user_type + '.multiaccess.products.swap_deal_details', product.uuid): route($page.props.auth.user.user_type + '.multiaccess.products.view_product_details', product.uuid)} class="media media-success" on:click="{resetComponent}">
                   <span class="media-img">
                     <img src="{product.img}" alt="">
                   </span>
