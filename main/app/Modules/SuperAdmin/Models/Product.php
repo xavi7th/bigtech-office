@@ -82,6 +82,18 @@ class Product extends BaseModel
 
   protected $casts = [
     'product_status_id' => 'int',
+    'app_user_id' => 'int',
+    'product_category_id' => 'int',
+    'product_model_id' => 'int',
+    'product_brand_id' => 'int',
+    'product_batch_id' => 'int',
+    'product_color_id' => 'int',
+    'product_grade_id' => 'int',
+    'product_supplier_id' => 'int',
+    'storage_size_id' => 'int',
+    'ram_size_id' => 'int',
+    'storage_type_id' => 'int',
+    'processor_speed_id' => 'int',
     'is_local' => 'bool',
   ];
 
