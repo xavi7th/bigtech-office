@@ -26,8 +26,8 @@ class ProductPriceTransformer
       'storage_size' => (string)$product_price->storage_size->human_size,
       'batch_number' => (string)$product_price->product_batch->batch_number,
       'order_date' => (string)$product_price->product_batch->order_date,
-      'cost_price' => to_naira($product_price->cost_price),
-      'proposed_selling_price' => to_naira($product_price->proposed_selling_price),
+      'cost_price' => $product_price->cost_price,
+      'proposed_selling_price' => $product_price->proposed_selling_price,
     ];
   }
 

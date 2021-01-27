@@ -115,7 +115,7 @@
                       Devices
                     </InertiaLink>
                   {/if}
-                  {#if auth.user.isSuperAdmin || auth.user.isAccountant}
+                  {#if (auth.user.isSuperAdmin || auth.user.isAccountant) && batch.id !== 1} <!--Local product price not viewable here-->
                     <InertiaLink
                       href={route(auth.user.user_type + '.multiaccess.products.prices_by_batch', batch.batch_number)}
                       class="btn btn-dark mr-5 btn-xs">
