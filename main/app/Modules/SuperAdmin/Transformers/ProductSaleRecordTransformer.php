@@ -32,7 +32,7 @@ class ProductSaleRecordTransformer
       'is_payment_complete' => (bool)$sale_record->is_payment_complete,
       'is_swap_transaction' => (bool)$sale_record->is_swap_transaction,
       'sales_channel' => (string)$sale_record->sales_channel->channel_name,
-      'sales_rep' => (string)$sale_record->sales_rep->full_name,
+      'sales_rep' => (string)optional($sale_record->sales_rep)->full_name,
       'online_rep' => (string)optional($sale_record->online_rep)->full_name,
       'sale_confirmer' => optional($sale_record->sale_confirmer)->full_name,
       'is_confirmed' => (bool)$sale_record->sale_confirmer,
