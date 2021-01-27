@@ -77,6 +77,7 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $swapped_with
  * @property-read \Illuminate\Database\Eloquent\Collection|Reseller[] $with_resellers
  * @property-read int|null $with_resellers_count
+ * @property-read mixed $full_name
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal backFromRepairs()
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal inStock()
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newModelQuery()

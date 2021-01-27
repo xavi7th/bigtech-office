@@ -417,7 +417,6 @@ class Product extends BaseModel
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,sk,a,ac', 'archive'))->middleware('auth:super_admin,stock_keeper,admin,accountant');
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac', 'archive', true))->middleware('auth:super_admin,admin,accountant');
-      Route::put('{product}/edit', [self::class, 'editProduct'])->name('edit_product')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name('edit_product_location')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
       Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name('qa_test_results')->defaults('ex', __e('ss,q,a', null, true))->middleware('auth:quality_control,admin,super_admin,accountant');
       Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('ss,d', null, true))->middleware('auth:sales_rep,dispatch_admin');
@@ -425,6 +424,9 @@ class Product extends BaseModel
       Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->defaults('ex', __e('ss,a,ac,d,sk', null, true))->middleware('auth:super_admin,admin,accountant');
       Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name('applicable_qa_tests')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
       Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->defaults('ex', __e('ss,d,q', null, true))->middleware('auth:super_admin,stock_keeper,quality_control');
+
+      Route::get('{product:product_uuid}/edit', [self::class, 'showEditProductForm'])->name('edit_product')->defaults('ex', __e('ac', 'archive', true))->middleware('auth:accountant');
+      Route::put('{product:product_uuid}/edit', [self::class, 'updateProduct'])->name('update')->defaults('ex', __e('ac,ss', 'archive', true))->middleware('auth:accountant,super_admin');
     });
   }
 
@@ -584,6 +586,39 @@ class Product extends BaseModel
     }
   }
 
+  public function showEditProductForm(Request $request, self $product)
+  {
+    return Inertia::render('SuperAdmin,Products/EditProduct', [
+      'batches' => fn () => Cache::remember('batches', (15 * 60 * 60), fn () => (new ProductBatchTransformer)->collectionTransformer(ProductBatch::latest()->get(), 'basic')),
+      'categories' => fn () => Cache::rememberForever('categories', fn () => (new ProductCategoryTransformer)->collectionTransformer(ProductCategory::all(), 'basic')),
+      'models' => fn () => Cache::rememberForever('models', fn () => (new ProductModelTransformer)->collectionTransformer(ProductModel::all(), 'basic')),
+      'brands' => fn () => Cache::rememberForever('brands', fn () => (new ProductBrandTransformer)->collectionTransformer(ProductBrand::all(), 'basic')),
+      'colors' => fn () => Cache::rememberForever('colors', fn () => (new ProductColorTransformer)->collectionTransformer(ProductColor::all(), 'basic')),
+      'grades' => fn () => Cache::rememberForever('grades', fn () => (new ProductGradeTransformer)->collectionTransformer(ProductGrade::all(), 'basic')),
+      'suppliers' => fn () => Cache::rememberForever('foreignSuppliers', fn () => (new ProductSupplierTransformer)->collectionTransformer(ProductSupplier::foreign()->get(), 'basic')),
+      'storage_sizes' => fn () => Cache::rememberForever('storage_sizes', fn () => (new StorageSizeTransformer)->collectionTransformer(StorageSize::all(), 'basic')),
+      'storage_types' => fn () => Cache::rememberForever('storage_types', fn () => (new StorageTypeTransformer)->collectionTransformer(StorageType::all(), 'basic')),
+      'processor_speeds' => fn () => Cache::rememberForever('processor_speeds', fn () => (new ProcessorSpeedTransformer)->collectionTransformer(ProcessorSpeed::all(), 'basic')),
+      'product' => $product
+    ]);
+  }
+
+  public function updateProduct(CreateProductValidation $request, self $product)
+  {
+    try {
+      foreach ($request->validated() as $key => $value) {
+        $product->$key = $value;
+      }
+
+      $product->save();
+
+      return back()->withFlash(['success' => 'Product details updated']);
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdmin($request->user(), $th, 'Product not updated');
+      return back()->withFlash(['erroe' => 'Product not updated']);
+    }
+  }
+
   public function showCreateLocalProductForm()
   {
     /**
@@ -658,22 +693,6 @@ class Product extends BaseModel
     $product->forceDelete();
 
     return back()->withFlash(['success' => 'Deleted']);
-  }
-
-  public function editProduct(CreateProductValidation $request, self $product)
-  {
-    try {
-      foreach ($request->validated() as $key => $value) {
-        $product->$key = $value;
-      }
-
-      $product->save();
-
-      return response()->json([], 204);
-    } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product not updated');
-      return response()->json(['err' => 'Product not updated'], 500);
-    }
   }
 
   public function updateProductLocation(Request $request, self $product)

@@ -34,6 +34,7 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
  * @property-read int|null $comments_count
+ * @property-read string $img_thumb_url
  * @property-read ProductBrand $product_brand
  * @property-read ProductCategory $product_category
  * @property-read ProductDescriptionSummary|null $product_description_summary
@@ -54,7 +55,6 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereProductCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read string $img_thumb_url
  */
 class ProductModel extends BaseModel
 {

@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Http\Validations;
 
+use App\Modules\AppUser\Models\AppUser;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
@@ -14,25 +15,26 @@ class CreateProductValidation extends FormRequest
    * Get the validation rules that apply to the request.
    *
    * @return array
+   * @method static \Illuminate\Database\Eloquent\Builder|AppUser user()
    */
   public function rules()
   {
     if ($this->isMethod('PUT')) {
       return [
-        'processor_speed_id' => 'exists:processor_speeds,id',
-        'product_batch_id' => 'exists:product_batches,id',
-        'product_category_id' => 'exists:product_categories,id',
-        'product_color_id' => 'exists:product_colors,id',
-        'storage_type_id' => 'exists:storage_types,id',
-        'storage_size_id' => 'exists:storage_sizes,id',
-        'ram_size_id' => 'exists:storage_sizes,id',
-        'product_grade_id' => 'exists:product_grades,id',
-        'product_supplier_id' => 'exists:product_suppliers,id',
-        'product_brand_id' => 'exists:product_brands,id',
-        'product_model_id' => 'exists:product_models,id',
-        'imei' => ['alpha_num',  Rule::unique('products')->ignore($this->route('product')->imei, 'imei')],
-        'serial_no' => ['alpha_dash',  Rule::unique('products')->ignore($this->route('product')->serial_no, 'serial_no')],
-        'model_no' => ['alpha_dash',  Rule::unique('products')->ignore($this->route('product')->model_no, 'model_nu')],
+        'processor_speed_id' => 'required|exists:processor_speeds,id',
+        'product_batch_id' => 'required|exists:product_batches,id',
+        'product_category_id' => 'required|exists:product_categories,id',
+        'product_color_id' => 'required|exists:product_colors,id',
+        'storage_type_id' => 'required|exists:storage_types,id',
+        'storage_size_id' => 'required|exists:storage_sizes,id',
+        'ram_size_id' => 'required|exists:storage_sizes,id',
+        'product_grade_id' => 'required|exists:product_grades,id',
+        'product_supplier_id' => 'required|exists:product_suppliers,id',
+        'product_brand_id' => 'required|exists:product_brands,id',
+        'product_model_id' => 'required|exists:product_models,id',
+        'imei' => 'required_without_all:serial_no,model_no|nullable|alpha_num|unique:products,imei,' . $this->imei . ',imei',
+        'serial_no' => 'required_without_all:imei,model_no|nullable|alpha_num|unique:products,imei,' . $this->serial_no . ',serial_no',
+        'model_no' => 'required_without_all:imei,serial_no|nullable|alpha_num|unique:products,imei,' . $this->model_no . ',model_no',
       ];
     } else {
       return [

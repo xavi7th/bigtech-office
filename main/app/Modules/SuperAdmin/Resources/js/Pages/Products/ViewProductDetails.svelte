@@ -1,5 +1,5 @@
 <script>
-  import { page, inertia } from "@inertiajs/inertia-svelte";
+  import { page, inertia, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
@@ -203,6 +203,13 @@
               <strong>{productDetails.uuid}</strong>
             </th>
           </tr>
+          {#if (auth.user.isAccountant || auth.user.isSuperAdmin)}
+            <tr>
+              <th scope="row" colspan="2" class="p-5">
+                <span><InertiaLink class="btn btn-warning btn-block text-center" href={route(auth.user.user_type + '.multiaccess.products.edit_product', productDetails.uuid)}>Edit</InertiaLink></span>
+              </th>
+            </tr>
+          {/if}
         </tbody>
       </table>
     </div>
