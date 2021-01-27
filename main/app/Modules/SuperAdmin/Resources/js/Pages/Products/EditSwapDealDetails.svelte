@@ -1,34 +1,23 @@
 <script>
-    import { Inertia } from "@inertiajs/inertia";
-    import Layout from "@superadmin-shared/SuperAdminLayout";
+  import { Inertia } from "@inertiajs/inertia";
+  import { page } from '@inertiajs/inertia-svelte';
+  import Layout from "@superadmin-shared/SuperAdminLayout";
 
-    let details = {}, files
+  export let swapDealDetails;
 
-    let createDirectSwapDeal = ()=>{
-      BlockToast.fire({
-        text: "Creating reseller ..."
-      });
+  let files
 
-      let formData = new FormData();
+  let updateSwapDealDetails = ()=>{
+    BlockToast.fire({
+      text: "Updatimg swap details ..."
+    });
 
-      _.forEach(details, (val, key) => {
-        formData.append(key, val);
-      });
-
-      Inertia.post(route("stockkeeper.products.swap_deal.create"), formData, {
-        preserveState: true,
-        preserveScroll: true,
-        only: ["flash", "errors"],
-        onSuccess: () =>{
-            details = {};
-        },
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      })
-    }
-
-
+    Inertia.put(route($page.props.auth.user.user_type + ".multiaccess.products.swap_deal.update",swapDealDetails.product_uuid), swapDealDetails, {
+      preserveState: true,
+      preserveScroll: true,
+      only: ["flash", "errors", 'swapDealDetails'],
+    })
+  }
 </script>
 
 <style>
@@ -37,10 +26,10 @@
     }
 </style>
 
-<Layout title="Create New Swap Deal">
+<Layout title="Update Swap Deal">
     <div class="row vertical-gap">
         <div class="col-lg-8 col-xl-6">
-            <form class="#" on:submit|preventDefault="{createDirectSwapDeal}">
+            <form class="#" on:submit|preventDefault="{updateSwapDealDetails}">
                 <div class="row vertical-gap sm-gap">
                     <div class="col-12">
                         <label for="swapDescription">Description</label>
@@ -48,7 +37,7 @@
                             <textarea
                                 name="swapDescription"
                                 id="swapDescription"
-                                bind:value="{details.description}"
+                                bind:value="{swapDealDetails.description}"
                                 class="form-control"
                                 placeholder="Blue samsung s7 edge with small crack on the screen" />
                         </div>
@@ -59,7 +48,7 @@
                             <textarea
                                 name="swapOwnerDetails"
                                 id="swapOwnerDetails"
-                                bind:value="{details.owner_details}"
+                                bind:value="{swapDealDetails.owner_details}"
                                 class="form-control"
                                 placeholder="Name, phone, address etc" />
                         </div>
@@ -71,8 +60,8 @@
                                 id="imei-option"
                                 name="primary-identifier"
                                 value="imei"
-                                on:change="{() => {delete details.model_no; delete details.serial_no}}"
-                                bind:group="{details.identification_type}"
+                                on:change="{() => {delete swapDealDetails.model_no; delete swapDealDetails.serial_no}}"
+                                bind:group="{swapDealDetails.identification_type}"
                                 class="custom-control-input" />
                             <label
                                 class="custom-control-label"
@@ -86,8 +75,8 @@
                                 id="serial-no-option"
                                 name="primary-identifier"
                                 value="serial_no"
-                                on:change="{() => {delete details.imei; delete details.model_no}}"
-                                bind:group="{details.identification_type}"
+                                on:change="{() => {delete swapDealDetails.imei; delete swapDealDetails.model_no}}"
+                                bind:group="{swapDealDetails.identification_type}"
                                 class="custom-control-input" />
                             <label
                                 class="custom-control-label"
@@ -101,8 +90,8 @@
                                 id="model-no-option"
                                 name="primary-identifier"
                                 value="model_no"
-                                on:change="{() => {delete details.imei; delete details.serial_no}}"
-                                bind:group="{details.identification_type}"
+                                on:change="{() => {delete swapDealDetails.imei; delete swapDealDetails.serial_no}}"
+                                bind:group="{swapDealDetails.identification_type}"
                                 class="custom-control-input" />
                             <label
                                 class="custom-control-label"
@@ -111,31 +100,31 @@
                             </label>
                         </div>
                     </div>
-                    {#if details.identification_type === 'imei'}
+                    {#if swapDealDetails.imei || swapDealDetails.identification_type === 'imei'}
                     <div class="col-12">
                         <label for="exampleBase1">Imei No.</label>
                         <input
                             type="text"
                             class="form-control"
-                            bind:value="{details.imei}"
+                            bind:value="{swapDealDetails.imei}"
                             placeholder="Enter Imei No." />
                     </div>
-                    {:else if details.identification_type === 'serial_no'}
+                    {:else if swapDealDetails.serial_no || swapDealDetails.identification_type === 'serial_no'}
                     <div class="col-12">
                         <label for="exampleBase1">Serial No.</label>
                         <input
                             type="text"
                             class="form-control"
-                            bind:value="{details.serial_no}"
+                            bind:value="{swapDealDetails.serial_no}"
                             placeholder="Enter Serial No." />
                     </div>
-                    {:else if details.identification_type === 'model_no'}
+                    {:else if swapDealDetails.model_no || swapDealDetails.identification_type === 'model_no'}
                     <div class="col-12">
                         <label for="exampleBase1">Model No.</label>
                         <input
                             type="text"
                             class="form-control"
-                            bind:value="{details.model_no}"
+                            bind:value="{swapDealDetails.model_no}"
                             placeholder="Enter Model No." />
                     </div>
                     {/if}
@@ -145,7 +134,7 @@
                             type="file"
                             class="form-control"
                             bind:files
-                            on:change="{details.id_card = files[0]}" />
+                            on:change="{swapDealDetails.id_card = files[0]}" />
                     </div>
                     <div class="col-12">
                         <label for="exampleBase1">Receipt</label>
@@ -153,7 +142,7 @@
                             type="file"
                             class="form-control"
                             bind:files
-                            on:change="{details.receipt = files[0]}" />
+                            on:change="{swapDealDetails.receipt = files[0]}" />
                     </div>
                      <div class="col-12">
                         <label for="swapValue">Swap Value</label>
@@ -162,14 +151,25 @@
                               type="number"
                                 name="swapValue"
                                 id="swapValue"
-                                bind:value="{details.swap_value}"
+                                bind:value="{swapDealDetails.swap_value}"
                                 class="form-control"
                                 placeholder="The amount the device was valued for" />
                         </div>
                     </div>
+                     <div class="col-12">
+                        <label for="swapUpdateReason">Update Reason</label>
+                        <div class="input-group">
+                            <textarea
+                                name="swapUpdateReason"
+                                id="swapUpdateReason"
+                                bind:value="{swapDealDetails.comment}"
+                                class="form-control"
+                                placeholder="What necesitated this update?" />
+                        </div>
+                    </div>
                     <div class="col-12">
                         <button class="btn btn-primary btn-long">
-                            <span class="text">Create Swap Deal</span>
+                            <span class="text">Update</span>
                             <span class="icon">
                                 <span
                                     data-feather="check-circle"

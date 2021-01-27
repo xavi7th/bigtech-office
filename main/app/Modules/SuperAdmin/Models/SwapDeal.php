@@ -26,7 +26,6 @@ use App\Modules\SuperAdmin\Models\ResellerProduct;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
-use App\Modules\AppUser\Http\Controllers\AppUserController;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
@@ -321,7 +320,6 @@ class SwapDeal extends BaseModel
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('accountant.products.')->group(function () {
-        Route::put('{swapDeal:product_uuid}/edit', [self::class, 'editSwapDeal'])->name('edit_swap_deal')->defaults('ex', __e('ac', 'refresh-cw', true));
         Route::put('{swapDeal:product_uuid}/confirm-sale', [self::class, 'confirmSwapDealSale'])->name('confirm_swap_sale')->defaults('ex', __e('ac', null, true));
       });
     });
@@ -344,6 +342,9 @@ class SwapDeal extends BaseModel
         Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q,a,d,ac', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin,accountant,super_admin');
         Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q,a,d,ac', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin,accountant,super_admin');
         Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->defaults('ex', __e('ss,s,d', null, true))->middleware('auth:stock_keeper,sales_rep,dispatch_admin');
+
+        Route::get('{swapDeal:product_uuid}/edit', [self::class, 'showEditSwapDealPage'])->name('edit_swap_deal')->defaults('ex', __e('ac,ss', 'refresh-cw', true))->middleware('auth:accountant,super_admin');
+        Route::put('{swapDeal:product_uuid}/edit', [self::class, 'editSwapDeal'])->name('swap_deal.update')->defaults('ex', __e('ac,ss', 'refresh-cw', true))->middleware('auth:accountant,super_admin');
       });
     });
   }
@@ -400,12 +401,23 @@ class SwapDeal extends BaseModel
     }
   }
 
+  public function showEditSwapDealPage(self $swapDeal)
+  {
+    return Inertia::render('SuperAdmin,Products/EditSwapDealDetails', [
+      'swapDealDetails' => $swapDeal
+    ]);
+  }
+
   public function editSwapDeal(CreateSwapDealValidation $request, self $swapDeal)
   {
     try {
       $swapDeal->selling_price = $request->selling_price;
       $swapDeal->description = $request->description;
 
+      foreach (collect($request->validated())->except('comment') as $key => $value) {
+        debug($key, $value);
+        $swapDeal->$key = $value;
+      }
       $swapDeal->save();
 
       if ($request->isApi()) return response()->json([], 204);

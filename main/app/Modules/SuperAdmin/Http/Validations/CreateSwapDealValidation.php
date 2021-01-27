@@ -2,13 +2,16 @@
 
 namespace App\Modules\SuperAdmin\Http\Validations;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Modules\Accountant\Models\Accountant;
+use App\Modules\SuperAdmin\Models\SuperAdmin;
 use \Illuminate\Contracts\Validation\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
 use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
-use App\Modules\SuperAdmin\Models\SwapDeal;
 
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder|SuperAdmin|Accountant user()
+ */
 class CreateSwapDealValidation extends FormRequest
 {
   /**
@@ -23,14 +26,22 @@ class CreateSwapDealValidation extends FormRequest
         'description' => 'nullable|string',
         'selling_price' => 'nullable|numeric',
         'comment' => 'required|string',
+        'imei' => 'required_without_all:model_no,serial_no|nullable|alpha_num|unique:swap_deals,imei,' . $this->swapDeal->imei . ',imei',
+        'serial_no' =>  'required_without_all:imei,model_no|nullable|alpha_dash|unique:swap_deals,serial_no,' . $this->swapDeal->serial_no . ',serial_no',
+        'model_no' =>  'required_without_all:imei,serial_no|nullable|alpha_dash|unique:swap_deals,model_no,' . $this->swapDeal->model_no . ',model_no',
+        'id_card' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        'receipt' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        'owner_details' => 'required|string',
+        'selling_price' => 'nullable|numeric',
+        'swap_value' => 'required|numeric',
       ];
     } else {
       return [
         'app_user_id' => 'nullable|exists:app_users,id',
         'description' => 'required|string',
         'owner_details' => 'required|string',
-        'id_card' => 'bail|required|image|mimes:jpeg,png,jpg,gif,svg',
-        'receipt' => 'bail|required|image|mimes:jpeg,png,jpg,gif,svg',
+        'id_card' => 'bail|required|image|mimes:jpeg,png,jpg,gif',
+        'receipt' => 'bail|required|image|mimes:jpeg,png,jpg,gif',
         'imei' => 'required_without_all:model_no,serial_no|alpha_num|unique:swap_deals,imei',
         'serial_no' =>  'required_without_all:imei,model_no|alpha_dash|unique:swap_deals,serial_no',
         'model_no' =>  'required_without_all:imei,serial_no|alpha_dash|unique:swap_deals,model_no',
