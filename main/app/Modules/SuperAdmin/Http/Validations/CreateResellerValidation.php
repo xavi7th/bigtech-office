@@ -19,11 +19,12 @@ class CreateResellerValidation extends FormRequest
   {
 
     return [
-      'business_name' => $this->isMethod("PUT") ? Rule::unique('resellers')->ignore($this->route('reseller')->business_name, 'business_name') : 'required|unique:resellers,business_name',
-      'ceo_name' => $this->isMethod("PUT") ? 'string|max:50' : 'required|string|max:50',
-      'address' =>  $this->isMethod("PUT") ? 'string'  : 'required|string',
+      'business_name' => $this->isMethod("PUT") ? 'required|unique:resellers,business_name,' . $this->reseller->business_name . ',business_name' : 'required|unique:resellers,business_name',
+      'ceo_name' => 'required|string|max:50',
+      'address' => 'required|string',
       'img' =>  'nullable|image|mimes:jpeg,png,jpg,gif,svg',
       'phone' =>  $this->isMethod("PUT") ? 'regex:/^[\+]?[0-9\Q()\E\s-]+$/i' : 'required|regex:/^[\+]?[0-9\Q()\E\s-]+$/i',
+      'email' =>  $this->isMethod("PUT") ? 'nullable|email|unique:resellers,email,' . $this->reseller->email . ',email' : 'nullable|email|unique:resellers,email',
     ];
   }
 
@@ -43,9 +44,7 @@ class CreateResellerValidation extends FormRequest
      * Remove the img key from the validated options so that it does not cause errors with the edit route
      */
     if ($this->img) {
-      return array_merge((collect(parent::validated())->except('img'))->all(), [
-        'img_url' => $this->img
-      ]);
+      return (collect(parent::validated())->except('img'))->all();
     } else {
       return parent::validated();
     }

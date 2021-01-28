@@ -24,7 +24,8 @@ class ResellerTransformer
       'ceo_name' => (string)$reseller->ceo_name,
       'address' => (string)$reseller->address,
       'phone' => (string)$reseller->phone,
-      'brand_img' => (string)$reseller->img_url,
+      'email' => (string)$reseller->email,
+      'img_url' => (string)$reseller->img_url,
     ];
   }
 

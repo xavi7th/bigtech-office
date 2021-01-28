@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\QueryException;
 use Illuminate\Notifications\Notifiable;
-use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -60,6 +59,8 @@ use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
  * @method static \Illuminate\Database\Query\Builder|Reseller withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Reseller withoutTrashed()
  * @mixin \Eloquent
+ * @property string|null $email
+ * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereEmail($value)
  */
 class Reseller extends BaseModel
 {
@@ -70,6 +71,7 @@ class Reseller extends BaseModel
     'ceo_name',
     'address',
     'phone',
+    'email',
     'img_url',
   ];
 
@@ -162,7 +164,7 @@ class Reseller extends BaseModel
     try {
 
       if ($request->hasFile('img')) {
-        $reseller = self::create(collect($request->validated())->merge(['img_url' => compress_image_upload('img', 'product_models_images/', null, 200)['img_url']])->all());
+        $reseller = self::create(collect($request->validated())->merge(['img_url' => compress_image_upload('img', 'resellers/', null, 200)['img_url']])->all());
       } else {
         $reseller = self::create($request->validated());
       }
@@ -184,8 +186,8 @@ class Reseller extends BaseModel
         $reseller->$key = $value;
       }
 
-      if ($request->hasFile('brand_img')) {
-        $reseller->img_url = compress_image_upload('brand_img', 'product_models_images/', null, 200)['img_url'];
+      if ($request->hasFile('img')) {
+        $reseller->img_url = compress_image_upload('img', 'resellers/', null, 200)['img_url'];
       }
 
       $reseller->save();

@@ -40,26 +40,17 @@
       text: "Updating reseller ..."
     });
 
-    let formData = new FormData();
-
-    formData.append("_method", "PUT");
-
-    _.forEach(currentReseller, (val, key) => {
-      formData.append(key, val);
-    });
+    currentReseller._method = 'PUT';
 
     Inertia.post(
       route("superadmin.resellers.edit_reseller", currentReseller.id),
-      formData,
+      {...currentReseller},
       {
         preserveState: true,
         preserveScroll: true,
         only: ["flash", "errors", "resellers"],
         onSuccess: () =>{
           currentReseller = {};
-        },
-        headers: {
-          "Content-Type": "multipart/form-data"
         }
       }
     )
@@ -138,6 +129,15 @@
             </div>
 
             <div class="col-12">
+              <label for="email">Office Email</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Office Email"
+                bind:value={details.email} />
+            </div>
+
+            <div class="col-12">
               <label for="name">Office Phone</label>
               <input
                 type="text"
@@ -182,7 +182,8 @@
         <h2 class="mnb-2" id="formBase">Available Resellers</h2>
       </div>
       <div class="table-responsive">
-        <table class="table table-bordered">
+        <!-- svelte-ignore missing-declaration -->
+        <table class="table table-bordered" use:initialiseDatatable>
           <thead class="thead-dark">
             <tr>
               <th scope="col">#</th>
@@ -190,18 +191,19 @@
               <th scope="col">CEO</th>
               <th scope="col">Address</th>
               <th scope="col">Phone</th>
+              <th scope="col">Email</th>
               {#if auth.user.isSuperAdmin}
                 <th scope="col">Action</th>
               {/if}
             </tr>
           </thead>
           <tbody>
-            {#each resellers as reseller, idx}
+            {#each resellers as reseller}
               <tr>
-                <td>{idx + 1}</td>
+                <td>{reseller.id}</td>
                 <td>
                   <img
-                    src={reseller.brand_img}
+                    src={reseller.img_url}
                     alt="{reseller.business_name}'s Logo'"
                     class="img-fluid" />
                   {reseller.business_name}
@@ -209,6 +211,7 @@
                 <td>{reseller.ceo_name}</td>
                 <td>{reseller.address}</td>
                 <td>{reseller.phone}</td>
+                <td>{reseller.email}</td>
                 {#if auth.user.isSuperAdmin}
                   <td
                     class="d-flex justify-content-between align-content-center">
@@ -275,6 +278,15 @@
         </div>
 
         <div class="col-12">
+          <label for="email">Office Email</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Office Email"
+            bind:value={currentReseller.email} />
+        </div>
+
+        <div class="col-12">
           <label for="name">Office Address</label>
           <input
             type="text"
@@ -290,7 +302,7 @@
             class="form-control"
             placeholder="Business Logo"
             bind:files
-            on:change={() => (currentReseller.brand_img = files[0])} />
+            on:change={currentReseller.img = files[0]} />
         </div>
       </div>
       <button
