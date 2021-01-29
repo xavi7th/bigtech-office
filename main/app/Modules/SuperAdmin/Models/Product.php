@@ -461,7 +461,7 @@ class Product extends BaseModel
       Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name('applicable_qa_tests')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
       Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->defaults('ex', __e('ss,d,q', null, true))->middleware('auth:super_admin,stock_keeper,quality_control');
 
-      Route::get('{product:product_uuid}/edit', [self::class, 'showEditProductForm'])->name('edit_product')->defaults('ex', __e('ac', 'archive', true))->middleware('auth:accountant');
+      Route::get('{product:product_uuid}/edit', [self::class, 'showEditProductForm'])->name('edit_product')->defaults('ex', __e('ac,ss', 'archive', true))->middleware('auth:accountant,super_admin');
       Route::put('{product:product_uuid}/edit', [self::class, 'updateProduct'])->name('update')->defaults('ex', __e('ac,ss', 'archive', true))->middleware('auth:accountant,super_admin');
     });
   }
