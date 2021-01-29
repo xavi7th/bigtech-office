@@ -325,7 +325,7 @@ class ProductSaleRecord extends BaseModel
      * ? this receipt will still carry this his current records
      */
     try {
-      $receipt = $product->generateReceipt($amountPaid);
+      $receipt = $product->generateReceipt($productSaleRecord->amount_paid);
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
