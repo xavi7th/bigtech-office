@@ -83,8 +83,10 @@ class AppUserController extends Controller
 
   public function resendReceipt(Request $request, ProductReceipt $productReceipt)
   {
-    // dd($productReceipt->product->app_user);
-    $productReceipt->product->app_user->notify(new ProductReceiptNotification($productReceipt));
+    // dd($productReceipt->product->reseller());
+    $receiptOwner = $productReceipt->product->reseller() ?? $productReceipt->product->app_user;
+
+    $receiptOwner->notify(new ProductReceiptNotification($productReceipt));
     return back()->withFlash(['success' => 'Receipt sent']);
   }
 

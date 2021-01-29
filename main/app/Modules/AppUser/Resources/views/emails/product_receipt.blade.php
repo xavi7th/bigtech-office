@@ -2123,13 +2123,13 @@
 
 																							<div class="col-md-6 invoice-col">Customer Details
 																								<address>
-                                                      <strong>{{ $receipt->product->app_user->full_name }}</strong>
+                                                      <strong>{{ $receipt->user_name }}</strong>
                                                       <br>
-                                                      {{ $receipt->user_address }}
+                                                      {{ Str::title($receipt->user_address) }}
                                                       <br>
-                                                      {{ $receipt->user_city }}
+                                                      {{ Str::title($receipt->user_city) }}
                                                       <br>
-                                                      Phone:{{ $receipt->user_phone }}
+                                                      Phone:{{ Str::title($receipt->user_phone) }}
                                                       <br>
                                                       Email: {{ $receipt->user_email }}
                                                       <br>
@@ -2163,7 +2163,17 @@
 																													<tr>
 																														<td>1</td>
 																														<td>{{ $receipt->product->full_name }}</td>
-																														<td>{{ $receipt->product->primary_identifier() }}</td>
+																														<td>
+																															
+																															
+																															
+																															
+																															{{ Str::title($receipt->product->primary_identifier()) }}
+																														
+																														
+																														
+																														
+																														</td>
 																														<td>{{ to_naira($receipt->amount_paid) }}</td>
 																													</tr>
 																												</tbody>

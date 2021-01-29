@@ -329,19 +329,20 @@ class ProductSaleRecord extends BaseModel
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
-      return back()->withFlash(['error' => ['Receipt generation failed']]);
+      return back()->withFlash(['error' => ['Receipt generation failed because ' . $th->getMessage()]]);
     }
 
     /**
-     * Send the user an email containing his receipt
+     * Send the reseller or user an email containing his receipt
+     * ! Reseller first because the app_user relationship does not ever return null because of withDefault
      */
     try {
-      $product->app_user->notify(new ProductReceiptNotification($receipt));
+      $receiptOwner = $product->reseller() ?? $product->app_user;
+      $receiptOwner->notify(new ProductReceiptNotification($receipt));
     } catch (\Throwable $th) {
-      dd($th);
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
       // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
-      return back()->withFlash(['error' => ['Failed to send receipt to user  ' . $product->app_user->emai]]);
+      return back()->withFlash(['error' => ['Failed to send receipt to user because ' . $th->getMessage()]]);
     }
 
 

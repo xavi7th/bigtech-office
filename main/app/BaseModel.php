@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Inertia\Inertia;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,15 +14,5 @@ use Illuminate\Database\Eloquent\Model;
  */
 class BaseModel extends Model
 {
-  // public function __construct(array $attributes = [])
-  // {
-  //   parent::__construct($attributes);
-  //   if (routeHasRootNamespace('appuser.')) {
-  //     Inertia::setRootView('appuser::app');
-  //   } elseif (routeHasRootNamespace('admin.')) {
-  //     Inertia::setRootView('admin::app');
-  //   } elseif (routeHasRootNamespace('superadmin.')) {
-  //     Inertia::setRootView('superadmin::app');
-  //   }
-  // }
+
 }

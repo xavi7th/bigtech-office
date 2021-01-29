@@ -10,6 +10,7 @@ use App\Modules\AppUser\Models\ProductReceipt;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\Modules\AppUser\Notifications\Channels\BulkSMSMessage;
 use App\Modules\PublicPages\Notifications\Channels\SMSSolutionsMessage;
+use App\Modules\SuperAdmin\Models\Reseller;
 
 class ProductReceiptNotification extends Notification implements ShouldQueue
 {
@@ -47,13 +48,13 @@ class ProductReceiptNotification extends Notification implements ShouldQueue
   /**
    * Get the SMS representation of the notification.
    *
-   * @param AppUser $appUser
+   * @param AppUser|Reseller $appUser
    */
-  public function toBulkSMS(AppUser $appUser)
+  public function toBulkSMS()
   {
     return (new BulkSMSMessage)
       ->sms_message('Your receipt for ' . to_naira($this->receipt->amount_paid) . ' has been sent to your email.')
-      ->to($appUser->phone);
+    ->to($this->receipt->phone);
   }
 
   /**
@@ -73,11 +74,11 @@ class ProductReceiptNotification extends Notification implements ShouldQueue
         "coyEmail" => config('app.email'),
         "coySupportEmail" => config('app.email'),
         "coyComplaintsPhoneNumber" => config('app.complaint_phone_line'),
-        "customerFullName" => $appUser->full_name,
-        "customerAddress" => $appUser->address,
-        "customerCity" => $appUser->city,
-        "customerPhone" => $appUser->phone,
-        "customerEmail" => $appUser->email,
+      "customerFullName" => $this->receipt->user_name,
+      "customerAddress" => $this->receipt->user_address,
+      "customerCity" => $this->receipt->user_city,
+      "customerPhone" => $this->receipt->user_phone,
+      "customerEmail" => $this->receipt->user_email,
         "receiptNo" => str_pad($this->receipt->id, 7, '0', STR_PAD_LEFT),
         "receiptUrl" => route('appuser.preview_receipt', $this->receipt->order_ref),
         "orderRef" => $this->receipt->order_ref,
@@ -89,8 +90,7 @@ class ProductReceiptNotification extends Notification implements ShouldQueue
         "swapDevices" => $this->receipt->product->swapped_deal_device ? [
           [
             "swapDeviceDescription" => $this->receipt->product->swapped_deal_device->description,
-            "swapDeviceId" => $this->receipt->product->swapped_deal_device->primary_identifier(),
-            "swapDeviceValue" => $this->receipt->product->swapped_deal_device->swap_value
+          "swapDeviceId" => $this->receipt->product->swapped_deal_device->primary_identifier()
           ]
         ] : [],
         "taxRate" => $this->receipt->tax_rate,
@@ -98,24 +98,6 @@ class ProductReceiptNotification extends Notification implements ShouldQueue
         "shippingFee" => to_naira($this->receipt->delivery_fee ?? 0),
         "grandTotal" => to_naira($this->receipt->amount_paid + ($this->receipt->tax_rate / 100 * $this->receipt->amount_paid) + $this->receipt->delivery_fee),
       ]);
-
-    // return (new MailMessage)
-    //   ->from('support@theelects.com')
-    //   ->subject('Payment Receipt')
-    //   ->view('appuser::emails.product_receipt', ['receipt' => $this->receipt->load('product.app_user', 'product.product_model', 'product.swapped_deal_device')]);
-  }
-
-  /**
-   * Get the database representation of the notification.
-   *
-   * @param AppUser $appUser
-   */
-  public function toDatabase($appUser)
-  {
-    return [
-      'action' =>  'Profile details updated.',
-
-    ];
   }
 
   /**
@@ -128,5 +110,13 @@ class ProductReceiptNotification extends Notification implements ShouldQueue
     return (new SMSSolutionsMessage)
       ->sms_message('You just updated your profile details on Capital X.')
       ->to($appUser->phone);
+  }
+
+  public function viaQueues()
+  {
+    return [
+      'mail' => 'hign',
+      BulkSMSMessage::class => 'high',
+    ];
   }
 }

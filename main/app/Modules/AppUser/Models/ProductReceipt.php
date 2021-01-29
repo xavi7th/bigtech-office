@@ -20,12 +20,14 @@ use App\Modules\AppUser\Http\Controllers\AppUserController;
  * @property string $user_address
  * @property string $user_city
  * @property string $order_ref
+ * @property string $product_type
  * @property float $amount_paid
  * @property float|null $tax_rate
  * @property float|null $delivery_fee
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read Product $product
  * @method static \Illuminate\Database\Eloquent\Builder|ProductReceipt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductReceipt newQuery()
  * @method static \Illuminate\Database\Query\Builder|ProductReceipt onlyTrashed()
@@ -45,16 +47,14 @@ use App\Modules\AppUser\Http\Controllers\AppUserController;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductReceipt whereUserPhone($value)
  * @method static \Illuminate\Database\Query\Builder|ProductReceipt withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductReceipt withoutTrashed()
- * @mixin \Eloquent
- * @property-read Product $product
- * @property string $product_type
  * @method static \Illuminate\Database\Eloquent\Builder|ProductReceipt whereProductType($value)
+ * @mixin \Eloquent
  */
 class ProductReceipt extends Model
 {
   use SoftDeletes;
 
-  protected $fillable = ['user_email', 'user_phone', 'user_address', 'user_city', 'amount_paid'];
+  protected $fillable = ['user_email', 'user_name', 'user_phone', 'user_address', 'user_city', 'amount_paid'];
 
   public function product()
   {

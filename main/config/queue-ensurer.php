@@ -13,7 +13,7 @@ return [
   // alternatively, define a more in depth configuration.
   'queues' => [
     'default' => 1,
-    'high' => 1,
+    'high' => 2,
     'low' => 1,
     // 'another' => [
     //     'amount' => 1, // The number of processes you want to run.

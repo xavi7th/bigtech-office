@@ -32,6 +32,7 @@ use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
  * @property string $address
  * @property string $phone
  * @property string $img_url
+ * @property string|null $email
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -58,9 +59,8 @@ use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Reseller withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Reseller withoutTrashed()
- * @mixin \Eloquent
- * @property string|null $email
  * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereEmail($value)
+ * @mixin \Eloquent
  */
 class Reseller extends BaseModel
 {
@@ -85,6 +85,11 @@ class Reseller extends BaseModel
   public function products_in_possession()
   {
     return $this->products()->wherePivot('status', 'tenured')->withPivot('status');
+  }
+
+  public function purchased_products()
+  {
+    return $this->products()->wherePivot('status', 'sold')->withPivot('status');
   }
 
   public function swap_deals()
@@ -430,7 +435,7 @@ class Reseller extends BaseModel
     /**
      * Change the product's status to reflect that it has been sold
      */
-    $product->product_status_id = ProductStatus::soldId();
+    $product->product_status_id = ProductStatus::soldByResellerId();
     $product->save();
 
     /**
