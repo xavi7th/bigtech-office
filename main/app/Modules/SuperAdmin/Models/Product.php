@@ -195,7 +195,7 @@ class Product extends BaseModel
     return $this->morphMany(ProductHistory::class, 'product')->latest();
   }
 
-  public function reseller(): Reseller
+  public function reseller(): ?Reseller
   {
     // return $this->morphToMany(Reseller::class, 'product',  $table = 'reseller_product')->using(ResellerProduct::class)->wherePivot('status', 'sold')->withPivot('status')->withTimestamps()->as('sale_record')->limit(1);
     return $this->belongsToMany(Reseller::class, 'reseller_product')->wherePivot('status', 'sold')->withPivot('status', 'product_type')->withTimestamps()->as('sale_record')->first();
