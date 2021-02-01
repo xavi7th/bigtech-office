@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
+use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\ActivityLog;
@@ -179,6 +180,12 @@ class SwapDeal extends BaseModel
     return $this->morphMany(ProductExpense::class, 'product')->latest();
   }
 
+  public function reseller(): ?Reseller
+  {
+    // return $this->morphToMany(Reseller::class, 'product',  $table = 'reseller_product')->using(ResellerProduct::class)->wherePivot('status', 'sold')->withPivot('status')->withTimestamps()->as('sale_record')->limit(1);
+    return $this->belongsToMany(Reseller::class, 'reseller_product')->wherePivot('status', 'sold')->withPivot('status', 'product_type')->withTimestamps()->as('sale_record')->first();
+  }
+
   public function with_resellers()
   {
     return $this->morphToMany(Reseller::class, 'product',  $table = 'reseller_product')->using(ResellerProduct::class)->wherePivot('status', 'tenured')->withPivot('status')->withTimestamps()->as('tenure_record');
@@ -262,11 +269,29 @@ class SwapDeal extends BaseModel
 
   public function generateReceipt(float $amount): ProductReceipt
   {
+    /** If there is no app_user attached to the product, it is most likely a reseller sale **/
+    if ($this->is_sold() && $this->app_user->first_name == 'Not Sold') return $this->generateResellerReceipt($amount);
+
     return $this->productReceipt()->create([
       'user_email' => $this->app_user->email,
+      'user_name' => $this->app_user->full_name,
       'user_phone' => $this->app_user->phone,
       'user_address' => $this->app_user->address,
       'user_city' => $this->app_user->city,
+      'amount_paid' => $amount
+    ]);
+  }
+
+  public function generateResellerReceipt(float $amount): ProductReceipt
+  {
+    $reseller = $this->reseller();
+
+    return $this->productReceipt()->create([
+      'user_email' => $reseller->email,
+      'user_name' => $reseller->business_name,
+      'user_phone' => $reseller->phone,
+      'user_address' => $reseller->address,
+      'user_city' => 'Lagos',
       'amount_paid' => $amount
     ]);
   }

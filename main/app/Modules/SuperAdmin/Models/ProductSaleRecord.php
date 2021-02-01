@@ -325,7 +325,7 @@ class ProductSaleRecord extends BaseModel
      * ? this receipt will still carry this his current records
      */
     try {
-      $receipt = $product->generateReceipt($productSaleRecord->amount_paid);
+      $receipt = $product->generateReceipt($productSaleRecord->selling_price);
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
@@ -337,7 +337,7 @@ class ProductSaleRecord extends BaseModel
      * ! Reseller first because the app_user relationship does not ever return null because of withDefault
      */
     try {
-      $receiptOwner = $product->reseller() ?? $product->app_user;
+      $receiptOwner = $product->app_user->first_name == 'Not Sold' ? $product->reseller() : $product->app_user;
       $receiptOwner->notify(new ProductReceiptNotification($receipt));
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
