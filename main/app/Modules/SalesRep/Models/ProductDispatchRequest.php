@@ -75,8 +75,8 @@ use App\Modules\DispatchAdmin\Transformers\ProductDispatcgRequestTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|ProductDispatchRequest withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductDispatchRequest withoutTrashed()
- * @mixin \Eloquent
  * @method static Builder|ProductDispatchRequest unprocessed()
+ * @mixin \Eloquent
  */
 class ProductDispatchRequest extends Model
 {
@@ -178,7 +178,10 @@ class ProductDispatchRequest extends Model
   {
     if (!$request->identification_type) throw ValidationException::withMessages(['err' => "An IMEI or Serial Number or Model Number is required"])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-    $product = Product::where($request->identification_type, $request->input($request->identification_type))->first() ?? SwapDeal::where($request->identification_type, $request->input($request->identification_type))->firstOr(function () {
+    /**
+     * ? Check in swap deals first because the product kight be our product that was once sold and swapped back to us
+     */
+    $product = SwapDeal::where($request->identification_type, $request->input($request->identification_type))->first() ?? Product::where($request->identification_type, $request->input($request->identification_type))->firstOr(function () {
       throw ValidationException::withMessages(['err' => "Invalid product selected"])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
     });
 
