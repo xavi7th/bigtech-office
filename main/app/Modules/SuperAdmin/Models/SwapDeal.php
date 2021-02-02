@@ -259,6 +259,11 @@ class SwapDeal extends BaseModel
     return $this->description;
   }
 
+  public function shortDescription(): string
+  {
+    return $this->description . ' ' . $this->primary_identifier();
+  }
+
   static function store_documents()
   {
     return [
