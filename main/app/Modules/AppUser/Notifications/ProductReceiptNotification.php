@@ -115,7 +115,7 @@ class ProductReceiptNotification extends Notification implements ShouldQueue
   public function viaQueues()
   {
     return [
-      'mail' => 'hign',
+      'mail' => 'high',
       BulkSMSMessage::class => 'high',
     ];
   }
