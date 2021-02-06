@@ -75,11 +75,12 @@ class SendDispatchRequestValidation extends FormRequest
 
       /**
        * Check if the product has been sold already or confirmed
+       * ! Disable temporarily until we implement new scheduling system
        */
-      if (ProductDispatchRequest::alreadyExists($this->customer_first_name, $this->customer_last_name ?? ' ', $this->customer_phone, now())) {
-        $validator->errors()->add('Duplicate transaction', 'There is a delivery request made for this customer today already. Kindly contact the dispatch unit to confirm');
-        return;
-      }
+      // if (ProductDispatchRequest::alreadyExists($this->customer_first_name, $this->customer_last_name ?? ' ', $this->customer_phone, now())) {
+      //   $validator->errors()->add('Duplicate transaction', 'There is a delivery request made for this customer today already. Kindly contact the dispatch unit to confirm');
+      //   return;
+      // }
     });
   }
 
