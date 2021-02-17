@@ -70,6 +70,9 @@ import { confirm } from 'lodash/_freeGlobal';
               {#if productDetails.status == 'sold' && auth.user.isSuperAdmin}
                 <span><button class="btn btn-xs btn-danger" use:inertia="{{ href: route('superadmin.products.mark_as_sold.reverse', productDetails.uuid), method: 'put', onBefore: () => confirm('Are you sure? This is irreversible!!!') }}">Reverse Sale</button></span>
               {/if}
+              {#if productDetails.status == 'sale confirmed' && auth.user.isSuperAdmin}
+                <span><button class="btn btn-xs btn-danger" use:inertia="{{ href: route('superadmin.products.confirm_sale.reverse', productDetails.uuid), method: 'put', onBefore: () => confirm('Are you sure? This is irreversible!!!') }}">Reverse Sale</button></span>
+              {/if}
             </th>
           </tr>
          {#if auth.user.isAccountant || auth.user.isSuperAdmin}

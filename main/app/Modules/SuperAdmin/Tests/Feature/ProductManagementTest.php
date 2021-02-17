@@ -14,6 +14,7 @@ use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Modules\Accountant\Models\Accountant;
+use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
@@ -34,6 +35,8 @@ use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\QualityControl\Models\QualityControl;
 use App\Modules\SalesRep\Models\ProductDispatchRequest;
+use App\Modules\SuperAdmin\Models\CompanyBankAccount;
+use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class ProductManagementTest extends TestCase
@@ -216,9 +219,54 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
+  public function function_superadmin_can_reverse_a_product_from_sale_confirmed_to_in_stock()
+  {
+    $this->withoutExceptionHandling();
+
+    $product = $this->create_sale_confirmed_product();
+    $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->put(route('superadmin.products.confirm_sale.reverse', $product->product_uuid));
+
+    $product->refresh();
+
+    $this->assertEquals(ProductStatus::inStockId(), $product->product_status_id);
+    $this->assertCount(0, ProductSaleRecord::all());
+    $this->assertCount(0, AppUser::all());
+    $this->assertCount(0, SalesRecordBankAccount::all());
+    $this->assertCount(0, ProductReceipt::all());
+    $this->assertNull($product->app_user_id);
+    $this->assertNull($product->sold_at);
+
+    /** Test that a sales rep can now mark that same product as sold again */
+    $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid), $this->data());
+
+    $response->assertSessionHasNoErrors();
+    $response->assertRedirect();
+    $response->assertSessionMissing('flash.error');
+    $response->assertSessionHas('flash.success');
+
+    $product->refresh();
+
+    $this->assertEquals(ProductStatus::soldId(), $product->product_status_id);
+    $this->assertInstanceOf(Carbon::class, $product->sold_at);
+    $this->assertCount(1, ProductSaleRecord::all());
+    $this->assertCount(1, AppUser::all());
+    $this->assertEquals($product->app_user_id, AppUser::first()->id);
+  }
+
+  /** @test */
   public function function_super_admin_can_mark_a_local_product_as_supplier_paid()
   {
     // Test that the correct history is recorded in the static boot method of the prioduct model
+    $product = $this->create_local_product($unpaid = true);
+    $response = $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->put(route('superadmin.products.mark_local_product_as_paid', $product->product_uuid));
+
+    $product->refresh();
+
+    $this->assertEquals(true, $product->is_paid);
+    $response->assertSessionHasNoErrors();
+    $response->assertRedirect();
+    $response->assertSessionMissing('flash.error');
+    $response->assertSessionHas('flash.success', 'Marked as paid');
   }
 
   private function create_product_in_stock()
@@ -284,6 +332,53 @@ class ProductManagementTest extends TestCase
     $this->assertCount(1, AppUser::all());
     $this->assertEquals(true, $product->product_sales_record()->exists());
     $this->assertEquals($appUser->id, $product->app_user_id);
+
+    return $product;
+  }
+
+  private function create_sale_confirmed_product(): Product
+  {
+    $this->prepare_to_create_product();
+
+    $appUser = factory(AppUser::class)->create();
+    $product = factory(Product::class)->create(['product_status_id' => ProductStatus::soldId(), 'app_user_id' => $appUser->id]);
+    factory(SalesRep::class)->create(['unit' => 'walk-in']);
+    factory(SalesRep::class)->create(['unit' => 'social-media']);
+    $companyBankAccount = factory(CompanyBankAccount::class)->create();
+
+    $product->product_sales_record()->create([
+      'selling_price' => $this->faker->randomFloat(2, 40000),
+      'online_rep_id' => SalesRep::socialMedia()->inRandomOrder()->first()->id,
+      'sales_rep_id' => ($salesRep = SalesRep::walkIn()->inRandomOrder()->first())->id,
+      'sales_rep_type' => get_class($salesRep),
+      'sales_channel_id' => SalesChannel::first()->id,
+      'is_swap_transaction' => false
+    ]);
+
+    $product->product_sales_record()->latest('id')->first()->bank_account_payments()->save($companyBankAccount, [
+      'amount' => 600000
+    ]);
+
+    $product->generateReceipt(600000);
+
+    $this->assertCount(1, ProductSaleRecord::all());
+    $this->assertCount(1, CompanyBankAccount::all());
+    $this->assertCount(1, SalesRecordBankAccount::all());
+    $this->assertCount(1, AppUser::all());
+    $this->assertCount(1, ProductReceipt::all());
+    $this->assertEquals(true, $product->product_sales_record()->exists());
+    $this->assertEquals($appUser->id, $product->app_user_id);
+
+    return $product;
+  }
+
+  private function create_local_product(bool $unpaid): Product
+  {
+    $this->prepare_to_create_product();
+
+    $product = factory(Product::class)->create(['is_local' => true, 'is_paid' => $unpaid]);
+
+    $this->assertCount(1, Product::all());
 
     return $product;
   }
