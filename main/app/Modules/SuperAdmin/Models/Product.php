@@ -402,6 +402,7 @@ class Product extends BaseModel
     Route::group(['prefix' => 'products'], function () {
       Route::name('superadmin.products.')->group(function () {
         Route::put('local-product/{product:product_uuid}/mark-paid', [self::class, 'markLocalProductSupplierPaid'])->name('mark_local_product_as_paid')->defaults('ex', __e('ss', 'archive'));
+        Route::put('{product:product_uuid}/reverse-sale', [self::class, 'returnSoldProductToStock'])->name('mark_as_sold.reverse')->defaults('ex', __e('ss', 'archive'));
       });
     });
   }
@@ -733,6 +734,37 @@ class Product extends BaseModel
     return back()->withFlash(['success' => 'Deleted']);
   }
 
+  public function returnSoldProductToStock(Request $request, self $product)
+  {
+    DB::beginTransaction();
+
+    // 1. Set the product´s status id to in stock and nullify the sold at (364)
+    $product->product_status_id = ProductStatus::inStockId();
+    $product->sold_at = null;
+
+    // delete the user account if the user has no products
+    /** @var AppUser */
+    $productUser = $product->app_user;
+    $product->app_user_id = null;
+    $product->save();
+
+    $productUserProducts = $productUser->products;
+
+    if ($productUserProducts->isEmpty()) {
+      $productUser->forceDelete();
+    }
+
+    // 6. Delete the sales record for that product (force delete or else the product will ot be able to creare another sale record)
+    $productSalesRecord = $product->product_sales_record()->latest()->first();
+    if ($productSalesRecord) {
+      $productSalesRecord->forceDelete();
+    }
+
+    DB::commit();
+
+    return back()->withFlash(['success' => 'Successfully reverted the sale']);
+  }
+
   public function updateProductLocation(Request $request, self $product)
   {
     if (!$request->office_branch_id) {
@@ -830,7 +862,6 @@ class Product extends BaseModel
     if ($request->isApi()) return response()->json([], 204);
     return back()->withFlash(['success'=>'Product has been marked as undergoing QA.']);
   }
-
 
   public function markProductAsSold(MarkProductAsSoldValidation $request, self $product)
   {
@@ -1084,11 +1115,11 @@ class Product extends BaseModel
        */
       if ($product->isDirty('is_paid') && $product->is_local) {
       } else {
-      request()->user()->product_histories()->create([
-        'product_id' => $product->id,
-        'product_type' => get_class($product),
-        'product_status_id' => $product->product_status_id,
-      ]);
+        request()->user()->product_histories()->create([
+          'product_id' => $product->id,
+          'product_type' => get_class($product),
+          'product_status_id' => $product->product_status_id,
+        ]);
       }
     });
   }

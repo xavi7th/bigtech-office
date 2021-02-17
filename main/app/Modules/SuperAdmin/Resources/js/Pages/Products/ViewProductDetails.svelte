@@ -4,6 +4,7 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
   import { toCurrency } from '@public-shared/helpers';
+import { confirm } from 'lodash/_freeGlobal';
 
   $: ({ auth } = $page.props);
 
@@ -65,6 +66,9 @@
               {#if productDetails.product_receipt_ref_no && (auth.user.isAccountant || auth.user.isSuperAdmin)}
                 <span><a target="_blank" class="small" href="{route(auth.user.user_type + '.multiaccess.products.receipt', productDetails.product_receipt_ref_no)}">Receipt</a></span>
                 <span><button class="btn btn-xs btn-info" use:inertia="{{ href: route(auth.user.user_type + '.multiaccess.products.resend_receipt', productDetails.product_receipt_ref_no), method: 'post' }}">Resend Receipt</button></span>
+              {/if}
+              {#if productDetails.status == 'sold' && auth.user.isSuperAdmin}
+                <span><button class="btn btn-xs btn-danger" use:inertia="{{ href: route('superadmin.products.mark_as_sold.reverse', productDetails.uuid), method: 'put', onBefore: () => confirm('Are you sure? This is irreversible!!!') }}">Reverse Sale</button></span>
               {/if}
             </th>
           </tr>

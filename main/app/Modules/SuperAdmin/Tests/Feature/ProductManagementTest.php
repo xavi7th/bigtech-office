@@ -184,9 +184,46 @@ class ProductManagementTest extends TestCase
     $this->assertEquals('xavi7th@gmail.com', AppUser::latest('id')->first()->email);
   }
 
+  /** @test */
+  public function function_superadmin_can_reverse_a_product_from_sold_to_in_stock()
+  {
+    $product = $this->create_sold_product();
+    $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->put(route('superadmin.products.mark_as_sold.reverse', $product->product_uuid));
+
+    $product->refresh();
+
+    $this->assertEquals(ProductStatus::inStockId(), $product->product_status_id);
+    $this->assertCount(0, ProductSaleRecord::all());
+    $this->assertCount(0, AppUser::all());
+    $this->assertNull($product->app_user_id);
+    $this->assertNull($product->sold_at);
+
+    /** Test that a sales rep can now mark that same product as sold again */
+    $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid), $this->data());
+
+    $response->assertSessionHasNoErrors();
+    $response->assertRedirect();
+    $response->assertSessionMissing('flash.error');
+    $response->assertSessionHas('flash.success');
+
+    $product->refresh();
+
+    $this->assertEquals(ProductStatus::soldId(), $product->product_status_id);
+    $this->assertInstanceOf(Carbon::class, $product->sold_at);
+    $this->assertCount(1, ProductSaleRecord::all());
+    $this->assertCount(1, AppUser::all());
+    $this->assertEquals($product->app_user_id, AppUser::first()->id);
+  }
+
+  /** @test */
+  public function function_super_admin_can_mark_a_local_product_as_supplier_paid()
+  {
+    // Test that the correct history is recorded in the static boot method of the prioduct model
+  }
+
   private function create_product_in_stock()
   {
-    $this->prepare_to_create_product('in stock');
+    $this->prepare_to_create_product();
     $product = factory(Product::class)->create(['product_status_id' => ProductStatus::inStockId()]);
 
     $this->assertEquals(ProductStatus::inStockId(), $product->product_status_id);
@@ -196,7 +233,7 @@ class ProductManagementTest extends TestCase
 
   private function create_product_on_delivery()
   {
-    $this->prepare_to_create_product('out for delivery');
+    $this->prepare_to_create_product();
 
 
     $product = factory(Product::class)->create(['product_status_id' => ProductStatus::scheduledDeliveryId()]);
@@ -225,7 +262,33 @@ class ProductManagementTest extends TestCase
     return $product;
   }
 
-  private function prepare_to_create_product(string $requiredProductStatus)
+  private function create_sold_product(): Product
+  {
+    $this->prepare_to_create_product();
+
+    $appUser = factory(AppUser::class)->create();
+    $product = factory(Product::class)->create(['product_status_id' => ProductStatus::soldId(), 'app_user_id' => $appUser->id]);
+    factory(SalesRep::class)->create(['unit' => 'walk-in']);
+    factory(SalesRep::class)->create(['unit' => 'social-media']);
+
+    $product->product_sales_record()->create([
+      'selling_price' => $this->faker->randomFloat(2, 40000),
+      'online_rep_id' => SalesRep::socialMedia()->inRandomOrder()->first()->id,
+      'sales_rep_id' => ($salesRep = SalesRep::walkIn()->inRandomOrder()->first())->id,
+      'sales_rep_type' => get_class($salesRep),
+      'sales_channel_id' => SalesChannel::first()->id,
+      'is_swap_transaction' => false
+    ]);
+
+    $this->assertCount(1, ProductSaleRecord::all());
+    $this->assertCount(1, AppUser::all());
+    $this->assertEquals(true, $product->product_sales_record()->exists());
+    $this->assertEquals($appUser->id, $product->app_user_id);
+
+    return $product;
+  }
+
+  private function prepare_to_create_product()
   {
     factory(OfficeBranch::class)->create();
     factory(ProductCategory::class)->create();

@@ -494,7 +494,9 @@ class ProductSaleRecord extends BaseModel
     parent::boot();
 
     static::creating(function ($productSaleRecord) {
-      $productSaleRecord->sales_rep_type = get_class(request()->user());
+      if (!$productSaleRecord->sales_rep_type) {
+        $productSaleRecord->sales_rep_type = get_class(request()->user());
+      }
     });
   }
 }

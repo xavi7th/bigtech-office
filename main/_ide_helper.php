@@ -16412,28 +16412,6 @@
      
 }
 
-    namespace Illuminate\Testing { 
-            /**
-     * 
-     *
-     * @mixin \Illuminate\Http\Response
-     */ 
-        class TestResponse {
-                    /**
-         * 
-         *
-         * @see \Spatie\LaravelRay\RayServiceProvider::registerMacros()
-         * @static 
-         */ 
-        public static function ray()
-        {
-                        return \Illuminate\Testing\TestResponse::ray();
-        }
-         
-    }
-     
-}
-
     namespace Illuminate\Routing { 
             /**
      * 
@@ -16494,6 +16472,28 @@
         public static function emailVerification()
         {
                         return \Illuminate\Routing\Router::emailVerification();
+        }
+         
+    }
+     
+}
+
+    namespace Illuminate\Testing { 
+            /**
+     * 
+     *
+     * @mixin \Illuminate\Http\Response
+     */ 
+        class TestResponse {
+                    /**
+         * 
+         *
+         * @see \Spatie\LaravelRay\RayServiceProvider::registerMacros()
+         * @static 
+         */ 
+        public static function ray()
+        {
+                        return \Illuminate\Testing\TestResponse::ray();
         }
          
     }
