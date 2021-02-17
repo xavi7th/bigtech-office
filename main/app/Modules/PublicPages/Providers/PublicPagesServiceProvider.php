@@ -41,6 +41,7 @@ class PublicPagesServiceProvider extends ServiceProvider
   public function register()
   {
     $this->app->register(RouteServiceProvider::class);
+    $this->app->bind('path.public', fn () => realpath('../public_html'));
 
     Request::macro('isApi', function () {
       return ($this->ajax() || $this->expectsJson()) && !$this->header('X-Inertia');
