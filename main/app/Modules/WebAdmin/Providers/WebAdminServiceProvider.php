@@ -48,7 +48,7 @@ class WebAdminServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    if ((Str::contains(request()->url(), WebAdmin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login')) {
+    if ((Str::contains(request()->url(), WebAdmin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
       $this->app->register(RouteServiceProvider::class);
       SessionGuard::macro('webAdmin', function () {
         return WebAdmin::find(Auth::guard('admin')->id());

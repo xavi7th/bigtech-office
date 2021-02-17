@@ -48,7 +48,7 @@ class QualityControlServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    if ((Str::contains(request()->url(), QualityControl::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
+    if ((Str::contains(request()->url(), QualityControl::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
       $this->app->register(RouteServiceProvider::class);
       SessionGuard::macro('quality_control', function () {
         return QualityControl::find(Auth::guard('quality_control')->id());

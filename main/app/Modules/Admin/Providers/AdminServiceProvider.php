@@ -48,7 +48,7 @@ class AdminServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-    if ((Str::contains(request()->url(), Admin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login')) {
+    if ((Str::contains(request()->url(), Admin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
       $this->app->register(RouteServiceProvider::class);
       SessionGuard::macro('admin', function () {
       	return Admin::find(Auth::guard('admin')->id());
