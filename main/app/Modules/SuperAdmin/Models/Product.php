@@ -90,11 +90,13 @@ class Product extends BaseModel
     'product_color_id' => 'int',
     'product_grade_id' => 'int',
     'product_supplier_id' => 'int',
+    'office_branch_id' => 'int',
     'storage_size_id' => 'int',
     'ram_size_id' => 'int',
     'storage_type_id' => 'int',
     'processor_speed_id' => 'int',
     'is_local' => 'bool',
+    'sold_at' => 'datetime',
   ];
 
   public function app_user()
@@ -844,13 +846,17 @@ class Product extends BaseModel
      * Mark dispatch requests as sold.
      */
     if ($request->user()->isDispatchAdmin()) {
-      try {
-        $product->dispatch_request->sold_at = now();
-        $product->dispatch_request->save();
-      } catch (\Throwable $th) {
-        ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not mark dispatch request as processed ' . $request->email);
-        if ($request->isApi()) return response()->json(['err' => 'Could not mark dispatch request as processed ' . $request->email], 500);
-        return back()->withFlash(['error'=>['Could not mark dispatch request as processed.' . $th->getMessage()]]);
+      if ($product->dispatch_request) {
+        try {
+          $product->dispatch_request->sold_at = now();
+          $product->dispatch_request->save();
+        } catch (\Throwable $th) {
+          ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not mark dispatch request as processed ' . $request->email);
+          if ($request->isApi()) return response()->json(['err' => 'Could not mark dispatch request as processed ' . $request->email], 500);
+          return back()->withFlash(['error'=>['Could not mark dispatch request as processed.' . $th->getMessage()]]);
+        }
+      } else {
+        return back()->withFlash(['error' => 'Dispatch Admins can only mark dispatch requests as sold']);
       }
     }
 
@@ -875,21 +881,23 @@ class Product extends BaseModel
      * Create or update the buyer's user profile using the email
      */
     try {
-      $app_user = AppUser::updateOrCreate(
-        [
-          'email' => $request->email,
-          'email' => $request->email,
-        ],
-        [
-          'phone' => $request->phone,
-          'first_name' => $request->first_name,
-          'last_name' => $request->last_name,
-          'address' => $request->address,
-          'city' => $request->city,
-          'ig_handle' => $request->ig_handle,
-          'password' => 'default'
-        ]
-      );
+      $userData = [
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'first_name' => $request->first_name,
+        'last_name' => $request->last_name,
+        'address' => $request->address,
+        'city' => $request->city,
+        'ig_handle' => $request->ig_handle,
+        'password' => 'default'
+      ];
+
+      $app_user = AppUser::wherePhone($request->phone)->orWhere('email', $request->email)->first();
+      if ($app_user) {
+        $app_user->update($userData);
+      } else {
+        $app_user = AppUser::create($userData);
+      }
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create account profile for ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create account profile for ' . $request->email], 500);
@@ -911,7 +919,7 @@ class Product extends BaseModel
       list($id_url, $receipt_url) = SwapDeal::store_documents($request);
       if (!SwapDeal::create_swap_record((object)collect($request->validated())->merge(['app_user_id' => $app_user->id])->all(), $id_url, $receipt_url)) {
         if ($request->isApi()) return response()->json(['err' => 'Transaction not completed. The swap details could not be created'], 500);
-        return back()->withFlash(['error'=>['Transaction not completed. The swap details could not be created' . $th->getMessage()]]);
+        return back()->withFlash(['error' => ['Transaction not completed. The swap details could not be created']]);
       }
     }
 

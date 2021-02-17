@@ -85,6 +85,9 @@ class ProductDispatchRequest extends Model
   use SoftDeletes;
 
   protected $fillable = ['sales_channel_id', 'online_rep_id', 'product_description', 'product_id', 'product_type', 'proposed_selling_price', 'customer_first_name', 'customer_last_name', 'customer_phone', 'customer_email', 'customer_address', 'customer_city', 'customer_ig_handle'];
+  protected $casts = [
+    'sold_at' => 'datetime',
+  ];
 
   public function sales_channel()
   {
@@ -240,7 +243,9 @@ class ProductDispatchRequest extends Model
     parent::boot();
 
     static::creating(function ($dispatchRequest) {
-      $dispatchRequest->online_rep_id = request()->user()->id;
+      if (!$dispatchRequest->online_rep_id) {
+        $dispatchRequest->online_rep_id = request()->user()->id;
+      }
     });
 
     static::saved(function ($dispatchRequest) {
