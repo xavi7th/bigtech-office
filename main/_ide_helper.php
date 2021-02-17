@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 7.30.1.
+ * Generated for Laravel 7.30.4.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -2114,6 +2114,46 @@
         public static function hasMacro($name)
         {
                         return \Illuminate\Auth\SessionGuard::hasMacro($name);
+        }
+                    /**
+         * 
+         *
+         * @see \App\Modules\Admin\Providers\AdminServiceProvider::register()
+         * @static 
+         */ 
+        public static function admin()
+        {
+                        return \Illuminate\Auth\SessionGuard::admin();
+        }
+                    /**
+         * 
+         *
+         * @see \App\Modules\Accountant\Providers\AccountantServiceProvider::register()
+         * @static 
+         */ 
+        public static function accountant()
+        {
+                        return \Illuminate\Auth\SessionGuard::accountant();
+        }
+                    /**
+         * 
+         *
+         * @see \App\Modules\WebAdmin\Providers\WebAdminServiceProvider::register()
+         * @static 
+         */ 
+        public static function webAdmin()
+        {
+                        return \Illuminate\Auth\SessionGuard::webAdmin();
+        }
+                    /**
+         * 
+         *
+         * @see \App\Modules\StockKeeper\Providers\StockKeeperServiceProvider::register()
+         * @static 
+         */ 
+        public static function stockkeeper()
+        {
+                        return \Illuminate\Auth\SessionGuard::stockkeeper();
         }
                     /**
          * 
@@ -14251,6 +14291,16 @@
                     /**
          * 
          *
+         * @see \Barryvdh\Debugbar\ServiceProvider::register()
+         * @static 
+         */ 
+        public static function debug()
+        {
+                        return \Illuminate\Support\Collection::debug();
+        }
+                    /**
+         * 
+         *
          * @see \Spatie\LaravelRay\RayServiceProvider::registerMacros()
          * @param string $description
          * @static 
@@ -16362,6 +16412,28 @@
      
 }
 
+    namespace Illuminate\Testing { 
+            /**
+     * 
+     *
+     * @mixin \Illuminate\Http\Response
+     */ 
+        class TestResponse {
+                    /**
+         * 
+         *
+         * @see \Spatie\LaravelRay\RayServiceProvider::registerMacros()
+         * @static 
+         */ 
+        public static function ray()
+        {
+                        return \Illuminate\Testing\TestResponse::ray();
+        }
+         
+    }
+     
+}
+
     namespace Illuminate\Routing { 
             /**
      * 
@@ -16434,6 +16506,46 @@
      *
      */ 
         class SessionGuard {
+                    /**
+         * 
+         *
+         * @see \App\Modules\Admin\Providers\AdminServiceProvider::register()
+         * @static 
+         */ 
+        public static function admin()
+        {
+                        return \Illuminate\Auth\SessionGuard::admin();
+        }
+                    /**
+         * 
+         *
+         * @see \App\Modules\Accountant\Providers\AccountantServiceProvider::register()
+         * @static 
+         */ 
+        public static function accountant()
+        {
+                        return \Illuminate\Auth\SessionGuard::accountant();
+        }
+                    /**
+         * 
+         *
+         * @see \App\Modules\WebAdmin\Providers\WebAdminServiceProvider::register()
+         * @static 
+         */ 
+        public static function webAdmin()
+        {
+                        return \Illuminate\Auth\SessionGuard::webAdmin();
+        }
+                    /**
+         * 
+         *
+         * @see \App\Modules\StockKeeper\Providers\StockKeeperServiceProvider::register()
+         * @static 
+         */ 
+        public static function stockkeeper()
+        {
+                        return \Illuminate\Auth\SessionGuard::stockkeeper();
+        }
                     /**
          * 
          *

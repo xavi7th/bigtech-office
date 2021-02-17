@@ -17,6 +17,7 @@ use Str;
  * App\Modules\SuperAdmin\Models\ProductStatus
  *
  * @property int $id
+ * @property string $scope
  * @property string $status
  * @property string $status_slug
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -37,10 +38,9 @@ use Str;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|ProductStatus withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductStatus withoutTrashed()
- * @mixin \Eloquent
- * @property string $scope
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereScope($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus qa()
+ * @mixin \Eloquent
  */
 class ProductStatus extends BaseModel
 {

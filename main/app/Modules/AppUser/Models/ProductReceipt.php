@@ -21,6 +21,7 @@ use App\Modules\AppUser\Http\Controllers\AppUserController;
  * @property string $user_city
  * @property string $order_ref
  * @property string $product_type
+ * @property string $user_name
  * @property float $amount_paid
  * @property float|null $tax_rate
  * @property float|null $delivery_fee
@@ -48,6 +49,7 @@ use App\Modules\AppUser\Http\Controllers\AppUserController;
  * @method static \Illuminate\Database\Query\Builder|ProductReceipt withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductReceipt withoutTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductReceipt whereProductType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductReceipt whereUserName($value)
  * @mixin \Eloquent
  */
 class ProductReceipt extends Model
