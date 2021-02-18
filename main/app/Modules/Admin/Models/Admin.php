@@ -3,7 +3,9 @@
 namespace App\Modules\Admin\Models;
 
 use App\User;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
+use App\Modules\SuperAdmin\Models\ActivityLog;
 
 /**
  * App\Modules\Admin\Models\Admin
@@ -60,11 +62,40 @@ class Admin extends User
     return $this->verified_at !== null;
   }
 
-
   static function findByEmail(string $email)
   {
     return self::whereEmail($email)->first();
   }
+
+
+  static function superAdminRoutes()
+  {
+    Route::name('superadmin.manage_staff.')->prefix('admins')->group(function () {
+      Route::put('{admin}/suspend', [self::class, 'suspendAdmin'])->name('admin.suspend');
+      Route::put('{admin}/restore', [self::class, 'restoreAdmin'])->name('admin.reactivate');
+    });
+  }
+
+  public function suspendAdmin(self $admin)
+  {
+    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $admin->email);
+
+    $admin->is_active = false;
+    $admin->save();
+
+    return back()->withFlash(['success'=>'User account suspended']);
+  }
+
+  public function restoreAdmin(self $admin)
+  {
+    $admin->is_active = true;
+    $admin->save();
+
+    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $admin->email);
+
+    return back()->withFlash(['success'=>'User account re-activated']);
+  }
+
 
   protected static function booted()
   {

@@ -3,7 +3,9 @@
 namespace App\Modules\WebAdmin\Models;
 
 use App\User;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
+use App\Modules\SuperAdmin\Models\ActivityLog;
 
 /**
  * App\Modules\WebAdmin\Models\WebAdmin
@@ -62,6 +64,34 @@ class WebAdmin extends User
   static function findByEmail(string $email)
   {
     return self::whereEmail($email)->first();
+  }
+
+  static function superAdminRoutes()
+  {
+    Route::name('superadmin.manage_staff.')->prefix('web-admins')->group(function () {
+      Route::put('{webAdmin}/suspend', [self::class, 'suspendWebAdmin'])->name('web_admin.suspend');
+      Route::put('{webAdmin}/restore', [self::class, 'restoreWebAdmin'])->name('web_admin.reactivate');
+    });
+  }
+
+  public function suspendWebAdmin(self $webAdmin)
+  {
+    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $webAdmin->email);
+
+    $webAdmin->is_active = false;
+    $webAdmin->save();
+
+    return back()->withFlash(['success'=>'User account suspended']);
+  }
+
+  public function restoreWebAdmin(self $webAdmin)
+  {
+    $webAdmin->is_active = true;
+    $webAdmin->save();
+
+    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $webAdmin->email);
+
+    return back()->withFlash(['success'=>'User account re-activated']);
   }
 
   protected static function booted()

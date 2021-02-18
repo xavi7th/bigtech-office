@@ -3,7 +3,9 @@
 namespace App\Modules\QualityControl\Models;
 
 use App\User;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
+use App\Modules\SuperAdmin\Models\ActivityLog;
 
 /**
  * App\Modules\QualityControl\Models\QualityControl
@@ -64,6 +66,33 @@ class QualityControl extends User
     return self::whereEmail($email)->first();
   }
 
+  static function superAdminRoutes()
+  {
+    Route::name('superadmin.manage_staff.')->prefix('quality-controls')->group(function () {
+      Route::put('{qualityControl}/suspend', [self::class, 'suspendQualityControl'])->name('quality_control.suspend');
+      Route::put('{qualityControl}/restore', [self::class, 'restoreQualityControl'])->name('quality_control.reactivate');
+    });
+  }
+
+  public function suspendQualityControl(self $qualityControl)
+  {
+    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $qualityControl->email);
+
+    $qualityControl->is_active = false;
+    $qualityControl->save();
+
+    return back()->withFlash(['success'=>'User account suspended']);
+  }
+
+  public function restoreQualityControl(self $qualityControl)
+  {
+    $qualityControl->is_active = true;
+    $qualityControl->save();
+
+    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $qualityControl->email);
+
+    return back()->withFlash(['success'=>'User account re-activated']);
+  }
 
   protected static function booted()
   {

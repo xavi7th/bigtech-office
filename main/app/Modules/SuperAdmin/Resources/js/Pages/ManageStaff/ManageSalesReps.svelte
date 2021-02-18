@@ -93,7 +93,7 @@
         confirmButtonText: "Yes, carry on!",
         showLoaderOnConfirm: true,
         preConfirm: () => {
-          return Inertia.delete(
+          return Inertia.put(
             route("superadmin.manage_staff.sales_rep.suspend", id),
             {
               preserveState: true,
@@ -254,7 +254,7 @@
                       on:click={() => {
                         restoreSalesRep(salesRep.id);
                       }}>
-                      RESTORE
+                      RE-ACTIVATE
                     </button>
                   {:else}
                     <button

@@ -3,7 +3,9 @@
 namespace App\Modules\Accountant\Models;
 
 use App\User;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
+use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 
 /**
@@ -32,7 +34,9 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductHistory[] $product_histories
  * @property-read int|null $product_histories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $product_sales_record
  * @property-read int|null $reseller_histories_count
+ * @property-read int|null $product_sales_record_count
  * @method static Builder|Accountant newModelQuery()
  * @method static Builder|Accountant newQuery()
  * @method static Builder|Accountant query()
@@ -49,8 +53,6 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
  * @method static Builder|Accountant whereUpdatedAt($value)
  * @method static Builder|Accountant whereVerifiedAt($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $product_sales_record
- * @property-read int|null $product_sales_record_count
  */
 class Accountant extends User
 {
@@ -72,6 +74,34 @@ class Accountant extends User
   static function findByEmail(string $email)
   {
     return self::whereEmail($email)->first();
+  }
+
+  static function superAdminRoutes()
+  {
+    Route::name('superadmin.manage_staff.')->prefix('accountants')->group(function () {
+      Route::put('{accountant}/suspend', [self::class, 'suspendAccountant'])->name('accountant.suspend');
+      Route::put('{accountant}/restore', [self::class, 'restoreAccountant'])->name('accountant.reactivate');
+    });
+  }
+
+  public function suspendAccountant(self $accountant)
+  {
+    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $accountant->email);
+
+    $accountant->is_active = false;
+    $accountant->save();
+
+    return back()->withFlash(['success'=>'User account suspended']);
+  }
+
+  public function restoreAccountant(self $accountant)
+  {
+    $accountant->is_active = true;
+    $accountant->save();
+
+    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $accountant->email);
+
+    return back()->withFlash(['success'=>'User account re-activated']);
   }
 
 

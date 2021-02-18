@@ -112,7 +112,7 @@ class SalesRepTransformer
       'id' => (int)$salesRep->id,
       'full_name' => (string)$salesRep->full_name,
       'email' => (string)$salesRep->email,
-      'is_suspended' => (bool) $salesRep->deleted_at,
+      'is_suspended' => (bool) !$salesRep->is_active,
       'is_online_sales_rep' => (bool) $salesRep->isOnlineSalesRep(),
       'statistics' => [
         'total_online_sales_count' => (float)$salesRep->online_sales_records_count,

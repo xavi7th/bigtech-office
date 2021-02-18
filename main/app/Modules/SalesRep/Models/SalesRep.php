@@ -131,8 +131,8 @@ class SalesRep extends User
       Route::get('', [self::class, 'getAllSalesReps'])->name('sales_reps')->defaults('ex', __e('ss', 'aperture'));
       Route::post('create', [self::class, 'createSalesRep'])->name('sales_rep.create');
       Route::put('{salesRep}/edit', [self::class, 'editSalesRep'])->name('sales_rep.edit');
-      Route::delete('{salesRep}/suspend', [self::class, 'suspendSalesRep'])->name('sales_rep.suspend');
-      Route::put('{id}/restore', [self::class, 'restoreSalesRep'])->name('sales_rep.reactivate');
+      Route::put('{salesRep}/suspend', [self::class, 'suspendSalesRep'])->name('sales_rep.suspend');
+      Route::put('{salesRep}/restore', [self::class, 'restoreSalesRep'])->name('sales_rep.reactivate');
       Route::delete('{salesRep}/delete', [self::class, 'deleteSalesRep'])->name('sales_rep.delete');
     });
   }
@@ -243,20 +243,20 @@ class SalesRep extends User
   {
     ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $salesRep->email);
 
-    $salesRep->delete();
+    $salesRep->is_active = false;
+    $salesRep->save();
 
     return back()->withFlash(['success'=>'User account suspended']);
   }
 
-  public function restoreSalesRep($id)
+  public function restoreSalesRep(self $salesRep)
   {
-    $salesRep = self::withTrashed()->find($id);
-
-    $salesRep->restore();
+    $salesRep->is_active = true;
+    $salesRep->save();
 
     ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $salesRep->email);
 
-    return back()->withFlash(['success'=>'User account reactivated']);
+    return back()->withFlash(['success'=>'User account re-activated']);
   }
 
   public function deleteSalesRep(self $salesRep)

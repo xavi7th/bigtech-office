@@ -4,20 +4,24 @@ namespace App\Modules\SuperAdmin\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Modules\Admin\Models\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
+use App\Modules\WebAdmin\Models\WebAdmin;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
+use App\Modules\Accountant\Models\Accountant;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
 use App\Modules\SuperAdmin\Models\UserComment;
+use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\ProductBatch;
@@ -32,7 +36,9 @@ use App\Modules\SuperAdmin\Models\ProductExpense;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductSupplier;
+use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\QualityControl\Models\QualityControl;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
 
@@ -45,9 +51,16 @@ class SuperAdminController extends Controller
 
       Route::group(['middleware' => ['auth:super_admin']], function () {
 
-        Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss,a', 'home', true));
+        Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss', 'home', true));
 
         SalesRep::superAdminRoutes();
+        Admin::superAdminRoutes();
+        Accountant::superAdminRoutes();
+        DispatchAdmin::superAdminRoutes();
+        QualityControl::superAdminRoutes();
+        WebAdmin::superAdminRoutes();
+        StockKeeper::superAdminRoutes();
+        AppUser::superAdminRoutes();
         Product::superAdminRoutes();
         ProductSaleRecord::superAdminRoutes();
         ProductSupplier::superAdminRoutes();
@@ -57,7 +70,6 @@ class SuperAdminController extends Controller
         // ProductQATestResult::superAdminRoutes();
         CompanyBankAccount::superAdminRoutes();
         OfficeBranch::superAdminRoutes();
-        AppUser::superAdminRoutes();
         ErrLog::superAdminRoutes();
       });
 

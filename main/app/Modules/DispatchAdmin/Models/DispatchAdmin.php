@@ -3,6 +3,8 @@
 namespace App\Modules\DispatchAdmin\Models;
 
 use App\User;
+use Illuminate\Support\Facades\Route;
+use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 
 /**
@@ -71,4 +73,34 @@ class DispatchAdmin extends User
   {
     return self::whereEmail($email)->first();
   }
+
+
+  static function superAdminRoutes()
+  {
+    Route::name('superadmin.manage_staff.')->prefix('dispatch-admins')->group(function () {
+      Route::put('{dispatchAdmin}/suspend', [self::class, 'suspendDispatchAdmin'])->name('dispatch_admin.suspend');
+      Route::put('{dispatchAdmin}/restore', [self::class, 'restoreDispatchAdmin'])->name('dispatch_admin.reactivate');
+    });
+  }
+
+  public function suspendDispatchAdmin(self $dispatchAdmin)
+  {
+    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $dispatchAdmin->email);
+
+    $dispatchAdmin->is_active = false;
+    $dispatchAdmin->save();
+
+    return back()->withFlash(['success'=>'User account suspended']);
+  }
+
+  public function restoreDispatchAdmin(self $dispatchAdmin)
+  {
+    $dispatchAdmin->is_active = true;
+    $dispatchAdmin->save();
+
+    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $dispatchAdmin->email);
+
+    return back()->withFlash(['success'=>'User account re-activated']);
+  }
+
 }
