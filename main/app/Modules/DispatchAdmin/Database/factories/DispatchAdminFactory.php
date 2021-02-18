@@ -10,5 +10,6 @@ $factory->define(DispatchAdmin::class, function (Faker $faker) {
     'full_name' => $faker->name,
     'email' => $faker->email,
     'password' => 'dispatch-admins',
+    'is_active' =>true,
   ];
 });

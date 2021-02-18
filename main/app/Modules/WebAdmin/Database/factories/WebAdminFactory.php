@@ -24,5 +24,6 @@ $factory->define(WebAdmin::class, function (Faker $faker) {
     'full_name' => $faker->name,
     'email' => $faker->email,
     'password' => 'web-admins',
+    'is_active' =>true,
   ];
 });

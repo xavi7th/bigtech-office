@@ -33,5 +33,6 @@ $factory->define(AppUser::class, function (Faker $faker) {
     'phone' => $faker->unique()->phoneNumber,
     // 'avatar' => '/storage/id_cards/' . $faker->file(public_path('img/'), public_path('storage/app_users/'), false),
     'remember_token' => Str::random(10),
+    'is_active' =>true,
   ];
 });

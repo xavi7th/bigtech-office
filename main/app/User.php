@@ -85,6 +85,7 @@ class User extends Authenticatable implements JWTSubject
    */
   protected $casts = [
     'email_verified_at' => 'datetime',
+    'is_active' =>'bool'
   ];
 
   public function expenses()

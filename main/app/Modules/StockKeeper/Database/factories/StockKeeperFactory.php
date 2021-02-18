@@ -10,5 +10,6 @@ $factory->define(StockKeeper::class, function (Faker $faker) {
     'full_name' => $faker->name,
     'email' => $faker->email,
     'password' => 'stock-keepers',
+    'is_active' =>true,
   ];
 });

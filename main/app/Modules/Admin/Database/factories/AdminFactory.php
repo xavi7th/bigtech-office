@@ -10,5 +10,6 @@ $factory->define(Admin::class, function (Faker $faker) {
     'full_name' => $faker->name,
     'email' => $faker->companyEmail,
     'password' => 'admins',
+    'is_active' =>true,
   ];
 });

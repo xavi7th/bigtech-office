@@ -10,5 +10,6 @@ $factory->define(QualityControl::class, function (Faker $faker) {
     'full_name' => $faker->name,
     'email' => $faker->email,
     'password' => 'quality-controls',
+    'is_active' =>true
   ];
 });
