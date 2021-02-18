@@ -480,20 +480,41 @@ if (!function_exists('get_related_routes')) {
    */
   function get_related_routes(string $namespace, array $methods, bool $isHeirarchical = false)
   {
-    function getHeirachicalRoutes(&$routes)
-    {
-      $tmp = $routes;
-      $routes = [];
-      /**
-       * * Group them based on the route names into arrays
-       * eg all products.* get lumped into one array
-       */
-      collect($tmp)->map(function ($route, $key) use (&$routes) {
-        return $routes[Str::title(Str::of($key)->explode('.')->take(-2)->first())][] = $route;
-        // return $routes[Str::of($key)->after('.')->before('.')->title()->__toString()][] = $route;
-      });
-      return $routes;
+    if (!function_exists('getHeirachicalRoutes')) {
+      function getHeirachicalRoutes(&$routes)
+      {
+        $tmp = $routes;
+        $routes = [];
+        /**
+        * * Group them based on the route names into arrays
+        * eg all products.* get lumped into one array
+        */
+        collect($tmp)->map(function ($route, $key) use (&$routes) {
+          return $routes[Str::title(Str::of($key)->explode('.')->take(-2)->first())][] = $route;
+          // return $routes[Str::of($key)->after('.')->before('.')->title()->__toString()][] = $route;
+        });
+        return $routes;
+      }
     }
+
+    // dd(
+    //   collect([
+    //     request()->user()->getDashboardRoute() => collect(tap(\Illuminate\Support\Facades\Route::getRoutes()->getByName(request()->user()->getDashboardRoute()),
+    //     fn ($instance) => $instance->defaults['ex']['navSkip'] = false))])->merge(collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName()))
+    //      ->filter(function ($value, $key) use ($methods, $namespace) {
+    //       return (\Str::startsWith($key, $namespace) || \Str::startsWith($key, 'multiaccess')) && \Str::of(implode('|', $value->methods()))->contains($methods);
+    //       })
+    //       ->map(function (\Illuminate\Routing\Route $route) use ($namespace) {
+    //         return (object)[
+    //           // 'uri' => $route->uri(),
+    //           'name' => $route->getName(),
+    //           'nav_skip' => $route->defaults['ex']['navSkip'] ?? false,
+    //           'icon' => $route->defaults['ex']['icon'] ?? null,
+    //           'permitted_users' => $route->defaults['ex']['permittedUsers'] ?? null,
+    //           'menu_name' => \Str::of($route->getName())->afterLast('.')->replaceMatches('/[^A-Za-z0-9]++/', ' ')->after($namespace)->title()->trim()->__toString()
+    //         ];
+    //       })
+    //   );
 
     /**
      * * Get the dashboard route seperately if there is a logged in user
@@ -502,7 +523,11 @@ if (!function_exists('get_related_routes')) {
      * ! We have to add nav_skip to dashboard routes to prevent duplication of dashboard route in the generated route list
      */
     $routes = rescue(function () {
-      return collect([request()->user()->getDashboardRoute() => collect(tap(\Illuminate\Support\Facades\Route::getRoutes()->getByName(request()->user()->getDashboardRoute()), fn ($instance) => $instance->defaults['ex']['navSkip'] = false))])->merge(collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName()));
+
+      return collect([
+        request()->user()->getDashboardRoute() => collect(tap(\Illuminate\Support\Facades\Route::getRoutes()->getByName(request()->user()->getDashboardRoute()),
+        fn ($instance) => $instance->defaults['ex']['navSkip'] = false))])->merge(collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName()));
+
     }, function () {
       return collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName());
     }, false)
