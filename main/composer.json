@@ -116,7 +116,7 @@
         ],
 		"tf": "clear && vendor/bin/phpunit --filter",
 		"ts": "vendor/bin/phpunit --testsuite",
-		"all-tests": "vendor/bin/phpunit app/Modules",
+		"all-tests": "@php artisan test && vendor/bin/phpunit app/Modules",
 		"run-artisan-test": "@php artisan test",
 		"post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

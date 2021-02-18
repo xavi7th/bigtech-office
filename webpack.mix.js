@@ -2,6 +2,7 @@ const mix = require('laravel-mix');
 const autoPreprocess = require('svelte-preprocess');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const dotenvExpand = require('dotenv-expand');
+const WebpackBar = require('webpackbar');
 var path = require('path');
 
 require('laravel-mix-imagemin');
@@ -42,6 +43,7 @@ mix.webpackConfig({
 		chunkFilename:mix.inProduction() ? "[name].[contenthash].js" : "[name].[hash].js",
 	},
 	plugins: [
+    new WebpackBar(),
     new CleanWebpackPlugin({
 			dry: false,
 			cleanOnceBeforeBuildPatterns: ['js/*', './*.js', 'css/*', 'fonts/*', '/img/*', './mix-manifest.json']
