@@ -139,11 +139,6 @@ class SalesRep extends User
 
   public function getAllSalesReps(Request $request)
   {
-
-    ray()->clearScreen();
-    ray()->showQueries();
-    ray(now()->month);
-
     $salesReps =
       // Cache::rememberForever('allSalesReps', fn() =>
       (new SalesRepTransformer)->collectionTransformer(
@@ -172,10 +167,6 @@ class SalesRep extends User
         'transformForSuperAdminViewSalesReps'
       );
     // });
-
-    ray()->stopShowingQueries();
-
-    ray($salesReps);
 
     if ($request->isApi())  return response()->json($salesReps, 200);
     return Inertia::render('SuperAdmin,ManageStaff/ManageSalesReps', compact('salesReps'));

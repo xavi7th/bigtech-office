@@ -44,4 +44,16 @@ abstract class TestCase extends BaseTestCase
       };
     });
   }
+
+  /**
+   * This function recursively converts an array into a standard class object
+   *
+   * @param array $array
+   *
+   * @return object
+   */
+  protected function _arrayToObject($array)
+  {
+    return is_array($array) && !empty($array) ? (object) array_map([__CLASS__, __METHOD__], $array) : (gettype($array) == 'object' && empty((array)$array) ? null : $array);
+  }
 }
