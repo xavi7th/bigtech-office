@@ -172,16 +172,8 @@ if (!function_exists('generate_422_error')) {
    */
   function generate_422_error($errors)
   {
-    if (request()->isApi()) {
-      return response()->json([
-        'error' => 'form validation error',
-        'message' => $errors
-      ], 422);
-    } else {
-      throw ValidationException::withMessages([
-        'message' => $errors,
-      ])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
-    }
+    if (request()->isApi()) return response()->json(['error' => 'form validation error', 'message' => $errors], 422);
+    throw ValidationException::withMessages(['message' => $errors])->status(Response::HTTP_UNPROCESSABLE_ENTITY);
   }
 }
 
