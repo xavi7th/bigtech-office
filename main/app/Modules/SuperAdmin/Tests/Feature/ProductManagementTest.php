@@ -32,6 +32,16 @@ class ProductManagementTest extends TestCase
 {
   use RefreshDatabase, WithFaker, PreparesToCreateProduct;
 
+  // /**
+  //  * @test
+  //  */
+  // public function a_product_cannot_be_created_without_correct_data_supplied()
+  // {
+  //   $product = $this->create_product_in_stock();
+  //   $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid));
+  //   $response->assertSessionHasNoErrors();
+  // }
+
   /** @test */
   public function a_sales_rep_can_mark_a_product_as_sold()
   {
@@ -124,12 +134,18 @@ class ProductManagementTest extends TestCase
     $response->assertRedirect(route('app.login'));
   }
 
-  /** @test */
-  public function a_product_cannot_be_created_without_correct_data_supplied()
+  /**
+   * @test
+   * @dataProvider markProductAsSoldValidationDataProvider
+   */
+  public function a_product_cannot_be_marked_as_sold_without_correct_data_supplied($formInput, $formInputValue)
   {
+    ray($formInput, $formInputValue);
+
     $product = $this->create_product_in_stock();
-    $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid));
-    $response->assertSessionHasErrors();
+    $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid), is_array($formInputValue) ? $formInputValue : [$formInput => $formInputValue]);
+    $response->assertSessionHasErrors($formInput);
+    // $response->assertSessionHasErrors('other');
   }
 
   /** @test */
@@ -286,6 +302,57 @@ class ProductManagementTest extends TestCase
       'imei' => ($imei = $this->faker->randomElement([true, false]) ? Str::random(16) : null),
       'serial_no' => ($serial_no = $imei == null ? ($this->faker->randomElement([true, false]) ? Str::random(16) : null) : null),
       'model_no' => ($serial_no == null && $imei == null ? Str::random(16) : null),
+    ];
+  }
+
+  public function createProductValidationDataProvider()
+  {
+    return [
+      'selling_price' => 1000000,
+      'first_name' => $this->faker->firstName,
+      'last_name' => $this->faker->lastName,
+      'phone' => $this->faker->e164PhoneNumber,
+      'email' => $this->faker->email,
+      'address' => $this->faker->address,
+      'city' => $this->faker->city,
+      'sales_channel_id' => SalesChannel::inRandomOrder()->first()->id,
+      'ig_handle' => $this->faker->domainWord,
+      'online_rep_id' => SalesRep::inRandomOrder()->first()->id,
+      'is_swap_transaction' => null, //$is_swap = $this->faker->randomElement([true, null]),
+      'description' => $this->faker->sentence,
+      'owner_details' =>  $this->faker->name,
+      'id_card' =>  UploadedFile::fake()->image('id_card.jpg'),
+      'receipt' =>  UploadedFile::fake()->image('receipt.jpg'),
+      'swap_value' =>  $this->faker->randomNumber(5),
+      'imei' => ($imei = $this->faker->randomElement([true, false]) ? Str::random(16) : null),
+      'serial_no' => ($serial_no = $imei == null ? ($this->faker->randomElement([true, false]) ? Str::random(16) : null) : null),
+      'model_no' => ($serial_no == null && $imei == null ? Str::random(16) : null),
+    ];
+  }
+
+  public function markProductAsSoldValidationDataProvider()
+  {
+    return [
+      'selling_price_required' => ['selling_price', ''],
+      'selling_price_numeric' => ['selling_price', 'yjyu'],
+      'first_name_required' => ['first_name', ''],
+      'phone_required' => ['phone', ''],
+      'phone_regex' => ['phone', '54uhgj'],
+      'email_required' => ['email', ''],
+      'email_valid' => ['email', 'lorem-ipsum'],
+      'address_required' => ['address', ''],
+      'city_required' => ['city', ''],
+      'sales_channel_id_required' => ['sales_channel_id', ''],
+      'sales_channel_id_exists' => ['sales_channel_id', 30],
+      'online_rep_id_exists' => ['online_rep_id', 5],
+      'description_required_if' => ['description',  ['description' => '', 'is_swap_transaction' => true]],
+      'owner_details_required_if' => ['owner_details',  ['owner_details' => '', 'is_swap_transaction' => true]],
+      'id_card_required_if' => ['id_card',  ['id_card' => '', 'is_swap_transaction' => true]],
+      'receipt_required_if' => ['receipt',  ['receipt' => '', 'is_swap_transaction' => true]],
+      'swap_value_required_if' => ['swap_value',  ['swap_value' => '', 'is_swap_transaction' => true]],
+      // 'imei_required_if' => ['imei',  ['imei' => '', 'is_swap_transaction' => true]],
+      // 'serial_no_required_if' => ['serial_no',  ['serial_no' => '', 'is_swap_transaction' => true]],
+      // 'model_no_required_if' => ['model_no',  ['model_no' => '', 'is_swap_transaction' => true]],
     ];
   }
 }
