@@ -468,6 +468,11 @@ class ProductSaleRecord extends BaseModel
     return $query->whereMonth('product_sale_records.created_at', now()->month);
   }
 
+  public function scopeLastMonth($query)
+  {
+    return $query->whereMonth('product_sale_records.created_at', now()->subMonth()->month);
+  }
+
   public function scopeYesterday($query)
   {
     return $query->whereDate('product_sale_records.created_at', Carbon::yesterday());

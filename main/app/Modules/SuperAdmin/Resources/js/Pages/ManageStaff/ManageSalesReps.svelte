@@ -351,6 +351,9 @@
           <li class="list-group-item list-group-item-secondary">Monthly Sales Count: {salesRepStatistics.monthly_online_sales_count}</li>
           <li class="list-group-item list-group-item-primary">Monthly Bonus Amount: { toCurrency(salesRepStatistics.monthly_online_sales_bonus_amount) }</li>
           <li class="list-group-item list-group-item-warning">Monthly Sales Amount: { toCurrency(salesRepStatistics.monthly_online_sales_amount) }</li>
+          <li class="list-group-item list-group-item-secondary">Last Month's Sales Count: {salesRepStatistics.last_month_online_sales_count}</li>
+          <li class="list-group-item list-group-item-primary">Last Month's Bonus Amount: { toCurrency(salesRepStatistics.last_month_online_sales_bonus_amount) }</li>
+          <li class="list-group-item list-group-item-warning">Last Month's Sales Amount: { toCurrency(salesRepStatistics.last_month_online_sales_amount) }</li>
           <li class="list-group-item list-group-item-danger">Total Sales Count: {salesRepStatistics.total_online_sales_count}</li>
           <li class="list-group-item list-group-item-info">Total's Sales Bonus Amount: { toCurrency(salesRepStatistics.total_online_sales_bonus_amount) }</li>
           <li class="list-group-item list-group-item-success">Total's Sales Amount: { toCurrency(salesRepStatistics.total_online_sales_amount) }</li>
@@ -361,6 +364,9 @@
           <li class="list-group-item list-group-item-secondary">Monthly Sales Count: {salesRepStatistics.monthly_walk_in_sales_count}</li>
           <li class="list-group-item list-group-item-primary">Monthly Bonus Amount: { toCurrency(salesRepStatistics.monthly_walk_in_sales_bonus_amount) }</li>
           <li class="list-group-item list-group-item-warning">Monthly Sales Amount: { toCurrency(salesRepStatistics.monthly_walk_in_sales_amount) }</li>
+          <li class="list-group-item list-group-item-secondary">Last Month's Sales Count: {salesRepStatistics.last_month_walk_in_sales_count}</li>
+          <li class="list-group-item list-group-item-primary">Last Month's Bonus Amount: { toCurrency(salesRepStatistics.last_month_walk_in_sales_bonus_amount) }</li>
+          <li class="list-group-item list-group-item-warning">Last Month's Sales Amount: { toCurrency(salesRepStatistics.last_month_walk_in_sales_amount) }</li>
           <li class="list-group-item list-group-item-danger">Total Sales Count: {salesRepStatistics.total_walk_in_sales_count}</li>
           <li class="list-group-item list-group-item-info">Total's Sales Bonus Amount: { toCurrency(salesRepStatistics.total_walk_in_sales_bonus_amount) }</li>
           <li class="list-group-item list-group-item-success">Total's Sales Amount: { toCurrency(salesRepStatistics.total_walk_in_sales_amount) }</li>

@@ -157,6 +157,13 @@ class SalesRep extends User
           'onlineSalesRecords AS monthly_online_sales_count' => fn ($query) => $query->thisMonth(),
           'walkInSalesRecords AS monthly_walk_in_sales_count' => fn ($query) => $query->thisMonth(),
 
+        'onlineSalesRecords AS last_month_online_sales_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(selling_price)')),
+        'walkInSalesRecords AS last_month_walk_in_sales_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(selling_price)')),
+        'onlineSalesRecords AS last_month_online_sales_bonus_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(online_rep_bonus)')),
+        'walkInSalesRecords AS last_month_walk_in_sales_bonus_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(walk_in_rep_bonus)')),
+        'onlineSalesRecords AS last_month_online_sales_count' => fn ($query) => $query->lastMonth(),
+        'walkInSalesRecords AS last_month_walk_in_sales_count' => fn ($query) => $query->lastMonth(),
+
           'onlineSalesRecords AS today_online_sales_count' => fn ($query) => $query->today(),
           'walkInSalesRecords AS today_walk_in_sales_count' => fn ($query) => $query->today(),
           'onlineSalesRecords AS today_online_sales_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(selling_price)')),
