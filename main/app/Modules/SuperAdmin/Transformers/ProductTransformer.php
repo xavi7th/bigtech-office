@@ -47,6 +47,7 @@ class ProductTransformer
       'status' => (string)$product->product_status->status,
       'supplier' => (string)$product->product_supplier->name,
       'is_paid' => (bool)$product->is_paid,
+      'collection_date' => $product->created_at->diffForHumans(),
     ];
   }
 

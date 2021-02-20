@@ -91,6 +91,7 @@
                 Reseller
               </th>
               <th scope="col">Price</th>
+              <th scope="col">Collected</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -106,6 +107,7 @@
                 Reseller
               </th>
               <th scope="col">Price</th>
+              <th scope="col">Collected</th>
               <th scope="col">Action</th>
             </tr>
           </tfoot>
@@ -126,6 +128,7 @@
                   {product.supplier}
                 </td>
                 <td>{toCurrency(product.cost_price)} / {toCurrency(product.selling_price)}</td>
+                <td>{product.collection_date}</td>
                 <td>
                   <InertiaLink
                     type="button"
