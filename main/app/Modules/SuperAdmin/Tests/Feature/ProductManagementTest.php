@@ -14,19 +14,29 @@ use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Modules\Accountant\Models\Accountant;
-use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
+use App\Modules\AppUser\Models\ProductReceipt;
+use App\Modules\SuperAdmin\Models\StorageSize;
+use App\Modules\SuperAdmin\Models\StorageType;
 use App\Modules\StockKeeper\Models\StockKeeper;
+use App\Modules\SuperAdmin\Models\ProductBrand;
+use App\Modules\SuperAdmin\Models\ProductColor;
+use App\Modules\SuperAdmin\Models\ProductGrade;
+use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
+use App\Modules\SuperAdmin\Models\ProcessorSpeed;
+use App\Modules\SuperAdmin\Models\ProductCategory;
+use App\Modules\SuperAdmin\Models\ProductSupplier;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Modules\DispatchAdmin\Models\DispatchAdmin;
+use App\Modules\SuperAdmin\Models\LocalProductPrice;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\QualityControl\Models\QualityControl;
 use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
-use App\Modules\SuperAdmin\Tests\Traits\PreparesToCreateProduct;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use App\Modules\SuperAdmin\Tests\Traits\PreparesToCreateProduct;
 
 class ProductManagementTest extends TestCase
 {
@@ -40,6 +50,48 @@ class ProductManagementTest extends TestCase
   //   $product = $this->create_product_in_stock();
   //   $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid));
   //   $response->assertSessionHasNoErrors();
+  // }
+
+  /** @test */
+  public function accountant_can_create_local_product()
+  {
+    $this->withoutExceptionHandling();
+
+    $this->prepare_to_create_product();
+
+    $accountant = factory(Accountant::class)->create();
+    ray()->clearAll();
+    ray(array_merge($this->data(), ['cost_price' => 2000, 'selling_price' => 5000]));
+
+    $this->actingAs($accountant, 'accountant')->post(route('accountant.products.create_local'), array_merge($this->data(), ['cost_price' => 2000, 'proposed_selling_price' => 5000]))
+      ->assertSessionHasNoErrors()
+      ->assertRedirect()
+      ->assertSessionMissing('flash.error')
+      ->assertSessionHas('flash.success', 'Product created');
+
+
+    $this->assertCount(1, Product::all());
+    $this->assertCount(1, LocalProductPrice::all());
+    $this->assertEquals(2000, Product::first()->cost_price);
+    $this->assertEquals(5000, Product::first()->proposed_selling_price);
+  }
+
+  // public function accountant_can_edit_local_product_price()
+  // {
+  //   $product = $this->create_local_product();
+
+  //   $accountant = factory(Accountant::class)->create();
+
+  //   $this->actingAs($accountant, 'accountant')->post(route('accountant.products.local.edit_price', $product->product_uuid), ['cost_price' => 2000, 'proposed_selling_price' => 5000])
+  //     ->assertSessionHasNoErrors()
+  //     ->assertRedirect()
+  //     ->assertSessionHas('flash.success', 'Product price edited');
+
+  //   $product->refresh();
+
+  //   $this->assertCount(1, LocalProductPrice::all());
+  //   $this->assertEquals(2000, $product->cost_price);
+  //   $this->assertEquals(5000, $product->proposed_selling_price);
   // }
 
   /** @test */
@@ -268,7 +320,7 @@ class ProductManagementTest extends TestCase
   public function super_admin_can_mark_a_local_product_as_supplier_paid()
   {
     // Test that the correct history is recorded in the static boot method of the prioduct model
-    $product = $this->create_local_product($unpaid = true);
+    $product = $this->create_local_product(['is_paid' => true]);
     $response = $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->put(route('superadmin.products.mark_local_product_as_paid', $product->product_uuid));
 
     $product->refresh();
@@ -284,6 +336,7 @@ class ProductManagementTest extends TestCase
   {
     return [
       'selling_price' => 1000000,
+      'proposed_selling_price' => 1000000,
       'first_name' => $this->faker->firstName,
       'last_name' => $this->faker->lastName,
       'phone' => $this->faker->e164PhoneNumber,
@@ -302,6 +355,15 @@ class ProductManagementTest extends TestCase
       'imei' => ($imei = $this->faker->randomElement([true, false]) ? Str::random(16) : null),
       'serial_no' => ($serial_no = $imei == null ? ($this->faker->randomElement([true, false]) ? Str::random(16) : null) : null),
       'model_no' => ($serial_no == null && $imei == null ? Str::random(16) : null),
+      'processor_speed_id' => ProcessorSpeed::first()->id,
+      'product_category_id' => ProductCategory::first()->id,
+      'storage_type_id' => StorageType::first()->id,
+      'storage_size_id' => StorageSize::first()->id,
+      'product_color_id' => ProductColor::first()->id,
+      'product_supplier_id' => ProductSupplier::inRandomOrder()->first()->id,
+      'product_grade_id' => ProductGrade::first()->id,
+      'product_brand_id' => ProductBrand::first()->id,
+      'product_model_id' => ProductModel::first()->id,
     ];
   }
 

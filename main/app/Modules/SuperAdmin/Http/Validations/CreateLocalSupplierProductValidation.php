@@ -32,9 +32,9 @@ class CreateLocalSupplierProductValidation extends FormRequest
       'product_supplier_id' => $this->isMethod('PUT') ? 'exists:product_suppliers,id' : 'required|exists:product_suppliers,id',
       'product_brand_id' => $this->isMethod('PUT') ? 'exists:product_brands,id' : 'required|exists:product_brands,id',
       'product_model_id' => $this->isMethod('PUT') ? 'exists:product_models,id' : 'required|exists:product_models,id',
-      'imei' => $this->isMethod('PUT') ? ['alpha_num',  Rule::unique('products')->ignore($this->route('product')->imei)] : 'required_without_all:model_no,serial_no|alpha_num|unique:products,imei',
-      'serial_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('products')->ignore($this->route('product')->serial_no)] : 'required_without_all:imei,model_no|alpha_dash|unique:products,serial_no',
-      'model_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('products')->ignore($this->route('product')->model_no)] : 'required_without_all:imei,serial_no|alpha_dash|unique:products,model_no',
+      'imei' => $this->isMethod('PUT') ? ['alpha_num',  Rule::unique('products')->ignore($this->route('product')->imei)] : 'nullable|required_without_all:model_no,serial_no|alpha_num|unique:products,imei',
+      'serial_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('products')->ignore($this->route('product')->serial_no)] : 'nullable|required_without_all:imei,model_no|alpha_dash|unique:products,serial_no',
+      'model_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('products')->ignore($this->route('product')->model_no)] : 'nullable|required_without_all:imei,serial_no|alpha_dash|unique:products,model_no',
       'cost_price' => $this->isMethod('PUT') ? 'numeric' : 'required|numeric',
       'proposed_selling_price' => 'numeric|gte:cost_price'
     ];
@@ -69,7 +69,7 @@ class CreateLocalSupplierProductValidation extends FormRequest
     return array_merge(parent::validated(), [
       'stocked_by' => auth()->id(),
       'stocker_type' => get_class(auth()->user()),
-      'office_branch_id' => OfficeBranch::head_office_id(),
+      'office_branch_id' => $this->office_branch_id ?? 1,
       'product_batch_id' => $this->localSupplierId = ProductBatch::local_supplied_id(),
       'is_local' => true,
       'is_paid' => false

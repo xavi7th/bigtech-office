@@ -32,10 +32,10 @@ trait PreparesToCreateProduct
 {
   use WithFaker;
 
-  private function create_product_in_stock()
+  private function create_product_in_stock(array $extraAttributes = [])
   {
     $this->prepare_to_create_product();
-    $product = factory(Product::class)->create(['product_status_id' => ProductStatus::inStockId()]);
+    $product = factory(Product::class)->create(array_merge(['product_status_id' => ProductStatus::inStockId()], $extraAttributes));
 
     $this->assertEquals(ProductStatus::inStockId(), $product->product_status_id);
 
@@ -135,11 +135,11 @@ trait PreparesToCreateProduct
     return $product;
   }
 
-  private function create_local_product(bool $unpaid): Product
+  private function create_local_product(array $extraAttributes = []): Product
   {
     $this->prepare_to_create_product();
 
-    $product = factory(Product::class)->create(['is_local' => true, 'is_paid' => $unpaid]);
+    $product = factory(Product::class)->create(array_merge(['is_local' => true], $extraAttributes));
 
     $this->assertCount(1, Product::all());
 
@@ -153,9 +153,10 @@ trait PreparesToCreateProduct
     factory(ProductBrand::class)->create();
     factory(ProductModel::class)->create();
     factory(ProductBatch::class)->create();
+    factory(ProductBatch::class)->create(['batch_number' => 'LOCAL-SUPPLIER']);
     factory(ProductColor::class)->create();
     factory(ProductGrade::class)->create();
-    factory(ProductSupplier::class)->create();
+    factory(ProductSupplier::class, 4)->create();
     factory(ProductStatus::class)->create(['status' => 'in stock']);
     factory(ProductStatus::class)->create(['status' => 'out for delivery']);
     factory(ProductStatus::class)->create(['status' => 'sold']);

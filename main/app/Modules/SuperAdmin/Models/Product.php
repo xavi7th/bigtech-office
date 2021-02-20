@@ -684,31 +684,18 @@ class Product extends BaseModel
 
       $product = self::create($request->validated());
 
-      try {
-        /**
-         * create the local product price record
-         */
-
-        $product->localProductPrice()->create($request->validated());
-      } catch (QueryException $th) {
-        if ($th->getCode() == 23000) {
-          ErrLog::notifyAdminAndFail($request->user(), $th, 'Local Product not created');
-          if ($request->isApi()) return response()->json(['err' => 'Product not created'], 500);
-          return back()->withFlash(['error'=>['Product not created']]);
-        } else {
-          throw_if(true, $th);
-        }
-      }
+      /** create the local product price record */
+      $product->localProductPrice()->create($request->validated());
 
       DB::commit();
 
-      if ($request->isApi()) return response()->json($product, 201);
-      return back()->withFlash(['success'=>'Product created']);
-
+      return back()->withFlash(['success' => 'Product created']);
+    } catch (QueryException $th) {
+      ErrLog::notifyAdminAndFail($request->user(), $th, 'Local Product not created');
+      return back()->withFlash(['error' => ['Product not created' . $th->getMessage()]]);
     } catch (\Throwable $th) {
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Product not created');
-      if ($request->isApi()) return response()->json(['err' => 'Product not created'], 500);
-      return back()->withFlash(['error'=>['Product not created']]);
+      return back()->withFlash(['error' => ['Product not created: ' . $th->getMessage()]]);
     }
   }
 

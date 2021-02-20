@@ -33,6 +33,8 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
  * @property int $product_id
  * @property string $product_type
  * @property float $selling_price
+ * @property float $online_rep_bonus
+ * @property float $walk_in_rep_bonus
  * @property int|null $sales_channel_id
  * @property int|null $online_rep_id
  * @property int|null $sales_rep_id
@@ -79,12 +81,11 @@ use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
  * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductSaleRecord withoutTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord yesterday()
- * @mixin \Eloquent
- * @property float $online_rep_bonus
- * @property float $walk_in_rep_bonus
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereOnlineRepBonus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord whereWalkInRepBonus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord thisMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductSaleRecord lastMonth()
+ * @mixin \Eloquent
  */
 class ProductSaleRecord extends BaseModel
 {
