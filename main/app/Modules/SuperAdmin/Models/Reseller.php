@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * App\Modules\SuperAdmin\Models\Reseller
@@ -105,6 +106,128 @@ class Reseller extends BaseModel
   public function reseller_histories()
   {
     return $this->hasMany(ResellerHistory::class);
+  }
+
+  /**
+   * Mark a product as being with this reseller
+   *
+   * @param string $productUuid
+   *
+   * @return void
+   * @throws ModelNotFoundException
+   */
+  public function giveProduct(string $productUuid): object
+  {
+    /** @var Product */
+    $product =  Product::where('product_uuid', $productUuid)->firstOr(fn () => SwapDeal::where('product_uuid', $productUuid)->firstOrFail());
+
+    DB::beginTransaction();
+
+    /**
+     * Check if this product is marked as with reseller already
+     */
+    if ($product->with_reseller()) {
+      DB::rollBack();
+      ActivityLog::notifySuperAdmins(
+        optional(request()->user())->email ?? 'Console App' . ' tried to give a product: ' . $product->primary_identifier() . ' with a reseller to another reseller without signing out from previous reseller'
+      );
+      abort(422, 'productWithReseller');
+    }
+
+    if (!$product->in_stock()) {
+      DB::rollBack();
+      ActivityLog::notifySuperAdmins(
+        optional(request()->user())->email ?? 'Console App' . ' tried to give a product: ' . $product->primary_identifier() . ' that is not listed as being in stock to a reseller'
+      );
+      abort(422, 'productNotInStock');
+    }
+
+    /**
+     * Create an entry in the product reseller table
+     * ! syncwithoutdetach()
+     */
+    if ($product instanceof Product) {
+      // $this->products()->detach($product);
+      $this->products()->syncWithoutDetaching([$product->id => ['status' => 'tenured']]);
+    } elseif ($product instanceof SwapDeal) {
+      $this->swap_deals()->save($product);
+    }
+
+    /**
+     * Change the product's status to reflect that it's with reseller
+     */
+    $product->product_status_id = ProductStatus::withResellerId();
+    $product->save();
+
+    /**
+     * Setup notifications for admin in reseller_history static boot method
+     */
+
+    /**
+     * Send CEO of the reseller company an SMS or email that he just picked up a device
+     */
+    try {
+      $this->notify(new ProductUpdate($product));
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdmin(request()->user(), $th, 'Reseller notification failed');
+    }
+
+    DB::commit();
+
+    return $product;
+  }
+
+  /**
+   * Mark a product as being returned from reseller to stock
+   *
+   * @param string $productUuid
+   *
+   * @return void
+   */
+  public function returnProduct(string $productUuid): object
+  {
+
+    $product = Product::whereProductUuid($productUuid)->firstOr(fn () => SwapDeal::whereProductUuid($productUuid)->firstOrFail());
+
+    /**
+     * Check if this product is marked as with reseller
+     */
+    if (!$product->with_reseller()) {
+      ActivityLog::notifySuperAdmins(
+        optional(request()->user())->email ?? 'Console App' . ' tried to return a product with ' . $product->primary_identifier() . ' from a reseller that wasn\'t signed out to any reseller'
+      );
+      abort(422, 'productNotWithReseller');
+    }
+
+    DB::beginTransaction();
+
+    /**
+     * Update the entry in the product reseller table to reflect returned
+     */
+    if ($product instanceof Product) {
+      $this->products()->syncWithoutDetaching([$product->id => ['status' => 'returned']]);
+    } elseif ($product instanceof SwapDeal) {
+      $this->swap_deals()->sync([$product->id => ['status' => 'returned']]);
+    }
+
+    /**
+     * Change the product's status to reflect that it has been returned to stock
+     */
+    $product->product_status_id = ProductStatus::inStockId();
+    $product->save();
+
+    /**
+     * Send CEO of the reseller company an SMS or email that he just picked up a device
+     */
+    try {
+      $this->notify(new ProductUpdate($product));
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdmin(request()->user(), $th, 'Reseller notification failed');
+    }
+
+    DB::commit();
+
+    return $product;
   }
 
   public static function stockKeeperRoutes()
@@ -208,160 +331,54 @@ class Reseller extends BaseModel
 
   public function giveProductToReseller(Request $request, self $reseller,  $product_uuid)
   {
+
     try {
-      $product =  Product::where('product_uuid', $product_uuid)->firstOr(fn () => SwapDeal::where('product_uuid', $product_uuid)->firstOrFail());
+      $reseller->giveProduct($product_uuid);
     } catch (ModelNotFoundException $th) {
       return generate_422_error('Invalid product selected');
-    }
-
-    DB::beginTransaction();
-
-    /**
-     * Check if this product is marked as with reseller already
-     */
-
-    if ($product->with_reseller()) {
-      DB::rollBack();
-      ActivityLog::notifySuperAdmins(
-        $request->user()->email . ' tried to give a product: ' . $product->primary_identifier() . ' with a reseller to another reseller without signing out from previous reseller'
-      );
-      return generate_422_error('This product is already with a reseller');
-    }
-
-    if (!$product->in_stock()) {
-      DB::rollBack();
-
-      ActivityLog::notifySuperAdmins(
-        $request->user()->email . ' tried to give a product: ' . $product->primary_identifier() . ' that is not listed as being in stock to a reseller'
-      );
-      return generate_422_error('This product is currently not in the stock list and cannot be given to a reseller');
-    }
-
-    try {
-
-      /**
-       * create a reseller history for picking up this device
-       * ? Default status is tenured
-       */
-
-      $reseller->reseller_histories()->create([
-        'product_id' => $product->id,
-        'product_type' => get_class($product),
-        'handled_by' => $request->user()->id,
-        'handler_type' => get_class($request->user()),
-      ]);
-
-      /**
-       * Create an entry in the product reseller table
-       * ! syncwithoutdetach()
-       */
-      if ($product instanceof Product) {
-        $reseller->products()->save($product);
-      } elseif ($product instanceof SwapDeal) {
-        $reseller->swap_deals()->save($product);
+    } catch (HttpException $th) {
+      if ($th->getMessage() == 'productWithReseller') {
+        return generate_422_error('This product is already with a reseller');
+      } elseif ($th->getMessage() == 'productNotInStock') {
+        return generate_422_error('This product is currently not in the stock list and cannot be given to a reseller');
+      } else {
+        return generate_422_error('Error giving product to reseller');
       }
     } catch (QueryException $th) {
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Error giving product to reseller');
-      if ($th->errorInfo[1] == 1062) {
-        return generate_422_error($th->errorInfo[2]);
-      }
+      if ($th->errorInfo[1] == 1062) return generate_422_error($th->errorInfo[2]);
       return generate_422_error($th->getMessage());
     }
 
-    /**
-     * Change the product's status to reflect that it's with reseller
-     */
-    $product->product_status_id = ProductStatus::withResellerId();
-    $product->save();
-
-    /**
-     * Setup notifications for admin in reseller_history static boot method
-     */
-
-    /**
-     * Send CEO of the reseller company an SMS or email that he just picked up a device
-     */
-    try {
-      $reseller->notify(new ProductUpdate($product));
-    } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Reseller notification failed');
-    }
-
-    DB::commit();
-
-    if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
     return back()->withFlash(['success'=>'Done. Product has been removed from stock list']);
   }
 
   public function resellerReturnProduct(Request $request, self $reseller, $product_uuid)
   {
 
+    /**
+     * Use the transaction here because if
+     */
+
     try {
-      $product = Product::whereProductUuid($product_uuid)->firstOr(fn () => SwapDeal::whereProductUuid($product_uuid)->firstOrFail());
+      $reseller->returnProduct($product_uuid);
     } catch (ModelNotFoundException $th) {
-      return back()->withFlash(['error'=>['The product you are trying to return to shelf does not exist']]);
-    }
-
-    /**
-     * Check if this product is marked as with reseller
-     */
-    if (!$product->with_reseller()) {
-      ActivityLog::notifySuperAdmins(
-        $request->user()->email . ' tried to return a product with ' . $product->primary_identifier() . ' from a reseller that wasn\'t signed out to any reseller'
-      );
-      return generate_422_error('This product is not supposed to be with a reseller');
-    }
-
-    DB::beginTransaction();
-    /**
-     * create a reseller history for returning this device
-     */
-    try {
-
-      $reseller->reseller_histories()->create([
-        'product_id' => $product->id,
-        'product_type' => get_class($product),
-        'handled_by' => $request->user()->id,
-        'handler_type' => get_class($request->user()),
-        'product_status' => 'returned'
-      ]);
-      /**
-       * Update the entry in the product reseller table to reflect returned
-       */
-      if ($product instanceof Product) {
-        $reseller->products()->where('product_id', $product->id)->update([
-          'status' => 'returned'
-        ]);
-      } elseif ($product instanceof SwapDeal) {
-        $reseller->swap_deals()->where('product_id', $product->id)->update([
-          'status' => 'returned'
-        ]);
+      return back()->withFlash(['error' => ['The product you are trying to return to shelf does not exist in our records']]);
+    } catch (HttpException $th) {
+      if ($th->getMessage() == 'productNotWithReseller') {
+        return generate_422_error('This product is not supposed to be with a reseller');
+      } elseif ($th->getMessage() == 'productNotInStock') {
+        return generate_422_error('This product is currently not in the stock list and cannot be given to a reseller');
+      } else {
+        return generate_422_error('Error giving product to reseller');
       }
     } catch (QueryException $th) {
-      if ($th->errorInfo[1] == 1062) {
-        return generate_422_error($th->errorInfo[2]);
-      }
+      ErrLog::notifyAdminAndFail($request->user(), $th, 'Error giving product to reseller');
+      if ($th->errorInfo[1] == 1062) return generate_422_error($th->errorInfo[2]);
       return generate_422_error($th->getMessage());
     }
 
-    /**
-     * Change the product's status to reflect that it has been returned to stock
-     */
-    $product->product_status_id = ProductStatus::inStockId();
-    $product->save();
 
-    /**
-     * Send CEO of the reseller company an SMS or email that he just picked up a device
-     */
-    try {
-      $reseller->notify(new ProductUpdate($product));
-    } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Reseller notification failed');
-    }
-
-    DB::commit();
-
-    if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
     return back()->withFlash(['success'=>'The product has been marked as returned and is back in the stock list']);
   }
 

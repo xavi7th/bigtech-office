@@ -1156,7 +1156,7 @@ class Product extends BaseModel
        * add an entry for the product trail that it's status changed
        *! Add an exception for when super admin marks an item as paid
        */
-      if ($product->isDirty('is_paid') && $product->is_local) {
+      if (is_null(request()->user()) || ($product->isDirty('is_paid') && $product->is_local)) {
       } else {
         request()->user()->product_histories()->create([
           'product_id' => $product->id,

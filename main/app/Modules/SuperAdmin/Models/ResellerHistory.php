@@ -67,7 +67,7 @@ class ResellerHistory extends Model
     static::created(function (self $reseller_history) {
       $reseller_history->load('product', 'reseller');
       if (is_null($reseller_history->product_status)) {
-        ActivityLog::notifySuperAdmins(request()->user()->email . ' gave product with ' . $reseller_history->product->primary_identifier() . ' to reseller:  "' . $reseller_history->reseller->business_name . '"');
+        ActivityLog::notifySuperAdmins(optional(request()->user())->email ?? 'Console App' . ' gave product with ' . $reseller_history->product->primary_identifier() . ' to reseller:  "' . $reseller_history->reseller->business_name . '"');
       } else {
         ActivityLog::notifySuperAdmins($reseller_history->reseller->business_name . ' has ' . $reseller_history->product_status . ' product with ' . $reseller_history->product->primary_identifier() . '. Handler: ' . request()->user()->email);
       }

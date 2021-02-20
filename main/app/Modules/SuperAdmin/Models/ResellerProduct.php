@@ -2,6 +2,7 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
+use App\Modules\SuperAdmin\Models\Reseller;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 
 /**
@@ -36,4 +37,32 @@ class ResellerProduct extends MorphPivot
    * @var bool
    */
   public $incrementing = true;
+
+  public function reseller()
+  {
+    return $this->belongsTo(Reseller::class);
+  }
+
+  public function product()
+  {
+    return $this->morphTo('product');
+  }
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saved(function (self $record) {
+      if (request()->user()) {
+        $record->reseller->reseller_histories()->create([
+          'product_id' => $record->product->id,
+          'product_type' => get_class($record->product),
+          'handled_by' => request()->user()->id,
+          'handler_type' => get_class(request()->user()),
+          'product_status' => $record->status ?? 'tenured'
+        ]);
+      }
+    });
+  }
 }

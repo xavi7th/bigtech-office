@@ -53,7 +53,7 @@ class ErrLog extends BaseModel
     if ($exception instanceof TypeError) {
       Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class($user), 'exception' => $exception->getMessage()]);
     }
-    Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class($user), 'exception' => $exception]);
+    Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class(optional($user) ?? (object)[]), 'exception' => $exception]);
   }
 
   static function notifyAdminAndFail(?User $user, Throwable $exception, string $message = null)

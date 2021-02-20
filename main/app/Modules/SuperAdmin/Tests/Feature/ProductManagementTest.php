@@ -33,7 +33,7 @@ class ProductManagementTest extends TestCase
   use RefreshDatabase, WithFaker, PreparesToCreateProduct;
 
   /** @test */
-  public function function_a_sales_rep_can_mark_a_product_as_sold()
+  public function a_sales_rep_can_mark_a_product_as_sold()
   {
     // $this->withoutExceptionHandling();
 
@@ -56,7 +56,7 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function function_a_dispatch_admin_can_mark_a_product_as_sold()
+  public function a_dispatch_admin_can_mark_a_product_as_sold()
   {
 
     $this->withoutExceptionHandling();
@@ -86,7 +86,7 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function function_a_dispatch_admin_cannot_mark_a_product_in_stock_as_sold()
+  public function a_dispatch_admin_cannot_mark_a_product_in_stock_as_sold()
   {
     $product = $this->create_product_in_stock();
     $response = $this->actingAs(factory(DispatchAdmin::class)->create(), 'dispatch_admin')->post(route('dispatchadmin.multiaccess.products.mark_as_sold', $product->product_uuid), $this->data());
@@ -105,7 +105,7 @@ class ProductManagementTest extends TestCase
 
 
   /** @test */
-  public function function_a_swap_deal_record_will_be_created_if_sold_product_is_a_swap_deal()
+  public function a_swap_deal_record_will_be_created_if_sold_product_is_a_swap_deal()
   {
 
     $product = $this->create_product_in_stock();
@@ -115,7 +115,7 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function function_only_a_logged_in_user_can_mark_product_as_sold()
+  public function only_a_logged_in_user_can_mark_product_as_sold()
   {
 
     $product = $this->create_product_in_stock();
@@ -125,7 +125,7 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function function_a_product_cannot_be_created_without_correct_data_supplied()
+  public function a_product_cannot_be_created_without_correct_data_supplied()
   {
     $product = $this->create_product_in_stock();
     $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid));
@@ -133,7 +133,7 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function function_a_product_cannot_be_marked_as_sold_by_unauthorised_users()
+  public function a_product_cannot_be_marked_as_sold_by_unauthorised_users()
   {
 
     $this->expectException(RouteNotFoundException::class);
@@ -160,7 +160,7 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function function_an_existing_user_will_have_their_details_updated_on_mark_product_as_sold()
+  public function an_existing_user_will_have_their_details_updated_on_mark_product_as_sold()
   {
     $product = $this->create_product_in_stock();
 
@@ -177,10 +177,10 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function function_superadmin_can_reverse_a_product_from_sold_to_in_stock()
+  public function superadmin_can_reverse_a_product_from_sold_to_in_stock()
   {
     $product = $this->create_sold_product();
-    $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->put(route('superadmin.products.mark_as_sold.reverse', $product->product_uuid));
+    $this->actingAs($superAdmin = factory(SuperAdmin::class)->create(), 'super_admin')->put(route('superadmin.products.mark_as_sold.reverse', $product->product_uuid));
 
     $product->refresh();
 
@@ -189,6 +189,9 @@ class ProductManagementTest extends TestCase
     $this->assertCount(0, AppUser::all());
     $this->assertNull($product->app_user_id);
     $this->assertNull($product->sold_at);
+
+    /** LOGOUT required before acting as another user because of authenticatesSession middleware */
+    $this->actingAs($superAdmin, 'super_admin')->post(route('app.logout'));
 
     /** Test that a sales rep can now mark that same product as sold again */
     $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid), $this->data());
@@ -208,12 +211,12 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function function_superadmin_can_reverse_a_product_from_sale_confirmed_to_in_stock()
+  public function superadmin_can_reverse_a_product_from_sale_confirmed_to_in_stock()
   {
     $this->withoutExceptionHandling();
 
     $product = $this->create_sale_confirmed_product();
-    $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->put(route('superadmin.products.confirm_sale.reverse', $product->product_uuid));
+    $this->actingAs($superAdmin = factory(SuperAdmin::class)->create(), 'super_admin')->put(route('superadmin.products.confirm_sale.reverse', $product->product_uuid));
 
     $product->refresh();
 
@@ -225,6 +228,9 @@ class ProductManagementTest extends TestCase
     $this->assertNull($product->app_user_id);
     $this->assertNull($product->sold_at);
 
+    /** LOGOUT required before acting as another user because of authenticatesSession middleware */
+    $this->actingAs($superAdmin, 'super_admin')->post(route('app.logout'));
+
     /** Test that a sales rep can now mark that same product as sold again */
     $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid), $this->data());
 
@@ -243,7 +249,7 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function function_super_admin_can_mark_a_local_product_as_supplier_paid()
+  public function super_admin_can_mark_a_local_product_as_supplier_paid()
   {
     // Test that the correct history is recorded in the static boot method of the prioduct model
     $product = $this->create_local_product($unpaid = true);

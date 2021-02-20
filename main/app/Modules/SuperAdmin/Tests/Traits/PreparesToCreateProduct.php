@@ -23,12 +23,14 @@ use App\Modules\SuperAdmin\Models\ProductSupplier;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
+use Illuminate\Foundation\Testing\WithFaker;
 
 /**
  * Does the necessary steps to enable the smooth gerenration of products
  */
 trait PreparesToCreateProduct
 {
+  use WithFaker;
 
   private function create_product_in_stock()
   {
