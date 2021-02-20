@@ -95,7 +95,11 @@ class ProductSaleRecord extends BaseModel
     'selling_price', 'online_rep_id', 'sales_rep_id', 'sales_rep_type', 'sales_channel_id', 'is_swap_transaction'
   ];
 
-  protected $casts = ['selling_price' => 'float'];
+  protected $casts = [
+    'selling_price' => 'float',
+    'walk_in_rep_bonus' => 'float',
+    'online_rep_bonus' => 'float'
+  ];
 
   // protected $with = ['bank_account_payments'];
 
