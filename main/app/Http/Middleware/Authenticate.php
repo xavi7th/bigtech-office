@@ -2,9 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\ViewErrorBag;
 
 class Authenticate extends Middleware
 {
@@ -37,13 +40,16 @@ class Authenticate extends Middleware
    *
    * @throws ValidationException
    */
-  private function accountSuspended($request, string $guard)
+  private function accountSuspended($request, array $guards)
   {
-    $this->auth->guard($guard)->logout();
+    // $this->auth->guard($guard)->logout();
+    session()->flash('errors', (new ViewErrorBag())->put('default', new MessageBag(['email' => 'Account Suspended. Contact your manager.'])));
 
-    throw ValidationException::withMessages([
-      "email" => 'Account Suspended. Contact your manager.'
-    ]);
+    throw new AuthenticationException(
+      'Unauthenticated.',
+      $guards,
+      $this->redirectTo($request)
+    );
   }
 
   /**
@@ -61,12 +67,13 @@ class Authenticate extends Middleware
         $guards = [null];
     }
 
+
     foreach ($guards as $guard) {
       if ($this->auth->guard($guard)->check()) {
 
         /** Check if the user is active and deny access if not*/
         if (!$this->auth->guard($guard)->user()->is_active && !$this->auth->guard($guard)->user()->isSuperAdmin()) {
-          $this->accountSuspended($request, $guard);
+          $this->accountSuspended($request, $guards);
         }
 
         return $this->auth->shouldUse($guard);
