@@ -444,6 +444,7 @@ class Product extends BaseModel
   {
     Route::group(['prefix' => 'products'], function () {
       Route::name('dispatchadmin.products.')->group(function () {
+        Route::get('products-on-delivery', [self::class, 'getProductsOnDelivery'])->name('products_on_delivery')->defaults('ex', __e('d', 'truck'));
         Route::post('{product:product_uuid}/return-to-stock', [self::class, 'returnProductToStock'])->name('return_to_stock')->defaults('ex', __e('d', null, true));
       });
     });
@@ -499,7 +500,7 @@ class Product extends BaseModel
     } elseif ($request->user()->isQualityControl()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isDispatchAdmin()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->inStock()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'dispatch_request'])->get(), 'dispatchListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->inStock()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'dispatch_request'])->take(10)->get(), 'dispatchListing');
     } elseif ($request->user()->isWebAdmin()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isAccountant()) {
@@ -514,6 +515,20 @@ class Product extends BaseModel
     $resellers = fn () => Cache::rememberForever('resellers', fn () => (new ResellerTransformer)->collectionTransformer(Reseller::all(), 'basic'));
 
     if ($request->isApi()) return  response()->json($products, 200);
+    return Inertia::render('SuperAdmin,Products/ListProducts', compact('products', 'salesChannel', 'resellers', 'onlineReps'));
+  }
+
+  public function getProductsOnDelivery(Request $request)
+  {
+    $searchKey = $request->searchKey == 'product_name' ? 'product_model_id' : $request->searchKey;
+    $searchQuery = $request->searchKey == 'product_name' ? ProductModel::where('name', 'LIKE', '%' . $request->searchQuery . '%')->pluck('id')->toArray() : $request->searchQuery;
+
+    $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'dispatch_request'])->get(), 'dispatchListing');
+
+    $onlineReps = fn () => Cache::rememberForever('onlineReps', fn () => (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->orWhere->callCenter()->get(), 'transformBasic'));
+    $salesChannel = fn () => Cache::rememberForever('salesChannel', fn () => (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic'));
+    $resellers = fn () => Cache::rememberForever('resellers', fn () => (new ResellerTransformer)->collectionTransformer(Reseller::all(), 'basic'));
+
     return Inertia::render('SuperAdmin,Products/ListProducts', compact('products', 'salesChannel', 'resellers', 'onlineReps'));
   }
 

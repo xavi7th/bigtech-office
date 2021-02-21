@@ -26,6 +26,11 @@ trait ProvidesDifferentUserDataTypes
     return $this->provideDifferentUserTypes(['accountant', 'appuser']);
   }
 
+  public function provideDifferentUserTypesWithoutDispatchAdmin()
+  {
+    return $this->provideDifferentUserTypes(['dispatchadmin', 'appuser']);
+  }
+
   public function provideDifferentUserTypesWithoutSuperAdmin()
   {
     return $this->provideDifferentUserTypes(['superadmin', 'appuser']);
