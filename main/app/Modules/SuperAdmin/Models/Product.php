@@ -414,6 +414,7 @@ class Product extends BaseModel
       Route::name('accountant.products.')->group(function () {
         Route::get('local-product/create', [self::class, 'showCreateLocalProductForm'])->name('create_local_product')->defaults('ex', __e('ac', 'archive'));
         Route::post('local-product/create', [self::class, 'createLocalSupplierProduct'])->name('create_local')->defaults('ex', __e('ac', 'archive'));
+        Route::patch('local-product/{product:product_uuid}/update-price', [self::class, 'updateLocalSupplierProductPrice'])->name('local.edit_price')->defaults('ex', __e('ac', 'archive'));
         Route::delete('local-product/{product:product_uuid}/delete', [self::class, 'deleteLocalSupplierProduct'])->name('delete_local_product')->defaults('ex', __e('ac', 'archive'));
       });
     });
@@ -697,6 +698,18 @@ class Product extends BaseModel
       ErrLog::notifyAdminAndFail($request->user(), $th, 'Product not created');
       return back()->withFlash(['error' => ['Product not created: ' . $th->getMessage()]]);
     }
+  }
+
+  public function updateLocalSupplierProductPrice(Request $request, self $product)
+  {
+    $data = $request->validate([
+      'cost_price' => 'required|numeric',
+      'proposed_selling_price' => 'required|numeric|gte:cost_price',
+    ]);
+
+    $product->localProductPrice()->update($data);
+
+    return back()->withFlash(['success' => 'Product price updated']);
   }
 
   public function markLocalProductSupplierPaid(Request $request, self $product)

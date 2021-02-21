@@ -19,6 +19,7 @@ use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
 use App\Modules\StockKeeper\Models\StockKeeper;
+use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\ProductBrand;
 use App\Modules\SuperAdmin\Models\ProductColor;
 use App\Modules\SuperAdmin\Models\ProductGrade;
@@ -37,6 +38,7 @@ use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use App\Modules\SuperAdmin\Tests\Traits\PreparesToCreateProduct;
+use Illuminate\Auth\AuthenticationException;
 
 class ProductManagementTest extends TestCase
 {
@@ -55,13 +57,8 @@ class ProductManagementTest extends TestCase
   /** @test */
   public function accountant_can_create_local_product()
   {
-    $this->withoutExceptionHandling();
-
     $this->prepare_to_create_product();
-
     $accountant = factory(Accountant::class)->create();
-    ray()->clearAll();
-    ray(array_merge($this->data(), ['cost_price' => 2000, 'selling_price' => 5000]));
 
     $this->actingAs($accountant, 'accountant')->post(route('accountant.products.create_local'), array_merge($this->data(), ['cost_price' => 2000, 'proposed_selling_price' => 5000]))
       ->assertSessionHasNoErrors()
@@ -76,23 +73,72 @@ class ProductManagementTest extends TestCase
     $this->assertEquals(5000, Product::first()->proposed_selling_price);
   }
 
-  // public function accountant_can_edit_local_product_price()
-  // {
-  //   $product = $this->create_local_product();
+  /**
+   * @test
+   * @dataProvider provideDifferentUserTypes
+   */
+  public function other_users_cannot_create_local_product($getDataSource)
+  {
+    // $this->withoutExceptionHandling();
+    // $this->expectException(AuthenticationException::class);
 
-  //   $accountant = factory(Accountant::class)->create();
+    [$location, $user] = $getDataSource();
+    ray([$location, $user]);
 
-  //   $this->actingAs($accountant, 'accountant')->post(route('accountant.products.local.edit_price', $product->product_uuid), ['cost_price' => 2000, 'proposed_selling_price' => 5000])
-  //     ->assertSessionHasNoErrors()
-  //     ->assertRedirect()
-  //     ->assertSessionHas('flash.success', 'Product price edited');
+    $this->prepare_to_create_product();
 
-  //   $product->refresh();
+    $this->actingAs($user, Str::snake(class_basename(get_class(($user)))))->post(route('accountant.products.create_local'), array_merge($this->data(), ['cost_price' => 2000, 'proposed_selling_price' => 5000]))
+      ->assertRedirect(route('app.login'))
+      ->assertSessionMissing('flash.success');
+  }
 
-  //   $this->assertCount(1, LocalProductPrice::all());
-  //   $this->assertEquals(2000, $product->cost_price);
-  //   $this->assertEquals(5000, $product->proposed_selling_price);
-  // }
+  /** @test */
+  public function accountant_can_edit_local_product_price()
+  {
+    $this->prepare_to_create_product();
+    $accountant = factory(Accountant::class)->create();
+
+    $this->actingAs($accountant, 'accountant')->post(route('accountant.products.create_local'), array_merge($this->data(), ['cost_price' => 2000, 'proposed_selling_price' => 5000]));
+
+    $this->assertCount(1, Product::all());
+
+    $product = Product::first();
+
+    $this->actingAs($accountant, 'accountant')->patch(route('accountant.products.local.edit_price', $product->product_uuid), ['cost_price' => 3000, 'proposed_selling_price' => 15000])
+      ->assertSessionHasNoErrors()
+      ->assertRedirect()
+      ->assertSessionHas('flash.success', 'Product price updated');
+
+    $product->refresh();
+
+    $this->assertCount(1, LocalProductPrice::all());
+    $this->assertEquals(3000, $product->cost_price);
+    $this->assertEquals(15000, $product->proposed_selling_price);
+  }
+
+  /**
+   * @test
+   * @dataProvider provideDifferentUserTypes
+   */
+  public function other_users_cannot_edit_local_product_price($getDataSource)
+  {
+    // $this->withoutExceptionHandling();
+    // $this->expectException(AuthenticationException::class);
+
+    [$location, $user] = $getDataSource();
+
+    $this->prepare_to_create_product();
+    $accountant = factory(Accountant::class)->create();
+    $this->actingAs($accountant, 'accountant')->post(route('accountant.products.create_local'), array_merge($this->data(), ['cost_price' => 2000, 'proposed_selling_price' => 5000]));
+    $this->assertCount(1, Product::all());
+    $this->actingAs($accountant)->post(route('app.logout'));
+
+    $product = Product::first();
+
+    $this->actingAs($user, Str::snake(class_basename(get_class(($user)))))->patch(route('accountant.products.local.edit_price', $product->product_uuid), array_merge($this->data(), ['cost_price' => 3000, 'proposed_selling_price' => 15000]))
+      ->assertRedirect(route('app.login'))
+      ->assertSessionMissing('flash.success');
+  }
 
   /** @test */
   public function a_sales_rep_can_mark_a_product_as_sold()
@@ -415,6 +461,40 @@ class ProductManagementTest extends TestCase
       // 'imei_required_if' => ['imei',  ['imei' => '', 'is_swap_transaction' => true]],
       // 'serial_no_required_if' => ['serial_no',  ['serial_no' => '', 'is_swap_transaction' => true]],
       // 'model_no_required_if' => ['model_no',  ['model_no' => '', 'is_swap_transaction' => true]],
+    ];
+  }
+
+
+  public function provideDifferentUserTypes()
+  {
+    /**
+     * @key salesrep is a handle for the test to refer to that pasrticular dataset
+     * @fn() is required because data providers are fired before the test class is initialised. The application and the IOC is bootstrapped when the calss is initialised ao factories and other stuffs like that fail and trigger not found errors
+     * @factoryOffice branch is required because the data is fired and cached before the test is initialised. When the test is initialised the database is refreshed so we need to re fire the office location factory for each dataset otherwise there will be no location in the DB
+     * @factoryUser is the main thin we are needing as we see grabbed from the method using destructuring
+     */
+    return [
+      'salesrep' => [
+        fn () => [factory(OfficeBranch::class)->create(), factory(SalesRep::class)->create(['id' => 30])]
+      ],
+      'admin' => [
+        fn () => [factory(OfficeBranch::class)->create(), factory(Admin::class)->create(['id' => 30])],
+      ],
+      // 'accountant' => [
+      //   fn () => [factory(OfficeBranch::class)->create(), factory(Accountant::class)->create(['id' => 30])],
+      // ],
+      'webAdmin' => [
+        fn () => [factory(OfficeBranch::class)->create(), factory(WebAdmin::class)->create(['id' => 30])],
+      ],
+      'qualityCOntrol' => [
+        fn () => [factory(OfficeBranch::class)->create(), factory(QualityControl::class)->create(['id' => 30])],
+      ],
+      'stockKeeper' => [
+        fn () => [factory(OfficeBranch::class)->create(), factory(StockKeeper::class)->create(['id' => 30])],
+      ],
+      'dispatchAdmin' => [
+        fn () => [factory(OfficeBranch::class)->create(), factory(DispatchAdmin::class)->create(['id' => 30])],
+      ],
     ];
   }
 }

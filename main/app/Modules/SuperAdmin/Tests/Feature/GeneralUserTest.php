@@ -152,7 +152,6 @@ class GeneralUserTest extends TestCase
     $this->actingAs($user, $guard)->post(route('app.logout'));
   }
 
-
   public function provideDifferentUserTypes()
   {
     /**

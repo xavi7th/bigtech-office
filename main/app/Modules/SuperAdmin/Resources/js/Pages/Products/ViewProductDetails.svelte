@@ -3,15 +3,15 @@
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import DisplayUserComments from "@superadmin-shared/Partials/DisplayUserComments.svelte";
+  import UpdateLocalProductPrice from "@superadmin-shared/Partials/UpdateLocalProductPrice.svelte";
   import { toCurrency } from '@public-shared/helpers';
-import { confirm } from 'lodash/_freeGlobal';
 
   $: ({ auth } = $page.props);
 
   export let productDetails = {},
     productComments = [];
 
-  let userComment;
+  let userComment, editPrice = false;
 
   let commentOnProduct = uuid => {
     BlockToast.fire({
@@ -214,11 +214,15 @@ import { confirm } from 'lodash/_freeGlobal';
             <tr>
               <th scope="row" colspan="2" class="p-5">
                 <span><InertiaLink class="btn btn-warning btn-block text-center" href={route(auth.user.user_type + '.multiaccess.products.edit_product', productDetails.uuid)}>Edit</InertiaLink></span>
+                <span><button class="btn btn-info btn-block text-center" on:click="{() => editPrice = !editPrice}">Edit Price</button></span>
               </th>
             </tr>
           {/if}
         </tbody>
       </table>
+      {#if editPrice}
+        <UpdateLocalProductPrice details={{cost_price: productDetails.cost_price, proposed_selling_price:productDetails.selling_price, uuid: productDetails.uuid}}/>
+      {/if}
     </div>
     <div class="col-lg-5">
       <div class="col-12">
