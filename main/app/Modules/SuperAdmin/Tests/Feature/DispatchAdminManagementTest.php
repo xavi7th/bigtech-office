@@ -8,6 +8,8 @@ use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Modules\DispatchAdmin\Models\DispatchAdmin;
+use App\Modules\SalesRep\Models\ProductDispatchRequest;
+use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Tests\Traits\PreparesToCreateProduct;
 use App\Modules\SuperAdmin\Tests\Traits\ProvidesDifferentUserDataTypes;
@@ -19,8 +21,6 @@ class DispatchAdminManagementTest extends TestCase
   /** @test */
   public function dispatch_admin_can_view_product_list()
   {
-    // $this->withoutExceptionHandling();
-
     $this->prepare_to_create_product();
     factory(Product::class, 200)->create(['is_local' => false]);
     /** @var DispatchAdmin */
@@ -28,10 +28,7 @@ class DispatchAdminManagementTest extends TestCase
 
     $rsp = $this->actingAs($dispatchAdmin, Str::snake(class_basename(get_class(($dispatchAdmin)))))->get(route(strtolower($dispatchAdmin->getType()) . '.multiaccess.products.view_products'));
 
-    $page = $this->_arrayToObject($rsp->getOriginalContent()->getData()['page']);
-
-    // ray()->clearAll();
-    // ray((array)$page->props);
+    $page = $this->getResponseData($rsp);
 
     $this->assertEquals('SuperAdmin,Products/ListProducts', $page->component);
     $this->assertNull($page->props->errors);
@@ -42,7 +39,7 @@ class DispatchAdminManagementTest extends TestCase
   }
 
   /** @test */
-  public function dispatch_admin_can_view_dispatch_requests()
+  public function dispatch_admin_can_view_products_on_delivery()
   {
     $this->prepare_to_create_product();
     factory(Product::class, 200)->create(['is_local' => false, 'product_status_id' => ProductStatus::inStockId()]);
@@ -57,10 +54,7 @@ class DispatchAdminManagementTest extends TestCase
       ->assertSessionHasNoErrors()
       ->assertSessionMissing('flash.error');
 
-    $page = $this->_arrayToObject($rsp->getOriginalContent()->getData()['page']);
-
-    ray()->clearAll();
-    ray((array)$page->props);
+    $page = $this->getResponseData($rsp);
 
     $this->assertEquals('SuperAdmin,Products/ListProducts', $page->component);
     $this->assertNull($page->props->errors);
@@ -74,7 +68,7 @@ class DispatchAdminManagementTest extends TestCase
    * @test
    * @dataProvider provideDifferentUserTypesWithoutDispatchAdmin
    */
-  public function other_users_cannot_view_dispatch_requests($dataSource)
+  public function other_users_cannot_view_products_on_delivery($dataSource)
   {
     // $this->withoutExceptionHandling();
 
@@ -84,5 +78,31 @@ class DispatchAdminManagementTest extends TestCase
       ->assertRedirect(route('app.login'))
       ->assertSessionHasNoErrors()
       ->assertSessionMissing('flash.error');
+  }
+
+  /** @test */
+  public function dispatch_admin_can_view_dispatch_requests()
+  {
+    $this->prepare_to_create_product();
+    factory(ProductDispatchRequest::class, 15)->create(['online_rep_id' => factory(SalesRep::class)]);
+    /** @var DispatchAdmin */
+    $dispatchAdmin = factory(DispatchAdmin::class)->create();
+
+    $this->assertCount(15, ProductDispatchRequest::all());
+
+    $rsp = $this->actingAs($dispatchAdmin, Str::snake(class_basename(get_class(($dispatchAdmin)))))->get(route(strtolower($dispatchAdmin->getType()) . '.dispatch_requests.view_dispatch_requests'))
+    ->assertOk()
+      ->assertSessionHasNoErrors()
+      ->assertSessionMissing('flash.error');
+
+    $page = $this->getResponseData($rsp);
+
+    // ray()->clearAll();
+    // ray((array)$page->props);
+
+    $this->assertEquals('DispatchAdmin,ViewDispatchRequests', $page->component);
+    $this->assertNull($page->props->errors);
+    $this->assertArrayHasKey('dispatch_requests', (array)$page->props);
+    $this->assertNotCount(0, (array)$page->props->dispatch_requests);
   }
 }

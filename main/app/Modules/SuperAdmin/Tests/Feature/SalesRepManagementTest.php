@@ -23,7 +23,7 @@ class SalesRepManagementTest extends TestCase
 
     $response = $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->get(route('superadmin.manage_staff.sales_reps'));
 
-    $page = $this->_arrayToObject($response->getOriginalContent()->getData()['page']);
+    $page = $this->getResponseData($response);
 
     // ray($page);
 

@@ -52,8 +52,13 @@ abstract class TestCase extends BaseTestCase
    *
    * @return object
    */
-  protected function _arrayToObject($array)
+  private function _arrayToObject($array)
   {
     return is_array($array) && !empty($array) ? (object) array_map([__CLASS__, __METHOD__], $array) : (gettype($array) == 'object' && empty((array)$array) ? null : $array);
+  }
+
+  protected function getResponseData($rsp)
+  {
+    return $this->_arrayToObject($rsp->getOriginalContent()->getData()['page']);
   }
 }

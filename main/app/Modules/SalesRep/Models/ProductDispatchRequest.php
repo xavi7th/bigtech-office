@@ -155,7 +155,8 @@ class ProductDispatchRequest extends Model
   {
     Route::group(['prefix' => 'product-dispatch-requests'], function () {
       Route::name('dispatchadmin.dispatch_requests.')->group(function () {
-        Route::get('', [self::class, 'getDispatchRequests'])->name('view_dispatch_requests')->defaults('ex', __e('d', 'list', false));
+        Route::get('', [self::class, 'getDispatchRequests'])->name('pending_dispatch_requests')->defaults('ex', __e('d', 'list', false));
+        Route::get('completed', [self::class, 'getCompletedDispatchRequests'])->name('past_dispatch_requests')->defaults('ex', __e('d', 'list', false));
         Route::post('{productDispatchRequest}/schedule-delivery', [self::class, 'scheduleProductForDeliveryRequest'])->name('schedule_delivery')->defaults('ex', __e('d', null, true));
         Route::post('{productDispatchRequest}/delete', [self::class, 'deleteDispatchRequest'])->name('delete')->defaults('ex', __e('d', 'list', false));
       });
@@ -174,6 +175,13 @@ class ProductDispatchRequest extends Model
   {
     return Inertia::render('DispatchAdmin,ViewDispatchRequests', [
       'dispatch_requests' => fn () => Cache::rememberForever('dispatchRequests', fn () => (new ProductDispatcgRequestTransformer)->collectionTransformer(self::unprocessed()->with('online_rep')->latest()->get(), 'basic')),
+    ]);
+  }
+
+  public function getCompletedDispatchRequests(Request $request)
+  {
+    return Inertia::render('DispatchAdmin,ViewDispatchRequests', [
+      'dispatch_requests' => fn () => Cache::rememberForever('completedDispatchRequests', fn () => (new ProductDispatcgRequestTransformer)->collectionTransformer(self::processed()->with('online_rep')->latest()->get(), 'basic')),
     ]);
   }
 
@@ -236,6 +244,11 @@ class ProductDispatchRequest extends Model
   public function scopeUnprocessed(Builder $query)
   {
     return $query->whereNull('sold_at');
+  }
+
+  public function scopeProcessed(Builder $query)
+  {
+    return $query->whereNotNull('sold_at');
   }
 
   protected static function boot()
