@@ -38,11 +38,12 @@ use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use App\Modules\SuperAdmin\Tests\Traits\PreparesToCreateProduct;
+use App\Modules\SuperAdmin\Tests\Traits\ProvidesDifferentUserDataTypes;
 use Illuminate\Auth\AuthenticationException;
 
 class ProductManagementTest extends TestCase
 {
-  use RefreshDatabase, WithFaker, PreparesToCreateProduct;
+  use RefreshDatabase, WithFaker, PreparesToCreateProduct, ProvidesDifferentUserDataTypes;
 
   // /**
   //  * @test
@@ -75,7 +76,7 @@ class ProductManagementTest extends TestCase
 
   /**
    * @test
-   * @dataProvider provideDifferentUserTypes
+   * @dataProvider provideDifferentUserTypesWithoutAccountant
    */
   public function other_users_cannot_create_local_product($getDataSource)
   {
@@ -118,7 +119,7 @@ class ProductManagementTest extends TestCase
 
   /**
    * @test
-   * @dataProvider provideDifferentUserTypes
+   * @dataProvider provideDifferentUserTypesWithoutAccountant
    */
   public function other_users_cannot_edit_local_product_price($getDataSource)
   {
@@ -461,40 +462,6 @@ class ProductManagementTest extends TestCase
       // 'imei_required_if' => ['imei',  ['imei' => '', 'is_swap_transaction' => true]],
       // 'serial_no_required_if' => ['serial_no',  ['serial_no' => '', 'is_swap_transaction' => true]],
       // 'model_no_required_if' => ['model_no',  ['model_no' => '', 'is_swap_transaction' => true]],
-    ];
-  }
-
-
-  public function provideDifferentUserTypes()
-  {
-    /**
-     * @key salesrep is a handle for the test to refer to that pasrticular dataset
-     * @fn() is required because data providers are fired before the test class is initialised. The application and the IOC is bootstrapped when the calss is initialised ao factories and other stuffs like that fail and trigger not found errors
-     * @factoryOffice branch is required because the data is fired and cached before the test is initialised. When the test is initialised the database is refreshed so we need to re fire the office location factory for each dataset otherwise there will be no location in the DB
-     * @factoryUser is the main thin we are needing as we see grabbed from the method using destructuring
-     */
-    return [
-      'salesrep' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(SalesRep::class)->create(['id' => 30])]
-      ],
-      'admin' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(Admin::class)->create(['id' => 30])],
-      ],
-      // 'accountant' => [
-      //   fn () => [factory(OfficeBranch::class)->create(), factory(Accountant::class)->create(['id' => 30])],
-      // ],
-      'webAdmin' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(WebAdmin::class)->create(['id' => 30])],
-      ],
-      'qualityCOntrol' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(QualityControl::class)->create(['id' => 30])],
-      ],
-      'stockKeeper' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(StockKeeper::class)->create(['id' => 30])],
-      ],
-      'dispatchAdmin' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(DispatchAdmin::class)->create(['id' => 30])],
-      ],
     ];
   }
 }

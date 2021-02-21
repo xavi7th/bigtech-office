@@ -15,12 +15,13 @@ use App\Modules\SuperAdmin\Models\OfficeBranch;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use App\Modules\QualityControl\Models\QualityControl;
+use App\Modules\SuperAdmin\Tests\Traits\ProvidesDifferentUserDataTypes;
 use Illuminate\Auth\AuthenticationException;
 use Str;
 
 class GeneralUserTest extends TestCase
 {
-  use RefreshDatabase;
+  use RefreshDatabase, ProvidesDifferentUserDataTypes;
    /** @test */
   public function an_inactive_user_cannot_login()
   {
@@ -93,10 +94,11 @@ class GeneralUserTest extends TestCase
 
   /**
    * @test
-   * @dataProvider provideDifferentUserTypes
+   * @dataProvider provideDifferentUserTypesWithoutSuperAdmin
    */
   public function admin_can_mark_user_as_inactive($dataSource)
   {
+    $this->withoutExceptionHandling();
     [$location, $user] = $dataSource();
     $superAdmin = factory(SuperAdmin::class)->create();
 
@@ -110,7 +112,7 @@ class GeneralUserTest extends TestCase
 
   /**
    * @test
-   * @dataProvider provideDifferentUserTypes
+   * @dataProvider provideDifferentUserTypesWithoutSuperAdmin
    */
   public function admin_can_restore_suspended_user($dataSource)
   {
@@ -152,42 +154,4 @@ class GeneralUserTest extends TestCase
     $this->actingAs($user, $guard)->post(route('app.logout'));
   }
 
-  public function provideDifferentUserTypes()
-  {
-    /**
-     * @key salesrep is a handle for the test to refer to that pasrticular dataset
-     * @fn() is required because data providers are fired before the test class is initialised. The application and the IOC is bootstrapped when the calss is initialised ao factories and other stuffs like that fail and trigger not found errors
-     * @factoryOffice branch is required because the data is fired and cached before the test is initialised. When the test is initialised the database is refreshed so we need to re fire the office location factory for each dataset otherwise there will be no location in the DB
-     * @factoryUser is the main thin we are needing as we see grabbed from the method using destructuring
-     */
-    return [
-      'salesrep' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(SalesRep::class)->create(['id' => 30])]
-      ],
-      'admin' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(Admin::class)->create(['id' => 30])],
-      ],
-      'accountant' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(Accountant::class)->create(['id' => 30])],
-      ],
-      'webAdmin' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(WebAdmin::class)->create(['id' => 30])],
-      ],
-      'qualityCOntrol' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(QualityControl::class)->create(['id' => 30])],
-      ],
-      'stockKeeper' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(StockKeeper::class)->create(['id' => 30])],
-      ],
-      'dispatchAdmin' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(DispatchAdmin::class)->create(['id' => 30])],
-      ],
-
-
-
-
-
-
-    ];
-  }
 }
