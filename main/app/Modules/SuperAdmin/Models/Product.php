@@ -949,9 +949,7 @@ class Product extends BaseModel
       }
     }
 
-    /**
-     * Create a sales record for the product
-     */
+    /** Create a sales record for the product */
     try {
       $product->product_sales_record()->create([
         'selling_price' => $request->selling_price,
@@ -966,9 +964,7 @@ class Product extends BaseModel
       return back()->withFlash(['error'=>['Could not create product sales record. Try again' . $th->getMessage()]]);
     }
 
-    /**
-     * Create or update the buyer's user profile using the email
-     */
+    /** Create or update the buyer's user profile using the email. phone or IG handle */
     try {
       $userData = [
         'email' => $request->email,
@@ -981,7 +977,7 @@ class Product extends BaseModel
         'password' => 'default'
       ];
 
-      $app_user = AppUser::wherePhone($request->phone)->orWhere('email', $request->email)->first();
+      $app_user = AppUser::wherePhone($request->phone)->orWhere('email', $request->email)->orWhere('ig_handle', $request->ig_handle)->first();
       if ($app_user) {
         $app_user->update($userData);
       } else {
