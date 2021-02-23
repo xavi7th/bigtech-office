@@ -149,6 +149,15 @@ class ProductExpense extends BaseModel
     }
   }
 
+  public function scopeToday($query)
+  {
+    return $query->whereDay('created_at', today());
+  }
+
+  public function scopeThisMonth($query)
+  {
+    return $query->whereMonth('created_at', today());
+  }
 
   protected static function boot()
   {
