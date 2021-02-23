@@ -40,6 +40,7 @@ use Cache;
  * @method static Builder|OtherExpense whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|OtherExpense withTrashed()
  * @method static \Illuminate\Database\Query\Builder|OtherExpense withoutTrashed()
+ * @method static Builder|OtherExpense thisMonth()
  * @mixin \Eloquent
  */
 class OtherExpense extends BaseModel

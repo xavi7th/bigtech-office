@@ -31,6 +31,8 @@ use App\Modules\SuperAdmin\Transformers\ProductExpenseTransformer;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereProductType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereReason($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense thisMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductExpense today()
  * @mixin \Eloquent
  */
 class ProductExpense extends BaseModel

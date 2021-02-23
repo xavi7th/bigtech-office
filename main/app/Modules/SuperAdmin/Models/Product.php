@@ -1136,6 +1136,16 @@ class Product extends BaseModel
     return $query->whereIsLocal(true)->whereIsPaid(false);
   }
 
+  public function scopeToday($query)
+  {
+    return $query->whereDay('created_at', today());
+  }
+
+  public function scopeThisMonth($query)
+  {
+    return $query->whereMonth('created_at', today());
+  }
+
   public function scopeSearch($query, $searchIndex, $searchParam)
   {
     return $searchParam ? (is_array($searchParam) ? $query->whereIn($searchIndex, $searchParam) : $query->where($searchIndex, 'LIKE', '%' . $searchParam . '%')) : $query;

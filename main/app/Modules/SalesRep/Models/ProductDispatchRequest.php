@@ -76,6 +76,7 @@ use App\Modules\DispatchAdmin\Transformers\ProductDispatcgRequestTransformer;
  * @method static \Illuminate\Database\Query\Builder|ProductDispatchRequest withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ProductDispatchRequest withoutTrashed()
  * @method static Builder|ProductDispatchRequest unprocessed()
+ * @method static Builder|ProductDispatchRequest processed()
  * @mixin \Eloquent
  */
 class ProductDispatchRequest extends Model
