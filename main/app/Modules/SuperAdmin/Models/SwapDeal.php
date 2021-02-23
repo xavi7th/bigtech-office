@@ -369,6 +369,7 @@ class SwapDeal extends BaseModel
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('accountant.products.')->group(function () {
         Route::put('{swapDeal:product_uuid}/confirm-sale', [self::class, 'confirmSwapDealSale'])->name('confirm_swap_sale')->defaults('ex', __e('ac', null, true));
+        Route::put('{swapDeal:product_uuid}/update-price', [self::class, 'editSwapDealPrice'])->name('edit_swap_deal')->defaults('ex', __e('ac,ss', 'refresh-cw', true));
       });
     });
   }
@@ -454,6 +455,26 @@ class SwapDeal extends BaseModel
     return Inertia::render('SuperAdmin,Products/EditSwapDealDetails', [
       'swapDealDetails' => $swapDeal
     ]);
+  }
+
+  public function editSwapDealPrice(Request $request, self $swapDeal)
+  {
+    $validatedData = $request->validate([
+      'description' => 'nullable|string',
+      'selling_price' => 'required|numeric|gte:' . $swapDeal->swap_value,
+    ]);
+    try {
+      $swapDeal->selling_price = $request->selling_price;
+      $swapDeal->description = $request->description;
+      $swapDeal->save();
+
+      if ($request->isApi()) return response()->json([], 204);
+      return back()->withFlash(['success' => 'Details updated']);
+    } catch (\Throwable $th) {
+      ErrLog::notifyAdmin(auth()->user(), $th, 'Swap details not updated');
+      if ($request->isApi()) return response()->json(['err' => 'Swap details not updated'], 500);
+      return back()->withFlash(['error' => ['Details not updated']]);
+    }
   }
 
   public function editSwapDeal(CreateSwapDealValidation $request, self $swapDeal)
