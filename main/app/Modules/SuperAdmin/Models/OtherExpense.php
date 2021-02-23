@@ -132,6 +132,11 @@ class OtherExpense extends BaseModel
     return $query->whereDay('created_at', today());
   }
 
+  public function scopeThisMonth($query)
+  {
+    return $query->whereMonth('created_at', today());
+  }
+
   /**
    * The "booted" method of the model.
    *
