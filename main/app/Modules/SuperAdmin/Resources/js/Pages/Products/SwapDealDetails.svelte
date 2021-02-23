@@ -157,7 +157,7 @@
             <td class="text-primary"><strong>Selling Price</strong></td>
             <th scope="row"><strong>{toCurrency(swapDeal.selling_price)}</strong></th>
           </tr>
-           {#if (auth.user.isAccountant || auth.user.isSuperAdmin)}
+           {#if (auth.user.isSuperAdmin)}
             <tr>
               <th scope="row" colspan="2" class="p-5">
                 <span><InertiaLink class="btn btn-warning btn-block text-center" href={route(auth.user.user_type + '.multiaccess.products.edit_swap_deal', swapDeal.uuid)}>Edit</InertiaLink></span>
