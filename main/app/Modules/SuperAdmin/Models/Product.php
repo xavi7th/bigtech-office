@@ -975,7 +975,12 @@ class Product extends BaseModel
         'password' => 'default'
       ];
 
-      $app_user = AppUser::wherePhone($request->phone)->orWhere('email', $request->email)->orWhere('ig_handle', $request->ig_handle)->first();
+      if ($request->ig_handle) {
+        $app_user = AppUser::wherePhone($request->phone)->orWhere('email', $request->email)->orWhere('ig_handle', $request->ig_handle)->first();
+      } else {
+        $app_user = AppUser::wherePhone($request->phone)->orWhere('email', $request->email)->first();
+      }
+
       if ($app_user) {
         $app_user->update($userData);
       } else {
