@@ -96,6 +96,7 @@ class Product extends BaseModel
     'storage_type_id' => 'int',
     'processor_speed_id' => 'int',
     'is_local' => 'bool',
+    'is_paid' => 'bool',
     'sold_at' => 'datetime',
   ];
 
@@ -706,11 +707,8 @@ class Product extends BaseModel
       DB::commit();
 
       return back()->withFlash(['success' => 'Product created']);
-    } catch (QueryException $th) {
-      ErrLog::notifyAdminAndFail($request->user(), $th, 'Local Product not created');
-      return back()->withFlash(['error' => ['Product not created' . $th->getMessage()]]);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail($request->user(), $th, 'Product not created');
+      ErrLog::notifyAdminAndFail($request->user(), $th, 'Local Product not created');
       return back()->withFlash(['error' => ['Product not created: ' . $th->getMessage()]]);
     }
   }
