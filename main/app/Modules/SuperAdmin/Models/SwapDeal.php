@@ -109,6 +109,8 @@ use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWithType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal thisMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal today()
  * @mixin \Eloquent
  */
 class SwapDeal extends BaseModel
@@ -146,6 +148,22 @@ class SwapDeal extends BaseModel
   public function productReceipt()
   {
     return $this->morphOne(ProductReceipt::class, 'product')->latest();
+  }
+
+  /**
+   * Mock a product price relationship fro swap deal to keep its API consistent with product
+   * ? The relationship query will always return null because swapdDealModel.product_price_id will always give null
+   * @uses select * from `product_prices` where `product_prices`.`id` is null and `product_prices`.`deleted_at` is null
+   *
+   */
+  public function product_price()
+  {
+    return $this->belongsTo(
+      ProductPrice::class
+    )->withDefault(function ($product_price, $swap_deal) {
+      $product_price->cost_price = $swap_deal->swap_value;
+      $product_price->proposed_selling_price = $swap_deal->selling_price;
+    });
   }
 
   public function product_model()
