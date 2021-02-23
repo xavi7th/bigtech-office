@@ -32,7 +32,6 @@ class CreateSwapDealValidation extends FormRequest
         'id_card' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         'receipt' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         'owner_details' => 'required|string',
-        'selling_price' => 'nullable|numeric',
         'swap_value' => 'required|numeric',
       ];
     } else {
