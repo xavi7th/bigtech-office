@@ -19,7 +19,7 @@ use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
 use App\Modules\StockKeeper\Models\StockKeeper;
-use App\Modules\SuperAdmin\Models\OfficeBranch;
+use App\Modules\SuperAdmin\Models\ProductBatch;
 use App\Modules\SuperAdmin\Models\ProductBrand;
 use App\Modules\SuperAdmin\Models\ProductColor;
 use App\Modules\SuperAdmin\Models\ProductGrade;
@@ -39,7 +39,6 @@ use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use App\Modules\SuperAdmin\Tests\Traits\PreparesToCreateProduct;
 use App\Modules\SuperAdmin\Tests\Traits\ProvidesDifferentUserDataTypes;
-use Illuminate\Auth\AuthenticationException;
 
 class ProductManagementTest extends TestCase
 {
@@ -72,6 +71,9 @@ class ProductManagementTest extends TestCase
     $this->assertCount(1, LocalProductPrice::all());
     $this->assertEquals(2000, Product::first()->cost_price);
     $this->assertEquals(5000, Product::first()->proposed_selling_price);
+    $this->assertEquals(true, Product::first()->is_local);
+    $this->assertEquals(false, Product::first()->is_paid);
+    $this->assertEquals(ProductBatch::local_supplied_id(), Product::first()->product_batch_id);
   }
 
   /**
