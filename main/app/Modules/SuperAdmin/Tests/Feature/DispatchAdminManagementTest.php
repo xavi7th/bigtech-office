@@ -90,7 +90,7 @@ class DispatchAdminManagementTest extends TestCase
 
     $this->assertCount(15, ProductDispatchRequest::all());
 
-    $rsp = $this->actingAs($dispatchAdmin, Str::snake(class_basename(get_class(($dispatchAdmin)))))->get(route(strtolower($dispatchAdmin->getType()) . '.dispatch_requests.view_dispatch_requests'))
+    $rsp = $this->actingAs($dispatchAdmin, Str::snake(class_basename(get_class(($dispatchAdmin)))))->get(route(strtolower($dispatchAdmin->getType()) . '.dispatch_requests.pending_dispatch_requests'))
     ->assertOk()
       ->assertSessionHasNoErrors()
       ->assertSessionMissing('flash.error');
