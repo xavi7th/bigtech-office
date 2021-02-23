@@ -143,13 +143,13 @@ mix
 			content: [
         path.join(__dirname, "main/app/Modules/**/*.php"),
         // path.join(__dirname, "main/app/Modules/**/*.html"),
-        // path.join(__dirname, "main/app/Modules/**/*.js"),
+        path.join(__dirname, "main/app/Modules/**/*.js"),
         path.join(__dirname, "main/app/Modules/**/*.svelte"),
       ],
 			safelist: {
 				standard: [/[pP]aginat(e|ion)/, /active/, /page/, /disabled/, /^dt-/],
 				deep: [/[dD]ata[tT]able/],
-				greedy: [/^dt/, /yay/, /fancy/, /modal/]
+				greedy: [/^dt/, /yay/, /fancy/, /modal/, /rui-chartist-donut/, /rui-widget/]
 			},
 			rejected: true,
 			variables: true

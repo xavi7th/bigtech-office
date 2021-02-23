@@ -1,7 +1,13 @@
 import { App } from '@inertiajs/inertia-svelte'
 import { InertiaProgress } from '@inertiajs/progress'
 import { Inertia } from "@inertiajs/inertia";
-import { initialiseDatatable, initialiseSwiper, initialiseBasicDataTable } from "@public-shared/actions";
+import {
+	initialiseDatatable,
+	initialiseSwiper,
+	initialiseBasicDataTable,
+	initialiseDonutChart,
+	initialiseLineChart
+} from "@public-shared/actions";
 import { getErrorString, mediaHandler } from "@public-shared/helpers";
 
 window.swal = require('sweetalert2')
@@ -29,6 +35,8 @@ window._ = {
 window.initialiseDatatable = initialiseDatatable;
 window.initialiseBasicDataTable = initialiseBasicDataTable;
 window.initialiseSwiper = initialiseSwiper;
+window.initialiseDonutChart = initialiseDonutChart;
+window.initialiseLineChart = initialiseLineChart;
 window.Toast = swal.mixin({
 	toast: true,
 	position: 'top-end',

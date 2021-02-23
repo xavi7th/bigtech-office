@@ -553,7 +553,7 @@ console.log('init-1');
 		function q() {
 			void 0 !== window.feather && window.feather.replace()
 		}
-		function at() {
+    function at() {
 			"undefined" != typeof Swiper && a(".rui-swiper:not(.rui-swiper-ready")
 				.addClass("rui-swiper-ready")
 				.each((function() {
@@ -640,10 +640,14 @@ console.log('init-1');
 			return e = t, (n = [{
 				key: "init",
 				value: function() {
-					return this.initNightMode(), this.initNavbar(), this.initDropdown(), this.initMessenger(),
-						this.initMailbox(), this.initTabsSliding(), this.initSpotlightMode(), this.initSectionLines(),
+          return this.initNightMode(), this.initNavbar(), this.initDropdown(),
+          	// this.initMessenger(),
+          	// this.initMailbox(),
+          	this.initTabsSliding(), this.initSpotlightMode(), this.initSectionLines(),
 						this.initPluginYaybar(), this.initPluginOverlayScrollbars(), this.initPluginFeather(),
-						this.initPluginHightlight(), this
+            this.initPluginHightlight(),
+            	// this.initPluginSwiper(),
+            	this
 				}
             }, {
 				key: "setOptions",

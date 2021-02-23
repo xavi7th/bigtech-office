@@ -47,182 +47,180 @@ const displayTableSum = (tableColumn) => {
 
 export const initialiseLineChart = () => {
 	// 		// Chart
-	// jQuery('.rui-chartjs')
-	// 	.each(function() {
-	// 		const $this = jQuery(this);
-	// 		const ctx = $this[0].getContext('2d');
+	jQuery('.rui-chartjs')
+		.each(function() {
+				const $this = jQuery(this);
+				const ctx = $this[0].getContext('2d');
 
-	// 		$this.attr('height', parseInt($this.attr('data-height'), 10));
+			$this.attr('height', parseInt($this.attr('data-height'), 10));
 
-	// 		// Line Realtime
-	// 		if ($this.hasClass('rui-chartjs-line')) {
-	// 			const dataInterval = parseInt($this.attr('data-chartjs-interval'), 10);
-	// 			const dataBorderColor = $this.attr('data-chartjs-line-color');
-	// 			const conf = {};
+			// Line Realtime
+			if ($this.hasClass('rui-chartjs-line')) {
+				const dataInterval = parseInt($this.attr('data-chartjs-interval'), 10);
+				const dataBorderColor = $this.attr('data-chartjs-line-color');
+				const conf = {};
 
-	// 			const gradient = ctx.createLinearGradient(0, 0, 0, 90);
-	// 			gradient.addColorStop(0, Chart.helpers.color(dataBorderColor)
-	// 				.alpha(0.1)
-	// 				.rgbString());
-	// 			gradient.addColorStop(1, Chart.helpers.color(dataBorderColor)
-	// 				.alpha(0)
-	// 				.rgbString());
+				const gradient = ctx.createLinearGradient(0, 0, 0, 90);
+				gradient.addColorStop(0, Chart.helpers.color(dataBorderColor)
+					.alpha(0.1)
+					.rgbString());
+				gradient.addColorStop(1, Chart.helpers.color(dataBorderColor)
+					.alpha(0)
+					.rgbString());
 
-	// 			const rand = () => Array.from({
-	// 				length: 40
-	// 			}, () => Math.floor(Math.random() * (100 - 40) + 40));
+				const rand = () => Array.from({
+					length: 40
+				}, () => Math.floor(Math.random() * (100 - 40) + 40));
 
-	// 			function addData(chart, data) {
-	// 				chart.data.datasets.forEach((dataset) => {
-	// 					let data = dataset.data;
-	// 					const first = data.shift();
-	// 					data.push(first);
-	// 					dataset.data = data;
-	// 				});
+				function addData(chart, data) {
+					chart.data.datasets.forEach((dataset) => {
+						let data = dataset.data;
+						const first = data.shift();
+						data.push(first);
+						dataset.data = data;
+					});
 
-	// 				chart.update();
-	// 			}
+					chart.update();
+					}
 
-	// 			conf.type = 'line';
-	// 			conf.data = {
-	// 				labels: rand(),
-	// 				datasets: [{
-	// 					backgroundColor: gradient,
-	// 					borderColor: dataBorderColor,
-	// 					borderWidth: 2,
-	// 					pointHitRadius: 5,
-	// 					pointBorderWidth: 0,
-	// 					pointBackgroundColor: 'transparent',
-	// 					pointBorderColor: 'transparent',
-	// 					pointHoverBorderWidth: 0,
-	// 					pointHoverBackgroundColor: dataBorderColor,
-	// 					data: rand(),
-	//                       }],
-	// 			};
-	// 			conf.options = {
-	// 				tooltips: {
-	// 					mode: 'index',
-	// 					intersect: false,
-	// 					backgroundColor: '#393f49',
-	// 					bodyFontSize: 11,
-	// 					bodyFontColor: '#d7d9e0',
-	// 					bodyFontFamily: '"Open Sans", sans-serif',
-	// 					xPadding: 10,
-	// 					yPadding: 10,
-	// 					displayColors: false,
-	// 					caretPadding: 5,
-	// 					cornerRadius: 4,
-	// 					callbacks: {
-	// 						title: () => {
-	// 							return;
-	// 						},
-	// 						label: (t) => {
-	// 							if ($this.hasClass('rui-chartjs-memory')) {
-	// 								return [`In use ${t.value}%`, `${t.value * 100} MB`];
-	// 							}
-	// 							if ($this.hasClass('rui-chartjs-disc')) {
-	// 								return [`Read ${Math.round((t.value / 80) * 100) / 100} MB/s`,
-	// 									`Write ${Math.round((t.value / 90) * 100) / 100} MB/s`];
-	// 							}
-	// 							if ($this.hasClass('rui-chartjs-cpu')) {
-	// 								return [`Utilization ${t.value}%`, `Processes ${parseInt((t.value / 10), 10)}`];
-	// 							}
-	// 							if ($this.hasClass('rui-chartjs-total')) {
-	// 								return `$${t.value}`;
-	// 							}
-	// 						}
-	// 					},
-	// 				},
-	// 				legend: {
-	// 					display: false,
-	// 				},
-	// 				maintainAspectRatio: true,
-	// 				spanGaps: false,
-	// 				plugins: {
-	// 					filler: {
-	// 						propagate: false,
-	// 					},
-	// 				},
-	// 				scales: {
-	// 					xAxes: [{
-	// 						display: false
-	//                           }],
-	// 					yAxes: [{
-	// 						display: false,
-	// 						ticks: {
-	// 							beginAtZero: true,
-	// 						},
-	//                           }],
-	// 				},
-	// 			};
-	// 			const myChart = new Chart(ctx, conf);
-	// 			setInterval(() => addData(myChart), dataInterval);
-	// 		}
-	// 	});
+				conf.type = 'line';
+				conf.data = {
+					labels: rand(),
+					datasets: [{
+						backgroundColor: gradient,
+						borderColor: dataBorderColor,
+						borderWidth: 2,
+						pointHitRadius: 5,
+						pointBorderWidth: 0,
+						pointBackgroundColor: 'transparent',
+						pointBorderColor: 'transparent',
+						pointHoverBorderWidth: 0,
+						pointHoverBackgroundColor: dataBorderColor,
+						data: rand(),
+	                      }],
+				};
+				conf.options = {
+					tooltips: {
+						mode: 'index',
+						intersect: false,
+						backgroundColor: '#393f49',
+						bodyFontSize: 11,
+						bodyFontColor: '#d7d9e0',
+						bodyFontFamily: '"Open Sans", sans-serif',
+						xPadding: 10,
+						yPadding: 10,
+						displayColors: false,
+						caretPadding: 5,
+						cornerRadius: 4,
+						callbacks: {
+							title: () => {
+								return;
+							},
+							label: (t) => {
+								if ($this.hasClass('rui-chartjs-memory')) {
+									return [`In use ${t.value}%`, `${t.value * 100} MB`];
+								}
+								if ($this.hasClass('rui-chartjs-disc')) {
+									return [`Read ${Math.round((t.value / 80) * 100) / 100} MB/s`,
+										`Write ${Math.round((t.value / 90) * 100) / 100} MB/s`];
+								}
+								if ($this.hasClass('rui-chartjs-cpu')) {
+									return [`Utilization ${t.value}%`, `Processes ${parseInt((t.value / 10), 10)}`];
+								}
+								if ($this.hasClass('rui-chartjs-total')) {
+									return `$${t.value}`;
+								}
+							}
+						},
+					},
+					legend: {
+						display: false,
+					},
+					maintainAspectRatio: true,
+					spanGaps: false,
+					plugins: {
+						filler: {
+							propagate: false,
+						},
+					},
+					scales: {
+						xAxes: [{
+							display: false
+	                          }],
+						yAxes: [{
+							display: false,
+							ticks: {
+								beginAtZero: true,
+							},
+	                          }],
+					},
+				};
+				const myChart = new Chart(ctx, conf);
+				setInterval(() => addData(myChart), dataInterval);
+				}
+				});
 }
 
 export const initialiseDonutChart = () => {
-
 	// Doughnut
+	jQuery('.rui-chartist')
+		.each(function() {
+				const $this = jQuery(this);
+				let dataSeries = $this.attr('data-chartist-series');
+				const dataWidth = $this.attr('data-width');
+				const dataHeight = $this.attr('data-height');
+				const dataGradient = $this.attr('data-chartist-gradient');
+				const dataBorderWidth = parseInt($this.attr('data-chartist-width'), 10);
+				const data = {};
+				const conf = {};
 
-	// jQuery('.rui-chartist')
-	// 	.each(function() {
-	// 		const $this = jQuery(this);
-	// 		let dataSeries = $this.attr('data-chartist-series');
-	// 		const dataWidth = $this.attr('data-width');
-	// 		const dataHeight = $this.attr('data-height');
-	// 		const dataGradient = $this.attr('data-chartist-gradient');
-	// 		const dataBorderWidth = parseInt($this.attr('data-chartist-width'), 10);
-	// 		const data = {};
-	// 		const conf = {};
+    // Data
+    if (dataSeries) {
+    	dataSeries = dataSeries.split(',');
+    	let dataSeriesNum = [];
+    	for (let i = 0; i < dataSeries.length; i++) {
+    		dataSeriesNum.push(parseInt(dataSeries[i], 10));
+    	}
+    	data.series = dataSeriesNum;
+    }
 
-	// 		// Data
-	// 		if (dataSeries) {
-	// 			dataSeries = dataSeries.split(',');
-	// 			let dataSeriesNum = [];
-	// 			for (let i = 0; i < dataSeries.length; i++) {
-	// 				dataSeriesNum.push(parseInt(dataSeries[i], 10));
-	// 			}
-	// 			data.series = dataSeriesNum;
-	// 		}
+    // Conf
+    conf.donut = true;
+    conf.showLabel = false;
 
-	// 		// Conf
-	// 		conf.donut = true;
-	// 		conf.showLabel = false;
+    if (dataBorderWidth) {
+    	conf.donutWidth = dataBorderWidth;
+    }
+    if (dataWidth) {
+    	conf.width = dataWidth;
+    }
+    if (dataHeight) {
+    	conf.height = dataHeight;
+    }
 
-	// 		if (dataBorderWidth) {
-	// 			conf.donutWidth = dataBorderWidth;
-	// 		}
-	// 		if (dataWidth) {
-	// 			conf.width = dataWidth;
-	// 		}
-	// 		if (dataHeight) {
-	// 			conf.height = dataHeight;
-	// 		}
+    const chart = new Chartist.Pie($this[0], data, conf);
 
-	// 		const chart = new Chartist.Pie($this[0], data, conf);
-
-	// 		// Create gradient
-	// 		chart.on('created', function(ctx) {
-	// 			const defs = ctx.svg.elem('defs');
-	// 			defs.elem('linearGradient', {
-	// 					id: 'gradient',
-	// 					x1: 0,
-	// 					y1: 1,
-	// 					x2: 0,
-	// 					y2: 0
-	// 				})
-	// 				.elem('stop', {
-	// 					offset: 0,
-	// 					'stop-color': dataGradient.split(';')[0]
-	// 				})
-	// 				.parent()
-	// 				.elem('stop', {
-	// 					offset: 1,
-	// 					'stop-color': dataGradient.split(';')[1]
-	// 				});
-	// 		});
-	// 	});
+    // Create gradient
+    chart.on('created', function(ctx) {
+    const defs = ctx.svg.elem('defs');
+    defs.elem('linearGradient', {
+    		id: 'gradient',
+    		x1: 0,
+    		y1: 1,
+    		x2: 0,
+    		y2: 0
+    	})
+    	.elem('stop', {
+    		offset: 0,
+    		'stop-color': dataGradient.split(';')[0]
+    	})
+    	.parent()
+    	.elem('stop', {
+    		offset: 1,
+    		'stop-color': dataGradient.split(';')[1]
+    	});
+    });
+    });
 }
 
 /**
@@ -348,7 +346,40 @@ export const initialiseServerSideDatatable = (elem, params = {}) => {
 }
 
 export const initialiseSwiper = (elem, params = {}) => {
-	var mySwiper = new Swiper(elem)
+		var mySwiper = new Swiper(elem, {
+			speed: params.speed || 400,
+			loop: params.loop || true,
+			initialSlide: params.initialSlide || 0,
+			slidesPerView: params.slides || 'auto',
+			navigation: {
+				nextEl: '.swiper-button-next',
+				prevEl: '.swiper-button-prev',
+			},
+			autoplay: {
+				delay: params.autoplay || 5000,
+			},
+			scrollbar: {
+				el: '.swiper-scrollbar',
+				draggable: true,
+			},
+			breakpoints: {
+				// when window width is >= 320px
+				320: {
+					slidesPerView: 2,
+					spaceBetween: 20
+				},
+				// when window width is >= 480px
+				480: {
+					slidesPerView: 3,
+					spaceBetween: 30
+				},
+				// when window width is >= 640px
+				640: {
+					slidesPerView: 4,
+					spaceBetween: 40
+				}
+			}
+		})
 }
 
 export const initialiseObjectFitImages = (elem, params = {}) => {
