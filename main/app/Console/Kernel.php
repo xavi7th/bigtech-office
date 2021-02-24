@@ -50,6 +50,8 @@ class Kernel extends ConsoleKernel
     //   $schedule->command('queue:restart')->hourly();
     //   $schedule->command('queue:work --sleep=3 --timeout=900 --queue=high,default,low')->runInBackground()->withoutOVerlapping()->everyMinute();
     // }
+
+    $schedule->command('telescope:prune  --hours=48')->daily();
   }
 
 
