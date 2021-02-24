@@ -34,9 +34,9 @@ class SalesRepManagementTest extends TestCase
 
     $page = $this->getResponseData($rsp);
 
-    $this->assertEquals('SalesRep,SalesRepDashboard', $page->component);
+    $this->assertEquals('SuperAdmin,Products/ListProducts', $page->component);
     $this->assertNull($page->props->errors);
-    $this->assertArrayHasKey('total_monthly_sale_count', (array)$page->props->statistics);
-    $this->assertArrayHasKey('total_monthly_sale_profit', (array)$page->props->statistics);
+    $this->assertArrayHasKey('products', (array)$page->props);
+    $this->assertCount(ProductModel::count(), (array)$page->props->products);
   }
 }

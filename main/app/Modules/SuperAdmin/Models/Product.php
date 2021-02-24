@@ -544,7 +544,7 @@ class Product extends BaseModel
 
   public function viewStockList(Request $request)
   {
-    $current_stock = Product::inStock()->with('product_model:id,name')->groupBy('product_model_id')->select('product_model_id', DB::raw('count(*) as total'))->get();
+    $current_stock = Cache::rememberForever('currentStock', fn () => Product::inStock()->with('product_model:id,name')->groupBy('product_model_id')->select('product_model_id', DB::raw('count(*) as total'))->get());
 
     return Inertia::render('SuperAdmin,Products/ViewStockAggregate', compact('current_stock'));
   }
