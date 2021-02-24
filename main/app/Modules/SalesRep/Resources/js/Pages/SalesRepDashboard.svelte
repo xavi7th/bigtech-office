@@ -8,11 +8,13 @@
 </script>
 
 <Layout title="SalesRep Dashboard">
-  <div class="rui-swiper" data-swiper-initialslide="2" data-swiper-loop="false" data-swiper-grabcursor="true"
-      data-swiper-center="true" data-swiper-slides="auto" data-swiper-gap="30" data-swiper-speed="400">
+  <!-- svelte-ignore missing-declaration -->
+  <div class="rui-swiper" use:initialiseDonutChart>
       <!-- svelte-ignore missing-declaration -->
-    <div class="swiper-container" use:initialiseSwiper>
+    <div class="swiper-container"  use:initialiseSwiper={{initialSlide:0, loop:true, grabcursor:true, center:false, slides:'auto', gap:30, speed:400}}>
+
       <div class="swiper-wrapper">
+
         <div class="swiper-slide">
           <div class="rui-widget rui-widget-chart">
             <div class="rui-widget-chart-info">
@@ -24,6 +26,7 @@
             </div>
           </div>
         </div>
+
         <div class="swiper-slide">
           <div class="rui-widget rui-widget-chart">
             <div class="rui-widget-chart-info">
@@ -35,6 +38,7 @@
             </div>
           </div>
         </div>
+
         <div class="swiper-slide">
           <div class="rui-widget rui-widget-chart">
             <div class="rui-widget-chart-info">
@@ -46,6 +50,7 @@
             </div>
           </div>
         </div>
+
         <div class="swiper-slide">
           <div class="rui-widget rui-widget-chart">
             <div class="rui-widget-chart-info">
@@ -57,12 +62,15 @@
             </div>
           </div>
         </div>
+
       </div>
+
     </div>
     <div class="swiper-button-next">
       <span data-feather="chevron-right" class="rui-icon rui-icon-stroke-1_5"></span>
     </div>
     <div class="swiper-button-prev"><span data-feather="chevron-left" class="rui-icon rui-icon-stroke-1_5"></span>
     </div>
-    </div>
+    <div class="swiper-scrollbar"></div>
+  </div>
 </Layout>
