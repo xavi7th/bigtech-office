@@ -17,6 +17,7 @@ use App\Providers\RouteServiceProvider;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Validation\ValidationException;
+use App\Modules\SuperAdmin\Events\UserLoggedIn;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Modules\SuperAdmin\Events\NotificationEvent;
 use App\Modules\SuperAdmin\Events\NotificationEvents;
@@ -94,7 +95,6 @@ class LoginController extends Controller
     }
 
     if ($this->attemptLogin($request)) {
-      event(NotificationEvents::LOGGED_IN, new NotificationEvent($this->authenticatedGuard()->user()));
       return $this->sendLoginResponse($request);
     }
 
@@ -201,6 +201,8 @@ class LoginController extends Controller
    */
   protected function authenticated(Request $request, User $user)
   {
+    event(new UserLoggedIn($user));
+
     if ($user->isAppUser()) {
       redirect()->intended(route($user->getDashboardRoute()));
     } else {

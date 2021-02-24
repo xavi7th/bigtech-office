@@ -114,9 +114,7 @@ class SuperAdminController extends Controller
 
   protected function getDashboardStatistics()
   {
-    ray()->clearAll();
-
-    Travel::to('- 13 days');
+    // Travel::to('- 13 days');
 
     $sales_record_today = ProductSaleRecord::with('product.product_price')->today()->get();
     $most_recent_sales = ProductSaleRecord::with('product.product_model', 'sales_rep')->today()->latest('id')->take(5)->get()->transform(fn ($record) => ['desc' => $record->product->shortDescription(), 'uuid' => $record->product->product_uuid, 'sales_rep' => $record->sales_rep->full_name]);

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
+use App\Modules\SuperAdmin\Providers\SuperAdminEventServiceProvider;
 
 class SuperAdminServiceProvider extends ServiceProvider
 {
@@ -45,7 +46,7 @@ class SuperAdminServiceProvider extends ServiceProvider
   {
     if (Str::contains(request()->url(), SuperAdmin::DASHBOARD_ROUTE_PREFIX) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
       $this->app->register(RouteServiceProvider::class);
-      $this->app->register(AdminEventServiceProvider::class);
+      $this->app->register(SuperAdminEventServiceProvider::class);
     }
   }
 

@@ -3,11 +3,11 @@
 namespace App\Modules\SuperAdmin\Listeners;
 
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Modules\SuperAdmin\Models\ActivityLog;
-use App\Modules\SuperAdmin\Events\NotificationEvent;
-use App\Modules\SuperAdmin\Events\NotificationEvents;
+use App\Modules\SuperAdmin\Events\UserLoggedIn;
 
-class NotificationEventSubscriber
+class UserEventSubscriber implements ShouldQueue
 {
 
   /**
@@ -17,11 +17,11 @@ class NotificationEventSubscriber
    */
   public function subscribe($events)
   {
-    $events->listen(NotificationEvents::LOGGED_IN, [self::class, 'onLoggedIn']);
+    $events->listen(UserLoggedIn::class, 'App\Modules\SuperAdmin\Listeners\UserEventSubscriber@onLoggedIn');
   }
 
 
-  static function onLoggedIn(NotificationEvent $event)
+  static function onLoggedIn(UserLoggedIn $event)
   {
     $message = $event->user->email  . ' logged into the ' . $event->user->getType() . ' dashboard';
     ActivityLog::notifySuperAdmins($message);

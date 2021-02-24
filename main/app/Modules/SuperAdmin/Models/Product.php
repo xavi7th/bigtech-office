@@ -13,7 +13,6 @@ use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
-use Illuminate\Database\QueryException;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
@@ -27,6 +26,7 @@ use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
 use App\Modules\SuperAdmin\Traits\Commentable;
 use Illuminate\Validation\ValidationException;
+use App\Modules\SuperAdmin\Events\ProductSaved;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\ProductBatch;
@@ -37,6 +37,7 @@ use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Models\ProductPrice;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
+use App\Modules\SuperAdmin\Events\ProductUpdated;
 use App\Modules\SuperAdmin\Models\ProcessorSpeed;
 use App\Modules\SuperAdmin\Models\ProductExpense;
 use App\Modules\SuperAdmin\Models\ProductHistory;
@@ -98,6 +99,11 @@ class Product extends BaseModel
     'is_local' => 'bool',
     'is_paid' => 'bool',
     'sold_at' => 'datetime',
+  ];
+
+  protected $dispatchesEvents = [
+    'updated' => ProductUpdated::class,
+    'saved' => ProductSaved::class,
   ];
 
   public function app_user()

@@ -21,7 +21,10 @@ use Illuminate\Validation\ValidationException;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
+use App\Modules\SuperAdmin\Events\ProductSaleRecordSaved;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
+use App\Modules\SuperAdmin\Events\ProductSaleRecordUpdated;
+use App\Modules\SuperAdmin\Events\ProductSaleRecordConfirmed;
 use App\Modules\AppUser\Notifications\ProductReceiptNotification;
 use App\Modules\SuperAdmin\Transformers\ProductSaleRecordTransformer;
 use App\Modules\SuperAdmin\Transformers\CompanyBankAccountTransformer;
@@ -101,6 +104,12 @@ class ProductSaleRecord extends BaseModel
     'walk_in_rep_bonus' => 'float',
     'online_rep_bonus' => 'float'
   ];
+
+  protected $dispatchesEvents = [
+    'updated' => ProductSaleRecordUpdated::class,
+    'saved' => ProductSaleRecordSaved::class,
+  ];
+
 
   // protected $with = ['bank_account_payments'];
 
@@ -350,6 +359,8 @@ class ProductSaleRecord extends BaseModel
       return back()->withFlash(['error' => ['Failed to send receipt to user because ' . $th->getMessage()]]);
     }
 
+    Cache::forget('bank_payments');
+    event(new ProductSaleRecordConfirmed($productSaleRecord));
 
     /**
      * Notify Admin that a product was sold
