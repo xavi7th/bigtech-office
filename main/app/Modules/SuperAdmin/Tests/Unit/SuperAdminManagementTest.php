@@ -6,6 +6,7 @@ use Carbon\Factory;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use RachidLaasri\Travel\Travel;
+use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
@@ -91,5 +92,25 @@ class SuperAdminManagementTest extends TestCase
     $this->assertEquals('SuperAdmin,Products/ViewStockAggregate', $page->component);
     $this->assertNull($page->props->errors);
     $this->assertArrayHasKey('current_stock', (array)$page->props);
+  }
+
+  /** @test */
+  public function super_admin_can_view_sales_reps_list()
+  {
+    $this->withoutExceptionHandling();
+
+    factory(OfficeBranch::class)->create();
+    factory(SalesRep::class, 20)->create();
+
+    $response = $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->get(route('superadmin.manage_staff.sales_reps'));
+
+    $page = $this->getResponseData($response);
+
+    // ray($page);
+
+    $this->assertEquals('SuperAdmin,ManageStaff/ManageSalesReps', $page->component);
+    $this->assertNull($page->props->errors);
+    /** Asserting 19 because of the globalQueryScope */
+    $this->assertCount(19, (array)$page->props->salesReps);
   }
 }

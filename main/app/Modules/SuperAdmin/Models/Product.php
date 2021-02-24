@@ -503,7 +503,9 @@ class Product extends BaseModel
 
     if ($request->user()->isStockKeeper()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
-    } elseif ($request->user()->isSalesRep()) {
+    } elseif ($request->user()->isOnlineSalesRep()) {
+      $products = fn () => ProductModel::with('product_brand:id,name')->get(['id', 'name', 'product_brand_id'])->transform(fn ($record) => ['model' => $record->name, 'brand' => $record->product_brand->name]);
+    } elseif ($request->user()->isWalkInRep()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isQualityControl()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');

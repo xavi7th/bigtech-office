@@ -2,34 +2,41 @@
 
 namespace App\Modules\SuperAdmin\Tests\Feature;
 
-use App\Modules\SalesRep\Models\SalesRep;
-use App\Modules\SuperAdmin\Models\OfficeBranch;
-use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Tests\TestCase;
+use Illuminate\Support\Str;
+use App\Modules\SalesRep\Models\SalesRep;
+use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Modules\SuperAdmin\Models\SuperAdmin;
+use App\Modules\SuperAdmin\Models\OfficeBranch;
+use App\Modules\SuperAdmin\Models\ProductModel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Modules\SuperAdmin\Tests\Traits\PreparesToCreateProduct;
 
 class SalesRepManagementTest extends TestCase
 {
-  use RefreshDatabase;
+  use RefreshDatabase, PreparesToCreateProduct;
 
-    /** @test */
-  public function function_super_admin_can_view_sales_reps_list()
+  /** @test */
+  public function a_social_media_rep_can_only_see_available_product_models_in_product_list()
   {
-    $this->withoutExceptionHandling();
-
+    $this->prepare_to_create_product();
     factory(OfficeBranch::class)->create();
-    factory(SalesRep::class, 20)->create();
+    factory(ProductModel::class, 123)->create();
+    factory(Product::class, 1000)->create();
+    /** @var SalesRep */
+    $salesRep = factory(SalesRep::class)->create(['unit' => 'social-media']);
 
-    $response = $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->get(route('superadmin.manage_staff.sales_reps'));
+    $rsp = $this->actingAs($salesRep, Str::snake(class_basename(get_class(($salesRep)))))->get(route(strtolower($salesRep->getType()) . '.multiaccess.products.view_products'))
+    ->assertOk()
+      ->assertSessionHasNoErrors()
+      ->assertSessionMissing('flash.error');
 
-    $page = $this->getResponseData($response);
+    $page = $this->getResponseData($rsp);
 
-    // ray($page);
-
-    $this->assertEquals('SuperAdmin,ManageStaff/ManageSalesReps', $page->component);
+    $this->assertEquals('SalesRep,SalesRepDashboard', $page->component);
     $this->assertNull($page->props->errors);
-    /** Asserting 19 because of the globalQueryScope */
-    $this->assertCount(19, (array)$page->props->salesReps);
+    $this->assertArrayHasKey('total_monthly_sale_count', (array)$page->props->statistics);
+    $this->assertArrayHasKey('total_monthly_sale_profit', (array)$page->props->statistics);
   }
 }
