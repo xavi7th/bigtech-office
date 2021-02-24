@@ -463,6 +463,7 @@ class Product extends BaseModel
       Route::get('', [self::class, 'getProducts'])->name('view_products')->defaults('ex', __e('ss,a,ac,d,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,admin,dispatch_admin,web_admin,accountant');
       Route::get('local-supplier-products', [self::class, 'getLocalProducts'])->name('pending_local_products')->defaults('ex', __e('ss,ac', 'box'))->middleware('auth:super_admin,accountant');
       Route::get('search', [self::class, 'findProduct'])->name('find_product')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+      Route::get('stock-list-aggregate', [self::class, 'viewStockList'])->name('view_stock')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,sk,a,ac', 'archive'))->middleware('auth:super_admin,stock_keeper,admin,accountant');
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac', 'archive', true))->middleware('auth:super_admin,admin,accountant');
@@ -537,6 +538,13 @@ class Product extends BaseModel
     $resellers = fn () => Cache::rememberForever('resellers', fn () => (new ResellerTransformer)->collectionTransformer(Reseller::all(), 'basic'));
 
     return Inertia::render('SuperAdmin,Products/ListProducts', compact('products', 'salesChannel', 'resellers', 'onlineReps'));
+  }
+
+  public function viewStockList(Request $request)
+  {
+    $current_stock = Product::inStock()->with('product_model:id,name')->groupBy('product_model_id')->select('product_model_id', DB::raw('count(*) as total'))->get();
+
+    return Inertia::render('SuperAdmin,Products/ViewStockAggregate', compact('current_stock'));
   }
 
   public function getLocalProducts(Request $request)

@@ -2,14 +2,17 @@
 
 namespace App\Modules\SuperAdmin\Tests\Unit;
 
-use App\Modules\SuperAdmin\Models\CompanyBankAccount;
+use Carbon\Factory;
 use Tests\TestCase;
 use Illuminate\Support\Str;
+use RachidLaasri\Travel\Travel;
+use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
+use App\Modules\SuperAdmin\Models\ProductModel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Tests\Traits\PreparesToCreateProduct;
-use RachidLaasri\Travel\Travel;
 
 class SuperAdminManagementTest extends TestCase
 {
@@ -18,10 +21,6 @@ class SuperAdminManagementTest extends TestCase
   /** @test */
   public function super_admin_can_visit_dashboard()
   {
-    ray()->clearAll();
-
-    Travel::to('-10 days');
-
     $this->prepare_to_create_product();
     factory(OfficeBranch::class)->create();
     /** @var SuperAdmin */
@@ -64,5 +63,33 @@ class SuperAdminManagementTest extends TestCase
     $this->assertArrayHasKey('live_account_pauments', (array)$page->props->statistics);
     /** +1 to make room for the total index merged into the payments breakdown array */
     $this->assertCount(CompanyBankAccount::count() + 1, (array)$page->props->statistics->payments_breakdown);
+  }
+
+  /** @test */
+  public function super_admin_should_be_able_to_see_stock_aggregate()
+  {
+    $this->withoutExceptionHandling();
+
+    $this->prepare_to_create_product();
+
+    factory(ProductModel::class, 10)->create();
+    factory(Product::class, 50)->create();
+
+    factory(OfficeBranch::class)->create();
+
+    $superAdmin = factory(SuperAdmin::class)->create();
+
+
+    $rsp = $this->actingAs($superAdmin, Str::snake(class_basename(get_class(($superAdmin)))))->get(route('superadmin.multiaccess.products.view_stock'))
+    ->assertOk()
+      ->assertSessionHasNoErrors()
+      ->assertSessionMissing('flash.error');
+
+
+    $page = $this->getResponseData($rsp);
+
+    $this->assertEquals('SuperAdmin,Products/ViewStockAggregate', $page->component);
+    $this->assertNull($page->props->errors);
+    $this->assertArrayHasKey('current_stock', (array)$page->props);
   }
 }
