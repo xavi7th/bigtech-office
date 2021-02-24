@@ -45,120 +45,117 @@ const displayTableSum = (tableColumn) => {
 	}
 }
 
-export const initialiseLineChart = () => {
-	// 		// Chart
-	jQuery('.rui-chartjs')
-		.each(function() {
-				const $this = jQuery(this);
-				const ctx = $this[0].getContext('2d');
+export const initialiseLineChart = (elem, params = {}) => {
+		// Chart
+		const $this = jQuery(elem);
+  const ctx = $this[0].getContext('2d');
 
-			$this.attr('height', parseInt($this.attr('data-height'), 10));
+  $this.attr('height', parseInt($this.attr('data-height'), 10));
 
-			// Line Realtime
-			if ($this.hasClass('rui-chartjs-line')) {
-				const dataInterval = parseInt($this.attr('data-chartjs-interval'), 10);
-				const dataBorderColor = $this.attr('data-chartjs-line-color');
-				const conf = {};
+  // Line Realtime
+  if ($this.hasClass('rui-chartjs-line')) {
+    const dataInterval = parseInt($this.attr('data-chartjs-interval'), 10);
+    const dataBorderColor = $this.attr('data-chartjs-line-color');
+    const conf = {};
 
-				const gradient = ctx.createLinearGradient(0, 0, 0, 90);
-				gradient.addColorStop(0, Chart.helpers.color(dataBorderColor)
-					.alpha(0.1)
-					.rgbString());
-				gradient.addColorStop(1, Chart.helpers.color(dataBorderColor)
-					.alpha(0)
-					.rgbString());
+    const gradient = ctx.createLinearGradient(0, 0, 0, 90);
+    gradient.addColorStop(0, Chart.helpers.color(dataBorderColor)
+      .alpha(0.1)
+      .rgbString());
+    gradient.addColorStop(1, Chart.helpers.color(dataBorderColor)
+      .alpha(0)
+      .rgbString());
 
-				const rand = () => Array.from({
-					length: 40
-				}, () => Math.floor(Math.random() * (100 - 40) + 40));
+    const rand = () => Array.from({
+      length: 40
+    }, () => Math.floor(Math.random() * (100 - 40) + 40));
 
-				function addData(chart, data) {
-					chart.data.datasets.forEach((dataset) => {
-						let data = dataset.data;
-						const first = data.shift();
-						data.push(first);
-						dataset.data = data;
-					});
+    function addData(chart, data) {
+      chart.data.datasets.forEach((dataset) => {
+        let data = dataset.data;
+        const first = data.shift();
+        data.push(first);
+        dataset.data = data;
+      });
 
-					chart.update();
-					}
+      chart.update();
+      }
 
-				conf.type = 'line';
-				conf.data = {
-					labels: rand(),
-					datasets: [{
-						backgroundColor: gradient,
-						borderColor: dataBorderColor,
-						borderWidth: 2,
-						pointHitRadius: 5,
-						pointBorderWidth: 0,
-						pointBackgroundColor: 'transparent',
-						pointBorderColor: 'transparent',
-						pointHoverBorderWidth: 0,
-						pointHoverBackgroundColor: dataBorderColor,
-						data: rand(),
-	                      }],
-				};
-				conf.options = {
-					tooltips: {
-						mode: 'index',
-						intersect: false,
-						backgroundColor: '#393f49',
-						bodyFontSize: 11,
-						bodyFontColor: '#d7d9e0',
-						bodyFontFamily: '"Open Sans", sans-serif',
-						xPadding: 10,
-						yPadding: 10,
-						displayColors: false,
-						caretPadding: 5,
-						cornerRadius: 4,
-						callbacks: {
-							title: () => {
-								return;
-							},
-							label: (t) => {
-								if ($this.hasClass('rui-chartjs-memory')) {
-									return [`In use ${t.value}%`, `${t.value * 100} MB`];
-								}
-								if ($this.hasClass('rui-chartjs-disc')) {
-									return [`Read ${Math.round((t.value / 80) * 100) / 100} MB/s`,
-										`Write ${Math.round((t.value / 90) * 100) / 100} MB/s`];
-								}
-								if ($this.hasClass('rui-chartjs-cpu')) {
-									return [`Utilization ${t.value}%`, `Processes ${parseInt((t.value / 10), 10)}`];
-								}
-								if ($this.hasClass('rui-chartjs-total')) {
-									return `$${t.value}`;
-								}
-							}
-						},
-					},
-					legend: {
-						display: false,
-					},
-					maintainAspectRatio: true,
-					spanGaps: false,
-					plugins: {
-						filler: {
-							propagate: false,
-						},
-					},
-					scales: {
-						xAxes: [{
-							display: false
-	                          }],
-						yAxes: [{
-							display: false,
-							ticks: {
-								beginAtZero: true,
-							},
-	                          }],
-					},
-				};
-				const myChart = new Chart(ctx, conf);
-				setInterval(() => addData(myChart), dataInterval);
-				}
-				});
+    conf.type = 'line';
+    conf.data = {
+      labels: params.data ? params.data.map(d => d.bank) : rand(),
+      datasets: [{
+        backgroundColor: gradient,
+        borderColor: dataBorderColor,
+        borderWidth: 2,
+        pointHitRadius: 5,
+        pointBorderWidth: 0,
+        pointBackgroundColor: 'transparent',
+        pointBorderColor: 'transparent',
+        pointHoverBorderWidth: 0,
+        pointHoverBackgroundColor: dataBorderColor,
+        data: params.data ? params.data.map(d => d.amount) : rand(),
+      }],
+    };
+    conf.options = {
+      tooltips: {
+        mode: 'index',
+        intersect: false,
+        backgroundColor: '#393f49',
+        bodyFontSize: 11,
+        bodyFontColor: '#d7d9e0',
+        bodyFontFamily: '"Open Sans", sans-serif',
+        xPadding: 10,
+        yPadding: 10,
+        displayColors: false,
+        caretPadding: 5,
+        cornerRadius: 4,
+        callbacks: {
+          title: () => {
+            return;
+          },
+          label: (t) => {
+            if ($this.hasClass('rui-chartjs-memory')) {
+              return [`In use ${t.value}%`, `${t.value * 100} MB`];
+            }
+            if ($this.hasClass('rui-chartjs-disc')) {
+              return [`Read ${Math.round((t.value / 80) * 100) / 100} MB/s`,
+                `Write ${Math.round((t.value / 90) * 100) / 100} MB/s`];
+            }
+            if ($this.hasClass('rui-chartjs-cpu')) {
+              return [`Utilization ${t.value}%`, `Processes ${parseInt((t.value / 10), 10)}`];
+            }
+            if ($this.hasClass('rui-chartjs-total')) {
+              return `${t.label}: ${toCurrency(t.value)}`;
+            }
+          }
+        },
+      },
+      legend: {
+        display: false,
+      },
+      maintainAspectRatio: true,
+      spanGaps: false,
+      plugins: {
+        filler: {
+          propagate: false,
+        },
+      },
+      scales: {
+        xAxes: [{
+          display: false
+        }],
+        yAxes: [{
+          display: false,
+          ticks: {
+            beginAtZero: true,
+          },
+        }],
+      },
+    };
+    const myChart = new Chart(ctx, conf);
+    setInterval(() => addData(myChart), dataInterval);
+  }
 }
 
 export const initialiseDonutChart = () => {
@@ -365,17 +362,17 @@ export const initialiseSwiper = (elem, params = {}) => {
 			breakpoints: {
 				// when window width is >= 320px
 				320: {
-					slidesPerView: 2,
+					slidesPerView: 1,
 					spaceBetween: 20
 				},
 				// when window width is >= 480px
 				480: {
-					slidesPerView: 3,
+					slidesPerView: 2,
 					spaceBetween: 30
 				},
 				// when window width is >= 640px
 				640: {
-					slidesPerView: 4,
+					slidesPerView: 5,
 					spaceBetween: 40
 				}
 			}

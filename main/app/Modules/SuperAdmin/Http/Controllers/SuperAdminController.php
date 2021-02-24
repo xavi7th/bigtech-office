@@ -4,9 +4,11 @@ namespace App\Modules\SuperAdmin\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use RachidLaasri\Travel\Travel;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Admin\Models\Admin;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
@@ -41,8 +43,8 @@ use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\QualityControl\Models\QualityControl;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
+use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
-use RachidLaasri\Travel\Travel;
 
 class SuperAdminController extends Controller
 {
@@ -54,6 +56,7 @@ class SuperAdminController extends Controller
       Route::group(['middleware' => ['auth:super_admin']], function () {
 
         Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss', 'home', true));
+        // Route::get('/dashboard-statistics/{date}', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss', 'home', true));
 
         SalesRep::superAdminRoutes();
         Admin::superAdminRoutes();
@@ -113,7 +116,8 @@ class SuperAdminController extends Controller
   {
     ray()->clearAll();
 
-    Travel::to('- 10 days');
+    Travel::to('- 13 days');
+
     $sales_record_today = ProductSaleRecord::with('product.product_price')->today()->get();
     $most_recent_sales = ProductSaleRecord::with('product.product_model', 'sales_rep')->today()->latest('id')->take(5)->get()->transform(fn ($record) => ['desc' => $record->product->shortDescription(), 'uuid' => $record->product->product_uuid, 'sales_rep' => $record->sales_rep->full_name]);
     $daily_expenses_list = OtherExpense::today()->get();
@@ -136,11 +140,11 @@ class SuperAdminController extends Controller
         'total_daily_confirmed_sale_amount' => (float)$sales_record_today->whereNotNull('sale_confirmed_by')->sum('selling_price'),
         'total_daily_unconfirmed_sale_count' => (int)$sales_record_today->whereNull('sale_confirmed_by')->count(),
         'total_daily_unconfirmed_sale_amount' => (float)$sales_record_today->whereNull('sale_confirmed_by')->sum('selling_price'),
-        'total_daily_sales_cost_price' => (float)$total_daily_sales_cost_price = $sales_record_today->sum('product.product_price.cost_price'),
+        'total_daily_sales_cost_price' => (float)$total_daily_sales_cost_price = $sales_record_today->sum('product.product_price.cost_price'), # Not Displayed
         'total_daily_sales_selling_price' => (float) $total_daily_sales_selling_price = $sales_record_today->sum('selling_price'),
-        'total_daily_sales_proposed_selling_price' => (float)$sales_record_today->sum('product.product_price.proposed_selling_price'),
-        'total_bank_payments' => (float)$payments_breakdown->except('Cash')->sum(),
-        'total_cash_payments' => (float)$cash_collected = $payments_breakdown->only('Cash')->sum(),
+        'total_daily_sales_proposed_selling_price' => (float)$sales_record_today->sum('product.product_price.proposed_selling_price'), # Not Displayed
+        'total_bank_payments' => (float)$payments_breakdown->except('Cash')->sum(), # Not Displayed
+        'total_cash_payments' => (float)$cash_collected = $payments_breakdown->only('Cash')->sum(), # Not Displayed
         'total_daily_sales_stock' => (float)$stock_sales_records->sum('selling_price'),
         'total_daily_sales_local_suppliers' => (float)$local_supplier_sales_records->sum('selling_price'),
         'total_daily_profit' => (float) $total_daily_sales_selling_price - $total_daily_sales_cost_price,
@@ -154,6 +158,7 @@ class SuperAdminController extends Controller
         'payments_breakdown' => collect($payments_breakdown)->merge(['total' => $payments_breakdown->sum()]),
         'daily_expenses_list' => collect($daily_expenses_list)->merge(['total' => $daily_expenses_list->sum('amount')]),
         'most_recent_sales' => $most_recent_sales,
+        'live_account_pauments' => Cache::rememberForever('bank_payments', fn () => SalesRecordBankAccount::with('company_bank_account')->today()->get()->transform(fn ($rec) => ['bank' => $rec->company_bank_account->bank, 'amount' => $rec->amount])),
       ]
     ];
   }
