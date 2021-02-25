@@ -167,7 +167,7 @@ if (!function_exists('generate_422_error')) {
   /**
    * Generate a 422 error in a format that axios and sweetalert 2 can display it
    *
-   * @param  mixed  $errors An array of errors to display
+   * @param  array|string  $errors An array of errors to display
    * @return Response
    */
   function generate_422_error($errors)

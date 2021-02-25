@@ -28,6 +28,7 @@
 		"orangehill/iseed": "^2.6",
 		"rachidlaasri/travel": "^1.0",
 		"spatie/laravel-backup": "^6.14",
+		"spatie/laravel-query-builder": "^3.3",
 		"tightenco/ziggy": "^1.0",
 		"tymon/jwt-auth": "^1.0",
 		"webparking/laravel-queue-ensurer": "^1.3",
