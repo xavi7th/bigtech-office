@@ -94,11 +94,6 @@ class SalesRep extends User
   protected $dates = ['dob'];
   const DASHBOARD_ROUTE_PREFIX = 'sales-reps';
 
-  public function is_verified(): bool
-  {
-    return $this->verified_at !== null;
-  }
-
   static function defaultSystemAccountId(): int
   {
     return 1;

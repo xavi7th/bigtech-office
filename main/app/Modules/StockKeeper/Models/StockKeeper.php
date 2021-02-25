@@ -3,9 +3,8 @@
 namespace App\Modules\StockKeeper\Models;
 
 use App\User;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
-use App\Modules\SuperAdmin\Models\ActivityLog;
+use App\Modules\SuperAdmin\Traits\IsAStaff;
 
 /**
  * App\Modules\StockKeeper\Models\StockKeeper
@@ -53,51 +52,13 @@ use App\Modules\SuperAdmin\Models\ActivityLog;
  */
 class StockKeeper extends User
 {
+  use IsAStaff;
+
   protected $fillable = [];
   const DASHBOARD_ROUTE_PREFIX = 'stock-panel';
 
-  public function is_verified()
-  {
-    return $this->verified_at !== null;
-  }
-
-  static function findByEmail(string $email)
-  {
-    return self::whereEmail($email)->first();
-  }
-
   static function superAdminRoutes()
   {
-    Route::name('superadmin.manage_staff.')->prefix('stock-keepers')->group(function () {
-      Route::put('{stockKeepers}/suspend', [self::class, 'suspendStockKeeper'])->name('stock_keeper.suspend');
-      Route::put('{stockKeeper}/restore', [self::class, 'restoreStockKeeper'])->name('stock_keeper.reactivate');
-    });
-  }
-
-  public function suspendStockKeeper(self $stockKeepers)
-  {
-    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $stockKeepers->email);
-
-    $stockKeepers->is_active = false;
-    $stockKeepers->save();
-
-    return back()->withFlash(['success'=>'User account suspended']);
-  }
-
-  public function restoreStockKeeper(self $stockKeeper)
-  {
-    $stockKeeper->is_active = true;
-    $stockKeeper->save();
-
-    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $stockKeeper->email);
-
-    return back()->withFlash(['success'=>'User account re-activated']);
-  }
-
-  protected static function booted()
-  {
-    static::addGlobalScope('safeRecords', function (Builder $builder) {
-      $builder->where('id', '>', 1);
-    });
+    self::staffRoutes();
   }
 }

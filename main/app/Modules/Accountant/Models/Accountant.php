@@ -3,10 +3,9 @@
 namespace App\Modules\Accountant\Models;
 
 use App\User;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
-use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\SuperAdmin\Traits\IsAStaff;
 
 /**
  * App\Modules\Accountant\Models\Accountant
@@ -56,6 +55,9 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
  */
 class Accountant extends User
 {
+
+  use IsAStaff;
+
   protected $fillable = [];
   const DASHBOARD_ROUTE_PREFIX = 'accountant-panel';
 
@@ -65,50 +67,8 @@ class Accountant extends User
     return $this->morphMany(ProductSaleRecord::class, 'sales_rep');
   }
 
-  public function is_verified()
-  {
-    return $this->verified_at !== null;
-  }
-
-
-  static function findByEmail(string $email)
-  {
-    return self::whereEmail($email)->first();
-  }
-
   static function superAdminRoutes()
   {
-    Route::name('superadmin.manage_staff.')->prefix('accountants')->group(function () {
-      Route::put('{accountant}/suspend', [self::class, 'suspendAccountant'])->name('accountant.suspend');
-      Route::put('{accountant}/restore', [self::class, 'restoreAccountant'])->name('accountant.reactivate');
-    });
-  }
-
-  public function suspendAccountant(self $accountant)
-  {
-    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $accountant->email);
-
-    $accountant->is_active = false;
-    $accountant->save();
-
-    return back()->withFlash(['success'=>'User account suspended']);
-  }
-
-  public function restoreAccountant(self $accountant)
-  {
-    $accountant->is_active = true;
-    $accountant->save();
-
-    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $accountant->email);
-
-    return back()->withFlash(['success'=>'User account re-activated']);
-  }
-
-
-  protected static function booted()
-  {
-    static::addGlobalScope('safeRecords', function (Builder $builder) {
-      $builder->where('id', '>', 1);
-    });
+    self::staffRoutes();
   }
 }

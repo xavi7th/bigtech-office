@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 
 /**
@@ -14,6 +15,16 @@ use App\Modules\SuperAdmin\Models\ActivityLog;
  */
 trait IsAStaff
 {
+
+  static function findByEmail(string $email)
+  {
+    return self::whereEmail($email)->first();
+  }
+
+  public function is_verified()
+  {
+    return $this->verified_at !== null;
+  }
 
   /**
    * @use self::staffRoutes() after the get route group
@@ -131,5 +142,12 @@ trait IsAStaff
     $staff->forceDelete();
 
     return back()->withFlash(['success' => 'User account deleted']);
+  }
+
+  protected static function booted()
+  {
+    static::addGlobalScope('safeRecords', function (Builder $builder) {
+      $builder->where('id', '>', 1);
+    });
   }
 }

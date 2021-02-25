@@ -116,6 +116,8 @@ class GeneralUserTest extends TestCase
    */
   public function admin_can_restore_suspended_user($dataSource)
   {
+    $this->withoutExceptionHandling();
+
     [$location, $user] = $dataSource();
     $user->is_active = false;
     $user->save();

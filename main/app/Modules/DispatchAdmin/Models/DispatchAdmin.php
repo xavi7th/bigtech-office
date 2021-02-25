@@ -3,9 +3,8 @@
 namespace App\Modules\DispatchAdmin\Models;
 
 use App\User;
-use Illuminate\Support\Facades\Route;
-use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\SuperAdmin\Traits\IsAStaff;
 
 /**
  * App\Modules\DispatchAdmin\Models\DispatchAdmin
@@ -55,52 +54,18 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
  */
 class DispatchAdmin extends User
 {
+  use IsAStaff;
+
   protected $fillable = [];
   const DASHBOARD_ROUTE_PREFIX = 'dispatch-admins';
-
-  public function is_verified()
-  {
-    return $this->verified_at !== null;
-  }
 
   public function product_sales_record()
   {
     return $this->morphMany(ProductSaleRecord::class, 'sales_rep');
   }
 
-
-  static function findByEmail(string $email)
-  {
-    return self::whereEmail($email)->first();
-  }
-
-
   static function superAdminRoutes()
   {
-    Route::name('superadmin.manage_staff.')->prefix('dispatch-admins')->group(function () {
-      Route::put('{dispatchAdmin}/suspend', [self::class, 'suspendDispatchAdmin'])->name('dispatch_admin.suspend');
-      Route::put('{dispatchAdmin}/restore', [self::class, 'restoreDispatchAdmin'])->name('dispatch_admin.reactivate');
-    });
+    self::staffRoutes();
   }
-
-  public function suspendDispatchAdmin(self $dispatchAdmin)
-  {
-    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $dispatchAdmin->email);
-
-    $dispatchAdmin->is_active = false;
-    $dispatchAdmin->save();
-
-    return back()->withFlash(['success'=>'User account suspended']);
-  }
-
-  public function restoreDispatchAdmin(self $dispatchAdmin)
-  {
-    $dispatchAdmin->is_active = true;
-    $dispatchAdmin->save();
-
-    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $dispatchAdmin->email);
-
-    return back()->withFlash(['success'=>'User account re-activated']);
-  }
-
 }
