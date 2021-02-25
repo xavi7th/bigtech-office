@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
+use App\Modules\SuperAdmin\Traits\IsAStaff;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
@@ -84,6 +85,9 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  */
 class SalesRep extends User
 {
+
+  use IsAStaff;
+
   protected $fillable = [
     'role_id', 'full_name', 'email', 'password', 'phone', 'avatar', 'gender', 'address',
   ];
@@ -127,17 +131,13 @@ class SalesRep extends User
 
   static function superAdminRoutes()
   {
-    Route::name('superadmin.manage_staff.')->prefix('sales-reps')->group(function () {
-      Route::get('', [self::class, 'getAllSalesReps'])->name('sales_reps')->defaults('ex', __e('ss', 'aperture'));
-      Route::post('create', [self::class, 'createSalesRep'])->name('sales_rep.create');
-      Route::put('{salesRep}/edit', [self::class, 'editSalesRep'])->name('sales_rep.edit');
-      Route::put('{salesRep}/suspend', [self::class, 'suspendSalesRep'])->name('sales_rep.suspend');
-      Route::put('{salesRep}/restore', [self::class, 'restoreSalesRep'])->name('sales_rep.reactivate');
-      Route::delete('{salesRep}/delete', [self::class, 'deleteSalesRep'])->name('sales_rep.delete');
-    });
+    // Route::name('superadmin.manage_staff.')->prefix('sales-reps')->group(function () {
+    self::staffRoutes();
+    // });
   }
 
-  public function getAllSalesReps(Request $request)
+  /** Overide trait method */
+  public function getAllStaff(Request $request)
   {
     $salesReps =
       // Cache::rememberForever('allSalesReps', fn() =>
@@ -157,12 +157,12 @@ class SalesRep extends User
           'onlineSalesRecords AS monthly_online_sales_count' => fn ($query) => $query->thisMonth(),
           'walkInSalesRecords AS monthly_walk_in_sales_count' => fn ($query) => $query->thisMonth(),
 
-        'onlineSalesRecords AS last_month_online_sales_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(selling_price)')),
-        'walkInSalesRecords AS last_month_walk_in_sales_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(selling_price)')),
-        'onlineSalesRecords AS last_month_online_sales_bonus_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(online_rep_bonus)')),
-        'walkInSalesRecords AS last_month_walk_in_sales_bonus_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(walk_in_rep_bonus)')),
-        'onlineSalesRecords AS last_month_online_sales_count' => fn ($query) => $query->lastMonth(),
-        'walkInSalesRecords AS last_month_walk_in_sales_count' => fn ($query) => $query->lastMonth(),
+          'onlineSalesRecords AS last_month_online_sales_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(selling_price)')),
+          'walkInSalesRecords AS last_month_walk_in_sales_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(selling_price)')),
+          'onlineSalesRecords AS last_month_online_sales_bonus_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(online_rep_bonus)')),
+          'walkInSalesRecords AS last_month_walk_in_sales_bonus_amount' => fn ($query) => $query->lastMonth()->select(DB::raw('SUM(walk_in_rep_bonus)')),
+          'onlineSalesRecords AS last_month_online_sales_count' => fn ($query) => $query->lastMonth(),
+          'walkInSalesRecords AS last_month_walk_in_sales_count' => fn ($query) => $query->lastMonth(),
 
           'onlineSalesRecords AS today_online_sales_count' => fn ($query) => $query->today(),
           'walkInSalesRecords AS today_walk_in_sales_count' => fn ($query) => $query->today(),
@@ -170,101 +170,15 @@ class SalesRep extends User
           'walkInSalesRecords AS today_walk_in_sales_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(selling_price)')),
           'onlineSalesRecords AS today_online_sales_bonus_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(online_rep_bonus)')),
           'walkInSalesRecords AS today_walk_in_sales_bonus_amount' => fn ($query) => $query->today()->select(DB::raw('SUM(walk_in_rep_bonus)')),
-      ])->withTrashed()->get(),
+        ])->withTrashed()->get(),
         'transformForSuperAdminViewSalesReps'
       );
     // });
 
     if ($request->isApi())  return response()->json($salesReps, 200);
     return Inertia::render('SuperAdmin,ManageStaff/ManageSalesReps', compact('salesReps'));
-
   }
 
-  public function createSalesRep(Request $request)
-  {
-    $validated = $request->validate([
-      'full_name' => 'required|string|max:20',
-      'email' => 'required|email|max:50|unique:sales_reps,email',
-      'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-      'password' => ''
-    ]);
-
-    $validated['password'] = 'sales-reps';
-
-    if ($request->hasFile('avatar')) {
-      $validated['avatar'] = compress_image_upload('avatar', 'user-avatars/', 'user-avatars/thumbs/', 1400, true, 50)['img_url'];
-    }
-
-    try {
-
-      $salesRep = self::create($validated);
-
-      ActivityLog::notifySuperAdmins($request->user()->full_name . ' created a sales rep account for ' . $salesRep->full_name);
-
-      return back()->withFlash(['success'=>'Sales rep account created']);
-    } catch (Throwable $e) {
-      if (app()->environment() == 'local') {
-        return back()->withFlash(['error'=>$e->getMessage()]);
-      }
-      return back()->withFlash(['error'=>'Error occurred']);
-    }
-  }
-
-  public function editSalesRep(Request $request, self $salesRep)
-  {
-    $validated = $request->validate([
-      'full_name' => 'required|string|max:20',
-      'email' => 'required|email|max:50|unique:sales_reps,email,' . $salesRep->id,
-      'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-    ]);
-
-    if ($request->hasFile('avatar')) {
-      $validated['avatar'] = compress_image_upload('avatar', 'user-avatars/', 'user-avatars/thumbs/', 1400, true, 50)['img_url'];
-    }
-
-    try {
-
-      $salesRep->update($validated);
-
-      ActivityLog::notifySuperAdmins($request->user()->full_name . ' updated the sales rep account for ' . $salesRep->full_name);
-
-      return back()->withFlash(['success'=>'Sales rep account updated']);
-    } catch (Throwable $e) {
-      if (app()->environment() == 'local') {
-        return back()->withFlash(['error'=>$e->getMessage()]);
-      }
-      return back()->withFlash(['error'=>'Error occurred']);
-    }
-  }
-
-  public function suspendSalesRep(self $salesRep)
-  {
-    ActivityLog::logUserActivity(auth()->user()->email . ' suspended the account of ' . $salesRep->email);
-
-    $salesRep->is_active = false;
-    $salesRep->save();
-
-    return back()->withFlash(['success'=>'User account suspended']);
-  }
-
-  public function restoreSalesRep(self $salesRep)
-  {
-    $salesRep->is_active = true;
-    $salesRep->save();
-
-    ActivityLog::logUserActivity(auth()->user()->email . ' restored the account of ' . $salesRep->email);
-
-    return back()->withFlash(['success'=>'User account re-activated']);
-  }
-
-  public function deleteSalesRep(self $salesRep)
-  {
-    ActivityLog::logUserActivity(auth()->user()->email . ' permanently deleted the account of ' . $salesRep->email);
-
-    $salesRep->forceDelete();
-
-    return back()->withFlash(['success'=>'User account deleted']);
-  }
 
   public function scopeSocialMedia($query)
   {

@@ -122,7 +122,7 @@ class GeneralUserTest extends TestCase
     ray($user);
     $superAdmin = factory(SuperAdmin::class)->create();
 
-    $response = $this->actingAs($superAdmin, 'super_admin')->put(route('superadmin.manage_staff.' . Str::snake(class_basename(get_class(($user)))) . '.reactivate', $user));
+    $response = $this->actingAs($superAdmin, 'super_admin')->put(route('superadmin.manage_staff.' . Str::of(class_basename(get_class(($user))))->snake()->plural() . '.reactivate', $user));
     $user->refresh();
     $response->assertSessionHasNoErrors();
     $response->assertRedirect();

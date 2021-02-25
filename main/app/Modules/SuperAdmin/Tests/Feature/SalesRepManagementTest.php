@@ -23,7 +23,7 @@ class SalesRepManagementTest extends TestCase
     $this->prepare_to_create_product();
     factory(OfficeBranch::class)->create();
     factory(ProductModel::class, 123)->create();
-    factory(Product::class, 1000)->create();
+    factory(Product::class, 100)->create();
     /** @var SalesRep */
     $salesRep = factory(SalesRep::class)->create(['unit' => 'social-media']);
 

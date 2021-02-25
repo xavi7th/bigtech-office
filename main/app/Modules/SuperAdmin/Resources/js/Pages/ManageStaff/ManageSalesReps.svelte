@@ -24,7 +24,7 @@
     });
 
     Inertia.post(
-      route("superadmin.manage_staff.sales_rep.create"),
+      route("superadmin.manage_staff.sales_reps.create"),
       formData,
       {
         preserveState: true,
@@ -58,7 +58,7 @@
     formData.append("_method", "PUT");
 
     Inertia.post(
-      route("superadmin.manage_staff.sales_rep.edit", details.id),
+      route("superadmin.manage_staff.sales_reps.edit", details.id),
       formData,
       {
         preserveState: true,
@@ -94,7 +94,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.put(
-            route("superadmin.manage_staff.sales_rep.suspend", id),
+            route("superadmin.manage_staff.sales_reps.suspend", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -132,7 +132,7 @@
         showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.put(
-            route("superadmin.manage_staff.sales_rep.reactivate", id),
+            route("superadmin.manage_staff.sales_reps.reactivate", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -226,6 +226,9 @@
                  {salesRep.full_name}
                  <br />
                   <span>{salesRep.email}</span>
+                  {#if salesRep.is_deleted}
+                    <span class="badge badge-pill badge-danger ml-5">Deleted</span>
+                  {/if}
                 </td>
                 <td class="text-nowrap">
                   {#if salesRep.is_online_sales_rep}
@@ -235,52 +238,54 @@
                   {/if}
                 </td>
                 <td class="d-flex justify-content-between align-content-center">
-                   <button
-                    type="button"
-                    class="btn btn-primary btn-xs"
-                    data-toggle="modal"
-                    data-target="#viewSalesRepStatistics"
-                    on:click={() => {
-                      salesRepStatistics = salesRep.statistics;
-                      salesRepStatistics.full_name = salesRep.full_name;
-                      salesRepStatistics.is_online_sales_rep = salesRep.is_online_sales_rep;
-                    }}>
-                    Statistics
-                  </button>
-                  {#if salesRep.is_suspended}
+                  {#if !salesRep.is_deleted}
                     <button
                       type="button"
-                      class="btn btn-success btn-xs"
+                      class="btn btn-primary btn-xs"
+                      data-toggle="modal"
+                      data-target="#viewSalesRepStatistics"
                       on:click={() => {
-                        restoreSalesRep(salesRep.id);
+                        salesRepStatistics = salesRep.statistics;
+                        salesRepStatistics.full_name = salesRep.full_name;
+                        salesRepStatistics.is_online_sales_rep = salesRep.is_online_sales_rep;
                       }}>
-                      RE-ACTIVATE
+                      Statistics
                     </button>
-                  {:else}
+                    {#if salesRep.is_suspended}
+                      <button
+                        type="button"
+                        class="btn btn-success btn-xs nowrap"
+                        on:click={() => {
+                          restoreSalesRep(salesRep.id);
+                        }}>
+                        RE-ACTIVATE
+                      </button>
+                    {:else}
+                      <button
+                        type="button"
+                        class="btn btn-danger btn-xs"
+                        on:click={() => {
+                          suspendSalesRep(salesRep.id);
+                        }}>
+                        SUSPEND
+                      </button>
+                    {/if}
+                    <!-- <InertiaLink
+                      href={route('superadmin.product_sales_records.sales_reps.today', [salesRep.id])}
+                      class="btn btn-brand btn-xs text-nowrap">
+                      Today's Transactions
+                    </InertiaLink> -->
                     <button
                       type="button"
-                      class="btn btn-danger btn-xs"
+                      class="btn btn-warning btn-xs"
+                      data-toggle="modal"
+                      data-target="#updateSalesRep"
                       on:click={() => {
-                        suspendSalesRep(salesRep.id);
+                        details = salesRep;
                       }}>
-                      SUSPEND
+                      EDIT
                     </button>
                   {/if}
-                  <!-- <InertiaLink
-                    href={route('superadmin.product_sales_records.sales_rep.today', [salesRep.id])}
-                    class="btn btn-brand btn-xs text-nowrap">
-                    Today's Transactions
-                  </InertiaLink> -->
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-xs"
-                    data-toggle="modal"
-                    data-target="#updateSalesRep"
-                    on:click={() => {
-                      details = salesRep;
-                    }}>
-                    EDIT
-                  </button>
                 </td>
               </tr>
             {:else}

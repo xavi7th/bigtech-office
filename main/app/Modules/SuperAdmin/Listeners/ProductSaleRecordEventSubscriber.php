@@ -37,13 +37,13 @@ class ProductSaleRecordEventSubscriber
 
   static function onProductSaleRecordUpdated(ProductSaleRecordUpdated $event)
   {
-    dd('here');
+    // dd('here56');
   }
 
 
   static function onProductSaleRecordSaved(ProductSaleRecordSaved $event)
   {
-    dd('here');
+    // dd('heretr');
   }
 
   static function onProductSaleRecordConfirmed(ProductSaleRecordConfirmed $event)
