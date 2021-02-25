@@ -12,8 +12,8 @@ return [
   // Configure the number of processes you want to run per queue or
   // alternatively, define a more in depth configuration.
   'queues' => [
-    'default' => 1,
-    'high' => 2,
+    'default' => 2,
+    'high' => 4,
     'low' => 1,
     // 'another' => [
     //     'amount' => 1, // The number of processes you want to run.

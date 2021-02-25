@@ -46,8 +46,11 @@ class SuperAdminServiceProvider extends ServiceProvider
   {
     if (Str::contains(request()->url(), SuperAdmin::DASHBOARD_ROUTE_PREFIX) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
       $this->app->register(RouteServiceProvider::class);
-      $this->app->register(SuperAdminEventServiceProvider::class);
     }
+    /**
+     * ? Always register the service provider irrespevctive of the current user cos they all need them
+     */
+    $this->app->register(SuperAdminEventServiceProvider::class);
   }
 
   /**

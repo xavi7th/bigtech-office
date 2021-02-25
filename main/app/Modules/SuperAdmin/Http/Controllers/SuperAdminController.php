@@ -45,6 +45,7 @@ use App\Modules\QualityControl\Models\QualityControl;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
+use App\Modules\SuperAdmin\Providers\SuperAdminEventServiceProvider;
 
 class SuperAdminController extends Controller
 {

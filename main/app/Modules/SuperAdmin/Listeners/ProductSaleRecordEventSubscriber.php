@@ -6,11 +6,12 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Events\ProductSaleRecordSaved;
 use App\Modules\SuperAdmin\Events\ProductSaleRecordUpdated;
 use App\Modules\SuperAdmin\Events\ProductSaleRecordConfirmed;
 
-class ProductSaleRecordEventSubscriber
+class ProductSaleRecordEventSubscriber implements ShouldQueue
 {
   /**
    * Create the event listener.
@@ -29,7 +30,7 @@ class ProductSaleRecordEventSubscriber
    */
   public function subscribe($events)
   {
-    $events->listen(ProductSaleRecordConfirmed::class, [self::class, 'onProductSaleRecordConfirmed']);
+    $events->listen(ProductSaleRecordConfirmed::class, 'App\Modules\SuperAdmin\Listeners\ProductSaleRecordEventSubscriber@onProductSaleRecordConfirmed');
     $events->listen(ProductSaleRecordUpdated::class, 'App\Modules\SuperAdmin\Listeners\ProductSaleRecordEventSubscriber@onProductSaleRecordUpdated');
     $events->listen(ProductSaleRecordSaved::class, 'App\Modules\SuperAdmin\Listeners\ProductSaleRecordEventSubscriber@onProductSaleRecordSaved');
   }
@@ -50,5 +51,9 @@ class ProductSaleRecordEventSubscriber
   {
     dd($event);
     Cache::forget('bank_payments');
+
+    ActivityLog::notifySuperAdmins(auth()->user()->email . ' confirmed the sale of product with ' . $$event->product_sale_record->product->primary_identifier() . '.');
+    ActivityLog::notifyAccountants(auth()->user()->email . ' confirmed the sale of product with ' . $$event->product_sale_record->product->primary_identifier() . '.');
+
   }
 }

@@ -359,18 +359,7 @@ class ProductSaleRecord extends BaseModel
       return back()->withFlash(['error' => ['Failed to send receipt to user because ' . $th->getMessage()]]);
     }
 
-    Cache::forget('bank_payments');
     event(new ProductSaleRecordConfirmed($productSaleRecord));
-
-    /**
-     * Notify Admin that a product was sold
-     */
-    ActivityLog::notifySuperAdmins(auth()->user()->email . ' confirmed the sale of product with ' . $product->primary_identifier() . '.');
-
-    /**
-     * Notify Accountant that a product was marked as sold
-     */
-    ActivityLog::notifyAccountants(auth()->user()->email . ' confirmed the sale of product with ' . $product->primary_identifier() . '.');
 
     DB::commit();
 
