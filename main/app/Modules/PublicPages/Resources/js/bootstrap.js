@@ -128,7 +128,7 @@ Inertia.on('error', (e) => {
     icon: "error",
     timer:10000, //milliseconds
     footer:
-    	`Our support email: &nbsp;&nbsp;&nbsp; <a target="_blank" href="mailto:hello@theelects.com">hello@theelects.com</a>`,
+    	`Our support email: &nbsp;&nbsp;&nbsp; <a target="_blank" href="mailto:hello@bigtech.website">hello@bigtech.website</a>`,
   } );
 })
 

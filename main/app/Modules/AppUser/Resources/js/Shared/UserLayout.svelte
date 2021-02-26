@@ -33,10 +33,10 @@
       <div class="logo d-flex justify-content-center mb-30">
         <InertiaLink href={route('app.home')}>
           <img
-            src="/img/the-elects-logo.png"
+            src="/img/the-bigtech-logo.png"
             alt={app.name}
             class="logo-img"
-            width="100" />
+            width="200" />
         </InertiaLink>
       </div>
       <slot></slot>

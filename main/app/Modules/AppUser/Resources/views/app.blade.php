@@ -18,7 +18,7 @@
 	<meta property="og:url" content="{{ $ogUrl ?? route('app.login') }}" />
 	<meta property="og:title" content="{{ $title ?? ''}} | {{config('app.name') }}" />
 	<meta property="og:description" content="{{$metaDesc ?? 'Sales of phones etc '}}" />
-	<meta property="og:image" content="{{ asset($ogImg ?? '/img/the-elects-logo.png') }}" />
+	<meta property="og:image" content="{{ asset($ogImg ?? '/img/the-bigtech-logo.png') }}" />
 
 	<link rel="canonical" href="{{ $cononical ?? route('app.home')}}" />
 	<link rel="icon" type="image/png" href="{{ asset('/img/favicon.png') }}">
@@ -28,7 +28,7 @@
 	<script src="{{ mix('/js/manifest.js') }}" defer></script>
 	<script src="{{ mix('/js/vendor.js') }}" defer></script>
 	<script src="{{ mix('js/dashboard-app.js') }}" defer></script>
-  <link rel="stylesheet" href="{{ mix('css/dashboard-app.css') }}">
+	<link rel="stylesheet" href="{{ mix('css/dashboard-app.css') }}">
 </head>
 
 <body data-spy="scroll" data-target=".rui-page-sidebar" data-offset="140"

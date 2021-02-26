@@ -88,18 +88,6 @@
   .rui-sign-form-cloud {
     max-width: 410px;
   }
-
-  .rui-social-links {
-    display: flex;
-    justify-content: space-evenly;
-
-    li {
-      padding: 0;
-    }
-    &:after {
-      content: none;
-    }
-  }
 </style>
 
 <Layout title="Login Page">

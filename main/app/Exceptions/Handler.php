@@ -61,6 +61,7 @@ class Handler extends ExceptionHandler
    */
   public function render($request, Throwable $exception)
   {
+
     $response = parent::render($request, $exception);
 
     if (($request->ajax() || $request->expectsJson()) && !$request->header('X-Inertia')) {
@@ -94,27 +95,6 @@ class Handler extends ExceptionHandler
         return response()->json(['message' => 'An error occured'], 500);
       }
     }
-    // elseif (
-    //   // (App::environment('production')) &&
-    //   // $request->header('X-Inertia') &&
-    //   in_array($response->status(), [500, 503, 404, 403, 405])
-    // ) {
-
-    //   if ($this->is404($exception)) {
-    //     $this->log404($request);
-    //   }
-
-    //   try {
-    //     Inertia::setRootView('publicpages::app');
-    //     return Inertia::render('PublicPages,DisplayError', ['status' => $response->status()])
-    //       ->toResponse($request)
-    //       ->setStatusCode($response->status());
-    //   } catch (\Throwable $th) {
-    //     if (getenv('APP_ENV') === 'local') {
-    //       return dd('Hanfler err', $th);
-    //     }
-    //   }
-    // }
     elseif (in_array($response->status(), [419])) {
       return back()->withFlash(['error'=>'Your session has expired. Please try again']);
     }

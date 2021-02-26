@@ -24,7 +24,7 @@
             </svg>
           </button>
           <a class="mobile-header__logo" href="/">
-            <img src="/img/the-elects-logo.png" class="img-fluid logo" alt="" />
+            <img src="/img/the-bigtech-logo.png" class="img-fluid logo" alt="" />
           </a>
           <div
             class="search search--location--mobile-header mobile-header__search">

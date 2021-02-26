@@ -226,9 +226,9 @@
       <div class="site-header__logo">
         <a href="/">
           <img
-            src="/img/the-elects-logo.png"
+            src="/img/the-bigtech-logo.png"
             class="img-fluid"
-            alt="the elects logo" />
+            alt="the bigtech logo" />
         </a>
       </div>
       <div class="site-header__search">

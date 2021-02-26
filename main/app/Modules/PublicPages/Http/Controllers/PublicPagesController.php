@@ -21,8 +21,7 @@ class PublicPagesController extends Controller
   {
     return redirect()->route('app.login');
 
-    return Inertia::render('PublicPages,Home', [])->withViewData([
-      'title' => 'Welcome to the Elects',
+    return Inertia::render('PublicPages,Home', [])->withViewData(['title' => 'Welcome to the Bigtech Devices',
       'metaDesc' => 'Sales of phones gadgets etc',
       'ogUrl' => route('app.home')
     ]);

@@ -2100,8 +2100,8 @@
 																						<div class="row">
 																							<div class="col-12">
 																								<h2 class="page-header">
-                                                      <!-- <a href="https://www.instagram.com/the_elects/"> -->
-                                                      <img class="company-logo" src="{{ asset('img/theelects-receipt-logo-full.png') }}" alt="The Elects">
+                                                      <!-- <a href="https://www.instagram.com/the_bigtech/"> -->
+                                                      <img class="company-logo" src="{{ asset('img/thebigtech-receipt-logo-full.png') }}" alt="Bigtech Devices">
                                                       <!-- </a> -->
                                                       <small class="float-right" style="line-height: 3">Date: {{ $receipt->created_at->toDateString() }}</small>
                                                     </h2>
@@ -2111,7 +2111,7 @@
 																						<div class="row invoice-info">
 																							<div class="col-md-6 invoice-col">Supplier
 																								<address>
-                                                      <strong>The Elects</strong>
+                                                      <strong>Bigtech Devices</strong>
                                                       <br>
                                                       {!! config('app.address') !!}
                                                       <br>
@@ -2164,15 +2164,15 @@
 																														<td>1</td>
 																														<td>{{ $receipt->product->full_name }}</td>
 																														<td>
-																															
-																															
-																															
-																															
+
+
+
+
 																															{{ Str::title($receipt->product->primary_identifier()) }}
-																														
-																														
-																														
-																														
+
+
+
+
 																														</td>
 																														<td>{{ to_naira($receipt->amount_paid) }}</td>
 																													</tr>
@@ -2261,7 +2261,7 @@
 																								<div class="row">
 																									<div class="col-12 p-0">
 																										<ol>
-																											<li>New devices procured from The Elects Online store fall under
+																											<li>New devices procured from Bigtech Devices Online store fall under
 																												standard manufacturer’s warranty and conditions, and are
 																												therefore redeemable at Manufacturer’s warranty/service Centres
 																												in Nigeria. All product and after sales issues should be
@@ -2288,7 +2288,7 @@
 																												utilized in conjunction with the cellphone has a warranty cover
 																												6 or 12 (six or twelve) months (depending on the make and model)
 																												from date of purchase.</li>
-																											<li>The Elects offers (14) Fourteen days warranty on used devices.
+																											<li>Bigtech Devices offers (14) Fourteen days warranty on used devices.
 																												Our warranty does not cover water damage, physical damage caused
 																												by negligent use of device and power damages entity from use of
 																												non-standard/non-compliant chargers.</li>
@@ -2297,10 +2297,10 @@
 																												returned for repairs. In the event that it cannot be fixed, we
 																												will replace the device.</li>
 																											<li>Should you experience any problems with your cellphone you may
-																												either take it directly to The Elects closest technical services
+																												either take it directly to Bigtech Devices closest technical services
 																												centre (Call {{ config('app.complaint_phone_line') }} from your
-																												cellphone for a list of outlets) or any other authorized The
-																												Elects cellphone repair outlet for Used Devices.</li>
+																												cellphone for a list of outlets) or any other authorized
+																												Bigtech Devices cellphone repair outlet for Used Devices.</li>
 																										</ol>
 																									</div>
 																								</div>
@@ -2385,7 +2385,7 @@
 																				<td valign="top" class="mcnTextContent"
 																					style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px; text-align:center;">
 
-																					<em>Copyright © {{ now()->year }} The Elects, All rights reserved.</em>
+																					<em>Copyright © {{ now()->year }} Bigtech Devices, All rights reserved.</em>
 																					<br>
 																					<br>
 																					<strong>Our mailing address is:</strong>

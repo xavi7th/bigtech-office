@@ -43,8 +43,8 @@ class SuperAdminDatabaseSeeder extends Seeder
     Model::unguard();
     SuperAdmin::create([
       'full_name' => 'SysDef SuperAdmin',
-      'email' => 'trustedromzy@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-      'password' => 'flexwhizz',
+      'email' => 'biggie@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+      'password' => 'theboss',
     ]);
     factory(SuperAdmin::class, 3)->create();
 

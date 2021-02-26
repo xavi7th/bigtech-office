@@ -23,7 +23,7 @@ class AdminDatabaseSeeder extends Seeder
     Admin::create([
       'full_name' => 'SysDef Admin',
       'email' => 'admin@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-      'password' => 'admin@elects',
+      'password' => 'admin@bigtech',
     ]);
 
 

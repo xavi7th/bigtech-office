@@ -11,10 +11,58 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 
+/**
+ * App\Modules\SuperAdmin\Models\SuperAdmin
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|ActivityLog[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\OtherExpense[] $expenses
+ * @property-read int|null $expenses_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductHistory[] $product_histories
+ * @property-read int|null $product_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
+ * @property-read int|null $reseller_histories_count
+ * @property-write mixed $password
+ * @method static Builder|SuperAdmin newModelQuery()
+ * @method static Builder|SuperAdmin newQuery()
+ * @method static Builder|SuperAdmin query()
+ * @mixin \Eloquent
+ * @property int $id
+ * @property string $full_name
+ * @property string $email
+ * @property string|null $phone
+ * @property string|null $avatar
+ * @property string|null $gender
+ * @property string|null $address
+ * @property int $office_branch_id
+ * @property string|null $verified_at
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static Builder|SuperAdmin whereAddress($value)
+ * @method static Builder|SuperAdmin whereAvatar($value)
+ * @method static Builder|SuperAdmin whereCreatedAt($value)
+ * @method static Builder|SuperAdmin whereDeletedAt($value)
+ * @method static Builder|SuperAdmin whereEmail($value)
+ * @method static Builder|SuperAdmin whereFullName($value)
+ * @method static Builder|SuperAdmin whereGender($value)
+ * @method static Builder|SuperAdmin whereId($value)
+ * @method static Builder|SuperAdmin whereOfficeBranchId($value)
+ * @method static Builder|SuperAdmin wherePassword($value)
+ * @method static Builder|SuperAdmin wherePhone($value)
+ * @method static Builder|SuperAdmin whereRememberToken($value)
+ * @method static Builder|SuperAdmin whereUpdatedAt($value)
+ * @method static Builder|SuperAdmin whereVerifiedAt($value)
+ */
 class SuperAdmin extends User
 {
   protected $fillable = [];
-  protected $table = 'trusted_romzy';
+  protected $table = 'he_control';
   const DASHBOARD_ROUTE_PREFIX = 'super-panel';
 
   public function is_verified()
