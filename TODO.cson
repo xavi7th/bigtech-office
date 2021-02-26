@@ -1,0 +1,116 @@
+That a certificate of investment shall be issued at the beginning of the investment and void at its end.
+
+That on roll-over of the Investment, a new certificate of investment shall be issued to the Second Party
+
+Certificate of Investment means the document attached signed by both the Second Party and the director of the Company stating the exact value of the Investment and the expected ROI.
+
+
+Fix: menu not scrollable wen it overfollows
+feat: admin dashboard last 10 sales record
+Feat: persist dark mode
+Feat: Admin should be able to see history of products returned
+Feat: Admin should be able to see the sales statistics for any day on his dashboard.
+        Have a calender/ date field.
+        When they press send, refresh the statistics on the page with the statistics of the given date
+Feat: Admin should be able to see list of products replaced
+Feat: admin should have a place to see a list of daily transactions cash flow and item paid for (with total)
+Feat: Admin should be able to see list of item marked as rto(damaged) and mark them as returned. (with total)
+        On mark as rto delete item?
+Feat: Admin should be able to see stock aggregate (Result cached daily by cron?)
+        EG. 7+ 32gb 6pcs <tota cost>
+Feat: setup user dashboard
+Feat: get a bulksms wallet
+Fix: If there are validation exceptions and there are files uploaded, the site crashes when LOGTODB is trying to save the validation error to DB
+Feat: use static variables to prevent static method calls from performing multiple database queries.
+          sample: productBatch::local_supplier_id()
+Feat: Add stopPropagation modifirr to all preventDefault modifier chains
+Feat: Harmonise all variable names casing to camelCase
+Feat: there shold be a way to specify reseller prices for products.
+        This way when it´s a reseller that bought a product, we will compare the amount received with the reseller price instead of the normal price to see if payment was complete
+        BETTER STILL have a comment field to the mark paid modal so that the accountant can specify any reason for the difference in price. eg "Sold to reseler at 50k"
+Feat: Top 3 sales rep performers (NO BONUS AMOUNT OR COUNT DISPLAYED)
+Feat: make local products and entity of it´s own like swap deals
+        we can mark as paid when we pay the supplier
+        we can upload payment bank statemeent for future purpose
+        We can view products we collected buthave not paid for and their current status (sold or not)
+        We can return products back to suppliers when they did not go and mark it out of the system
+
+CHORE: What happens when someone comes to reswap our product or reswap a previously bought swap deal?
+          Investigate how products that were bought from us and then are swapped are added to the product list. (Duplicate IMEIs?)
+Feat: Use stores to save shared props app etc
+Feat: Extract common methods into a dedicated super Product class
+        in_stock(), etc
+        This way Prouct (change to foreign product class?), local product, swap deal can all inherit that class
+        Or better still use a trait isProduct
+Feat: Play around with a master layout that houses the InertiaApp component.
+        So that we can keep the menu constant and only the page view itself changing
+Feat: Dispatch request sending multiple items for one customer causes issues.
+        Implement an add to cart feature so that we can aggregate customers orders
+Feat: set up a slack channel where notifications appear of activities
+Feat: set up telegram channel or whatsapp Termii channel for notifications
+Feat: Implement server side pagination for local-supplier batch list devices
+Feat: Brand new items should go to stock immediately they are created
+Fix: Cost price of swap deals and local suppliers do not show cost price
+
+
+
+
+THE MENU STRUCTURE
+Route::prefix(StockKeeper::DASHBOARD_ROUTE_PREFIX)->group(function () {
+ Route::group(['prefix' => 'products'], function () {
+    Route::name('accountant.products.')->group(function () {
+      Route::get('local-product/create', [self::class, 'showCreateLocalProductForm'])->name('create_local_product')->defaults('ex', __e('ac', 'archive', true));
+      Route::post('local-product/create', [self::class, 'createLocalSupplierProduct'])->name('create_local')->defaults('ex', __e('ac', 'archive'));
+    });
+  });
+});
+
+1. Name accountant.*
+    This determines what can get curated into the routes object to frontend via helpers get_related_routes() method through PublicPagesServiceProviders route key and used to compose the user´s menu
+    This also determines what routes are available to the ziggy route('*') helper via the @routes(['admin','auth', 'public', 'multiaccess']) directive.
+
+2. Defaults ->defaults('ex', __e('ac', 'archive',true));
+    The __e($permittedUsers = null, $icon = null, $navSkip = false) function works thus
+    This is used to filter out the routes that end up in the curated user´s route list special reference to the $permittedUsers variable which uses a comma seperated list to determine who should have that routed curated in their list
+    The keywords are as follows:
+      'a' => 'Admin',
+      'ss' => 'SuperAdmin',
+      'ac' => 'Accountant',
+      'd' => 'DispatchAdmin',
+      'q' => 'QualityControl',
+      's' => 'SalesRep',
+      'sk' => 'StockKeeper',
+      'w' => 'WebAdmin',
+
+3. Prefix Route::prefix(StockKeeper::DASHBOARD_ROUTE_PREFIX)
+    This determines what routes from all the route list are available to laravel.
+    By default ALL routes from  ALL modules are loaded and available to the framework´s collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutesByName()) method.
+    This is not desirable because of the introduction of multi access routes, having the same name but available under different prefixes
+    This results for example in '/products' route always being prefixed with '/super-panel' even when Accountant User is logged in
+    To prevent this every ModuleServiceProvider has a if ((Str::contains(request()->url(), Admin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) condition that prevents that modules route from being available to the frame once that user type is not logged in
+    On the front end any attempt to visit a route from another UserType´s curation throws 404. Cos that route does not even exist to the framework
+
+
+
+#Reverse confirmed sale to back in stock
+
+1. Set the product´s status id to in stock and nullify the sold at (364)
+delete the user account
+2. Revert the sale record away from confirmed (729)
+    Clear the confirmed_by
+    Clear the confirmer type
+3. Remove the bonuses from the sale record
+4. Delete the bank payment records of the sale record (sales_record_bank_account) (501)
+5. Delete the receipt record of the product sale record (501)
+6. Delete the sales record for that product (force delete or else the product will ot be able to creare another sale record)
+7. If swap deal delete the swap deal record if necessary
+8. Clear cache
+
+
+Reverse confirmed sale to mark as Sold
+
+Change the product id to mark as sold (418 & 440)
+Remove the confirmewd by and type from the sale record (685 & 677)
+Clewar the bonuses from the sale record
+Delete sales record´s bank account payment records
+Delete the product´s receipt
