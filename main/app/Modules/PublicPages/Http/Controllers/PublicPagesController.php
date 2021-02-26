@@ -19,6 +19,8 @@ class PublicPagesController extends Controller
 
   public function index(Request $request)
   {
+    return Inertia::location(route('app.login'));
+
     return Inertia::render('PublicPages,Home', [])->withViewData([
       'title' => 'Welcome to the Elects',
       'metaDesc' => 'Sales of phones gadgets etc',
