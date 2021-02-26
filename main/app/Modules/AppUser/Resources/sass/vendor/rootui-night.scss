@@ -1,13 +1,4 @@
-/*!
- * Name: RootUI - Dashboards and Administration areas for React + Redux and HTML
- * Version: 1.1.2
- * Author: dexad, nK
- * Website: https://nkdev.info/
- * Purchase: https://themeforest.net/user/_nk/portfolio
- * Support: https://nk.ticksy.com/
- * License: You must have a valid license purchased only from ThemeForest (the above link) in order to legally use the theme for your project.
- * Copyright 2019.
- */
+$brand: #fe070b;
 
 .demo>.modal {
 	background-color: rgba(69, 76, 85, .85)
@@ -49,7 +40,7 @@ body {
 }
 
 a {
-	color: #725ec3
+	color: $brand
 }
 
 a.hover,
@@ -58,7 +49,7 @@ a:hover {
 }
 
 a:active {
-	color: #725ec3
+	color: $brand
 }
 
 label {
@@ -543,7 +534,7 @@ h6 {
 }
 
 .alert-brand {
-	border-color: #725ec3
+	border-color: $brand
 }
 
 .alert-primary {
@@ -669,7 +660,7 @@ h6 {
 .btn-link,
 .btn-link.focus,
 .btn-link:focus {
-	color: #725ec3
+	color: $brand
 }
 
 .btn-link.hover,
@@ -742,7 +733,7 @@ h6 {
 .btn-hover-outline.btn-brand.hover,
 .btn-hover-outline.btn-brand:focus,
 .btn-hover-outline.btn-brand:hover {
-	color: #725ec3
+	color: $brand
 }
 
 .btn-hover-outline.btn-primary.focus,
@@ -805,8 +796,8 @@ h6 {
 .btn-hover-brand.hover,
 .btn-hover-brand:focus,
 .btn-hover-brand:hover {
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .btn-hover-brand.focus,
@@ -826,7 +817,7 @@ h6 {
 .btn-hover-brand.btn-hover-outline.hover,
 .btn-hover-brand.btn-hover-outline:focus,
 .btn-hover-brand.btn-hover-outline:hover {
-	color: #725ec3;
+	color: $brand;
 	background-color: rgba(0, 0, 0, 0)
 }
 
@@ -1303,7 +1294,7 @@ h6 {
 }
 
 .page-item.active .page-link {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .page-link {
@@ -1382,15 +1373,15 @@ h6 {
 }
 
 .dropdown:not(.dropdown-hover):active {
-	color: #725ec3
+	color: $brand
 }
 
 .dropdown:not(.dropdown-hover):active>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .dropdown:not(.dropdown-hover):active>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .dropdown:not(.dropdown-hover).show>.dropdown-item {
@@ -1413,17 +1404,17 @@ h6 {
 
 .dropdown .dropdown-item-switch.custom-switch>input:checked~.dropdown-item,
 .dropdown.show .dropdown-item-switch.custom-switch>input:checked~.dropdown-item {
-	color: #725ec3
+	color: $brand
 }
 
 .dropdown .dropdown-item-switch.custom-switch>input:checked~.dropdown-item>span:not([class]),
 .dropdown.show .dropdown-item-switch.custom-switch>input:checked~.dropdown-item>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .dropdown .dropdown-item-switch.custom-switch>input:checked~.dropdown-item>.rui-icon,
 .dropdown.show .dropdown-item-switch.custom-switch>input:checked~.dropdown-item>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .dropdown-hover.hover>.dropdown-item {
@@ -1628,8 +1619,8 @@ h6 {
 .custom-checkbox .custom-control-input:checked~.custom-control-label:before,
 .custom-radio .custom-control-input:checked~.custom-control-label:before,
 .custom-switch .custom-control-input:checked~.custom-control-label:before {
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .custom-checkbox .custom-control-input:focus:not(:checked)~.custom-control-label:before,
@@ -1697,7 +1688,7 @@ h6 {
 }
 
 .custom-range::-webkit-slider-thumb {
-	background: #725ec3
+	background: $brand
 }
 
 .custom-range::-webkit-slider-thumb:active {
@@ -1705,7 +1696,7 @@ h6 {
 }
 
 .custom-range::-moz-range-thumb {
-	background: #725ec3
+	background: $brand
 }
 
 .custom-range::-moz-range-thumb:active {
@@ -1713,7 +1704,7 @@ h6 {
 }
 
 .custom-range::-ms-thumb {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .custom-range::-ms-thumb:active {
@@ -1813,8 +1804,8 @@ h6 {
 }
 
 .list-group-item.active {
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .list-group-item.disabled,
@@ -1836,7 +1827,7 @@ h6 {
 }
 
 .list-group-item-action.active {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .list-group-item-action.active.focus,
@@ -1914,8 +1905,8 @@ h6 {
 }
 
 .list-group-item-brand {
-	-webkit-box-shadow: inset 2px 0 0 #725ec3;
-	box-shadow: inset 2px 0 0 #725ec3
+	-webkit-box-shadow: inset 2px 0 0 $brand;
+	box-shadow: inset 2px 0 0 $brand
 }
 
 .list-group-item-primary {
@@ -1972,7 +1963,7 @@ h6 {
 }
 
 .media.media-brand:before {
-	background-color: #725ec3;
+	background-color: $brand;
 	-webkit-box-shadow: 0 0 0 2px #292f38;
 	box-shadow: 0 0 0 2px #292f38
 }
@@ -2152,11 +2143,11 @@ h6 {
 }
 
 .nav .nav-link.active>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .nav .nav-link.active>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .nav .nav-link.disabled {
@@ -2187,7 +2178,7 @@ h6 {
 }
 
 .nav-tabs .nav-link.active {
-	color: #725ec3;
+	color: $brand;
 	border-bottom-color: rgba(114, 94, 195, .8)
 }
 
@@ -2291,7 +2282,7 @@ h6 {
 }
 
 .toast {
-	border-color: #252c36 #252c36 #252c36 #725ec3;
+	border-color: #252c36 #252c36 #252c36 $brand;
 	-webkit-box-shadow: 0 3px 10px rgba(36, 43, 53, .9);
 	box-shadow: 0 3px 10px rgba(36, 43, 53, .9)
 }
@@ -2463,7 +2454,7 @@ h6 {
 }
 
 .rui-changelog .rui-changelog-brand:before {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-changelog .rui-changelog-primary:before {
@@ -2586,7 +2577,7 @@ h6 {
 }
 
 .rui-task.rui-task-brand>.rui-task-icon:first-child {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-task.rui-task-primary>.rui-task-icon:first-child {
@@ -2636,7 +2627,7 @@ h6 {
 
 .rui-task-status.rui-task-status-brand .rui-task-status-item-icon {
 	color: #c7d1db;
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-task-status.rui-task-status-primary .rui-task-status-item-icon {
@@ -3074,7 +3065,7 @@ h6 {
 }
 
 .rui-box-window .rui-box-window-bar .rui-box-window-brand {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-box-window .rui-box-window-bar .rui-box-window-primary {
@@ -3246,37 +3237,37 @@ h6 {
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a {
-	color: #725ec3 !important
+	color: $brand !important
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a:before {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>.yay-icon,
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>.yay-icon-collapse {
-	color: #725ec3
+	color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a {
-	color: #725ec3 !important
+	color: $brand !important
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a:before {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>.yay-icon,
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>.yay-icon-collapse {
-	color: #725ec3
+	color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-submenu-open>a {
@@ -3463,7 +3454,7 @@ h6 {
 
 .fc-event-list .fc-event.fc-event-brand,
 .rui-calendar .fc-event.fc-event-brand {
-	border-left-color: #725ec3
+	border-left-color: $brand
 }
 
 .fc-event-list .fc-event.fc-event-primary,
@@ -3605,7 +3596,7 @@ h6 {
 }
 
 .rui-calendar .fc-list-view .fc-list-item.fc-event-brand .fc-event-dot {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-calendar .fc-list-view .fc-list-item.fc-event-primary .fc-event-dot {
@@ -3690,15 +3681,15 @@ h6 {
 }
 
 .rui-jstree .jstree-open>.jstree-ocl:hover+.jstree-anchor>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-jstree .jstree-open>.jstree-anchor {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-jstree .jstree-open>.jstree-anchor>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-jstree-lines .jstree-children .jstree-children .jstree-node:before {
@@ -3722,7 +3713,7 @@ h6 {
 }
 
 .swal2-popup .swal2-styled.swal2-confirm {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .swal2-popup .swal2-styled.swal2-confirm:hover {
@@ -3735,12 +3726,12 @@ h6 {
 }
 
 .swal2-icon.swal2-brand {
-	color: #725ec3;
+	color: $brand;
 	border-color: rgba(114, 94, 195, .3)
 }
 
 .swal2-icon.swal2-brand [class^=swal2-brand-line] {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .swal2-icon.swal2-brand .swal2-success-ring {
@@ -3939,7 +3930,7 @@ h6 {
 .dataTables_paginate>a.current,
 .dataTables_paginate>span>a.current {
 	color: #c7d1db;
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .dataTables_paginate>a.disabled,
@@ -4083,8 +4074,8 @@ h6 {
 }
 
 .daterangepicker.show-calendar .drp-buttons .btn {
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .daterangepicker.show-calendar .drp-buttons .btn:hover {
@@ -4349,7 +4340,7 @@ h6 {
 
 .rui-irs-double .irs-handle>i:first-child,
 .rui-irs .irs-handle>i:first-child {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-irs-double .irs-handle:hover>i:first-child,
@@ -4451,7 +4442,7 @@ h6 {
 
 .pcr-app[data-theme=classic] .pcr-interaction .pcr-save {
 	color: #c7d1db;
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .pcr-app[data-theme=classic] .pcr-interaction .pcr-save:hover {
@@ -4629,7 +4620,7 @@ h6 {
 .peity-brand+.peity.hover>rect,
 .peity-brand+.peity:hover>polygon,
 .peity-brand+.peity:hover>rect {
-	fill: #725ec3
+	fill: $brand
 }
 
 .peity-primary+.peity>polygon,
@@ -4770,11 +4761,11 @@ h6 {
 }
 
 .rui-quill .rui-quill-toolbar button.ql-active .ql-stroke {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-quill .rui-quill-toolbar button.ql-active .ql-fill {
-	fill: #725ec3
+	fill: $brand
 }
 
 .rui-quill .rui-quill-toolbar .ql-picker svg.rui-icon {

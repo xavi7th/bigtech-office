@@ -1,20 +1,5 @@
-/*!
- * Name: RootUI - Dashboards and Administration areas for React + Redux and HTML
- * Version: 1.1.2
- * Author: dexad, nK
- * Website: https://nkdev.info/
- * Purchase: https://themeforest.net/user/_nk/portfolio
- * Support: https://nk.ticksy.com/
- * License: You must have a valid license purchased only from ThemeForest (the above link) in order to legally use the theme for your project.
- * Copyright 2019.
- */
-
-/*!
- * Bootstrap (https://getbootstrap.com/)
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
-
 $orange: orangered;
+$brand: #fe070b;
 
 :root {
 	--blue: #007bff;
@@ -30,7 +15,7 @@ $orange: orangered;
 	--white: #fff;
 	--gray: #6c757d;
 	--gray-dark: #343a40;
-	--brand: #725ec3;
+	--brand: $brand;
 	--primary: #007bff;
 	--secondary: #6c757d;
 	--success: #2fc787;
@@ -2826,8 +2811,8 @@ fieldset:disabled a.btn {
 
 .btn-brand {
 	color: #fff;
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .btn-brand.focus,
@@ -2846,8 +2831,8 @@ fieldset:disabled a.btn {
 .btn-brand.disabled,
 .btn-brand:disabled {
 	color: #fff;
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .btn-brand:not(:disabled):not(.disabled).active,
@@ -3225,14 +3210,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-brand {
-	color: #725ec3;
-	border-color: #725ec3
+	color: $brand;
+	border-color: $brand
 }
 
 .btn-outline-brand:hover {
 	color: #fff;
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .btn-outline-brand.focus,
@@ -3242,7 +3227,7 @@ fieldset:disabled a.btn {
 
 .btn-outline-brand.disabled,
 .btn-outline-brand:disabled {
-	color: #725ec3;
+	color: $brand;
 	background-color: rgba(0, 0, 0, 0)
 }
 
@@ -3250,8 +3235,8 @@ fieldset:disabled a.btn {
 .btn-outline-brand:not(:disabled):not(.disabled):active,
 .show>.btn-outline-brand.dropdown-toggle {
 	color: #fff;
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .btn-outline-brand:not(:disabled):not(.disabled).active:focus,
@@ -5652,7 +5637,7 @@ a.badge:hover {
 
 .badge-brand {
 	color: #fff;
-	background-color: #725ec3
+	background-color: $brand
 }
 
 a.badge-brand:focus,
@@ -7362,7 +7347,7 @@ a.close.disabled {
 }
 
 .bg-brand {
-	background-color: #725ec3 !important
+	background-color: $brand !important
 }
 
 a.bg-brand:focus,
@@ -7509,7 +7494,7 @@ button.bg-dark:hover {
 }
 
 .border-brand {
-	border-color: #725ec3 !important
+	border-color: $brand !important
 }
 
 .border-primary {
@@ -11196,7 +11181,7 @@ button.bg-dark:hover {
 }
 
 .text-brand {
-	color: #725ec3 !important
+	color: $brand !important
 }
 
 a.text-brand:focus,

@@ -42,43 +42,33 @@
   };
 
   let markProductAsSold = () => {
-    swal
+    swalPreconfirm
       .fire({
-        title: "Are you sure?",
-        text:
+         text:
           "This will mark this product as sold for and update the sales reps daily sales",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
         confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
         preConfirm: () => {
-          let formData = new FormData();
+            let formData = new FormData();
 
-          _.forEach(
-            _.omit(details, ["set", "update", "subscribe"]),
-            (val, key) => {
-              formData.append(key, val);
-            }
-          );
-          return Inertia.post(
-            route(
-              auth.user.user_type + ".multiaccess.products.mark_swap_as_sold",
-              productToMarkAsSold
-            ),
-            formData,
-            {
-              preserveState: true,
-              preserveScroll: true,
-              only: ["flash", "errors", "swapDeals"]
-            }
-          )
-        }
+            _.forEach(
+              _.omit(details, ["set", "update", "subscribe"]),
+              (val, key) => {
+                formData.append(key, val);
+              }
+            );
+            return Inertia.post(
+              route(
+                auth.user.user_type + ".multiaccess.products.mark_swap_as_sold",
+                productToMarkAsSold
+              ),
+              formData,
+              {
+                preserveState: true,
+                preserveScroll: true,
+                only: ["flash", "errors", "swapDeals"]
+              }
+            )
+          }
       })
       .then(result => {
         if (result.dismiss && result.dismiss == "cancel") {

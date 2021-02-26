@@ -70,22 +70,12 @@
   };
 
   let deleteBrand = id => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text:
+      swalPreconfirm
+        .fire({
+           text:
           "This brand and all associated models will be permanently deleted and it may no longer be possible to create products under this brand",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
-        confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
+          confirmButtonText: "Yes, carry on!",
+          preConfirm: () => {
           return Inertia.delete(
             route(auth.user.user_type + ".multiaccess.product_brands.delete_product_brand", id),
             {
@@ -95,7 +85,7 @@
             }
           )
         }
-      })
+        })
       .then(result => {
         if (result.dismiss && result.dismiss == "cancel") {
           swal.fire(

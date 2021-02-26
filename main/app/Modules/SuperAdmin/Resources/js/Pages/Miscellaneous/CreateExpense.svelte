@@ -47,32 +47,22 @@
   // };
 
   // let deleteDailyExpense = id => {
-  //   swal
-  //     .fire({
-  //       title: "Are you sure?",
-  //       text:
-  //         "This daily expense will be permanently deleted and products can no longer be created under it",
-  //       icon: "question",
-  //       showCloseButton: false,
-  //       allowOutsideClick: () => !swal.isLoading(),
-  //       allowEscapeKey: false,
-  //       showCancelButton: true,
-  //       focusCancel: true,
-  //       cancelButtonColor: "#d33",
-  //       confirmButtonColor: "#725ec3",
-  //       confirmButtonText: "Yes, carry on!",
-  //       showLoaderOnConfirm: true,
-  //       preConfirm: () => {
-  //         return Inertia.delete(
-  //           route("superadmin.miscellaneous.delete_daily_expense", id),
-  //           {
-  //             preserveState: true,
-  //             preserveScroll: true,
-  //             only: ["flash", "errors", "dailyExpenses"]
-  //           }
-  //         )
-  //       }
-  //     })
+    // swalPreconfirm
+    //   .fire({
+    //     text:
+    //           "This daily expense will be permanently deleted and products can no longer be created under it",
+    //     confirmButtonText: "Yes, carry on!",
+    //     preConfirm: () => {
+    //           return Inertia.delete(
+    //             route("superadmin.miscellaneous.delete_daily_expense", id),
+    //             {
+    //               preserveState: true,
+    //               preserveScroll: true,
+    //               only: ["flash", "errors", "dailyExpenses"]
+    //             }
+    //           )
+    //         }
+    //   })
   // };
 </script>
 

@@ -25,22 +25,12 @@
   };
 
   let updateTests = () => {
-    swal
+    swalPreconfirm
       .fire({
-        title: "Are you sure?",
         text:
           "This will update the QA tests required for products of this model",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
         confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
+         preConfirm: () => {
           return Inertia.put(
             route(
               $page.props.auth.user.user_type + ".multiaccess.product_models.update_model_qa_tests",

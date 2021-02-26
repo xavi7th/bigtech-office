@@ -5,32 +5,22 @@ import { fade, fly } from 'svelte/transition';
   export let details = {};
 
   let updateLocalPrice = comment => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text:
+      swalPreconfirm
+        .fire({
+          text:
           "This will update the selling and the cost prices",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
-        confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
-          return Inertia.patch(
-            route("accountant.products.local.edit_price", details.uuid), details,
-            {
-              preserveState: true,
-              preserveScroll: true,
-              only:['errors', 'flash', 'productDetails']
-            }
-          )
-        }
-      })
+          confirmButtonText: "Yes, carry on!",
+          preConfirm: () => {
+            return Inertia.patch(
+              route("accountant.products.local.edit_price", details.uuid), details,
+              {
+                preserveState: true,
+                preserveScroll: true,
+                only:['errors', 'flash', 'productDetails']
+              }
+            )
+          }
+        })
       .then(result => {
         if (result.dismiss && result.dismiss == "cancel") {
           swal.fire(

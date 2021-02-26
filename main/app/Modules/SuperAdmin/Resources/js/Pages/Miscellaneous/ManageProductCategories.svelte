@@ -65,32 +65,22 @@
   };
 
   let deleteCategory = id => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text:
-          "This category will be permanently deleted and products can no longer be created under this category",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonCategory: "#d33",
-        confirmButtonCategory: "#725ec3",
-        confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
-          return Inertia.delete(
-            route(auth.user.user_type + ".multiaccess.miscellaneous.delete_product_category", id),
-            {
-              preserveState: true,
-              preserveScroll: true,
-              only: ["flash", "errors", "productCategories"]
-            }
-          )
-        }
-      })
+      swalPreconfirm
+        .fire({
+          text:
+                "This category will be permanently deleted and products can no longer be created under this category",
+          confirmButtonText: "Yes, carry on!",
+          preConfirm: () => {
+            return Inertia.delete(
+              route(auth.user.user_type + ".multiaccess.miscellaneous.delete_product_category", id),
+              {
+                preserveState: true,
+                preserveScroll: true,
+                only: ["flash", "errors", "productCategories"]
+              }
+            )
+          }
+        })
       .then(result => {
         if (result.dismiss && result.dismiss == "cancel") {
           swal.fire(

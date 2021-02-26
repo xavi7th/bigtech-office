@@ -53,21 +53,11 @@
   };
 
   let deleteProductStatus = id => {
-    swal
+    swalPreconfirm
       .fire({
-        title: "Are you sure?",
         text:
-          "This product status will be permanently deleted and products can no longer be created under it",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
+              "This product status will be permanently deleted and products can no longer be created under it",
         confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
             route("superadmin.miscellaneous.delete_product_status", id),

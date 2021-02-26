@@ -1,13 +1,4 @@
-/*!
- * Name: RootUI - Dashboards and Administration areas for React + Redux and HTML
- * Version: 1.1.2
- * Author: dexad, nK
- * Website: https://nkdev.info/
- * Purchase: https://themeforest.net/user/_nk/portfolio
- * Support: https://nk.ticksy.com/
- * License: You must have a valid license purchased only from ThemeForest (the above link) in order to legally use the theme for your project.
- * Copyright 2019.
- */
+$brand: #fe070b;
 
 .demo>.card,
 .demo>.list-group {
@@ -467,8 +458,8 @@ body.rui-no-transition * {
 	-webkit-flex: 1;
 	-ms-flex: 1;
 	flex: 1;
-	background: #725ec3;
-	box-shadow: 0 2px 20px #725ec3;
+	background: $brand;
+	box-shadow: 0 2px 20px $brand;
 	-webkit-animation: rui-preloader-animation .8s ease infinite alternate;
 	animation: rui-preloader-animation .8s ease infinite alternate
 }
@@ -558,7 +549,7 @@ body {
 }
 
 a {
-	color: #725ec3;
+	color: $brand;
 	-webkit-transition: color .1s ease-in-out;
 	-o-transition: color .1s ease-in-out;
 	transition: color .1s ease-in-out
@@ -571,7 +562,7 @@ a:hover {
 }
 
 a:active {
-	color: #725ec3
+	color: $brand
 }
 
 p {
@@ -4632,11 +4623,11 @@ h6 {
 }
 
 .rui-navbar-dark.rui-navbar .nav .nav-link.active>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-navbar-dark.rui-navbar .nav .nav-link.active>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-navbar-dark.rui-navbar .nav .nav-link.disabled {
@@ -4697,8 +4688,8 @@ h6 {
 }
 
 .rui-navbar-dark.rui-navbar .custom-switch .custom-control-input:checked~.custom-control-label:before {
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .rui-navbar-dark.rui-navbar .custom-switch .custom-control-input:focus:not(:checked)~.custom-control-label:before {
@@ -4757,15 +4748,15 @@ h6 {
 }
 
 .rui-navbar-dark.rui-navbar .dropdown:not(.dropdown-hover):active {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-navbar-dark.rui-navbar .dropdown:not(.dropdown-hover):active>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-navbar-dark.rui-navbar .dropdown:not(.dropdown-hover):active>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-navbar-dark.rui-navbar .dropdown:not(.dropdown-hover).show>.dropdown-item {
@@ -4788,17 +4779,17 @@ h6 {
 
 .rui-navbar-dark.rui-navbar .dropdown .dropdown-item-switch>input:checked~.dropdown-item,
 .rui-navbar-dark.rui-navbar .dropdown.show .dropdown-item-switch>input:checked~.dropdown-item {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-navbar-dark.rui-navbar .dropdown .dropdown-item-switch>input:checked~.dropdown-item>span:not([class]),
 .rui-navbar-dark.rui-navbar .dropdown.show .dropdown-item-switch>input:checked~.dropdown-item>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-navbar-dark.rui-navbar .dropdown .dropdown-item-switch>input:checked~.dropdown-item>.rui-icon,
 .rui-navbar-dark.rui-navbar .dropdown.show .dropdown-item-switch>input:checked~.dropdown-item>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-navbar-dark.rui-navbar .dropdown-hover.hover>.dropdown-item {
@@ -4897,7 +4888,7 @@ h6 {
 }
 
 .rui-navbar-dark.rui-navbar .media.media-brand:before {
-	background-color: #725ec3;
+	background-color: $brand;
 	box-shadow: 0 0 0 2px #292f38
 }
 
@@ -6683,7 +6674,7 @@ h6 {
 }
 
 .alert-brand {
-	border-color: #725ec3
+	border-color: $brand
 }
 
 .alert-primary {
@@ -7022,7 +7013,7 @@ h6 {
 .btn-link,
 .btn-link.focus,
 .btn-link:focus {
-	color: #725ec3
+	color: $brand
 }
 
 .btn-link.hover,
@@ -7140,7 +7131,7 @@ h6 {
 .btn-hover-outline.btn-brand.hover,
 .btn-hover-outline.btn-brand:focus,
 .btn-hover-outline.btn-brand:hover {
-	color: #725ec3
+	color: $brand
 }
 
 .btn-hover-outline.btn-primary.focus,
@@ -7203,8 +7194,8 @@ h6 {
 .btn-hover-brand.hover,
 .btn-hover-brand:focus,
 .btn-hover-brand:hover {
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .btn-hover-brand.focus,
@@ -7222,7 +7213,7 @@ h6 {
 .btn-hover-brand.btn-hover-outline.hover,
 .btn-hover-brand.btn-hover-outline:focus,
 .btn-hover-brand.btn-hover-outline:hover {
-	color: #725ec3;
+	color: $brand;
 	background-color: rgba(0, 0, 0, 0)
 }
 
@@ -7855,7 +7846,7 @@ h6 {
 }
 
 .page-item.active .page-link {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .page-link {
@@ -8054,15 +8045,15 @@ h6 {
 }
 
 .dropdown:not(.dropdown-hover):active {
-	color: #725ec3
+	color: $brand
 }
 
 .dropdown:not(.dropdown-hover):active>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .dropdown:not(.dropdown-hover):active>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .dropdown:not(.dropdown-hover).show>.dropdown-item {
@@ -8114,17 +8105,17 @@ h6 {
 
 .dropdown .dropdown-item-switch.custom-switch>input:checked~.dropdown-item,
 .dropdown.show .dropdown-item-switch.custom-switch>input:checked~.dropdown-item {
-	color: #725ec3
+	color: $brand
 }
 
 .dropdown .dropdown-item-switch.custom-switch>input:checked~.dropdown-item>span:not([class]),
 .dropdown.show .dropdown-item-switch.custom-switch>input:checked~.dropdown-item>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .dropdown .dropdown-item-switch.custom-switch>input:checked~.dropdown-item>.rui-icon,
 .dropdown.show .dropdown-item-switch.custom-switch>input:checked~.dropdown-item>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .dropdown-hover.hover>.dropdown-menu:before {
@@ -8671,8 +8662,8 @@ textarea.form-control {
 .custom-checkbox .custom-control-input:checked~.custom-control-label:before,
 .custom-radio .custom-control-input:checked~.custom-control-label:before,
 .custom-switch .custom-control-input:checked~.custom-control-label:before {
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .custom-checkbox .custom-control-input:focus~.custom-control-label:before,
@@ -8773,7 +8764,7 @@ textarea.form-control {
 	width: 16px;
 	height: 16px;
 	margin-top: -4.5px;
-	background: #725ec3;
+	background: $brand;
 	border: 0;
 	border-radius: 8px
 }
@@ -8787,7 +8778,7 @@ textarea.form-control {
 	height: 16px;
 	margin-top: -4.5px;
 	cursor: pointer;
-	background: #725ec3;
+	background: $brand;
 	border: 0;
 	border-radius: 8px
 }
@@ -8801,7 +8792,7 @@ textarea.form-control {
 	height: 16px;
 	margin-top: 0;
 	cursor: pointer;
-	background-color: #725ec3;
+	background-color: $brand;
 	border: 0;
 	border-radius: 8px
 }
@@ -8931,8 +8922,8 @@ textarea.form-control {
 }
 
 .list-group-item.active {
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .list-group-item-action {
@@ -8955,7 +8946,7 @@ textarea.form-control {
 }
 
 .list-group-item-action.active {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .list-group-item-action.active.focus,
@@ -9058,7 +9049,7 @@ textarea.form-control {
 }
 
 .list-group-item-brand {
-	box-shadow: inset 2px 0 0 #725ec3
+	box-shadow: inset 2px 0 0 $brand
 }
 
 .list-group-item-primary {
@@ -9222,7 +9213,7 @@ textarea.form-control {
 }
 
 .media.media-brand .media-img:before {
-	background-color: #725ec3;
+	background-color: $brand;
 	box-shadow: 0 0 0 2px #fff
 }
 
@@ -9667,11 +9658,11 @@ textarea.form-control {
 }
 
 .nav .nav-link.active>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .nav .nav-link.active>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .nav .nav-link.disabled {
@@ -9715,7 +9706,7 @@ textarea.form-control {
 }
 
 .nav-tabs .nav-link.active {
-	color: #725ec3;
+	color: $brand;
 	border-bottom-color: rgba(114, 94, 195, .8)
 }
 
@@ -9984,7 +9975,7 @@ textarea.form-control {
 
 .toast {
 	border-color: #e6ecf0;
-	border-left: 2px solid #725ec3;
+	border-left: 2px solid $brand;
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, .03)
 }
 
@@ -10098,7 +10089,7 @@ textarea.form-control {
 }
 
 .toast-brand {
-	border-left-color: #725ec3
+	border-left-color: $brand
 }
 
 .toast-primary {
@@ -11009,7 +11000,7 @@ textarea.form-control {
 }
 
 .rui-changelog .rui-changelog-brand:before {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-changelog .rui-changelog-primary:before {
@@ -11251,7 +11242,7 @@ textarea.form-control {
 }
 
 .rui-task.rui-task-brand>.rui-task-icon:first-child {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-task.rui-task-primary>.rui-task-icon:first-child {
@@ -11303,7 +11294,7 @@ textarea.form-control {
 
 .rui-task-status.rui-task-status-brand .rui-task-status-item-icon {
 	color: #fff;
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-task-status.rui-task-status-primary .rui-task-status-item-icon {
@@ -12759,15 +12750,15 @@ textarea.form-control {
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a {
-	color: #725ec3 !important
+	color: $brand !important
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a:before {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>.rui-yaybar-circle {
@@ -12776,19 +12767,19 @@ textarea.form-control {
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>.yay-icon,
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>.yay-icon-collapse {
-	color: #725ec3
+	color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a {
-	color: #725ec3 !important
+	color: $brand !important
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a:before {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>.rui-yaybar-circle {
@@ -12797,7 +12788,7 @@ textarea.form-control {
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>.yay-icon,
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>.yay-icon-collapse {
-	color: #725ec3
+	color: $brand
 }
 
 .yaybar.rui-yaybar .yaybar-wrap ul>li.yay-submenu-open>a {
@@ -13002,11 +12993,11 @@ textarea.form-control {
 }
 
 .rui-yaybar-dark.rui-yaybar .nav .nav-link.active>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .nav .nav-link.active>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .nav .nav-link.disabled {
@@ -13072,34 +13063,34 @@ textarea.form-control {
 }
 
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a {
-	color: #725ec3 !important
+	color: $brand !important
 }
 
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a:before {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a,
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>.yay-icon,
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active>a>.yay-icon-collapse {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a:before {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>.yay-icon,
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-item-active.yay-submenu-open>a>.yay-icon-collapse {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .yaybar-wrap ul>li.yay-submenu-open>a {
@@ -13180,15 +13171,15 @@ textarea.form-control {
 }
 
 .rui-yaybar-dark.rui-yaybar .dropdown:not(.dropdown-hover):active {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .dropdown:not(.dropdown-hover):active>span:not([class]) {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .dropdown:not(.dropdown-hover):active>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-yaybar-dark.rui-yaybar .dropdown:not(.dropdown-hover).show>.dropdown-item {
@@ -13788,7 +13779,7 @@ textarea.form-control {
 
 .fc-event-list .fc-event.fc-event-brand,
 .rui-calendar .fc-event.fc-event-brand {
-	border-left-color: #725ec3
+	border-left-color: $brand
 }
 
 .fc-event-list .fc-event.fc-event-primary,
@@ -14184,7 +14175,7 @@ textarea.form-control {
 }
 
 .rui-calendar .fc-list-view .fc-list-item.fc-event-brand .fc-event-dot {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .rui-calendar .fc-list-view .fc-list-item.fc-event-primary .fc-event-dot {
@@ -14415,15 +14406,15 @@ textarea.form-control {
 }
 
 .rui-jstree .jstree-open>.jstree-ocl:hover+.jstree-anchor>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-jstree .jstree-open>.jstree-anchor {
-	color: #725ec3
+	color: $brand
 }
 
 .rui-jstree .jstree-open>.jstree-anchor>.rui-icon {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-jstree .jstree-children .jstree-node+.jstree-node {
@@ -14489,7 +14480,7 @@ textarea.form-control {
 
 .swal2-popup .swal2-styled.swal2-confirm {
 	font-size: 13px;
-	background-color: #725ec3;
+	background-color: $brand;
 	border-radius: .25rem;
 	-o-transition: background-color .1s ease-in-out, box-shadow .1s ease-in-out;
 	transition: background-color .1s ease-in-out, box-shadow .1s ease-in-out;
@@ -14508,12 +14499,12 @@ textarea.form-control {
 }
 
 .swal2-icon.swal2-brand {
-	color: #725ec3;
+	color: $brand;
 	border-color: rgba(114, 94, 195, .3)
 }
 
 .swal2-icon.swal2-brand [class^=swal2-brand-line] {
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .swal2-icon.swal2-brand .swal2-success-ring {
@@ -14853,7 +14844,7 @@ textarea.form-control {
 
 .dataTables_paginate .paginate_button.current {
 	color: #fff;
-	background-color: #725ec3
+	background-color: $brand
 }
 
 .dataTables_paginate .paginate_button.disabled {
@@ -15417,8 +15408,8 @@ textarea.form-control {
 
 .daterangepicker.show-calendar .drp-buttons .btn {
 	margin-left: 11px;
-	background-color: #725ec3;
-	border-color: #725ec3
+	background-color: $brand;
+	border-color: $brand
 }
 
 .daterangepicker.show-calendar .drp-buttons .btn:hover {
@@ -15807,7 +15798,7 @@ textarea.form-control {
 	left: 1px;
 	width: 16px;
 	height: 16px;
-	background-color: #725ec3;
+	background-color: $brand;
 	border-radius: 100%;
 	-o-transition: background-color .1s ease-in-out, box-shadow .1s ease-in-out;
 	transition: background-color .1s ease-in-out, box-shadow .1s ease-in-out;
@@ -16103,7 +16094,7 @@ textarea.form-control {
 .pcr-app[data-theme=classic] .pcr-interaction .pcr-save {
 	line-height: 0;
 	color: #fff;
-	background-color: #725ec3;
+	background-color: $brand;
 	-o-transition: color .15s ease-in-out, background-color .15s ease-in-out, box-shadow .15s ease-in-out;
 	transition: color .15s ease-in-out, background-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
@@ -16672,7 +16663,7 @@ textarea.form-control {
 .peity-brand+.peity.hover>rect,
 .peity-brand+.peity:hover>polygon,
 .peity-brand+.peity:hover>rect {
-	fill: #725ec3
+	fill: $brand
 }
 
 .peity-primary+.peity>polygon,
@@ -16923,11 +16914,11 @@ p>.peity {
 }
 
 .rui-quill .rui-quill-toolbar button.ql-active .ql-stroke {
-	stroke: #725ec3
+	stroke: $brand
 }
 
 .rui-quill .rui-quill-toolbar button.ql-active .ql-fill {
-	fill: #725ec3
+	fill: $brand
 }
 
 .rui-quill .rui-quill-toolbar .ql-picker {

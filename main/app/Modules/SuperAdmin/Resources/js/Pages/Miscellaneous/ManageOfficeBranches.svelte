@@ -46,22 +46,12 @@
   };
 
   let deleteOfficeBranch = id => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text:
+      swalPreconfirm
+        .fire({
+          text:
           "This office branch will be permanently deleted and products can no longer be created under it",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
-        confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
+          confirmButtonText: "Yes, carry on!",
+          preConfirm: () => {
           return Inertia.delete(
             route("superadmin.miscellaneous.delete_office_branch", id),
             {
@@ -71,7 +61,7 @@
             }
           )
         }
-      })
+        })
       .then(result => {
         if (result.dismiss && result.dismiss == "cancel") {
           swal.fire(

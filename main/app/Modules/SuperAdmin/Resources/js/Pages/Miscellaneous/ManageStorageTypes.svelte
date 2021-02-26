@@ -51,21 +51,11 @@
   };
 
   let deleteStorageType = id => {
-    swal
+    swalPreconfirm
       .fire({
-        title: "Are you sure?",
         text:
           "This storage type will be permanently deleted and products can no longer be created under it",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
         confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
             route(auth.user.user_type + ".multiaccess.miscellaneous.delete_storage_type", id),

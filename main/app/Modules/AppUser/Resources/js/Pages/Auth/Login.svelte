@@ -164,31 +164,6 @@
       <div class="col-12">
         <button class="btn btn-brand btn-block text-center">Sign in</button>
       </div>
-      <div class="col-12">
-        <div class="rui-sign-or mt-2 mb-5">or</div>
-      </div>
-      <div class="col-12">
-        <ul class="rui-social-links">
-          <li>
-            <a href class="rui-social-github">
-              <span class="fab fa-github" />
-              Github
-            </a>
-          </li>
-          <li>
-            <a href class="rui-social-facebook">
-              <span class="fab fa-facebook-f" />
-              Facebook
-            </a>
-          </li>
-          <li>
-            <a href class="rui-social-google">
-              <span class="fab fa-google" />
-              Google
-            </a>
-          </li>
-        </ul>
-      </div>
     </div>
   </form>
   <div class="mt-20 text-grey-6">

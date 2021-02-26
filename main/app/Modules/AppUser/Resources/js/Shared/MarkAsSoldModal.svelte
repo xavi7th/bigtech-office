@@ -44,42 +44,31 @@
   };
 
   let markProductAsSold = () => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text:
-          "This will mark this product as sold for and update the sales reps daily sales",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
-        confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
 
-          return Inertia.post(
-            route(auth.user.user_type + ".multiaccess.products.mark_as_sold", productToMarkAsSold),
-            details,
-            {
-              preserveState: true,
-              preserveScroll: true,
-              only: ["flash", "errors", "officeBranch", "products"],
-              onSuccess: () =>{
-                 details = {
-                  online_rep_id: null,
-                  sales_channel_id: null
-                }
-                jQuery('#enterSalesDetails').modal('hide');
+  swalPreconfirm
+    .fire({
+      text: "This will mark this product as sold for and update the sales reps daily sales",
+      confirmButtonText: "Yes, carry on!",
+      preConfirm: () => {
+
+        return Inertia.post(
+          route(auth.user.user_type + ".multiaccess.products.mark_as_sold", productToMarkAsSold),
+          details, {
+            preserveState: true,
+            preserveScroll: true,
+            only: ["flash", "errors", "officeBranch", "products"],
+            onSuccess: () => {
+              details = {
+                online_rep_id: null,
+                sales_channel_id: null
               }
+              jQuery('#enterSalesDetails')
+                .modal('hide');
             }
-          )
-        }
-      })
-      .then(result => {
+          }
+        )
+      }
+    }).then(result => {
         if (result.dismiss && result.dismiss == "cancel") {
           swal.fire(
             "Canceled!",

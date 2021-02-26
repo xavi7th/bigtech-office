@@ -10,22 +10,12 @@
 $: details.product_description = productToSendToDispatch;
 
   let requestProductDispatch = () => {
-    swal
+    swalPreconfirm
       .fire({
-        title: "Are you sure?",
         text:
           "Send request to Dispatch? The dispatch team will see this as a pending delivery request and proceed to process it",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
         confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
+         preConfirm: () => {
           return Inertia.post(
             route("salesrep.products.send_for_dispatch"),
             details,

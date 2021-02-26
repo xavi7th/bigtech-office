@@ -9,21 +9,11 @@ import { toCurrency } from '@public-shared/helpers';
   export let batchWithProducts;
 
   let deleteProduct = productUUID => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text: "This will delete this comment completely",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
-        confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
+      swalPreconfirm
+        .fire({
+          text: "This will delete this comment completely",
+          confirmButtonText: "Yes, carry on!",
+          preConfirm: () => {
           return Inertia.delete(
             route("superadmin.products.delete_local_product", productUUID),
             {
@@ -32,7 +22,7 @@ import { toCurrency } from '@public-shared/helpers';
             }
           )
         }
-      })
+        })
       .then(result => {
         if (result.dismiss && result.dismiss == "cancel") {
           swal.fire(

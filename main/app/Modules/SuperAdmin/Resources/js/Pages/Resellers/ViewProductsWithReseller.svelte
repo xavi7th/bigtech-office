@@ -10,41 +10,31 @@
   let sellingPrice, productToMarkAsSold;
 
   let markProductAsSold = () => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text:
+      swalPreconfirm
+        .fire({
+          text:
           "This will mark this product as sold no longer available in the stock list",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
-        confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
-          return Inertia.post(
-            route("stockkeeper.resellers.mark_as_sold", [
-              resellerWithProducts.id,
-              productToMarkAsSold
-            ]),
-            {
-              selling_price: sellingPrice
-            },
-            {
-              preserveState: true,
-              preserveScroll: true,
-              only: ["flash", "errors", "resellerWithProducts"],
-              onSuccess: () =>{
-                sellingPrice = null;
+          confirmButtonText: "Yes, carry on!",
+           preConfirm: () => {
+            return Inertia.post(
+              route("stockkeeper.resellers.mark_as_sold", [
+                resellerWithProducts.id,
+                productToMarkAsSold
+              ]),
+              {
+                selling_price: sellingPrice
               },
-            }
-          )
-        }
-      })
+              {
+                preserveState: true,
+                preserveScroll: true,
+                only: ["flash", "errors", "resellerWithProducts"],
+                onSuccess: () =>{
+                  sellingPrice = null;
+                },
+              }
+            )
+          }
+        })
       .then(result => {
         if (result.dismiss && result.dismiss == "cancel") {
           swal.fire(

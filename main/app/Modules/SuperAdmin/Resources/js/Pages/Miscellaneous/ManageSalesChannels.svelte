@@ -51,31 +51,21 @@
   };
 
   let deleteSalesChannel = id => {
-    swal
+    swalPreconfirm
       .fire({
-        title: "Are you sure?",
         text: "This sales channel will be permanently deleted",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
         confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
         preConfirm: () => {
-          return Inertia.delete(
-            route(auth.user.user_type + ".multiaccess.miscellaneous.delete_sales_channel", id),
-            {
-              preserveState: true,
-              preserveScroll: true,
-              only: ["flash", "errors", "salesChannels"]
-            }
-          )
-        }
-      })
+            return Inertia.delete(
+              route(auth.user.user_type + ".multiaccess.miscellaneous.delete_sales_channel", id),
+              {
+                preserveState: true,
+                preserveScroll: true,
+                only: ["flash", "errors", "salesChannels"]
+              }
+            )
+          }
+        })
       .then(result => {
         if (result.dismiss && result.dismiss == "cancel") {
           swal.fire(

@@ -67,22 +67,12 @@
   };
 
   let suspendAppUser = id => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text:
+      swalPreconfirm
+        .fire({
+          text:
           "This app users will no longer be able to login to their account. It can be restored at a later time",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
-        confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
+          confirmButtonText: "Yes, carry on!",
+          preConfirm: () => {
           return Inertia.delete(
             route("superadmin.manage_staff.sales_rep.suspend", id),
             {
@@ -105,21 +95,11 @@
   };
 
   let restoreAppUser = id => {
-    swal
+    swalPreconfirm
       .fire({
-        title: "Are you sure?",
         text:
           "This app users will once again be ableto acces their accounts.",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
         confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.put(
             route("superadmin.manage_staff.sales_rep.reactivate", id),

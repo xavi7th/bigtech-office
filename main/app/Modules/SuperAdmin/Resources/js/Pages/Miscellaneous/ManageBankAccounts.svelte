@@ -77,22 +77,12 @@
   };
 
   let suspendBankAccount = id => {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text:
+      swalPreconfirm
+        .fire({
+          text:
           "This bank account will no longer be available as a payment option for users. It can be restored at a later time",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
-        confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
+          confirmButtonText: "Yes, carry on!",
+          preConfirm: () => {
           return Inertia.delete(
             route("superadmin.miscellaneous.suspend_bank_account", id),
             {
@@ -102,7 +92,7 @@
             }
           )
         }
-      })
+        })
       .then(result => {
         if (result.dismiss && result.dismiss == "cancel") {
           swal.fire(
@@ -115,21 +105,11 @@
   };
 
   let restoreBankAccount = id => {
-    swal
+    swalPreconfirm
       .fire({
-        title: "Are you sure?",
         text:
           "This bank account will once again be available as a payment option for users.",
-        icon: "question",
-        showCloseButton: false,
-        allowOutsideClick: () => !swal.isLoading(),
-        allowEscapeKey: false,
-        showCancelButton: true,
-        focusCancel: true,
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#725ec3",
         confirmButtonText: "Yes, carry on!",
-        showLoaderOnConfirm: true,
         preConfirm: () => {
           return Inertia.delete(
             route("superadmin.miscellaneous.restore_bank_account", id),
