@@ -4017,20 +4017,14 @@ h6 {
 .rui-navbar-top {
 	position: -webkit-sticky;
 	position: sticky;
-	-webkit-box-align: stretch;
-	-webkit-align-items: stretch;
-	-ms-flex-align: stretch;
 	align-items: stretch;
 	min-height: 70px;
 	padding: 0 15px;
-	background-color: #fff;
+	background-color: scale-color($color: $brand, $red: -20%);
 	will-change: transform, opacity;
-	-webkit-transition: opacity .15s ease-in-out, -webkit-transform .15s ease-in-out;
-	transition: opacity .15s ease-in-out, -webkit-transform .15s ease-in-out;
-	-o-transition: transform .15s ease-in-out, opacity .15s ease-in-out;
 	transition: transform .15s ease-in-out, opacity .15s ease-in-out;
-	transition: transform .15s ease-in-out, opacity .15s ease-in-out, -webkit-transform .15s ease-in-out;
-	z-index: 1001
+	z-index: 1001;
+  color: #fff;
 }
 
 @media (max-width:1199.98px) {

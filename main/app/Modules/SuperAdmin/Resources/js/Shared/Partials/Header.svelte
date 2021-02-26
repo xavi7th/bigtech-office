@@ -5,6 +5,7 @@
 <style>
   .dashboard-logo{
     max-height: 70px;
+    margin-left: 30px;
   }
 </style>
 
