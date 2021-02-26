@@ -194,16 +194,16 @@
         },
         {
             "name": "coconutcraig/laravel-postmark",
-            "version": "v2.10.0",
+            "version": "v2.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/craigpaul/laravel-postmark.git",
-                "reference": "c4899114a9364930123f4e53aafff41c94021788"
+                "reference": "9ed991b3ff5e29dba9d64d25f749f87834b72171"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craigpaul/laravel-postmark/zipball/c4899114a9364930123f4e53aafff41c94021788",
-                "reference": "c4899114a9364930123f4e53aafff41c94021788",
+                "url": "https://api.github.com/repos/craigpaul/laravel-postmark/zipball/9ed991b3ff5e29dba9d64d25f749f87834b72171",
+                "reference": "9ed991b3ff5e29dba9d64d25f749f87834b72171",
                 "shasum": ""
             },
             "require": {
@@ -260,7 +260,7 @@
             ],
             "support": {
                 "issues": "https://github.com/craigpaul/laravel-postmark/issues",
-                "source": "https://github.com/craigpaul/laravel-postmark/tree/v2.10.0"
+                "source": "https://github.com/craigpaul/laravel-postmark/tree/v2.10.1"
             },
             "funding": [
                 {
@@ -268,7 +268,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-30T13:54:22+00:00"
+            "time": "2021-02-24T13:45:30+00:00"
         },
         {
             "name": "danielme85/laravel-log-to-db",
@@ -7308,16 +7308,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.0.10",
+            "version": "2.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "890c79ff096818e762b42c9624ca1df800ab789b"
+                "reference": "a5a5632da0b1c2d6fa9a3b65f1f4e90d1f04abb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/890c79ff096818e762b42c9624ca1df800ab789b",
-                "reference": "890c79ff096818e762b42c9624ca1df800ab789b",
+                "url": "https://api.github.com/repos/composer/composer/zipball/a5a5632da0b1c2d6fa9a3b65f1f4e90d1f04abb9",
+                "reference": "a5a5632da0b1c2d6fa9a3b65f1f4e90d1f04abb9",
                 "shasum": ""
             },
             "require": {
@@ -7385,7 +7385,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.0.10"
+                "source": "https://github.com/composer/composer/tree/2.0.11"
             },
             "funding": [
                 {
@@ -7401,7 +7401,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-23T15:11:37+00:00"
+            "time": "2021-02-24T13:57:23+00:00"
         },
         {
             "name": "composer/semver",
@@ -10539,16 +10539,16 @@
         },
         {
             "name": "spatie/ray",
-            "version": "1.20.0",
+            "version": "1.20.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/ray.git",
-                "reference": "27400a44a1130e660a07b374a10dd96db70d6d0a"
+                "reference": "f51ef21fe88c4d4628f1656a73db540fdbc28773"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/ray/zipball/27400a44a1130e660a07b374a10dd96db70d6d0a",
-                "reference": "27400a44a1130e660a07b374a10dd96db70d6d0a",
+                "url": "https://api.github.com/repos/spatie/ray/zipball/f51ef21fe88c4d4628f1656a73db540fdbc28773",
+                "reference": "f51ef21fe88c4d4628f1656a73db540fdbc28773",
                 "shasum": ""
             },
             "require": {
@@ -10598,7 +10598,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/ray/issues",
-                "source": "https://github.com/spatie/ray/tree/1.20.0"
+                "source": "https://github.com/spatie/ray/tree/1.20.1"
             },
             "funding": [
                 {
@@ -10610,7 +10610,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2021-02-22T12:01:10+00:00"
+            "time": "2021-02-26T11:06:59+00:00"
         },
         {
             "name": "symfony/debug",
