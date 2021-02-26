@@ -155,9 +155,9 @@ class SuperAdminController extends Controller
         'total_local_purchases_count' => Product::local()->today()->count(),
         'balance_after_expenses' => (float)$cash_collected - $daily_expenses_list->sum('amount'),
         'payments_breakdown' => collect($payments_breakdown)->merge(['total' => $payments_breakdown->sum()]),
-        'daily_expenses_list' => collect($daily_expenses_list)->merge(['total' => $daily_expenses_list->sum('amount')]),
+        'daily_expenses_list' => collect($daily_expenses_list)->merge([['purpose' => 'Total', 'amount'=> $daily_expenses_list->sum('amount')]]),
         'most_recent_sales' => $most_recent_sales,
-        'live_account_pauments' => Cache::rememberForever('bank_payments', fn () => SalesRecordBankAccount::with('company_bank_account')->today()->get()->transform(fn ($rec) => ['bank' => $rec->company_bank_account->bank, 'amount' => $rec->amount])),
+        'live_account_payments' => Cache::rememberForever('bank_payments', fn () => SalesRecordBankAccount::with('company_bank_account')->today()->get()->transform(fn ($rec) => ['bank' => $rec->company_bank_account->bank, 'amount' => $rec->amount])),
       ]
     ];
   }

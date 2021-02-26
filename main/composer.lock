@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "10d35e7b3a9eed4a962179af4def472a",
+    "content-hash": "e0f28a6c649ed438dae827ebdf9db9e3",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2493,69 +2493,6 @@
             "time": "2020-11-07T02:01:34+00:00"
         },
         {
-            "name": "orangehill/iseed",
-            "version": "v2.6.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/orangehill/iseed.git",
-                "reference": "03c73d3f829a74065e14a757f0d749ad4928a15f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/orangehill/iseed/zipball/03c73d3f829a74065e14a757f0d749ad4928a15f",
-                "reference": "03c73d3f829a74065e14a757f0d749ad4928a15f",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
-                "php": "^7.2"
-            },
-            "require-dev": {
-                "illuminate/filesystem": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
-                "laravel/framework": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
-                "mockery/mockery": "^1.0.0",
-                "phpunit/phpunit": "^8.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Orangehill\\Iseed\\IseedServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Orangehill\\Iseed": "src/"
-                },
-                "classmap": [
-                    "src/Orangehill/Iseed/Exceptions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Tihomir Opacic",
-                    "email": "tihomir.opacic@orangehilldev.com"
-                }
-            ],
-            "description": "Generate a new Laravel database seed file based on data from the existing database table.",
-            "keywords": [
-                "artisan",
-                "generators",
-                "laravel",
-                "seed"
-            ],
-            "support": {
-                "issues": "https://github.com/orangehill/iseed/issues",
-                "source": "https://github.com/orangehill/iseed/tree/v2.6.4"
-            },
-            "time": "2020-09-10T06:25:21+00:00"
-        },
-        {
             "name": "paragonie/constant_time_encoding",
             "version": "v2.4.0",
             "source": {
@@ -3298,57 +3235,6 @@
                 "source": "https://github.com/bobthecow/psysh/tree/v0.10.6"
             },
             "time": "2021-01-18T15:53:43+00:00"
-        },
-        {
-            "name": "rachidlaasri/travel",
-            "version": "1.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rashidlaasri/travel.git",
-                "reference": "a492080e7f1e00515ea9e22d989d1902f9476e19"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rashidlaasri/travel/zipball/a492080e7f1e00515ea9e22d989d1902f9476e19",
-                "reference": "a492080e7f1e00515ea9e22d989d1902f9476e19",
-                "shasum": ""
-            },
-            "require": {
-                "nesbot/carbon": ">=1.29.0",
-                "php": "^7.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.2|^9.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "RachidLaasri\\Travel\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Rachid Laasri",
-                    "email": "rashidlaasri@gmail.com",
-                    "homepage": "https://rachidlaasri.com"
-                }
-            ],
-            "description": "Framework agnostic PHP package to control the time.",
-            "homepage": "https://github.com/rashidlaasri/travel",
-            "keywords": [
-                "carbon",
-                "time",
-                "travel"
-            ],
-            "support": {
-                "issues": "https://github.com/rashidlaasri/travel/issues",
-                "source": "https://github.com/rashidlaasri/travel/tree/1.0.5"
-            },
-            "time": "2021-01-06T22:26:46+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -6574,67 +6460,6 @@
                 "source": "https://github.com/webparking/laravel-queue-ensurer/tree/1.3.0"
             },
             "time": "2020-09-10T10:24:32+00:00"
-        },
-        {
-            "name": "wewowweb/laravel-svelte-preset",
-            "version": "v0.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/wewowweb/laravel-svelte-preset.git",
-                "reference": "6b9f784aafc3ceba4d7aa9c8ff13f222762bdd80"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/wewowweb/laravel-svelte-preset/zipball/6b9f784aafc3ceba4d7aa9c8ff13f222762bdd80",
-                "reference": "6b9f784aafc3ceba4d7aa9c8ff13f222762bdd80",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "^5.8|^6.0|^7.0|^8.0",
-                "laravel/ui": "^1.2|^2.0|^3.0",
-                "php": "^7.2"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^3.8|^4.0|^5.0|^6.0",
-                "phpunit/phpunit": "^8.0|^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Wewowweb\\LaravelSveltePreset\\LaravelSveltePresetServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Wewowweb\\LaravelSveltePreset\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Gal Jakic",
-                    "email": "gal@wewowweb.com",
-                    "role": "Author"
-                }
-            ],
-            "description": "Svelte frontend preset for Laravel.",
-            "homepage": "https://github.com/wewowweb/laravel-svelte-preset",
-            "keywords": [
-                "We Wow Web",
-                "laravel",
-                "laravel-svelte-preset",
-                "svelte"
-            ],
-            "support": {
-                "issues": "https://github.com/wewowweb/laravel-svelte-preset/issues",
-                "source": "https://github.com/wewowweb/laravel-svelte-preset/tree/v0.1.8"
-            },
-            "time": "2020-11-16T21:27:08+00:00"
         }
     ],
     "packages-dev": [
@@ -8353,6 +8178,69 @@
             "time": "2020-10-29T15:12:23+00:00"
         },
         {
+            "name": "orangehill/iseed",
+            "version": "v2.6.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orangehill/iseed.git",
+                "reference": "03c73d3f829a74065e14a757f0d749ad4928a15f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orangehill/iseed/zipball/03c73d3f829a74065e14a757f0d749ad4928a15f",
+                "reference": "03c73d3f829a74065e14a757f0d749ad4928a15f",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "illuminate/filesystem": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+                "laravel/framework": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+                "mockery/mockery": "^1.0.0",
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Orangehill\\Iseed\\IseedServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Orangehill\\Iseed": "src/"
+                },
+                "classmap": [
+                    "src/Orangehill/Iseed/Exceptions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tihomir Opacic",
+                    "email": "tihomir.opacic@orangehilldev.com"
+                }
+            ],
+            "description": "Generate a new Laravel database seed file based on data from the existing database table.",
+            "keywords": [
+                "artisan",
+                "generators",
+                "laravel",
+                "seed"
+            ],
+            "support": {
+                "issues": "https://github.com/orangehill/iseed/issues",
+                "source": "https://github.com/orangehill/iseed/tree/v2.6.4"
+            },
+            "time": "2020-09-10T06:25:21+00:00"
+        },
+        {
             "name": "phar-io/manifest",
             "version": "2.0.1",
             "source": {
@@ -9081,6 +8969,57 @@
                 }
             ],
             "time": "2021-01-17T07:37:30+00:00"
+        },
+        {
+            "name": "rachidlaasri/travel",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rashidlaasri/travel.git",
+                "reference": "a492080e7f1e00515ea9e22d989d1902f9476e19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rashidlaasri/travel/zipball/a492080e7f1e00515ea9e22d989d1902f9476e19",
+                "reference": "a492080e7f1e00515ea9e22d989d1902f9476e19",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": ">=1.29.0",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.2|^9.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RachidLaasri\\Travel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rachid Laasri",
+                    "email": "rashidlaasri@gmail.com",
+                    "homepage": "https://rachidlaasri.com"
+                }
+            ],
+            "description": "Framework agnostic PHP package to control the time.",
+            "homepage": "https://github.com/rashidlaasri/travel",
+            "keywords": [
+                "carbon",
+                "time",
+                "travel"
+            ],
+            "support": {
+                "issues": "https://github.com/rashidlaasri/travel/issues",
+                "source": "https://github.com/rashidlaasri/travel/tree/1.0.5"
+            },
+            "time": "2021-01-06T22:26:46+00:00"
         },
         {
             "name": "react/promise",
@@ -10534,6 +10473,67 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.9.1"
             },
             "time": "2020-07-08T17:02:28+00:00"
+        },
+        {
+            "name": "wewowweb/laravel-svelte-preset",
+            "version": "v0.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wewowweb/laravel-svelte-preset.git",
+                "reference": "6b9f784aafc3ceba4d7aa9c8ff13f222762bdd80"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wewowweb/laravel-svelte-preset/zipball/6b9f784aafc3ceba4d7aa9c8ff13f222762bdd80",
+                "reference": "6b9f784aafc3ceba4d7aa9c8ff13f222762bdd80",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.8|^6.0|^7.0|^8.0",
+                "laravel/ui": "^1.2|^2.0|^3.0",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^3.8|^4.0|^5.0|^6.0",
+                "phpunit/phpunit": "^8.0|^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Wewowweb\\LaravelSveltePreset\\LaravelSveltePresetServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wewowweb\\LaravelSveltePreset\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gal Jakic",
+                    "email": "gal@wewowweb.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "Svelte frontend preset for Laravel.",
+            "homepage": "https://github.com/wewowweb/laravel-svelte-preset",
+            "keywords": [
+                "We Wow Web",
+                "laravel",
+                "laravel-svelte-preset",
+                "svelte"
+            ],
+            "support": {
+                "issues": "https://github.com/wewowweb/laravel-svelte-preset/issues",
+                "source": "https://github.com/wewowweb/laravel-svelte-preset/tree/v0.1.8"
+            },
+            "time": "2020-11-16T21:27:08+00:00"
         },
         {
             "name": "zbateson/mail-mime-parser",

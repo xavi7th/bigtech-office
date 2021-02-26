@@ -83,8 +83,6 @@ class LoginController extends Controller
    */
   public function login(Request $request)
   {
-    ray()->clearAll();
-    dd($this->authSuccess);
     $this->validateLogin($request);
 
     if (

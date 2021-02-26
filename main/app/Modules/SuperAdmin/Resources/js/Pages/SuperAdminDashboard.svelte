@@ -77,7 +77,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@
               <small class="rui-widget-subtitle">Total Daily Sales</small>
             </div>
             <div class="rui-widget-total-chart">
-              <canvas use:initialiseLineChart={{data: statistics.live_account_pauments}} class="rui-chartjs rui-chartjs-line rui-chartjs-total" data-height="100" data-chartjs-interval="3000" data-chartjs-line-color="#8e9fff"></canvas>
+              <canvas use:initialiseLineChart={{data: statistics.live_account_payments}} class="rui-chartjs rui-chartjs-line rui-chartjs-total" data-height="100" data-chartjs-interval="3000" data-chartjs-line-color="#fe070b">
             </div>
           </div>
         </div>
@@ -173,7 +173,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -185,7 +185,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -197,7 +197,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -209,7 +209,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -221,7 +221,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -233,7 +233,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -245,7 +245,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -257,7 +257,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -269,7 +269,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -281,7 +281,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -294,7 +294,7 @@
             </div>
             <div class="rui-chartjs-container">
               <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
+                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
             </div>
           </div>
         </div>
@@ -360,8 +360,8 @@
               <p class="card-text">List of expenses and monies spent in the office today.</p>
           </div>
           <ul class="list-group list-group-flush">
-              {#each  Object.entries(statistics.daily_expenses_list) as [expense_details, amount]}
-                <li class="list-group-item d-flex justify-content-between"><strong class="text-capitalize">{expense_details}: </strong> <h4 class="my-0 mr-15">{toCurrency(amount)}</h4></li>
+              {#each  Object.entries(statistics.daily_expenses_list) as [idx, expense_details]}
+                <li class="list-group-item d-flex justify-content-between"><strong class="text-capitalize">{expense_details.purpose}: </strong> <h4 class="my-0">{toCurrency(expense_details.amount)}</h4></li>
               {/each}
           </ul>
       </div>

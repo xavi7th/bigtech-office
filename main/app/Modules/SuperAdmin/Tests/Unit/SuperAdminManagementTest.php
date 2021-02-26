@@ -61,7 +61,7 @@ class SuperAdminManagementTest extends TestCase
     $this->assertArrayHasKey('payments_breakdown', (array)$page->props->statistics);
     $this->assertArrayHasKey('daily_expenses_list', (array)$page->props->statistics);
     $this->assertArrayHasKey('most_recent_sales', (array)$page->props->statistics);
-    $this->assertArrayHasKey('live_account_pauments', (array)$page->props->statistics);
+    $this->assertArrayHasKey('live_account_payments', (array)$page->props->statistics);
     /** +1 to make room for the total index merged into the payments breakdown array */
     $this->assertCount(CompanyBankAccount::count() + 1, (array)$page->props->statistics->payments_breakdown);
   }
