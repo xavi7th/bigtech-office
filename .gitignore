@@ -3,9 +3,6 @@
 .phpunit.result.cache
 /node_modules
 node_modules
-/public_html/**
-!/public_html/.htaccess
-!/public_html/index.php
 /public_html/hot
 /public_html/storage
 /main/storage/*.key
