@@ -139,9 +139,9 @@
                   Product ID
                 </th>
                 <th scope="col">Selling Price</th>
-                {#if !auth.user.isWebAdmin}
+
                   <th scope="col">Action</th>
-                {/if}
+
               </tr>
             </tfoot>
             <tbody>
@@ -157,7 +157,7 @@
                     {/if}
                   </td>
                   <td>{toCurrency(product.selling_price)}</td>
-                  {#if !auth.user.isWebAdmin}
+
                     <td>
                       {#if auth.user.isSuperAdmin || auth.user.isAuditor || auth.user.isAccountant}
                         <InertiaLink
@@ -244,7 +244,7 @@
                         {/if}
                       {/if}
                     </td>
-                  {/if}
+
                 </tr>
               {/each}
             </tbody>
