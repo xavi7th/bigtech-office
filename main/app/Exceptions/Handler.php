@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Request;
 use App\Modules\SuperAdmin\Models\ErrLog;
+use Illuminate\Auth\AuthenticationException;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -100,6 +101,22 @@ class Handler extends ExceptionHandler
     }
 
     return $response;
+  }
+
+  /**
+   * Convert an authentication exception into a response.
+   *
+   * ! This is important to vhange the default redirect named route from route('login') and avoid route('login') not defined
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  \Illuminate\Auth\AuthenticationException  $exception
+   * @return \Symfony\Component\HttpFoundation\Response
+   */
+  protected function unauthenticated($request, AuthenticationException $exception)
+  {
+    return $request->expectsJson()
+      ? response()->json(['message' => $exception->getMessage()], 401)
+      : redirect()->guest($exception->redirectTo() ?? route('app.login.show'));
   }
 
 
