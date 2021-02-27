@@ -25,6 +25,7 @@ window._ = {
 	map: require('lodash/map'),
 	omit: require('lodash/omit'),
 	pullAt: require('lodash/pullAt'),
+	pullAllWith: require('lodash/pullAllWith'),
 	reduce: require('lodash/reduce'),
 	size: require('lodash/size'),
 	split: require('lodash/split'),

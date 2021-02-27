@@ -34,7 +34,7 @@
           confirmButtonText: "Yes, carry on!",
           preConfirm: () => {
           return Inertia.delete(
-            route($page.auth.user.user_type + ".multiaccess.product_models.delete_model_image", id),
+            route($page.props.auth.user.user_type + ".multiaccess.product_models.delete_model_image", id),
             {
               preserveState: true,
               preserveScroll: true,
