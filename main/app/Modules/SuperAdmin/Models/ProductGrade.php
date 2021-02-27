@@ -23,9 +23,9 @@ class ProductGrade extends BaseModel
       $gen = function ($name) {
         return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProductGrades'])->name($gen('product_grades'))->defaults('ex', __e('ss,a', 'check-square', false))->middleware('auth:super_admin,auditor');
-      Route::post('create', [self::class, 'createProductGrade'])->name($gen('create_product_grade'))->defaults('ex', __e('ss,a', 'check-square', true))->middleware('auth:super_admin,auditor');
-      Route::put('{productGrade}/edit', [self::class, 'editProductGrade'])->name($gen('edit_product_grade'))->defaults('ex', __e('ss,a', 'check-square', true))->middleware('auth:super_admin,auditor');
+      Route::get('', [self::class, 'getProductGrades'])->name($gen('product_grades'))->defaults('ex', __e('ss,a,w', 'check-square', false))->middleware('auth:super_admin,auditor,web_admin');
+      Route::post('create', [self::class, 'createProductGrade'])->name($gen('create_product_grade'))->defaults('ex', __e('ss,a,w', 'check-square', true))->middleware('auth:super_admin,auditor,web_admin');
+      Route::put('{productGrade}/edit', [self::class, 'editProductGrade'])->name($gen('edit_product_grade'))->defaults('ex', __e('ss,a,w', 'check-square', true))->middleware('auth:super_admin,auditor,web_admin');
     });
   }
 

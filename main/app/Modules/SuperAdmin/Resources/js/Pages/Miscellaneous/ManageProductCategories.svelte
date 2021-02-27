@@ -103,7 +103,7 @@
 
 <Layout title="Manage Product Categories">
   <div class="row vertical-gap">
-    {#if auth.user.isAuditor}
+    {#if auth.user.isAuditor || auth.user.isWebAdmin}
       <div class="col-lg-4 col-xl-4">
         <form class="#" on:submit|preventDefault={createProductCategory}>
 
@@ -150,7 +150,7 @@
               <th scope="col">#</th>
               <th scope="col">Name</th>
               <th scope="col">Sample Image</th>
-              {#if auth.user.isAuditor}
+              {#if auth.user.isAuditor || auth.user.isWebAdmin}
                 <th scope="col">Action</th>
               {/if}
             </tr>
@@ -166,7 +166,7 @@
                       alt="{category.name}'s logo"
                       class="img-fluid img-responsive" />
                   </td>
-                {#if auth.user.isAuditor}
+                {#if auth.user.isAuditor || auth.user.isWebAdmin}
                   <td class="">
                     <!-- <button
                     type="button"

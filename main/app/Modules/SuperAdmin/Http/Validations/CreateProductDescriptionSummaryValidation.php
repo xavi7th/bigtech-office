@@ -17,8 +17,7 @@ class CreateProductDescriptionSummaryValidation extends FormRequest
   public function rules()
   {
     return [
-      'product_model_id' => $this->isMethod('PUT') ? 'exists:product_models,id' : 'required|unique:product_description_summaries,product_model_id|exists:product_models,id',
-      'description_summary' => $this->isMethod('PUT') ? 'required_without:product_model_id|string' : 'required|string',
+      // 'description_summary' => 'required|string',
     ];
   }
 
@@ -29,6 +28,7 @@ class CreateProductDescriptionSummaryValidation extends FormRequest
    */
   public function authorize()
   {
+    dd($this->all());
     return true;
   }
 
@@ -40,7 +40,6 @@ class CreateProductDescriptionSummaryValidation extends FormRequest
   public function messages()
   {
     return [
-      'product_model_id.unique' => 'This model already has a description. Edit that instead',
       'description_summary.required_without' => 'You must change either the summary or the model',
     ];
   }

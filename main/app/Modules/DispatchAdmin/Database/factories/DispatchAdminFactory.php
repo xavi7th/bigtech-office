@@ -3,13 +3,12 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use Faker\Generator as Faker;
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 
-$factory->define(DispatchAdmin::class, function (Faker $faker) {
-  return [
-    'full_name' => $faker->name,
-    'email' => $faker->email,
-    'password' => 'dispatch-admins',
-    'is_active' =>true,
-  ];
-});
+// $factory->define(DispatchAdmin::class, function (Faker $faker) {
+//   return [
+//     'full_name' => $faker->name,
+//     'email' => $faker->email,
+//     'password' => 'dispatch-admins',
+//     'is_active' =>true,
+//   ];
+// });

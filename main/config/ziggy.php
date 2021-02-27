@@ -16,9 +16,6 @@ return [
     'accountant' => [
       'accountant.*'
     ],
-    'dispatchadmin' => [
-      'dispatchadmin.*'
-    ],
     'qualitycontrol' => [
       'qualitycontrol.*'
     ],

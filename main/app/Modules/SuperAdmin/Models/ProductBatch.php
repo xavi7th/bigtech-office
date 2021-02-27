@@ -77,9 +77,9 @@ class ProductBatch extends BaseModel
       $p = function ($name) {
         return 'multiaccess.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', false))->middleware('auth:stock_keeper,quality_control,auditor,accountant,super_admin');
-      Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss,a,ac', 'package', true))->middleware('auth:super_admin,auditor,accountant');
-      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', true))->middleware('auth:stock_keeper,quality_control,auditor,accountant,super_admin');
+      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a,ac,w', 'package', false))->middleware('auth:stock_keeper,quality_control,auditor,web_admin,accountant,super_admin');
+      Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss,a,ac,w', 'package', true))->middleware('auth:super_admin,auditor,web_admin,accountant');
+      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q,a,ac,w', 'package', true))->middleware('auth:stock_keeper,quality_control,auditor,web_admin,accountant,super_admin');
       Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss,ac', 'package', true))->middleware('auth:super_admin,accountant');
     });
   }

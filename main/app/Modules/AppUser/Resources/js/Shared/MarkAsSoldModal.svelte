@@ -156,7 +156,7 @@
         bind:value={details.ig_handle} />
     </div>
 
-    {#if !auth.user.isDispatchAdmin}
+    {#if !auth.user.isWebAdmin}
       <div class="col-12">
         <select class="custom-select" bind:value={details.online_rep_id}>
           <option selected value={null}>Select Online Rep</option>

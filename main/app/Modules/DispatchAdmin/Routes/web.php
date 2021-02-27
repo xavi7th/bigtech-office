@@ -1,8 +1,5 @@
 <?php
 
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
-use App\Modules\DispatchAdmin\Http\Controllers\DispatchAdminController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,4 +11,4 @@ use App\Modules\DispatchAdmin\Http\Controllers\DispatchAdminController;
 |
 */
 
-DispatchAdminController::routes();
+// DispatchAdminController::routes();

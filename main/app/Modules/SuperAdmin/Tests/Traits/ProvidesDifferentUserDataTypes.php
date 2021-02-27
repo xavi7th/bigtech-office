@@ -9,9 +9,8 @@ use App\Modules\WebAdmin\Models\WebAdmin;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Modules\Accountant\Models\Accountant;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
-use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
+use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\QualityControl\Models\QualityControl;
 
 /**
@@ -26,9 +25,9 @@ trait ProvidesDifferentUserDataTypes
     return $this->provideDifferentUserTypes(['accountant', 'appuser']);
   }
 
-  public function provideDifferentUserTypesWithoutDispatchAdmin()
+  public function provideDifferentUserTypesWithoutWebAdmin()
   {
-    return $this->provideDifferentUserTypes(['dispatchadmin', 'appuser']);
+    return $this->provideDifferentUserTypes(['webadmin', 'appuser']);
   }
 
   public function provideDifferentUserTypesWithoutSuperAdmin()
@@ -36,9 +35,9 @@ trait ProvidesDifferentUserDataTypes
     return $this->provideDifferentUserTypes(['superadmin', 'appuser']);
   }
 
-  public function provideDifferentUserTypesWithoutSalesRepAdnDispatchAdmin()
+  public function provideDifferentUserTypesWithoutSalesRepAndWebAdmin()
   {
-    return $this->provideDifferentUserTypes(['salesrep', 'dispatchadmin']);
+    return $this->provideDifferentUserTypes(['salesrep', 'webadmin']);
   }
 
   protected function provideDifferentUserTypes(array $typesToSkip = [])
@@ -67,9 +66,6 @@ trait ProvidesDifferentUserDataTypes
       ],
       'stockkeeper' => [
         fn () => [factory(OfficeBranch::class)->create(), factory(StockKeeper::class)->create(['id' => 2])],
-      ],
-      'dispatchadmin' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(DispatchAdmin::class)->create(['id' => 2])],
       ],
       'superadmin' => [
         fn () => [factory(OfficeBranch::class)->create(), factory(SuperAdmin::class)->create(['id' => 2])],

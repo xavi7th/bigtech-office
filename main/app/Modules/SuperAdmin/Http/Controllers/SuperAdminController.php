@@ -39,13 +39,11 @@ use App\Modules\SuperAdmin\Models\ProductExpense;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductSupplier;
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\QualityControl\Models\QualityControl;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
-use App\Modules\SuperAdmin\Providers\SuperAdminEventServiceProvider;
 
 class SuperAdminController extends Controller
 {
@@ -62,7 +60,6 @@ class SuperAdminController extends Controller
         SalesRep::superAdminRoutes();
         Auditor::superAdminRoutes();
         Accountant::superAdminRoutes();
-        DispatchAdmin::superAdminRoutes();
         QualityControl::superAdminRoutes();
         WebAdmin::superAdminRoutes();
         StockKeeper::superAdminRoutes();

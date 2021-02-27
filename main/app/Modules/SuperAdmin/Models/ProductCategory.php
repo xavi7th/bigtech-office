@@ -34,9 +34,9 @@ class ProductCategory extends BaseModel
       $gen = function ($name = null) {
         return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProductCategories'])->name($gen('product_categories'))->defaults('ex', __e('ss,a', 'edit-3', false))->middleware('auth:auditor,super_admin');;
-      Route::post('create', [self::class, 'createProductCategory'])->name($gen('create_product_category'))->defaults('ex', __e('ss,a', 'edit-3', true))->middleware('auth:auditor,super_admin');;
-      Route::put('{productCategory}/edit', [self::class, 'editProductCategory'])->name($gen('edit_product_category'))->defaults('ex', __e('ss,a', 'edit-3', true))->middleware('auth:auditor,super_admin');;
+      Route::get('', [self::class, 'getProductCategories'])->name($gen('product_categories'))->defaults('ex', __e('ss,a,w', 'edit-3', false))->middleware('auth:auditor,web_admin,super_admin');;
+      Route::post('create', [self::class, 'createProductCategory'])->name($gen('create_product_category'))->defaults('ex', __e('ss,a,w', 'edit-3', true))->middleware('auth:auditor,web_admin,super_admin');;
+      Route::put('{productCategory}/edit', [self::class, 'editProductCategory'])->name($gen('edit_product_category'))->defaults('ex', __e('ss,a,w', 'edit-3', true))->middleware('auth:auditor,web_admin,super_admin');;
     });
   }
 

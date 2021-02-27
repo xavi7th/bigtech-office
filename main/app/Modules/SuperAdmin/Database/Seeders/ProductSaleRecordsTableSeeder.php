@@ -33,7 +33,7 @@ class ProductSaleRecordsTableSeeder extends Seeder
         'sales_rep_id' => random_int(2, 10),
         'sales_rep_type' => SalesRep::class,
         'sale_confirmed_by' => 2,
-        'sale_confirmer_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
+        'sale_confirmer_type' => 'App\\Modules\\Accountant\\Models\\Accountant',
         'is_swap_transaction' => 0,
         'created_at' => '2020-06-17 00:00:00',
         'updated_at' => '2020-06-14 00:00:00',

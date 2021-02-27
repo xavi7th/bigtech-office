@@ -72,7 +72,7 @@
             Comments
           </a>
         </li>
-        {#if auth.user.isAuditor || auth.user.isSuperAdmin}
+        {#if auth.user.isAuditor || auth.user.isSuperAdmin || auth.user.isWebAdmin}
           <li class="nav-item">
             <a
               class="nav-link rui-tabs-link"
@@ -104,7 +104,7 @@
             comments={productModel.comments}
             on:view-comment={updateComment} />
         </div>
-        {#if auth.user.isAuditor || auth.user.isSuperAdmin}
+        {#if auth.user.isAuditor || auth.user.isSuperAdmin || auth.user.isWebAdmin}
           <div
             class="tab-pane fade"
             id="settings"

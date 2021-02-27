@@ -46,9 +46,9 @@ class StorageSize extends BaseModel
         return 'multiaccess.miscellaneous.' . $name;
       };
 
-      Route::get('', [self::class, 'getStorageSizes'])->name($misc('storage_sizes'))->defaults('ex', __e('ss,a', 'hard-drive', false))->middleware('auth:super_admin,auditor');
-      Route::post('create', [self::class, 'createStorageSize'])->name($misc('create_storage_size'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,auditor');
-      Route::put('{storageSize}/edit', [self::class, 'editStorageSize'])->name($misc('edit_storage_size'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,auditor');
+      Route::get('', [self::class, 'getStorageSizes'])->name($misc('storage_sizes'))->defaults('ex', __e('ss,a,w', 'hard-drive', false))->middleware('auth:super_admin,auditor,web_admin');
+      Route::post('create', [self::class, 'createStorageSize'])->name($misc('create_storage_size'))->middleware('auth:super_admin,auditor,web_admin');
+      Route::put('{storageSize}/edit', [self::class, 'editStorageSize'])->name($misc('edit_storage_size'))->middleware('auth:super_admin,auditor,web_admin');
     });
   }
 

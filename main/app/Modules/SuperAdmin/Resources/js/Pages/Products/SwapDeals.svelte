@@ -27,7 +27,7 @@
         confirmButtonText: "Return to Stock",
         preConfirm: () => {
           return Inertia.post(
-            route("dispatchadmin.products.swap_return_to_stock", product),
+            route("webadmin.products.swap_return_to_stock", product),
             {},
             {
               preserveState: true,
@@ -74,7 +74,9 @@
                 Selling Price
                 <Icon />
               </th>
-              <th scope="col">Action</th>
+              {#if !auth.user.isWebAdmin}
+                <th scope="col">Action</th>
+              {/if}
             </tr>
           </thead>
           <tbody>
@@ -93,90 +95,92 @@
                  {/if}
                 </td>
                 <td>{toCurrency(product.selling_price)}</td>
-                <td class="nowrap">
-                  <InertiaLink
-                    type="button"
-                    href={route(auth.user.user_type + '.multiaccess.products.swap_deal_details', product.uuid)}
-                    class="btn btn-primary btn-xs">
-                    Details
-                  </InertiaLink>
-
-                  {#if auth.user.isSuperAdmin || auth.user.isAuditor || auth.user.isAccountant}
+                {#if !auth.user.isWebAdmin}
+                  <td class="nowrap">
                     <InertiaLink
                       type="button"
-                      href={route(auth.user.user_type + '.multiaccess.miscellaneous.view_swap_history', product.uuid)}
-                      class="btn btn-info btn-xs btn-sm">
-                      History
+                      href={route(auth.user.user_type + '.multiaccess.products.swap_deal_details', product.uuid)}
+                      class="btn btn-primary btn-xs">
+                      Details
                     </InertiaLink>
-                  {/if}
 
-                  {#if auth.user.isSocialMediaRep || auth.user.isCallCenterRep}
+                    {#if auth.user.isSuperAdmin || auth.user.isAuditor || auth.user.isAccountant}
+                      <InertiaLink
+                        type="button"
+                        href={route(auth.user.user_type + '.multiaccess.miscellaneous.view_swap_history', product.uuid)}
+                        class="btn btn-info btn-xs btn-sm">
+                        History
+                      </InertiaLink>
+                    {/if}
+
+                    {#if auth.user.isSocialMediaRep || auth.user.isCallCenterRep}
+                      {#if product.status == 'in stock'}
+                        <button
+                          on:click={() => {
+                            productToSendToDispatch = `Awoof Device: ${product.description}, Price: ${toCurrency(product.selling_price)}`;
+                          }}
+                          type="button"
+                          data-toggle="modal"
+                          data-target="#sendToDispatch"
+                          class="btn btn-orange btn-xs btn-sm text-nowrap">
+                          Send to Dispatch
+                        </button>
+                      {/if}
+                    {/if}
+
+                    {#if auth.user.isWebAdmin}
+                      {#if product.status == 'out for delivery'}
+                        <button
+                          type="button"
+                          on:click={() => {
+                            productToMarkAsSold = product.uuid;
+                            dispatchDetails = product.dispatch_request;
+                          }}
+                          data-toggle="modal"
+                          data-target="#enterSwapSalesDetails"
+                          class="btn btn-success btn-xs btn-sm">
+                          Mark Sold
+                        </button>
+                        <button
+                          type="button"
+                          on:click={() => {
+                            returnToStock(product.uuid);
+                          }}
+                          class="btn btn-orange btn-xs btn-sm text-nowrap">
+                          Return to Stock
+                        </button>
+                      {/if}
+                    {/if}
+
                     {#if product.status == 'in stock'}
-                      <button
-                        on:click={() => {
-                          productToSendToDispatch = `Awoof Device: ${product.description}, Price: ${toCurrency(product.selling_price)}`;
-                        }}
-                        type="button"
-                        data-toggle="modal"
-                        data-target="#sendToDispatch"
-                        class="btn btn-orange btn-xs btn-sm text-nowrap">
-                        Send to Dispatch
-                      </button>
-                    {/if}
-                  {/if}
+                      {#if auth.user.isWalkInRep}
+                        <button
+                          type="button"
+                          on:click={() => {
+                            productToMarkAsSold = product.uuid;
+                          }}
+                          data-toggle="modal"
+                          data-target="#enterSwapSalesDetails"
+                          class="btn btn-success btn-xs btn-sm">
+                          Mark Sold
+                        </button>
+                      {/if}
 
-                  {#if auth.user.isDispatchAdmin}
-                    {#if product.status == 'out for delivery'}
-                      <button
-                        type="button"
-                        on:click={() => {
-                          productToMarkAsSold = product.uuid;
-                          dispatchDetails = product.dispatch_request;
-                        }}
-                        data-toggle="modal"
-                        data-target="#enterSwapSalesDetails"
-                        class="btn btn-success btn-xs btn-sm">
-                        Mark Sold
-                      </button>
-                      <button
-                        type="button"
-                        on:click={() => {
-                          returnToStock(product.uuid);
-                        }}
-                        class="btn btn-orange btn-xs btn-sm text-nowrap">
-                        Return to Stock
-                      </button>
+                      {#if auth.user.isStockKeeper}
+                        <button
+                          type="button"
+                          on:click={() => {
+                            productToGiveReseller = product.uuid;
+                          }}
+                          data-toggle="modal"
+                          data-target="#giveProductToReseller"
+                          class="btn btn-warning btn-xs btn-sm">
+                          Give Reseller
+                        </button>
+                      {/if}
                     {/if}
-                  {/if}
-
-                  {#if product.status == 'in stock'}
-                    {#if auth.user.isWalkInRep}
-                      <button
-                        type="button"
-                        on:click={() => {
-                          productToMarkAsSold = product.uuid;
-                        }}
-                        data-toggle="modal"
-                        data-target="#enterSwapSalesDetails"
-                        class="btn btn-success btn-xs btn-sm">
-                        Mark Sold
-                      </button>
-                    {/if}
-
-                    {#if auth.user.isStockKeeper}
-                      <button
-                        type="button"
-                        on:click={() => {
-                          productToGiveReseller = product.uuid;
-                        }}
-                        data-toggle="modal"
-                        data-target="#giveProductToReseller"
-                        class="btn btn-warning btn-xs btn-sm">
-                        Give Reseller
-                      </button>
-                    {/if}
-                  {/if}
-                </td>
+                  </td>
+                {/if}
               </tr>
             {/each}
           </tbody>

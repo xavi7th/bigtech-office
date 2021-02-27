@@ -1,12 +1,13 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
 	import { page } from '@inertiajs/inertia-svelte'
+  import { Inertia } from "@inertiajs/inertia";
 
   $: ({auth} = $page.props);
 
-  let salesChannelName, salesChannelId;
+  export let salesChannels = [];
+  let salesChannelName = null, salesChannelId;
 
   let createSalesChannel = () => {
     BlockToast.fire({
@@ -76,8 +77,6 @@
         }
       });
   };
-
-  export let salesChannels = [];
 </script>
 
 <Layout title="Manage Sales Channels">
@@ -100,8 +99,7 @@
           <div class="col-12">
             <button
               type="submit"
-              class="btn btn-success btn-long"
-              disabled={!salesChannelName}>
+              class="btn btn-success btn-long">
               <span class="text">Create</span>
             </button>
           </div>

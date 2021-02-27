@@ -18,7 +18,6 @@ use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Traits\MakesComments;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use App\Modules\QualityControl\Models\QualityControl;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -134,11 +133,6 @@ class User extends Authenticatable implements JWTSubject
     return $this instanceof QualityControl;
   }
 
-  public function isDispatchAdmin(): bool
-  {
-    return $this instanceof DispatchAdmin;
-  }
-
   public function isWebAdmin(): bool
   {
     return $this instanceof WebAdmin;
@@ -168,8 +162,6 @@ class User extends Authenticatable implements JWTSubject
       return ['isStockKeeper' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isQualityControl()) {
       return ['isQualityControl' => true, 'user_type' => strtolower($this->getType())];
-    } elseif ($this->isDispatchAdmin()) {
-      return ['isDispatchAdmin' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isWebAdmin()) {
       return ['isWebAdmin' => true, 'user_type' => strtolower($this->getType())];
     }
@@ -195,7 +187,7 @@ class User extends Authenticatable implements JWTSubject
    */
   static function findUserByEmail(string $email): self
   {
-    return SalesRep::findByEmail($email) ?? StockKeeper::findByEmail($email) ??  DispatchAdmin::findByEmail($email) ?? QualityControl::findByEmail($email) ?? WebAdmin::findByEmail($email) ?? Accountant::findByEmail($email) ?? Auditor::findByEmail($email);
+    return SalesRep::findByEmail($email) ?? StockKeeper::findByEmail($email) ?? QualityControl::findByEmail($email) ?? WebAdmin::findByEmail($email) ?? Accountant::findByEmail($email) ?? Auditor::findByEmail($email);
   }
 
   public function getType(): string

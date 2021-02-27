@@ -29,8 +29,8 @@
     Inertia.put(
       route(userType + ".multiaccess.product_descriptions.edit_product_desc", id),
       {
-        description_summary: desc
-        // product_model_id: id
+        description_summary: desc,
+        _method:'PUT'
       },
       {
         preserveState: true,

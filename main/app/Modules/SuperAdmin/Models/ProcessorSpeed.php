@@ -23,9 +23,9 @@ class ProcessorSpeed extends BaseModel
       $misc = function ($name) {
         return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProcessorSpeeds'])->name($misc('processor_speeds'))->defaults('ex', __e('ss,a', 'cpu', false))->middleware('auth:super_admin,auditor');
-      Route::post('create', [self::class, 'createProcessorSpeed'])->name($misc('create_processor_speed'))->defaults('ex', __e('ss,a', 'cpu', true))->middleware('auth:super_admin,auditor');
-      Route::put('{processorSpeed}/edit', [self::class, 'editProcessorSpeed'])->name($misc('edit_processor_speed'))->defaults('ex', __e('ss,a', 'cpu', true))->middleware('auth:super_admin,auditor');
+      Route::get('', [self::class, 'getProcessorSpeeds'])->name($misc('processor_speeds'))->defaults('ex', __e('ss,a,w', 'cpu', false))->middleware('auth:super_admin,web_admin,auditor');
+      Route::post('create', [self::class, 'createProcessorSpeed'])->name($misc('create_processor_speed'))->defaults('ex', __e('ss,a,w', 'cpu', true))->middleware('auth:super_admin,web_admin,auditor');
+      Route::put('{processorSpeed}/edit', [self::class, 'editProcessorSpeed'])->name($misc('edit_processor_speed'))->defaults('ex', __e('ss,a,w', 'cpu', true))->middleware('auth:super_admin,web_admin,auditor');
     });
   }
 

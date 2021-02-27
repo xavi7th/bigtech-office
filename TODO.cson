@@ -51,6 +51,10 @@ Feat: set up telegram channel or whatsapp Termii channel for notifications
 Feat: Implement server side pagination for local-supplier batch list devices
 Feat: Brand new items should go to stock immediately they are created
 Fix: Cost price of swap deals and local suppliers do not show cost price
+Feat: Clear live transactions every 12am to prevent cache fixation
+Feat: Only paid for local_stock_products should be counted as part of stock count for view stock route
+Feat: On creating product select a checkbox to skip QA
+CHORE: clear ->defaults('ex', __e('ac', 'archive', true) fron non_GET routes cos they don´t need it
 
 
 

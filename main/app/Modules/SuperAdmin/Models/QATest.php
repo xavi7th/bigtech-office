@@ -43,9 +43,9 @@ class QATest extends BaseModel
   {
     Route::group(['prefix' => 'qa-tests'], function () {
       Route::name('multiaccess.miscellaneous.')->group(function () {
-        Route::get('', [self::class, 'getQATests'])->name('qa_tests')->defaults('ex', __e('ss,a', 'award', false))->middleware('auth:super_admin,auditor');
-        Route::post('create', [self::class, 'createQATest'])->name('create_qa_test')->defaults('ex', __e('ss,a', 'award', true))->middleware('auth:super_admin,auditor');
-        Route::put('{qaTest}/edit', [self::class, 'editQATest'])->name('edit_qa_test')->defaults('ex', __e('ss,a', 'award', true))->middleware('auth:super_admin,auditor');
+        Route::get('', [self::class, 'getQATests'])->name('qa_tests')->defaults('ex', __e('ss,a,w', 'award', false))->middleware('auth:super_admin,auditor,web_admin');
+        Route::post('create', [self::class, 'createQATest'])->name('create_qa_test')->defaults('ex', __e('ss,a,w', 'award', true))->middleware('auth:super_admin,auditor,web_admin');
+        Route::put('{qaTest}/edit', [self::class, 'editQATest'])->name('edit_qa_test')->defaults('ex', __e('ss,a,w', 'award', true))->middleware('auth:super_admin,auditor,web_admin');
       });
     });
   }

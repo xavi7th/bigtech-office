@@ -157,7 +157,7 @@ class LoginController extends Controller
           $this->authSuccess = true;
         }
       } catch (\Throwable $th) {
-        ErrLog::notifyAuditorAndFail(SuperAdmin::find(1), $th, 'Login Error');
+        ErrLog::notifySuperAdminAndFail(SuperAdmin::find(1), $th, 'Login Error');
         abort(500, 'Sorry there was an error logging you in.');
       }
     });

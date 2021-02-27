@@ -58,6 +58,7 @@ class ProductDescriptionSummary extends Model
 
   public function editProductDescriptionSummary(CreateProductDescriptionSummaryValidation $request, ProductModel $productModel)
   {
+    dd($request->all());
 
     try {
       foreach ($request->validated() as $key => $value) {

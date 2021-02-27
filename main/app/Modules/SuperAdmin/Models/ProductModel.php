@@ -78,11 +78,11 @@ class ProductModel extends BaseModel
         return 'multiaccess.product_' . $namespace . $name;
       };
       Route::get('', [self::class, 'getProductModels'])->name($gen('models.manage_product_models'))->defaults('ex', __e('ss,a,w', 'git-branch', false))->middleware('auth:super_admin,auditor,web_admin');
-      Route::match(['post', 'get'], 'create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss,a', 'git-branch', true))->middleware('auth:super_admin,auditor');
+      Route::match(['post', 'get'], 'create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,auditor,web_admin');
       Route::get('{productModel}', [self::class, 'getProductModelDetails'])->name($gen('models', '.details'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,auditor,web_admin');
       Route::put('{productModel}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,auditor,web_admin');
-      Route::get('{productModel}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true))->middleware('auth:super_admin');
-      Route::put('{productModel}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('ss,a', 'git-branch', true))->middleware('auth:super_admin,auditor');
+      // Route::get('{productModel}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true))->middleware('auth:super_admin');
+      Route::put('{productModel}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,auditor,web_admin');
       // Route::get('{productModel}/images', [self::class, 'getProductModelImages'])->name($gen('models', '.model_images'))->defaults('ex', __e('ss', 'git-branch', true))->middleware('auth:super_admin');
       Route::post('{productModel}/images/create', [self::class, 'createProductModelImage'])->name($gen('models', '.create_model_image'))->defaults('ex', __e('a,w', 'git-branch', true))->middleware('auth:auditor,web_admin');
       Route::delete('images/{id}/delete', [self::class, 'deleteProductModelImage'])->name($gen('models', '.delete_model_image'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,auditor,web_admin');
@@ -184,11 +184,6 @@ class ProductModel extends BaseModel
       ErrLog::notifyAuditor($request->user(), $th, 'Model not updated');
       return response()->json(['err' => 'Model not updated'], 500);
     }
-  }
-
-  public function getProductModelQATests(Request $request, self $productModel)
-  {
-    return response()->json((new ProductModelTransformer)->collectionTransformer($productModel->qa_tests, 'transformQATest'), 200);
   }
 
   public function updateProductModelQATests(Request $request, self $productModel)

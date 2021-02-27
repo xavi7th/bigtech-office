@@ -7,7 +7,6 @@ use App\Modules\WebAdmin\Models\WebAdmin;
 use App\Modules\Accountant\Models\Accountant;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use App\Modules\StockKeeper\Models\StockKeeper;
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use App\Modules\QualityControl\Models\QualityControl;
 
 return [
@@ -62,10 +61,6 @@ return [
       'driver' => 'session',
       'provider' => 'auditors',
     ],
-    'dispatch_admin' => [
-      'driver' => 'session',
-      'provider' => 'dispatch_admins',
-    ],
     'quality_control' => [
       'driver' => 'session',
       'provider' => 'quality_controls',
@@ -117,10 +112,6 @@ return [
     'auditors' => [
       'driver' => 'eloquent',
       'model' => Auditor::class,
-    ],
-    'dispatch_admins' => [
-      'driver' => 'eloquent',
-      'model' => DispatchAdmin::class,
     ],
     'quality_controls' => [
       'driver' => 'eloquent',

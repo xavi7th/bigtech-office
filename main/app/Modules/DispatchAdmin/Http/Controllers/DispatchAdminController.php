@@ -7,10 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Modules\SuperAdmin\Models\Product;
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
-use App\Modules\SalesRep\Models\ProductDispatchRequest;
-use App\Modules\SuperAdmin\Models\SwapDeal;
 
 class DispatchAdminController extends Controller
 {
@@ -18,19 +14,11 @@ class DispatchAdminController extends Controller
   static function routes()
   {
     Route::group(['middleware' => ['web']], function () {
-      Route::prefix(DispatchAdmin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::group(['middleware' => ['web', 'auth:dispatch_admin']], function () {
-          Route::get('/', [self::class, 'index'])->name('dispatchadmin.dashboard')->defaults('ex', __e('d', 'home', true));
-
-          Product::dispatchAdminRoutes();
-          SwapDeal::dispatchAdminRoutes();
-          ProductDispatchRequest::dispatchAdminRoutes();
-        });
-        Route::name('dispatchadmin.')->group(function () {
-          Product::multiAccessRoutes();
-          SwapDeal::multiAccessRoutes();
-        });
-      });
+      // Route::prefix(DispatchAdmin::DASHBOARD_ROUTE_PREFIX)->group(function () {
+      //   Route::group(['middleware' => ['web', 'auth:web_admin']], function () {
+          // Route::get('/', [self::class, 'index'])->name('dispatchadmin.dashboard')->defaults('ex', __e('d', 'home', true));
+      //   });
+      // });
     });
   }
 

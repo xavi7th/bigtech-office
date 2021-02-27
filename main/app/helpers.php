@@ -551,7 +551,6 @@ if (!function_exists('get_related_routes')) {
         'a' => 'Auditor',
         'ss' => 'SuperAdmin',
         'ac' => 'Accountant',
-        'd' => 'DispatchAdmin',
         'q' => 'QualityControl',
         's' => 'SalesRep',
         'sk' => 'StockKeeper',

@@ -23,62 +23,6 @@ use App\Modules\SalesRep\Notifications\DispatchRequestDiscarded;
 use App\Modules\SalesRep\Http\Validations\SendDispatchRequestValidation;
 use App\Modules\DispatchAdmin\Transformers\ProductDispatcgRequestTransformer;
 
-/**
- * App\Modules\SalesRep\Models\ProductDispatchRequest
- *
- * @property int $id
- * @property int|null $sales_channel_id
- * @property int $online_rep_id
- * @property string $product_description
- * @property int|null $product_id
- * @property string|null $product_type
- * @property float $proposed_selling_price
- * @property string $customer_first_name
- * @property string|null $customer_last_name
- * @property string $customer_phone
- * @property string|null $customer_email
- * @property string $customer_address
- * @property string $customer_city
- * @property string|null $customer_ig_handle
- * @property string|null $scheduled_at
- * @property string|null $sold_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read \App\Modules\SalesRep\Models\SalesRep $online_rep
- * @property-read Model|\Eloquent $product
- * @property-read SalesChannel|null $sales_channel
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductDispatchRequest onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereCustomerAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereCustomerCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereCustomerEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereCustomerFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereCustomerIgHandle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereCustomerLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereCustomerPhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereOnlineRepId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereProductDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereProductType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereProposedSellingPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereSalesChannelId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereScheduledAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereSoldAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductDispatchRequest whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductDispatchRequest withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductDispatchRequest withoutTrashed()
- * @method static Builder|ProductDispatchRequest unprocessed()
- * @method static Builder|ProductDispatchRequest processed()
- * @mixin \Eloquent
- */
 class ProductDispatchRequest extends Model
 {
 
@@ -152,14 +96,14 @@ class ProductDispatchRequest extends Model
   }
 
 
-  static function dispatchAdminRoutes()
+  static function webAdminRoutes()
   {
     Route::group(['prefix' => 'product-dispatch-requests'], function () {
-      Route::name('dispatchadmin.dispatch_requests.')->group(function () {
-        Route::get('', [self::class, 'getDispatchRequests'])->name('pending_dispatch_requests')->defaults('ex', __e('d', 'list', false));
-        Route::get('completed', [self::class, 'getCompletedDispatchRequests'])->name('past_dispatch_requests')->defaults('ex', __e('d', 'list', false));
-        Route::post('{productDispatchRequest}/schedule-delivery', [self::class, 'scheduleProductForDeliveryRequest'])->name('schedule_delivery')->defaults('ex', __e('d', null, true));
-        Route::post('{productDispatchRequest}/delete', [self::class, 'deleteDispatchRequest'])->name('delete')->defaults('ex', __e('d', 'list', false));
+      Route::name('webadmin.dispatch_requests.')->group(function () {
+        Route::get('', [self::class, 'getDispatchRequests'])->name('pending_dispatch_requests')->defaults('ex', __e('w', 'list', false));
+        Route::get('completed', [self::class, 'getCompletedDispatchRequests'])->name('past_dispatch_requests')->defaults('ex', __e('w', 'list', false));
+        Route::post('{productDispatchRequest}/schedule-delivery', [self::class, 'scheduleProductForDeliveryRequest'])->name('schedule_delivery');
+        Route::post('{productDispatchRequest}/delete', [self::class, 'deleteDispatchRequest'])->name('delete');
       });
     });
   }
@@ -270,7 +214,6 @@ class ProductDispatchRequest extends Model
       Cache::forget('dispatchRequests');
       Cache::forget('products');
       Cache::forget('webAdminProducts');
-      Cache::forget('dispatchAdminProducts');
       Cache::forget('stockKeeperProducts');
       Cache::forget('salesRepProducts');
       Cache::forget('qualityControlProducts');

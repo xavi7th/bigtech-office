@@ -24,9 +24,9 @@ class StorageType extends BaseModel
       $misc = function ($name) {
         return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getStorageTypes'])->name($misc('storage_types'))->defaults('ex', __e('ss,a', 'hard-drive', false))->middleware('auth:super_admin,auditor');
-      Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,auditor');
-      Route::put('{storageType}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,auditor');
+      Route::get('', [self::class, 'getStorageTypes'])->name($misc('storage_types'))->defaults('ex', __e('ss,a,w', 'hard-drive', false))->middleware('auth:super_admin,auditor,web_admin');
+      Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->middleware('auth:super_admin,auditor,web_admin');
+      Route::put('{storageType}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->middleware('auth:super_admin,auditor,web_admin');
     });
   }
 

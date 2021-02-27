@@ -2,7 +2,6 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
-use Cache;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
@@ -11,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
@@ -47,12 +47,10 @@ use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
 use App\Modules\SuperAdmin\Models\LocalProductPrice;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
-use Spatie\QueryBuilder\Exceptions\InvalidFilterQuery;
 use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Transformers\QATestTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
-use App\Modules\SuperAdmin\SearchFilters\RelationshipFilter;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
 use App\Modules\SuperAdmin\Transformers\StorageSizeTransformer;
@@ -449,11 +447,11 @@ class Product extends BaseModel
     });
   }
 
-  static function dispatchAdminRoutes()
+  static function webAdminRoutes()
   {
     Route::group(['prefix' => 'products'], function () {
-      Route::name('dispatchadmin.products.')->group(function () {
-        Route::get('products-on-delivery', [self::class, 'getProductsOnDelivery'])->name('products_on_delivery')->defaults('ex', __e('d', 'truck'));
+      Route::name('webadmin.products.')->group(function () {
+        Route::get('products-on-delivery', [self::class, 'getProductsOnDelivery'])->name('products_on_delivery')->defaults('ex', __e('w', 'truck'));
         Route::post('{product:product_uuid}/return-to-stock', [self::class, 'returnProductToStock'])->name('return_to_stock')->defaults('ex', __e('d', null, true));
       });
     });
@@ -462,21 +460,20 @@ class Product extends BaseModel
   static function multiAccessRoutes()
   {
     Route::name('multiaccess.products.')->prefix('products')->group(function () {
-      Route::get('', [self::class, 'getProducts'])->name('view_products')->defaults('ex', __e('ss,a,ac,d,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,auditor,dispatch_admin,web_admin,accountant');
+      Route::get('', [self::class, 'getProducts'])->name('view_products')->defaults('ex', __e('ss,a,ac,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,auditor,web_admin,accountant');
       Route::get('local-supplier-products', [self::class, 'getLocalProducts'])->name('pending_local_products')->defaults('ex', __e('ss,ac', 'box'))->middleware('auth:super_admin,accountant');
       Route::get('search', [self::class, 'findProduct'])->name('find_product')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
       Route::get('stock-list-aggregate', [self::class, 'viewStockList'])->name('view_stock')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,sk,a,ac', 'archive'))->middleware('auth:super_admin,stock_keeper,auditor,accountant');
-      Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac', 'archive', true))->middleware('auth:super_admin,auditor,accountant');
+      Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac,w', 'archive', true))->middleware('auth:super_admin,auditor,web_admin,accountant');
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name('edit_product_location')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
-      Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name('qa_test_results')->defaults('ex', __e('ss,q,a', null, true))->middleware('auth:quality_control,auditor,super_admin,accountant');
-      Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('ss,d', null, true))->middleware('auth:sales_rep,dispatch_admin');
+      Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name('qa_test_results')->defaults('ex', __e('ss,q,a,w', null, true))->middleware('auth:quality_control,auditor,web_admin,super_admin,accountant');
+      Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('ss,w', null, true))->middleware('auth:sales_rep,web_admin');
       Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name('update_product_status')->defaults('ex', __e('ss,q', null, true))->middleware('auth:super_admin,quality_control');
-      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->defaults('ex', __e('ss,a,ac,d,sk', null, true))->middleware('auth:super_admin,auditor,accountant');
-      Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name('applicable_qa_tests')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
-      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->defaults('ex', __e('ss,d,q', null, true))->middleware('auth:super_admin,stock_keeper,quality_control');
-
+      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->defaults('ex', __e('ss,a,ac,d,sk,w', null, true))->middleware('auth:super_admin,auditor,web_admin,accountant');
+      Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name('applicable_qa_tests')->defaults('ex', __e('ss,a,w', null, true))->middleware('auth:super_admin,auditor,web_admin');
+      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->defaults('ex', __e('ss,d,q,w,a', null, true))->middleware('auth:super_admin,stock_keeper,quality_control,web_admin,auditor');
       Route::get('{product:product_uuid}/edit', [self::class, 'showEditProductForm'])->name('edit_product')->defaults('ex', __e('ac,ss', 'archive', true))->middleware('auth:accountant,super_admin');
       Route::put('{product:product_uuid}/edit', [self::class, 'updateProduct'])->name('update')->defaults('ex', __e('ac,ss', 'archive', true))->middleware('auth:accountant,super_admin');
     });
@@ -511,10 +508,8 @@ class Product extends BaseModel
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isQualityControl()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
-    } elseif ($request->user()->isDispatchAdmin()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->inStock()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'dispatch_request'])->take(10)->get(), 'dispatchListing');
     } elseif ($request->user()->isWebAdmin()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->inStock()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'dispatch_request'])->take(10)->get(), 'dispatchListing');
     } elseif ($request->user()->isAccountant()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->sold()->orWhere->saleConfirmed()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isAuditor() || $request->user()->isSuperAdmin()) {
@@ -950,7 +945,7 @@ class Product extends BaseModel
     /**
      * Mark dispatch requests as sold.
      */
-    if ($request->user()->isDispatchAdmin()) {
+    if ($request->user()->isWebAdmin()) {
       if ($product->dispatch_request) {
         try {
           $product->dispatch_request->sold_at = now();
@@ -961,7 +956,7 @@ class Product extends BaseModel
           return back()->withFlash(['error'=>['Could not mark dispatch request as processed.' . $th->getMessage()]]);
         }
       } else {
-        return back()->withFlash(['error' => 'Dispatch Admins can only mark dispatch requests as sold']);
+        return back()->withFlash(['error' => 'Web Admins can only mark dispatch requests as sold']);
       }
     }
 
@@ -1186,7 +1181,6 @@ class Product extends BaseModel
       Cache::forget($product->office_branch->city . 'officeBranchProducts');
       Cache::forget('products');
       Cache::forget('webAdminProducts');
-      Cache::forget('dispatchAdminProducts');
       Cache::forget('stockKeeperProducts');
       Cache::forget('salesRepProducts');
       Cache::forget('qualityControlProducts');

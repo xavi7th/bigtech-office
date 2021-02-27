@@ -101,8 +101,7 @@
           <div class="col-12">
             <button
               type="submit"
-              class="btn btn-success btn-long"
-              disabled={!qaTestName}>
+              class="btn btn-success btn-long">
               <span class="text">Create</span>
             </button>
           </div>

@@ -24,16 +24,12 @@ class ProductColor extends BaseModel
     return $this->hasMany(Product::class);
   }
 
-  /**
-   * The auditor routes
-   * @return Response
-   */
   public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'product-colors'], function () {
-      Route::get('', [self::class, 'getProductColors'])->name('multiaccess.miscellaneous.colors')->defaults('ex', __e('ss,a', 'pen-tool', false))->middleware('auth:super_admin,auditor');
-      Route::post('create', [self::class, 'createProductColor'])->name('multiaccess.miscellaneous.create_product_color')->defaults('ex', __e('ss,a', 'pen-tool', true))->middleware('auth:super_admin,auditor');
-      Route::put('{color}/edit', [self::class, 'editProductColor'])->name('multiaccess.miscellaneous.edit_product_color')->defaults('ex', __e('ss,a', 'pen-tool', true))->middleware('auth:super_admin,auditor');
+      Route::get('', [self::class, 'getProductColors'])->name('multiaccess.miscellaneous.colors')->defaults('ex', __e('ss,a,w', 'pen-tool', false))->middleware('auth:super_admin,auditor,web_admin');
+      Route::post('create', [self::class, 'createProductColor'])->name('multiaccess.miscellaneous.create_product_color')->defaults('ex', __e('ss,a,w', 'pen-tool', true))->middleware('auth:super_admin,auditor,web_admin');
+      Route::put('{color}/edit', [self::class, 'editProductColor'])->name('multiaccess.miscellaneous.edit_product_color')->defaults('ex', __e('ss,a,w', 'pen-tool', true))->middleware('auth:super_admin,auditor,web_admin');
     });
   }
 

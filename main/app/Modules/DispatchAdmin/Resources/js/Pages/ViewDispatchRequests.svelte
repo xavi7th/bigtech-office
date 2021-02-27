@@ -23,7 +23,7 @@
         preConfirm: () => {
           return Inertia.post(
             route(
-              "dispatchadmin.dispatch_requests.schedule_delivery",
+              "webadmin.dispatch_requests.schedule_delivery",
               dispatchRequestToSchedule.id
             ),
             {
@@ -74,7 +74,7 @@
           }
 
           return Inertia.post(
-            route("dispatchadmin.dispatch_requests.delete", dispatchRequestId),
+            route("webadmin.dispatch_requests.delete", dispatchRequestId),
             {
               reason
             },
@@ -133,7 +133,7 @@
                 <td>{dispatchRequest.grand_total}</td>
                 <td>{dispatchRequest.time_of_request}</td>
                 <td>
-                  {#if auth.user.isDispatchAdmin}
+                  {#if auth.user.isWebAdmin}
                     {#if !dispatchRequest.is_scheduled}
                       <button
                         type="button"

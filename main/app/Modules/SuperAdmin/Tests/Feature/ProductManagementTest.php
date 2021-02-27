@@ -30,7 +30,7 @@ use App\Modules\SuperAdmin\Models\ProcessorSpeed;
 use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductSupplier;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
+use App\Modules\WebAdmin\Models\WebAdmin;
 use App\Modules\SuperAdmin\Models\LocalProductPrice;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\QualityControl\Models\QualityControl;
@@ -167,14 +167,14 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function a_dispatch_admin_can_mark_a_product_as_sold()
+  public function a_web_admin_can_mark_a_product_as_sold()
   {
 
     $this->withoutExceptionHandling();
 
     $product = $this->create_product_on_delivery();
 
-    $response = $this->actingAs(factory(DispatchAdmin::class)->create(), 'dispatch_admin')->post(route('dispatchadmin.multiaccess.products.mark_as_sold', $product->product_uuid), $this->data());
+    $response = $this->actingAs(factory(WebAdmin::class)->create(), 'web_admin')->post(route('webadmin.multiaccess.products.mark_as_sold', $product->product_uuid), $this->data());
 
     // $response->dumpSession();
     // // dump($product->toArray(), request()->all());
@@ -197,13 +197,13 @@ class ProductManagementTest extends TestCase
   }
 
   /** @test */
-  public function a_dispatch_admin_cannot_mark_a_product_in_stock_as_sold()
+  public function a_web_admin_cannot_mark_a_product_in_stock_as_sold()
   {
     $product = $this->create_product_in_stock();
-    $response = $this->actingAs(factory(DispatchAdmin::class)->create(), 'dispatch_admin')->post(route('dispatchadmin.multiaccess.products.mark_as_sold', $product->product_uuid), $this->data());
+    $response = $this->actingAs(factory(WebAdmin::class)->create(), 'web_admin')->post(route('webadmin.multiaccess.products.mark_as_sold', $product->product_uuid), $this->data());
 
     $response->assertRedirect();
-    $response->assertSessionHas('flash.error', "Dispatch Admins can only mark dispatch requests as sold");
+    $response->assertSessionHas('flash.error', "Web Admins can only mark dispatch requests as sold");
     $response->assertSessionMissing('flash.success');
 
     $product->refresh();
@@ -250,9 +250,9 @@ class ProductManagementTest extends TestCase
   }
 
   /**
-  * @test
-  * @dataProvider provideDifferentUserTypesWithoutSalesRepAdnDispatchAdmin
-  */
+   * @test
+   * @dataProvider provideDifferentUserTypesWithoutSalesRepAndWebAdmin
+   */
   public function a_product_cannot_be_marked_as_sold_by_unauthorised_users($dataSource)
   {
     [$location, $user] = $dataSource();

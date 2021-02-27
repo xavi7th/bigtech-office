@@ -32,9 +32,9 @@ class SalesChannel extends BaseModel
   {
     Route::group(['prefix' => 'sales-channels'], function () {
       Route::name('multiaccess.miscellaneous.')->group(function () {
-        Route::get('', [self::class, 'getSalesChannels'])->name('sales_channels')->defaults('ex', __e('ss,a', 'airplay', false))->middleware('auth:super_admin,auditor');
-        Route::post('create', [self::class, 'createSalesChannel'])->name('create_sales_channel')->defaults('ex', __e('ss,a', 'airplay', true))->middleware('auth:super_admin,auditor');
-        Route::put('{salesChannel}/edit', [self::class, 'editSalesChannel'])->name('edit_sales_channel')->defaults('ex', __e('ss,a', 'airplay', true))->middleware('auth:super_admin,auditor');
+        Route::get('', [self::class, 'getSalesChannels'])->name('sales_channels')->defaults('ex', __e('ss,a,w', 'airplay', false))->middleware('auth:super_admin,auditor,web_admin');
+        Route::post('create', [self::class, 'createSalesChannel'])->name('create_sales_channel')->middleware('auth:super_admin,auditor,web_admin');
+        Route::put('{salesChannel}/edit', [self::class, 'editSalesChannel'])->name('edit_sales_channel')->middleware('auth:super_admin,auditor,web_admin');
       });
     });
   }

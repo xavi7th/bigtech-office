@@ -3,12 +3,10 @@
 namespace App\Modules\DispatchAdmin\Providers;
 
 use Illuminate\Support\Str;
-use Illuminate\Auth\SessionGuard;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
-use App\Modules\DispatchAdmin\Models\DispatchAdmin;
+use App\Modules\WebAdmin\Models\WebAdmin;
 
 class DispatchAdminServiceProvider extends ServiceProvider
 {
@@ -29,15 +27,12 @@ class DispatchAdminServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    if ((Str::contains(request()->url(), DispatchAdmin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
+    if ((Str::contains(request()->url(), WebAdmin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
       $this->registerTranslations();
       $this->registerConfig();
       $this->registerViews();
       $this->registerFactories();
       $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
-
-      // app()->make('router')->aliasMiddleware('dispatch_admins', OnlyDispatchAdmins::class);
-      // app()->make('router')->aliasMiddleware('verified', VerifiedDispatchAdmins::class);
     }
   }
 
@@ -48,11 +43,8 @@ class DispatchAdminServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    if ((Str::contains(request()->url(), DispatchAdmin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
+    if ((Str::contains(request()->url(), WebAdmin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
       $this->app->register(RouteServiceProvider::class);
-      SessionGuard::macro('dispatchAdmin', function () {
-        return DispatchAdmin::find(Auth::guard('dispatch_admin')->id());
-      });
     }
   }
 

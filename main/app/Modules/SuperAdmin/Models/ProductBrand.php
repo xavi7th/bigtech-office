@@ -37,9 +37,9 @@ class ProductBrand extends BaseModel
         return 'multiaccess.product_' . $namespace . $name;
       };
       Route::get('', [self::class, 'getProductBrands'])->name($gen('brands.manage_product_brands'))->defaults('ex', __e('ss,a,w', 'feather', false))->middleware('auth:super_admin,auditor,web_admin');
-      Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,auditor');
-      Route::put('{productBrand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,auditor,web_admin');
-      Route::delete('{productBrand}/delete', [self::class, 'deleteProductBrand'])->name($gen('brands', '.delete_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,auditor');
+      Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('ss,a,w', 'feather', true))->middleware('auth:super_admin,auditor,web_admin');
+      Route::put('{productBrand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('ss,a,w', 'feather', true))->middleware('auth:super_admin,auditor,web_admin');
+      Route::delete('{productBrand}/delete', [self::class, 'deleteProductBrand'])->name($gen('brands', '.delete_product_brand'))->defaults('ex', __e('ss,a,w', 'feather', true))->middleware('auth:super_admin,auditor,web_admin');
     });
   }
 
