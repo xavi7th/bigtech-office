@@ -548,7 +548,7 @@ if (!function_exists('get_related_routes')) {
      */
       ->reject(function ($val) {
       $allUserTypes = [
-        'a' => 'Admin',
+        'a' => 'Auditor',
         'ss' => 'SuperAdmin',
         'ac' => 'Accountant',
         'd' => 'DispatchAdmin',

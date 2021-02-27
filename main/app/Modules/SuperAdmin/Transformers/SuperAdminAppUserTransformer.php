@@ -3,7 +3,7 @@
 namespace App\Modules\SuperAdmin\Transformers;
 
 use App\User;
-use App\Modules\SuperAdmin\Transformers\AdminActivityLogTransformer;
+use App\Modules\SuperAdmin\Transformers\AuditorActivityLogTransformer;
 
 class SuperAdminAppUserTransformer
 {
@@ -64,7 +64,7 @@ class SuperAdminAppUserTransformer
       'id' => $user->id,
       'full_name' => $user->full_name,
       'email' => $user->email,
-      'activities' => (new AdminActivityLogTransformer)->collectionTransformer($user->activities, 'basicTransform')['activities']
+      'activities' => (new AuditorActivityLogTransformer)->collectionTransformer($user->activities, 'basicTransform')['activities']
     ];
   }
 

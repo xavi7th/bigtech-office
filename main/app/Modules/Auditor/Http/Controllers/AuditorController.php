@@ -68,6 +68,6 @@ class AuditorController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('Auditor,AdminDashboard');
+    return Inertia::render('Auditor,AuditorDashboard');
   }
 }

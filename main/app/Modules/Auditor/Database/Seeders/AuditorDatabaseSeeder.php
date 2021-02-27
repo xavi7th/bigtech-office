@@ -5,7 +5,7 @@ namespace App\Modules\Auditor\Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Modules\Auditor\Models\Auditor;
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\SuperAuditor\Database\Seeders\OfficeBranchesTableSeeder;
+use App\Modules\SuperAdmin\Database\Seeders\OfficeBranchesTableSeeder;
 
 class AuditorDatabaseSeeder extends Seeder
 {

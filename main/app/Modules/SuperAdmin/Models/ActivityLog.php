@@ -5,7 +5,7 @@ namespace App\Modules\SuperAdmin\Models;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
-use App\Modules\SuperAdmin\Transformers\AdminActivityLogTransformer;
+use App\Modules\SuperAdmin\Transformers\AuditorActivityLogTransformer;
 
 class ActivityLog extends Model
 {

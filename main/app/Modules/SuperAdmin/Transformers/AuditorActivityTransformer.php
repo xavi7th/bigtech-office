@@ -4,7 +4,7 @@ namespace App\Modules\SuperAdmin\Transformers;
 
 use App\Modules\SuperAdmin\Models\ErrLog;
 
-class AdminActivityTransformer
+class AuditorActivityTransformer
 {
   public function collectionTransformer($collection, $transformerMethod)
   {

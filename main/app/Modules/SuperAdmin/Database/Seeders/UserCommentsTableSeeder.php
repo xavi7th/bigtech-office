@@ -21,8 +21,8 @@ class UserCommentsTableSeeder extends Seeder
       0 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
-        'subject_id' => 1,
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
+        'subject_id' => 2,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Est eligendi et minima velit. Molestias rem quos occaecati et ratione velit asperiores consequatur. Exercitationem cumque veniam ex deserunt. Nesciunt saepe exercitationem natus ut officia et et. Dolorum et veritatis architecto consectetur.',
         'created_at' => '2020-03-22 13:33:52',
@@ -32,8 +32,8 @@ class UserCommentsTableSeeder extends Seeder
       1 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
-        'subject_id' => 1,
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
+        'subject_id' => 2,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Qui aut ut sed ducimus corrupti dolore quas. Illo ullam quia vel doloribus molestiae sed repudiandae aspernatur cumque. Provident omnis asperiores non itaque magni eos repudiandae ullam. Enim omnis aperiam distinctio eveniet qui. Eum sapiente et earum alias praesentium ipsum. Nemo sit et quae.',
         'created_at' => '2020-03-22 13:34:58',
@@ -43,8 +43,8 @@ class UserCommentsTableSeeder extends Seeder
       2 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
-        'subject_id' => 1,
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
+        'subject_id' => 2,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Ea praesentium ea. Doloribus quis accusantium tenetur blanditiis.',
         'created_at' => '2020-03-22 13:35:03',
@@ -54,7 +54,7 @@ class UserCommentsTableSeeder extends Seeder
       3 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 22,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Ipsam ad consequatur. Asperiores et debitis. Rerum qui dolorum. Omnis voluptatem aut iste eum omnis illum et delectus. Sequi veritatis sit quibusdam et officiis id fugit facere.',
@@ -65,7 +65,7 @@ class UserCommentsTableSeeder extends Seeder
       4 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 16,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Quia error id. Eum incidunt fugiat nam. Et sed harum.',
@@ -76,7 +76,7 @@ class UserCommentsTableSeeder extends Seeder
       5 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 15,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Nihil ea voluptatibus sit enim amet aut aliquam cum culpa. In et perferendis praesentium quas a. Ut nulla officiis sunt accusamus rerum aspernatur impedit provident.',
@@ -87,7 +87,7 @@ class UserCommentsTableSeeder extends Seeder
       6 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 4,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Vitae consequatur dolorem accusamus possimus et ad non. Ullam culpa ut aperiam. Repellat itaque quisquam. Magnam soluta nulla rerum dolorem quisquam. Voluptatum saepe vitae sed accusamus tempore numquam laborum.',
@@ -98,7 +98,7 @@ class UserCommentsTableSeeder extends Seeder
       7 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 19,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Est nulla eos eos perspiciatis et deserunt. Voluptatem ipsa recusandae natus minima soluta. Explicabo voluptas ad nulla consequatur reiciendis neque quisquam dignissimos. Dolorum id nulla placeat ad at aliquam voluptatem aut.',
@@ -109,7 +109,7 @@ class UserCommentsTableSeeder extends Seeder
       8 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 21,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Dolorum doloribus quia sint dignissimos. Repellat placeat eum eum. Ex et deserunt. Enim aliquid nostrum mollitia esse quae saepe rerum iste.',
@@ -120,7 +120,7 @@ class UserCommentsTableSeeder extends Seeder
       9 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 14,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Eos et et earum minus sint maiores aut asperiores ipsam. Nulla quibusdam ut et omnis occaecati. Commodi quae facilis. Autem quia incidunt quas rem. Perferendis incidunt consequatur et reprehenderit voluptas quia.',
@@ -131,7 +131,7 @@ class UserCommentsTableSeeder extends Seeder
       10 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 13,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Est enim autem accusamus consectetur eius quibusdam ea ab. Eum perspiciatis voluptates sint consectetur laborum quis ratione. Ut non totam placeat. Cumque nihil accusamus est. Mollitia et laborum. Esse eum aut praesentium fuga hic enim similique voluptas quis.',
@@ -142,7 +142,7 @@ class UserCommentsTableSeeder extends Seeder
       11 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 16,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Deleniti quo et occaecati. Rerum aut culpa non quia aut in provident expedita illo. Suscipit quo aliquam temporibus provident consequatur expedita. Doloremque accusamus assumenda et ex. Voluptatem numquam adipisci adipisci cumque et magni delectus officiis. Distinctio ut qui unde maiores sit ut consequuntur delectus dolores.',
@@ -153,7 +153,7 @@ class UserCommentsTableSeeder extends Seeder
       12 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 8,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Corrupti nulla odio ex numquam in eos aut. Optio velit odit vitae corrupti. Et sint est non facilis enim dolores aliquid qui.',
@@ -164,7 +164,7 @@ class UserCommentsTableSeeder extends Seeder
       13 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 12,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Quis harum iusto natus nemo omnis distinctio earum magni aut. Consequatur aliquid voluptatem ipsum voluptatem excepturi labore provident. Blanditiis quos reiciendis doloribus fuga ea nam non tenetur. Qui nostrum ea dolores molestiae.',
@@ -175,7 +175,7 @@ class UserCommentsTableSeeder extends Seeder
       14 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 20,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Dolores est consequuntur. Hic harum temporibus. Maiores totam sunt eos et iusto dolorem ab et.',
@@ -186,7 +186,7 @@ class UserCommentsTableSeeder extends Seeder
       15 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 26,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Fuga qui doloribus a. Voluptatibus ut est et fugiat ut. Dolore facere exercitationem eaque. Rerum molestiae aut voluptatibus dolor sunt. Qui ut vero laboriosam blanditiis dicta. Iste sint non optio soluta.',
@@ -197,7 +197,7 @@ class UserCommentsTableSeeder extends Seeder
       16 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 2,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Incidunt doloremque quis modi aliquid accusamus odit repellendus quos nulla. Hic voluptatem et qui quisquam qui quia. Omnis cumque ea commodi. Eum magnam veniam corporis fuga laudantium quia neque.',
@@ -208,7 +208,7 @@ class UserCommentsTableSeeder extends Seeder
       17 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 28,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\Product',
         'comment' => 'Repudiandae labore voluptas ipsam veritatis itaque enim vel. Voluptatem nobis provident inventore est. Laborum occaecati consequuntur a ipsam. Dolor nihil ut omnis reprehenderit et tenetur recusandae. Deleniti expedita quia perspiciatis animi autem sit. Perferendis dolorem ipsam ea aut.',
@@ -219,7 +219,7 @@ class UserCommentsTableSeeder extends Seeder
       18 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 18,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Et id aut quam dolorum. Exercitationem quis aliquam omnis qui totam qui. Incidunt illo quaerat velit illo culpa provident. Qui laborum soluta vero dignissimos ut placeat. Aut commodi voluptatibus sint inventore. Laborum illo ut et iste quia.',
@@ -230,7 +230,7 @@ class UserCommentsTableSeeder extends Seeder
       19 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 18,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Voluptas saepe quis adipisci illo. Quod at iste odio. Rerum excepturi nesciunt sit enim consequatur veniam iusto alias. Nobis et veniam eos earum sequi sit culpa. Sed veritatis sed.',
@@ -241,7 +241,7 @@ class UserCommentsTableSeeder extends Seeder
       20 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 13,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Minus et ipsum. Illo voluptas eligendi sit. Occaecati recusandae fugit iste placeat deleniti occaecati officiis.',
@@ -252,8 +252,8 @@ class UserCommentsTableSeeder extends Seeder
       21 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
-        'subject_id' => 1,
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
+        'subject_id' => 2,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Unde similique consequuntur. Delectus in tenetur quia. Consequuntur ut corrupti cupiditate quos est beatae exercitationem. Perspiciatis sequi doloremque omnis qui expedita sunt. Beatae saepe sint omnis pariatur molestias.',
         'created_at' => '2020-03-22 13:40:10',
@@ -263,7 +263,7 @@ class UserCommentsTableSeeder extends Seeder
       22 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 7,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Rerum tenetur blanditiis sit aut eius minima nihil. Autem magni eius aut quibusdam ut. At aperiam sit occaecati tempore saepe est nihil.',
@@ -274,8 +274,8 @@ class UserCommentsTableSeeder extends Seeder
       23 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
-        'subject_id' => 1,
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
+        'subject_id' => 2,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Nobis quae voluptas ad unde fugit eaque. Saepe ut quia. Vel dolore ipsam dolorum corporis qui vel ipsum est. Placeat et vitae unde nihil dolores.',
         'created_at' => '2020-03-22 13:40:17',
@@ -285,7 +285,7 @@ class UserCommentsTableSeeder extends Seeder
       24 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 14,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Voluptatem aut est recusandae placeat nihil dolores cupiditate provident est. Laborum fuga nisi possimus eaque maiores odit reiciendis et quaerat. Ut quidem modi aspernatur. Quo reprehenderit vero cumque cum.',
@@ -296,7 +296,7 @@ class UserCommentsTableSeeder extends Seeder
       25 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 17,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Eaque nihil qui quod eos laudantium voluptatem dicta enim ullam. Voluptate et natus commodi. Et laborum natus.',
@@ -307,7 +307,7 @@ class UserCommentsTableSeeder extends Seeder
       26 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 6,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Expedita accusamus aut ut fuga nostrum velit similique. Voluptatem quo est. Inventore placeat ducimus quis consequuntur voluptatem. Officia voluptas veritatis ut odio.',
@@ -318,7 +318,7 @@ class UserCommentsTableSeeder extends Seeder
       27 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 18,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Numquam ad ex nobis vitae cum. Et voluptatem fugit asperiores accusamus quae asperiores sed vero. Quas ipsam quos quam perferendis voluptatem.',
@@ -329,7 +329,7 @@ class UserCommentsTableSeeder extends Seeder
       28 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 2,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Labore ex blanditiis. Et illum dolor sed necessitatibus. Quidem temporibus quis esse mollitia sed doloribus. Animi ex quae inventore aut quis. Illo reiciendis quae voluptates veniam porro quibusdam voluptas maiores.',
@@ -340,7 +340,7 @@ class UserCommentsTableSeeder extends Seeder
       29 =>
       array(
         'user_id' => 1,
-        'user_type' => 'App\\Modules\\Admin\\Models\\Admin',
+        'user_type' => 'App\\Modules\\Auditor\\Models\\Auditor',
         'subject_id' => 7,
         'subject_type' => 'App\\Modules\\SuperAdmin\\Models\\ProductBatch',
         'comment' => 'Nihil quibusdam error quae doloribus. Dolorem est quis.',
