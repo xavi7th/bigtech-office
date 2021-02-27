@@ -4,9 +4,9 @@ namespace App\Modules\Auditor\Providers;
 
 use Illuminate\Support\Str;
 use Illuminate\Auth\SessionGuard;
-use App\Modules\Auditor\Models\Auditor;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use App\Modules\Auditor\Models\Auditor;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
