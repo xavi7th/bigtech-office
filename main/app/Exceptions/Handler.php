@@ -116,7 +116,8 @@ class Handler extends ExceptionHandler
   {
     return $request->expectsJson()
       ? response()->json(['message' => $exception->getMessage()], 401)
-      : redirect()->guest($exception->redirectTo() ?? route('app.login.show'));
+      : Inertia::location(route('app.login.show'));
+      // : redirect()->guest($exception->redirectTo() ?? route('app.login.show'));
   }
 
 
