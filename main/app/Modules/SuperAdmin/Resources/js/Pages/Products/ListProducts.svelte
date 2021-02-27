@@ -122,9 +122,9 @@
                   Product ID
                 </th>
                 <th scope="col">Selling Price</th>
-                {#if !auth.user.isWebAdmin}
+
                   <th scope="col">Action</th>
-                {/if}
+
               </tr>
             </thead>
             <tfoot class="thead-dark">
