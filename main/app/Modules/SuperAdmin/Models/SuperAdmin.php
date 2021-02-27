@@ -5,7 +5,7 @@ namespace App\Modules\SuperAdmin\Models;
 use App\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use App\Modules\Admin\Models\Admin;
+use App\Modules\Auditor\Models\Auditor;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Models\ActivityLog;
@@ -71,45 +71,45 @@ class SuperAdmin extends User
   }
 
 
-  static function adminRoutes()
+  static function auditorRoutes()
   {
-    Route::group(['namespace' => '\App\Modules\Admin\Models'], function () {
-      Route::get('admins', 'Admin@getAllAdmins')->middleware('auth:admin,normal_admin');
+    Route::group(['namespace' => '\App\Modules\Auditor\Models'], function () {
+      Route::get('auditors', 'Auditor@getAllAuditors')->middleware('auth:auditor,normal_auditor');
 
-      Route::post('admin/create', 'Admin@createAdminAccount')->middleware('auth:admin');
+      Route::post('auditor/create', 'Auditor@createAuditorAccount')->middleware('auth:auditor');
 
-      Route::get('admin/{admin}/permissions', 'Admin@getAdminPermittedRoutes')->middleware('auth:admin');
+      Route::get('auditor/{auditor}/permissions', 'Auditor@getAuditorPermittedRoutes')->middleware('auth:auditor');
 
-      Route::put('admin/{admin}/permissions', 'Admin@editAdminPermittedRoutes')->middleware('auth:admin');
+      Route::put('auditor/{auditor}/permissions', 'Auditor@editAuditorPermittedRoutes')->middleware('auth:auditor');
 
-      Route::put('admin/{admin}/suspend', 'Admin@suspendAdminAccount')->middleware('auth:admin');
+      Route::put('auditor/{auditor}/suspend', 'Auditor@suspendAuditorAccount')->middleware('auth:auditor');
 
-      Route::put('admin/{id}/restore', 'Admin@restoreAdminAccount')->middleware('auth:admin');
+      Route::put('auditor/{id}/restore', 'Auditor@restoreAuditorAccount')->middleware('auth:auditor');
 
-      Route::delete('admin/{admin}/delete', 'Admin@deleteAdminAccount')->middleware('auth:admin');
+      Route::delete('auditor/{auditor}/delete', 'Auditor@deleteAuditorAccount')->middleware('auth:auditor');
     });
   }
 
-  public function getAllAdmins()
+  public function getAllAuditors()
   {
-    return (new AdminUserTransformer)->collectionTransformer(Admin::withTrashed()->get(), 'transformForAdminViewAdmins');
+    return (new AuditorUserTransformer)->collectionTransformer(Auditor::withTrashed()->get(), 'transformForAuditorViewAuditors');
   }
 
-  public function createAdminAccount()
+  public function createAuditorAccount()
   {
     try {
       DB::beginTransaction();
-      $admin = Admin::create(Arr::collapse([
+      $auditor = Auditor::create(Arr::collapse([
         request()->all(),
         [
-          'password' => bcrypt('itsefintech@admin'),
+          'password' => bcrypt('itsefintech@auditor'),
         ]
       ]));
 
-      ActivityLog::notifySuperAdmins(auth()->user()->email . ' created a new admin account for ' . $admin->email);
+      ActivityLog::notifySuperAdmins(auth()->user()->email . ' created a new auditor account for ' . $auditor->email);
 
       DB::commit();
-      return response()->json(['rsp' => $admin], 201);
+      return response()->json(['rsp' => $auditor], 201);
     } catch (\Throwable $e) {
       if (app()->environment() == 'local') {
         return response()->json(['error' => $e->getMessage()], 500);
@@ -118,35 +118,35 @@ class SuperAdmin extends User
     }
   }
 
-  public function suspendAdminAccount(Admin $admin)
+  public function suspendAuditorAccount(Auditor $auditor)
   {
-    if ($admin->id === auth()->id()) {
+    if ($auditor->id === auth()->id()) {
       return response()->json(['rsp' => false], 403);
     }
-    $admin->delete();
-    ActivityLog::notifySuperAdmins(auth()->user()->email . ' suspended the account of ' . $admin->email);
+    $auditor->delete();
+    ActivityLog::notifySuperAdmins(auth()->user()->email . ' suspended the account of ' . $auditor->email);
     return response()->json(['rsp' => true], 204);
   }
 
-  public function restoreAdminAccount($id)
+  public function restoreAuditorAccount($id)
   {
-    $admin = Admin::withTrashed()->find($id);
-    $admin->restore();
+    $auditor = Auditor::withTrashed()->find($id);
+    $auditor->restore();
 
-    ActivityLog::notifySuperAdmins(auth()->user()->email . ' restored the account of ' . $admin->email);
+    ActivityLog::notifySuperAdmins(auth()->user()->email . ' restored the account of ' . $auditor->email);
 
     return response()->json(['rsp' => true], 204);
   }
 
-  public function deleteAdminAccount(Admin $admin)
+  public function deleteAuditorAccount(Auditor $auditor)
   {
-    if ($admin->id === auth()->id()) {
+    if ($auditor->id === auth()->id()) {
       return response()->json(['rsp' => false], 403);
     }
     /** log the activity before deleting */
-    ActivityLog::notifySuperAdmins(auth()->user()->email . ' permanently deleted the account of ' . $admin->email);
+    ActivityLog::notifySuperAdmins(auth()->user()->email . ' permanently deleted the account of ' . $auditor->email);
 
-    $admin->forceDelete();
+    $auditor->forceDelete();
 
     return response()->json(['rsp' => true], 204);
   }

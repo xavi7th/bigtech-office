@@ -12,33 +12,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductCategory
- *
- * @property int $id
- * @property string $name
- * @property string|null $img_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductModel[] $product_model
- * @property-read int|null $product_model_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductCategory onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductCategory withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductCategory withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductCategory extends BaseModel
 {
   use SoftDeletes;
@@ -61,9 +34,9 @@ class ProductCategory extends BaseModel
       $gen = function ($name = null) {
         return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProductCategories'])->name($gen('product_categories'))->defaults('ex', __e('ss,a', 'edit-3', false))->middleware('auth:admin,super_admin');;
-      Route::post('create', [self::class, 'createProductCategory'])->name($gen('create_product_category'))->defaults('ex', __e('ss,a', 'edit-3', true))->middleware('auth:admin,super_admin');;
-      Route::put('{productCategory}/edit', [self::class, 'editProductCategory'])->name($gen('edit_product_category'))->defaults('ex', __e('ss,a', 'edit-3', true))->middleware('auth:admin,super_admin');;
+      Route::get('', [self::class, 'getProductCategories'])->name($gen('product_categories'))->defaults('ex', __e('ss,a', 'edit-3', false))->middleware('auth:auditor,super_admin');;
+      Route::post('create', [self::class, 'createProductCategory'])->name($gen('create_product_category'))->defaults('ex', __e('ss,a', 'edit-3', true))->middleware('auth:auditor,super_admin');;
+      Route::put('{productCategory}/edit', [self::class, 'editProductCategory'])->name($gen('edit_product_category'))->defaults('ex', __e('ss,a', 'edit-3', true))->middleware('auth:auditor,super_admin');;
     });
   }
 
@@ -91,7 +64,7 @@ class ProductCategory extends BaseModel
         return response()->json((new ProductCategoryTransformer)->basic($product_category), 201);
       return back()->withFlash(['success'=>'Product category created. <br/> Products can now be created under this category']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product category not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Product category not created');
       if ($request->isApi())
         return response()->json(['err' => 'Category creation failed'], 500);
       return back()->withFlash(['error'=>['Category creation failed']]);
@@ -118,7 +91,7 @@ class ProductCategory extends BaseModel
       }
       return back()->withFlash(['success'=>'Updated']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Category not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Category not updated');
       if ($request->isApi())
         return response()->json(['err' => 'Category not updated'], 500);
       return back()->withFlash(['error'=>['Category update failed']]);

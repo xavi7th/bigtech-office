@@ -2118,16 +2118,6 @@
                     /**
          * 
          *
-         * @see \App\Modules\Admin\Providers\AdminServiceProvider::register()
-         * @static 
-         */ 
-        public static function admin()
-        {
-                        return \Illuminate\Auth\SessionGuard::admin();
-        }
-                    /**
-         * 
-         *
          * @see \App\Modules\Accountant\Providers\AccountantServiceProvider::register()
          * @static 
          */ 
@@ -16506,16 +16496,6 @@
      *
      */ 
         class SessionGuard {
-                    /**
-         * 
-         *
-         * @see \App\Modules\Admin\Providers\AdminServiceProvider::register()
-         * @static 
-         */ 
-        public static function admin()
-        {
-                        return \Illuminate\Auth\SessionGuard::admin();
-        }
                     /**
          * 
          *

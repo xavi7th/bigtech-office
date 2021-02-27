@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
-use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\ActivityLog;
@@ -35,85 +34,6 @@ use App\Modules\SuperAdmin\Http\Validations\CreateSwapDealValidation;
 use App\Modules\SuperAdmin\Http\Validations\MarkProductAsSoldValidation;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductCommentValidation;
 
-/**
- * App\Modules\SuperAdmin\Models\SwapDeal
- *
- * @property int $id
- * @property int|null $app_user_id
- * @property string $description
- * @property string $owner_details
- * @property string|null $id_url
- * @property string|null $receipt_url
- * @property string|null $imei
- * @property string|null $serial_no
- * @property string|null $model_no
- * @property float $swap_value
- * @property float|null $selling_price
- * @property string|null $sold_at
- * @property int|null $swapped_with_id
- * @property string|null $swapped_with_type
- * @property int $product_status_id
- * @property string $product_uuid
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read AppUser|null $app_user
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read ProductDispatchRequest|null $dispatch_request
- * @property-read string $id_thumb_url
- * @property-read string $receipt_thumb_url
- * @property-read ProductReceipt|null $productReceipt
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ProductExpense[] $product_expenses
- * @property-read int|null $product_expenses_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductHistory[] $product_histories
- * @property-read int|null $product_histories_count
- * @property-read \App\Modules\SuperAdmin\Models\ProductModel $product_model
- * @property-read ProductSaleRecord|null $product_sales_record
- * @property-read ProductStatus $product_status
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
- * @property-read int|null $reseller_histories_count
- * @property-read SwapDeal|null $swapped_deal_device
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $swapped_with
- * @property-read \Illuminate\Database\Eloquent\Collection|Reseller[] $with_resellers
- * @property-read int|null $with_resellers_count
- * @property-read mixed $full_name
- * @property-read \App\Modules\SuperAdmin\Models\ProductPrice $product_price
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal backFromRepairs()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal inStock()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal outForDelivery()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal outForRepairs()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal query()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal saleConfirmed()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal sold()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal soldByReseller()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal untested()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereAppUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereIdUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereImei($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereModelNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereOwnerDetails($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductStatusId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereProductUuid($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereReceiptUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSellingPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSerialNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSoldAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwapValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWithId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereSwappedWithType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal withReseller()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal thisMonth()
- * @method static \Illuminate\Database\Eloquent\Builder|SwapDeal today()
- * @mixin \Eloquent
- */
 class SwapDeal extends BaseModel
 {
   use Commentable;
@@ -340,7 +260,7 @@ class SwapDeal extends BaseModel
 
       return true;
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Swap Deal not created');
+      ErrLog::notifyAuditorAndFail(auth()->user(), $th, 'Swap Deal not created');
 
       return false;
     }
@@ -388,9 +308,9 @@ class SwapDeal extends BaseModel
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('multiaccess.products.')->group(function () {
-        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('ss,sk,s,q,a,d,ac', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin,accountant,super_admin');
-        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q,a,d,ac', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin,accountant,super_admin');
-        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q,a,d,ac', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control,admin,dispatch_admin,accountant,super_admin');
+        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('ss,sk,s,q,a,d,ac', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control,auditor,dispatch_admin,accountant,super_admin');
+        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q,a,d,ac', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control,auditor,dispatch_admin,accountant,super_admin');
+        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->defaults('ex', __e('ss,sk,s,q,a,d,ac', null, true))->middleware('auth:stock_keeper,sales_rep,quality_control,auditor,dispatch_admin,accountant,super_admin');
         Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->defaults('ex', __e('ss,s,d', null, true))->middleware('auth:stock_keeper,sales_rep,dispatch_admin');
 
         Route::get('{swapDeal:product_uuid}/edit', [self::class, 'showEditSwapDealPage'])->name('edit_swap_deal')->defaults('ex', __e('ac,ss', 'refresh-cw', true))->middleware('auth:accountant,super_admin');
@@ -411,8 +331,8 @@ class SwapDeal extends BaseModel
       $swapDeals = Cache::rememberForever('dispatchAdminsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with('swapped_with', 'product_status', 'app_user', 'dispatch_request')->get(), 'basicDispatch'));
     } elseif ($request->user()->isAccountant() || $request->user()->isSuperAdmin()) {
       $swapDeals = Cache::rememberForever('accountantSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->orWhere->untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
-    } elseif ($request->user()->isAdmin()) {
-      $swapDeals = Cache::rememberForever('adminSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->orWhere->untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
+    } elseif ($request->user()->isAuditor()) {
+      $swapDeals = Cache::rememberForever('auditorSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->orWhere->untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } else {
       $swapDeals = collect([]);
     }
@@ -472,7 +392,7 @@ class SwapDeal extends BaseModel
       if ($request->isApi()) return response()->json([], 204);
       return back()->withFlash(['success' => 'Details updated']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth()->user(), $th, 'Swap details not updated');
+      ErrLog::notifyAuditor(auth()->user(), $th, 'Swap details not updated');
       if ($request->isApi()) return response()->json(['err' => 'Swap details not updated'], 500);
       return back()->withFlash(['error' => ['Details not updated']]);
     }
@@ -493,7 +413,7 @@ class SwapDeal extends BaseModel
       if ($request->isApi()) return response()->json([], 204);
       return back()->withFlash(['success'=>'Details updated']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(auth()->user(), $th, 'Swap details not updated');
+      ErrLog::notifyAuditor(auth()->user(), $th, 'Swap details not updated');
       if ($request->isApi()) return response()->json(['err' => 'Swap details not updated'], 500);
       return back()->withFlash(['error'=>['Details not updated']]);
     }
@@ -566,7 +486,7 @@ class SwapDeal extends BaseModel
         'is_swap_transaction' => filter_var($request->is_swap_transaction, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
       ]);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
+      ErrLog::notifyAuditorAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create product sales record ' . $request->email], 500);
       return back()->withFlash(['error'=>['Could not create product sales record. Try again']]);
     }
@@ -590,7 +510,7 @@ class SwapDeal extends BaseModel
         ]
       );
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create account profile for ' . $request->email);
+      ErrLog::notifyAuditorAndFail(auth()->user(), $th, 'Could not create account profile for ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create account profile for ' . $request->email], 500);
       return back()->withFlash(['error'=>['Could not create account profile for buyer. Try again']]);
     }
@@ -687,7 +607,7 @@ class SwapDeal extends BaseModel
     try {
       $receipt = $swapDeal->generate_receipt();
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Receipt generation failed');
+      ErrLog::notifyAuditor($request->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
       // return back()->withFlash(['error'=>['Receipt generation failed']]);
     }
@@ -698,7 +618,7 @@ class SwapDeal extends BaseModel
 
     try {
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Failed to send receipt to user', $swapDeal->app_user->email);
+      ErrLog::notifyAuditor($request->user(), $th, 'Failed to send receipt to user', $swapDeal->app_user->email);
       // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
       // return back()->withFlash(['error'=>['Failed to send receipt to user  ' . $product->app_user->emai]]);
     }
@@ -828,7 +748,7 @@ class SwapDeal extends BaseModel
       Cache::forget('stockKeeoerSwapDeals');
       Cache::forget('dispatchAdminsSwapDeals');
       Cache::forget('accountantSwapDeals');
-      Cache::forget('adminSwapDeals');
+      Cache::forget('auditorSwapDeals');
 
       if ($swapDeal->isDirty('product_status_id')) {
         request()->user()->product_histories()->create([

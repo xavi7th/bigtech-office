@@ -6,7 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use RachidLaasri\Travel\Travel;
 use Illuminate\Support\Facades\DB;
-use App\Modules\Admin\Models\Admin;
+use App\Modules\Auditor\Models\Auditor;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -60,7 +60,7 @@ class SuperAdminController extends Controller
         // Route::get('/dashboard-statistics/{date}', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss', 'home', true));
 
         SalesRep::superAdminRoutes();
-        Admin::superAdminRoutes();
+        Auditor::superAdminRoutes();
         Accountant::superAdminRoutes();
         DispatchAdmin::superAdminRoutes();
         QualityControl::superAdminRoutes();

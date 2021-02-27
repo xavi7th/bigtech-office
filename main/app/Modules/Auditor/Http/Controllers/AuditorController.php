@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Admin\Http\Controllers;
+namespace App\Modules\Auditor\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Modules\Admin\Models\Admin;
+use App\Modules\Auditor\Models\Auditor;
 use App\Http\Controllers\Controller;
 use App\Modules\SuperAdmin\Models\OtherExpense;
 use Illuminate\Support\Facades\Route;
@@ -27,17 +27,17 @@ use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 
-class AdminController extends Controller
+class AuditorController extends Controller
 {
   static function routes()
   {
     Route::group(['middleware' => ['web']], function () {
-      Route::prefix(Admin::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::group(['middleware' => ['auth:admin']], function () {
-          Route::get('/', [self::class, 'index'])->name('admin.dashboard')->defaults('ex', __e('a', 'home', true));
+      Route::prefix(Auditor::DASHBOARD_ROUTE_PREFIX)->group(function () {
+        Route::group(['middleware' => ['auth:auditor']], function () {
+          Route::get('/', [self::class, 'index'])->name('auditor.dashboard')->defaults('ex', __e('a', 'home', true));
         });
 
-        Route::name('admin.')->group(function () {
+        Route::name('auditor.')->group(function () {
           Product::multiAccessRoutes();
           ProductHistory::multiAccessRoutes();
           ProductBatch::multiAccessRoutes();
@@ -68,6 +68,6 @@ class AdminController extends Controller
    */
   public function index(Request $request)
   {
-    return Inertia::render('Admin,AdminDashboard');
+    return Inertia::render('Auditor,AdminDashboard');
   }
 }

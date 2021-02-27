@@ -335,17 +335,17 @@ class AppUser extends User
   {
     try {
       DB::beginTransaction();
-      $admin = self::create(Arr::collapse([
+      $appUser = self::create(Arr::collapse([
         request()->all(),
         [
-          'password' => bcrypt('itsefintech@admin'),
+          'password' => bcrypt('itsefintech@appUser'),
         ]
       ]));
 
-      ActivityLog::logUserActivity('New Card User account created. Details: ' . $admin->email);
+      ActivityLog::logUserActivity('New Card User account created. Details: ' . $appUser->email);
 
       DB::commit();
-      return response()->json(['rsp' => $admin], 201);
+      return response()->json(['rsp' => $appUser], 201);
     } catch (\Throwable $e) {
       if (app()->environment() == 'local') {
         return response()->json(['error' => $e->getMessage()], 500);

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
-use App\Modules\Admin\Models\Admin;
+use App\Modules\Auditor\Models\Auditor;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\WebAdmin\Models\WebAdmin;
@@ -220,7 +220,7 @@ class ProductManagementTest extends TestCase
   {
 
     $product = $this->create_product_in_stock();
-    $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid), array_merge($this->data(), ['is_swap_transaction' => true]));
+    $rsp = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid), array_merge($this->data(), ['is_swap_transaction' => true]));
 
     $this->assertCount(1, SwapDeal::all());
   }
@@ -249,31 +249,25 @@ class ProductManagementTest extends TestCase
     // $response->assertSessionHasErrors('other');
   }
 
-  /** @test */
-  public function a_product_cannot_be_marked_as_sold_by_unauthorised_users()
+  /**
+  * @test
+  * @dataProvider provideDifferentUserTypesWithoutSalesRepAdnDispatchAdmin
+  */
+  public function a_product_cannot_be_marked_as_sold_by_unauthorised_users($dataSource)
   {
+    [$location, $user] = $dataSource();
 
-    $this->expectException(RouteNotFoundException::class);
+    if ($user instanceof AppUser) {
+      $this->expectException(RouteNotFoundException::class);
+    }
 
     $product = $this->create_product_in_stock();
-
-    $this->actingAs(factory(SuperAdmin::class)->create(), 'super_admin')->post(route('superadmin.multiaccess.products.mark_as_sold', $product->product_uuid))->assertRedirect(route('app.login'));
-    $this->actingAs(factory(Admin::class)->create(), 'admin')->post(route('admin.multiaccess.products.mark_as_sold', $product->product_uuid))->assertRedirect(route('app.login'));
-    $this->actingAs(factory(WebAdmin::class)->create(), 'web_admin')->post(route('webadmin.multiaccess.products.mark_as_sold', $product->product_uuid))->assertRedirect(route('app.login'));
-    $this->actingAs(factory(Accountant::class)->create(), 'accountant')->post(route('accountant.multiaccess.products.mark_as_sold', $product->product_uuid))->assertRedirect(route('app.login'));
-    $this->actingAs(factory(QualityControl::class)->create(), 'quality_control')->post(route('qualitycontrol.multiaccess.products.mark_as_sold', $product->product_uuid))->assertRedirect(route('app.login'));
-    $this->actingAs(factory(StockKeeper::class)->create(), 'stock_keeper')->post(route('stockkeeper.multiaccess.products.mark_as_sold', $product->product_uuid))->assertRedirect(route('app.login'));
-    $this->actingAs(factory(AppUser::class)->create())->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid))->assertRedirect(route('app.login'));
+    $this->actingAs($user, Str::snake(class_basename(get_class($user))))->post(route(strtolower($user->getType()) . '.multiaccess.products.mark_as_sold', $product->product_uuid))->assertRedirect(route('app.login'));
 
     /**
      * Make sure the product is still in stock
      */
     $this->assertEquals(ProductStatus::inStockId(), $product->refresh()->product_status_id);
-
-    /**
-     * Test this after other tests cos test breaks on exception thrown
-     */
-    $this->actingAs(factory(AppUser::class)->create())->post(route('appuser.multiaccess.products.mark_as_sold', $product->product_uuid));
   }
 
   /** @test */

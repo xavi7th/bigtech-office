@@ -109,7 +109,7 @@ return [
 			'connection' => 'default',
 			'collection' => 'err_logs',
 			'detailed' => true,
-      'queue' => true,
+      'queue' => env('LOG_DB_QUEUE'),
       'queue_name' => 'low',
 			'max_rows' => env('LOG_DB_MAX_ROWS'),
 			'max_records' => env('LOG_DB_MAX_ROWS'),

@@ -3,9 +3,7 @@
 namespace App\Modules\WebAdmin\Providers;
 
 use Illuminate\Support\Str;
-use Illuminate\Auth\SessionGuard;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use App\Modules\WebAdmin\Models\WebAdmin;
 use Illuminate\Database\Eloquent\Factory;
@@ -35,9 +33,6 @@ class WebAdminServiceProvider extends ServiceProvider
       $this->registerViews();
       $this->registerFactories();
       $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
-
-      // app()->make('router')->aliasMiddleware('web_admins', OnlyWebAdmins::class);
-      // app()->make('router')->aliasMiddleware('verified', VerifiedWebAdmins::class);
     }
   }
 
@@ -50,9 +45,6 @@ class WebAdminServiceProvider extends ServiceProvider
   {
     if ((Str::contains(request()->url(), WebAdmin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
       $this->app->register(RouteServiceProvider::class);
-      SessionGuard::macro('webAdmin', function () {
-        return WebAdmin::find(Auth::guard('admin')->id());
-      });
     }
   }
 

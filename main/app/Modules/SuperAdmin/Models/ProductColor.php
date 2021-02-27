@@ -13,29 +13,6 @@ use App\Modules\SuperAdmin\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductColorTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductColor
- *
- * @property int $id
- * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductColor newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductColor newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductColor onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductColor query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductColor whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductColor withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductColor withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductColor extends BaseModel
 {
   use SoftDeletes;
@@ -48,15 +25,15 @@ class ProductColor extends BaseModel
   }
 
   /**
-   * The admin routes
+   * The auditor routes
    * @return Response
    */
   public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'product-colors'], function () {
-      Route::get('', [self::class, 'getProductColors'])->name('multiaccess.miscellaneous.colors')->defaults('ex', __e('ss,a', 'pen-tool', false))->middleware('auth:super_admin,admin');
-      Route::post('create', [self::class, 'createProductColor'])->name('multiaccess.miscellaneous.create_product_color')->defaults('ex', __e('ss,a', 'pen-tool', true))->middleware('auth:super_admin,admin');
-      Route::put('{color}/edit', [self::class, 'editProductColor'])->name('multiaccess.miscellaneous.edit_product_color')->defaults('ex', __e('ss,a', 'pen-tool', true))->middleware('auth:super_admin,admin');
+      Route::get('', [self::class, 'getProductColors'])->name('multiaccess.miscellaneous.colors')->defaults('ex', __e('ss,a', 'pen-tool', false))->middleware('auth:super_admin,auditor');
+      Route::post('create', [self::class, 'createProductColor'])->name('multiaccess.miscellaneous.create_product_color')->defaults('ex', __e('ss,a', 'pen-tool', true))->middleware('auth:super_admin,auditor');
+      Route::put('{color}/edit', [self::class, 'editProductColor'])->name('multiaccess.miscellaneous.edit_product_color')->defaults('ex', __e('ss,a', 'pen-tool', true))->middleware('auth:super_admin,auditor');
     });
   }
 
@@ -92,7 +69,7 @@ class ProductColor extends BaseModel
           return generate_422_error($th->errorInfo[2]);
         }
       }
-      ErrLog::notifyAdmin(auth()->user(), $th, 'Color creation failed');
+      ErrLog::notifyAuditor(auth()->user(), $th, 'Color creation failed');
       if ($request->isApi())
         return response()->json(['err' => 'Color creation failed'], 500);
       return back()->withFlash(['error'=>['Color creation failed']]);
@@ -117,7 +94,7 @@ class ProductColor extends BaseModel
         return response()->json([], 204);
       return back()->withFlash(['success'=>'Product color updated. <br/> Products can now be created under this color']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Color not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Color not updated');
 
       if ($request->isApi())
         return response()->json(['err' => 'Color not updated'], 500);

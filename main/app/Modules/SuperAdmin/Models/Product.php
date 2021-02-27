@@ -12,8 +12,6 @@ use Illuminate\Http\Response;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
@@ -464,18 +462,18 @@ class Product extends BaseModel
   static function multiAccessRoutes()
   {
     Route::name('multiaccess.products.')->prefix('products')->group(function () {
-      Route::get('', [self::class, 'getProducts'])->name('view_products')->defaults('ex', __e('ss,a,ac,d,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,admin,dispatch_admin,web_admin,accountant');
+      Route::get('', [self::class, 'getProducts'])->name('view_products')->defaults('ex', __e('ss,a,ac,d,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,auditor,dispatch_admin,web_admin,accountant');
       Route::get('local-supplier-products', [self::class, 'getLocalProducts'])->name('pending_local_products')->defaults('ex', __e('ss,ac', 'box'))->middleware('auth:super_admin,accountant');
       Route::get('search', [self::class, 'findProduct'])->name('find_product')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
       Route::get('stock-list-aggregate', [self::class, 'viewStockList'])->name('view_stock')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
-      Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,sk,a,ac', 'archive'))->middleware('auth:super_admin,stock_keeper,admin,accountant');
-      Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac', 'archive', true))->middleware('auth:super_admin,admin,accountant');
+      Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,sk,a,ac', 'archive'))->middleware('auth:super_admin,stock_keeper,auditor,accountant');
+      Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac', 'archive', true))->middleware('auth:super_admin,auditor,accountant');
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name('edit_product_location')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
-      Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name('qa_test_results')->defaults('ex', __e('ss,q,a', null, true))->middleware('auth:quality_control,admin,super_admin,accountant');
+      Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name('qa_test_results')->defaults('ex', __e('ss,q,a', null, true))->middleware('auth:quality_control,auditor,super_admin,accountant');
       Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('ss,d', null, true))->middleware('auth:sales_rep,dispatch_admin');
       Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name('update_product_status')->defaults('ex', __e('ss,q', null, true))->middleware('auth:super_admin,quality_control');
-      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->defaults('ex', __e('ss,a,ac,d,sk', null, true))->middleware('auth:super_admin,admin,accountant');
+      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->defaults('ex', __e('ss,a,ac,d,sk', null, true))->middleware('auth:super_admin,auditor,accountant');
       Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name('applicable_qa_tests')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
       Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->defaults('ex', __e('ss,d,q', null, true))->middleware('auth:super_admin,stock_keeper,quality_control');
 
@@ -519,7 +517,7 @@ class Product extends BaseModel
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isAccountant()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->sold()->orWhere->saleConfirmed()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
-    } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin()) {
+    } elseif ($request->user()->isAuditor() || $request->user()->isSuperAdmin()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } else {
       $products = collect([]);
@@ -560,7 +558,7 @@ class Product extends BaseModel
 
     if ($request->user()->isAccountant()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::local()->notPaid()->search($searchKey, $searchQuery)->where(fn ($query) => $query->inStock()->orWhere->untested()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'localProductsListing');
-    } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin()) {
+    } elseif ($request->user()->isAuditor() || $request->user()->isSuperAdmin()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::local()->notPaid()->search($searchKey, $searchQuery)->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'product_supplier'])->get(), 'localProductsListing');
     } else {
       $products = fn () => collect([]);
@@ -658,7 +656,7 @@ class Product extends BaseModel
       if ($request->isApi()) return response()->json($product, 201);
       return back()->withFlash(['success'=>'Product created']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Product not created');
       return response()->json(['err' => 'Product not created'], 500);
     }
   }
@@ -691,7 +689,7 @@ class Product extends BaseModel
 
       return back()->withFlash(['success' => 'Product details updated']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Product not updated');
       return back()->withFlash(['erroe' => 'Product not updated']);
     }
   }
@@ -728,7 +726,7 @@ class Product extends BaseModel
 
       return back()->withFlash(['success' => 'Product created']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail($request->user(), $th, 'Local Product not created');
+      ErrLog::notifyAuditorAndFail($request->user(), $th, 'Local Product not created');
       return back()->withFlash(['error' => ['Product not created: ' . $th->getMessage()]]);
     }
   }
@@ -855,7 +853,7 @@ class Product extends BaseModel
 
       return response()->json([], 204);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Product not updated');
       return response()->json(['err' => 'Product not updated'], 500);
     }
   }
@@ -958,7 +956,7 @@ class Product extends BaseModel
           $product->dispatch_request->sold_at = now();
           $product->dispatch_request->save();
         } catch (\Throwable $th) {
-          ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not mark dispatch request as processed ' . $request->email);
+          ErrLog::notifyAuditorAndFail(auth()->user(), $th, 'Could not mark dispatch request as processed ' . $request->email);
           if ($request->isApi()) return response()->json(['err' => 'Could not mark dispatch request as processed ' . $request->email], 500);
           return back()->withFlash(['error'=>['Could not mark dispatch request as processed.' . $th->getMessage()]]);
         }
@@ -977,7 +975,7 @@ class Product extends BaseModel
         'is_swap_transaction' => filter_var($request->is_swap_transaction, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
       ]);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
+      ErrLog::notifyAuditorAndFail(auth()->user(), $th, 'Could not create product sales record ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create product sales record ' . $request->email], 500);
       return back()->withFlash(['error'=>['Could not create product sales record. Try again' . $th->getMessage()]]);
     }
@@ -1007,7 +1005,7 @@ class Product extends BaseModel
         $app_user = AppUser::create($userData);
       }
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Could not create account profile for ' . $request->email);
+      ErrLog::notifyAuditorAndFail(auth()->user(), $th, 'Could not create account profile for ' . $request->email);
       if ($request->isApi()) return response()->json(['err' => 'Could not create account profile for ' . $request->email], 500);
       return back()->withFlash(['error'=>['Could not create account profile for buyer. Try again' . $th->getMessage()]]);
     }

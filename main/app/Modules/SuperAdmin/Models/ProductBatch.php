@@ -23,36 +23,6 @@ use App\Modules\SuperAdmin\Transformers\ProductGradeTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductSupplierTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductBatch
- *
- * @property int $id
- * @property string $batch_number
- * @property \Illuminate\Support\Carbon $order_date
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductPrice[] $productPrices
- * @property-read int|null $product_prices_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductBatch onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereBatchNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereOrderDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductBatch withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductBatch withoutTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBatch foreign()
- * @mixin \Eloquent
- */
 class ProductBatch extends BaseModel
 {
   use SoftDeletes, Commentable;
@@ -107,9 +77,9 @@ class ProductBatch extends BaseModel
       $p = function ($name) {
         return 'multiaccess.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', false))->middleware('auth:stock_keeper,quality_control,admin,accountant,super_admin');
-      Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss,a,ac', 'package', true))->middleware('auth:super_admin,admin,accountant');
-      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', true))->middleware('auth:stock_keeper,quality_control,admin,accountant,super_admin');
+      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', false))->middleware('auth:stock_keeper,quality_control,auditor,accountant,super_admin');
+      Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->defaults('ex', __e('ss,a,ac', 'package', true))->middleware('auth:super_admin,auditor,accountant');
+      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', true))->middleware('auth:stock_keeper,quality_control,auditor,accountant,super_admin');
       Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss,ac', 'package', true))->middleware('auth:super_admin,accountant');
     });
   }
@@ -149,7 +119,7 @@ class ProductBatch extends BaseModel
       if ($request->isApi()) return response()->json((new ProductBatchTransformer)->basic($product_batch), 201);
       return back()->withFlash(['success'=>'New batch created']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Batch not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Batch not created');
       if ($request->isApi()) return response()->json(['err' => 'Batch not created'], 500);
       return back()->withFlash(['error'=>['Batch not created']]);
     }
@@ -176,7 +146,7 @@ class ProductBatch extends BaseModel
       $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->justArrived(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
     } elseif ($request->user()->isQualityControl()) {
       $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->untested(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
-    } elseif ($request->user()->isAdmin() || $request->user()->isSuperAdmin() || $request->user()->isAccountant()) {
+    } elseif ($request->user()->isAuditor() || $request->user()->isSuperAdmin() || $request->user()->isAccountant()) {
       $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products', 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
     } else {
       $batchWithProducts = collect(['products' => []]);

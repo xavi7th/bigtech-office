@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	@routes(['admin','auth', 'public', 'multiaccess'])
+	@routes(['auditor','auth', 'public', 'multiaccess'])
 	<script src="{{ mix('js/dashboard-app-vendor.js') }}"></script>
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0, shrink-to-fit=no">
 	<link rel="stylesheet"
@@ -16,9 +16,9 @@
 
 	<script src="{{ mix('/js/manifest.js') }}" defer async></script>
 	<script src="{{ mix('/js/vendor.js') }}" defer async></script>
-	<script src="{{ mix('js/admin.js') }}" defer></script>
+	<script src="{{ mix('js/auditor.js') }}" defer></script>
   <link rel="stylesheet" href="{{ mix('css/dashboard-app.css') }}">
-  <link rel="stylesheet" href="{{ mix('css/admin-app.css') }}">
+  <link rel="stylesheet" href="{{ mix('css/auditor-app.css') }}">
 
 </body>
 

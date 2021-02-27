@@ -22,40 +22,6 @@ use App\Modules\SuperAdmin\Transformers\ProductModelTransformer;
 use App\Modules\SuperAdmin\Transformers\ProductCategoryTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateProductModelValidation;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductModel
- *
- * @property int $id
- * @property int $product_brand_id
- * @property int $product_category_id
- * @property string $name
- * @property string|null $img_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read string $img_thumb_url
- * @property-read ProductBrand $product_brand
- * @property-read ProductCategory $product_category
- * @property-read ProductDescriptionSummary|null $product_description_summary
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductModelImage[] $product_model_images
- * @property-read int|null $product_model_images_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @property-read \Illuminate\Database\Eloquent\Collection|QATest[] $qa_tests
- * @property-read int|null $qa_tests_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereProductBrandId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereProductCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductModel whereUpdatedAt($value)
- * @mixin \Eloquent
- */
 class ProductModel extends BaseModel
 {
 
@@ -111,16 +77,16 @@ class ProductModel extends BaseModel
       $gen = function ($namespace, $name = null) {
         return 'multiaccess.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductModels'])->name($gen('models.manage_product_models'))->defaults('ex', __e('ss,a,w', 'git-branch', false))->middleware('auth:super_admin,admin,web_admin');
-      Route::match(['post', 'get'], 'create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss,a', 'git-branch', true))->middleware('auth:super_admin,admin');
-      Route::get('{productModel}', [self::class, 'getProductModelDetails'])->name($gen('models', '.details'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,admin,web_admin');
-      Route::put('{productModel}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,admin,web_admin');
+      Route::get('', [self::class, 'getProductModels'])->name($gen('models.manage_product_models'))->defaults('ex', __e('ss,a,w', 'git-branch', false))->middleware('auth:super_admin,auditor,web_admin');
+      Route::match(['post', 'get'], 'create', [self::class, 'createProductModel'])->name($gen('models', '.create_product_model'))->defaults('ex', __e('ss,a', 'git-branch', true))->middleware('auth:super_admin,auditor');
+      Route::get('{productModel}', [self::class, 'getProductModelDetails'])->name($gen('models', '.details'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,auditor,web_admin');
+      Route::put('{productModel}/edit', [self::class, 'editProductModel'])->name($gen('models', '.edit_product_model'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,auditor,web_admin');
       Route::get('{productModel}/qa-tests', [self::class, 'getProductModelQATests'])->name($gen('models', '.model_qa_tests'))->defaults('ex', __e('ss', 'git-branch', true))->middleware('auth:super_admin');
-      Route::put('{productModel}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('ss,a', 'git-branch', true))->middleware('auth:super_admin,admin');
+      Route::put('{productModel}/qa-tests', [self::class, 'updateProductModelQATests'])->name($gen('models', '.update_model_qa_tests'))->defaults('ex', __e('ss,a', 'git-branch', true))->middleware('auth:super_admin,auditor');
       // Route::get('{productModel}/images', [self::class, 'getProductModelImages'])->name($gen('models', '.model_images'))->defaults('ex', __e('ss', 'git-branch', true))->middleware('auth:super_admin');
-      Route::post('{productModel}/images/create', [self::class, 'createProductModelImage'])->name($gen('models', '.create_model_image'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,admin,web_admin');
-      Route::delete('images/{id}/delete', [self::class, 'deleteProductModelImage'])->name($gen('models', '.delete_model_image'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,admin,web_admin');
-      Route::post('{productModel}/comment', [self::class, 'commentOnProductModel'])->name($gen('models', '.comment_on_model'))->defaults('ex', __e('ss,a,w', null, true))->middleware('auth:super_admin,admin,web_admin');
+      Route::post('{productModel}/images/create', [self::class, 'createProductModelImage'])->name($gen('models', '.create_model_image'))->defaults('ex', __e('a,w', 'git-branch', true))->middleware('auth:auditor,web_admin');
+      Route::delete('images/{id}/delete', [self::class, 'deleteProductModelImage'])->name($gen('models', '.delete_model_image'))->defaults('ex', __e('ss,a,w', 'git-branch', true))->middleware('auth:super_admin,auditor,web_admin');
+      Route::post('{productModel}/comment', [self::class, 'commentOnProductModel'])->name($gen('models', '.comment_on_model'))->defaults('ex', __e('ss,a,w', null, true))->middleware('auth:super_admin,auditor,web_admin');
     });
   }
 
@@ -185,7 +151,7 @@ class ProductModel extends BaseModel
         } else return back()->withFlash(['success'=>'New product model created. Add some images to it']);
       } catch (\Throwable $th) {
         dd($th);
-        ErrLog::notifyAdmin($request->user(), $th, 'Product model not created');
+        ErrLog::notifyAuditor($request->user(), $th, 'Product model not created');
         return response()->json(['err' => 'Product model not created'], 500);
       }
     }
@@ -215,7 +181,7 @@ class ProductModel extends BaseModel
       }
       return back()->withFlash(['success'=>'Updated']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Model not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Model not updated');
       return response()->json(['err' => 'Model not updated'], 500);
     }
   }

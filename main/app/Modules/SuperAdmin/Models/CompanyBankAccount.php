@@ -184,7 +184,7 @@ class CompanyBankAccount extends BaseModel
       if ($request->isApi()) return response()->json((new CompanyBankAccountTransformer)->basic($account), 201);
       return back()->withFlash(['success'=>'Bank Account created. <br/> Payments can now be created under this bank account']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Company Account not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Company Account not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Account details NOT updated'], 500);
       return back()->withFlash(['error'=>['Account creation failed']]);
@@ -206,7 +206,7 @@ class CompanyBankAccount extends BaseModel
       if ($request->isApi())  return response()->json([], 204);
       return back()->withFlash(['success'=>'Bank Account updated. <br/> Payments can now be created under this bank account']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Account details NOT updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Account details NOT updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Account details NOT updated'], 500);
       return back()->withFlash(['error'=>['Account creation failed']]);

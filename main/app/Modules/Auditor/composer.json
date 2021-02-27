@@ -1,5 +1,5 @@
 {
-    "name": "nwidart/admin",
+    "name": "nwidart/auditor",
     "description": "",
     "authors": [
         {
@@ -10,7 +10,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "App\\Modules\\Admin\\Providers\\AdminServiceProvider"
+                "App\\Modules\\Auditor\\Providers\\AuditorServiceProvider"
             ],
             "aliases": {
 
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\Modules\\Admin\\": ""
+            "App\\Modules\\Auditor\\": ""
         }
     }
 }

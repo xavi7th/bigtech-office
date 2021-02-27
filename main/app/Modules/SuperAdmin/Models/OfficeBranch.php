@@ -7,7 +7,7 @@ use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Modules\Admin\Models\Admin;
+use App\Modules\Auditor\Models\Auditor;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
@@ -32,8 +32,8 @@ use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Admin[] $admins
- * @property-read int|null $admins_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Auditor[] $auditors
+ * @property-read int|null $auditors_count
  * @property-read \Illuminate\Database\Eloquent\Collection|ProductExpense[] $product_expenses
  * @property-read int|null $product_expenses_count
  * @property-read \Illuminate\Database\Eloquent\Collection|ProductHistory[] $product_histories
@@ -64,9 +64,9 @@ class OfficeBranch extends BaseModel
 
   protected $fillable = ['city', 'country'];
 
-  public function admins()
+  public function auditors()
   {
-    return $this->hasMany(Admin::class);
+    return $this->hasMany(Auditor::class);
   }
 
   public function products()
@@ -108,18 +108,18 @@ class OfficeBranch extends BaseModel
   public function staff()
   {
     return [
-      'admins' => (new AdminUserTransformer)->collectionTransformer($this->admins, 'basic'),
-      'sales_reps' => (new AdminUserTransformer)->collectionTransformer($this->sales_reps, 'basic'),
-      'accountants' => (new AdminUserTransformer)->collectionTransformer($this->accountants, 'basic'),
+      'auditors' => (new AuditorUserTransformer)->collectionTransformer($this->auditors, 'basic'),
+      'sales_reps' => (new AuditorUserTransformer)->collectionTransformer($this->sales_reps, 'basic'),
+      'accountants' => (new AuditorUserTransformer)->collectionTransformer($this->accountants, 'basic'),
     ];
   }
 
   public function staff_activities()
   {
     return [
-      'admins' => (new AdminUserTransformer)->collectionTransformer($this->admins, 'transformWithActivity'),
-      'sales_reps' => (new AdminUserTransformer)->collectionTransformer($this->sales_reps, 'transformWithActivity'),
-      'accountants' => (new AdminUserTransformer)->collectionTransformer($this->accountants, 'transformWithActivity'),
+      'auditors' => (new AuditorUserTransformer)->collectionTransformer($this->auditors, 'transformWithActivity'),
+      'sales_reps' => (new AuditorUserTransformer)->collectionTransformer($this->sales_reps, 'transformWithActivity'),
+      'accountants' => (new AuditorUserTransformer)->collectionTransformer($this->accountants, 'transformWithActivity'),
     ];
   }
 
@@ -130,7 +130,7 @@ class OfficeBranch extends BaseModel
 
   public static function superAdminRoutes()
   {
-    Route::group(['prefix' => 'office-branches', 'namespace' => '\App\Modules\Admin\Models'], function () {
+    Route::group(['prefix' => 'office-branches', 'namespace' => '\App\Modules\Auditor\Models'], function () {
 
       $others = function ($name) {
         return 'superadmin.miscellaneous.' . $name;
@@ -178,7 +178,7 @@ class OfficeBranch extends BaseModel
       if ($request->isApi()) return response()->json((new OfficeBranchTransformer)->basic($account), 201);
       return back()->withFlash(['success'=>'Office branch created.']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Office Branch not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Office Branch not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Office Branch not created'], 500);
       return back()->withFlash(['error'=>['Office Branch creation failed']]);
@@ -203,7 +203,7 @@ class OfficeBranch extends BaseModel
       if ($request->isApi()) return response()->json([], 204);
       return back()->withFlash(['success'=>'Office branch updated']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Branch details NOT updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Branch details NOT updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Branch details NOT updated'], 500);
       return back()->withFlash(['error'=>['Branch update failed']]);

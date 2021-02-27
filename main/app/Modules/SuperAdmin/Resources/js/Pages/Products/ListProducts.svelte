@@ -147,14 +147,14 @@
                   <td class="text-capitalize">{product.full_name}</td>
                   <td>
                     {product.identifier}
-                    {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+                    {#if auth.user.isAuditor || auth.user.isSuperAdmin}
                     <br>
                       <strong class="small font-weight-bold badge badge-brand">{product.status}</strong>
                     {/if}
                   </td>
                   <td>{toCurrency(product.selling_price)}</td>
                   <td>
-                    {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
+                    {#if auth.user.isSuperAdmin || auth.user.isAuditor || auth.user.isAccountant}
                       <InertiaLink
                         type="button"
                         href={route(auth.user.user_type + '.multiaccess.products.view_product_details', product.uuid)}

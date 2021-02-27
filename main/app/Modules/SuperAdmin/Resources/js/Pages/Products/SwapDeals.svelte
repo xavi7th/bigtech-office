@@ -84,7 +84,7 @@
                 <td>{product.description}</td>
                 <td>
                   {product.identifier}
-                 {#if auth.user.isAdmin || auth.user.isAccountant || auth.user.isSuperAdmin}
+                 {#if auth.user.isAuditor || auth.user.isAccountant || auth.user.isSuperAdmin}
                     <br />
                   <span class="small font-weight-bold text-capitalize badge badge-brand">
                     STATUS:
@@ -101,7 +101,7 @@
                     Details
                   </InertiaLink>
 
-                  {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
+                  {#if auth.user.isSuperAdmin || auth.user.isAuditor || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
                       href={route(auth.user.user_type + '.multiaccess.miscellaneous.view_swap_history', product.uuid)}

@@ -12,29 +12,6 @@ use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\SalesChannel
- *
- * @property int $id
- * @property string $channel_name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $sales_records
- * @property-read int|null $sales_records_count
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel newQuery()
- * @method static \Illuminate\Database\Query\Builder|SalesChannel onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel query()
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereChannelName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SalesChannel whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|SalesChannel withTrashed()
- * @method static \Illuminate\Database\Query\Builder|SalesChannel withoutTrashed()
- * @mixin \Eloquent
- */
 class SalesChannel extends BaseModel
 {
   use SoftDeletes;
@@ -55,9 +32,9 @@ class SalesChannel extends BaseModel
   {
     Route::group(['prefix' => 'sales-channels'], function () {
       Route::name('multiaccess.miscellaneous.')->group(function () {
-        Route::get('', [self::class, 'getSalesChannels'])->name('sales_channels')->defaults('ex', __e('ss,a', 'airplay', false))->middleware('auth:super_admin,admin');
-        Route::post('create', [self::class, 'createSalesChannel'])->name('create_sales_channel')->defaults('ex', __e('ss,a', 'airplay', true))->middleware('auth:super_admin,admin');
-        Route::put('{salesChannel}/edit', [self::class, 'editSalesChannel'])->name('edit_sales_channel')->defaults('ex', __e('ss,a', 'airplay', true))->middleware('auth:super_admin,admin');
+        Route::get('', [self::class, 'getSalesChannels'])->name('sales_channels')->defaults('ex', __e('ss,a', 'airplay', false))->middleware('auth:super_admin,auditor');
+        Route::post('create', [self::class, 'createSalesChannel'])->name('create_sales_channel')->defaults('ex', __e('ss,a', 'airplay', true))->middleware('auth:super_admin,auditor');
+        Route::put('{salesChannel}/edit', [self::class, 'editSalesChannel'])->name('edit_sales_channel')->defaults('ex', __e('ss,a', 'airplay', true))->middleware('auth:super_admin,auditor');
       });
     });
   }
@@ -88,7 +65,7 @@ class SalesChannel extends BaseModel
       if ($request->isApi()) return response()->json((new SalesChannelTransformer)->basic($channel_name), 201);
       return back()->withFlash(['success'=>'Sales Channel created']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Sales Channel not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Sales Channel not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Sales Channel not created'], 500);
       return back()->withFlash(['error'=>['Sales channel creation failed']]);
@@ -111,7 +88,7 @@ class SalesChannel extends BaseModel
       if ($request->isApi())       return response()->json([], 204);
       return back()->withFlash(['success'=>'Sales channel updated']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Channel name not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Channel name not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Sales Channel not created'], 500);
       return back()->withFlash(['error'=>['Sales channel creation failed']]);

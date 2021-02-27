@@ -40,7 +40,7 @@
         brand={productModel.brand} />
     </div>
     <div class="col-lg-6 col-xl-7">
-      {#if auth.user.isWebAdmin || auth.user.isAdmin}
+      {#if auth.user.isWebAdmin || auth.user.isAuditor}
          <DescriptionSummary
         descriptionSummary={productModel.descriptionSummary}
         descriptionSummaryUpdated={productModel.descriptionSummaryUpdated} />
@@ -72,7 +72,7 @@
             Comments
           </a>
         </li>
-        {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+        {#if auth.user.isAuditor || auth.user.isSuperAdmin}
           <li class="nav-item">
             <a
               class="nav-link rui-tabs-link"
@@ -104,7 +104,7 @@
             comments={productModel.comments}
             on:view-comment={updateComment} />
         </div>
-        {#if auth.user.isAdmin || auth.user.isSuperAdmin}
+        {#if auth.user.isAuditor || auth.user.isSuperAdmin}
           <div
             class="tab-pane fade"
             id="settings"

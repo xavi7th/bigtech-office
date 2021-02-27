@@ -2,8 +2,8 @@
 
 namespace App\Modules\SuperAdmin\Tests\Traits;
 
-use App\Modules\Admin\Models\Admin;
 use App\Modules\AppUser\Models\AppUser;
+use App\Modules\Auditor\Models\Auditor;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\WebAdmin\Models\WebAdmin;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -36,6 +36,10 @@ trait ProvidesDifferentUserDataTypes
     return $this->provideDifferentUserTypes(['superadmin', 'appuser']);
   }
 
+  public function provideDifferentUserTypesWithoutSalesRepAdnDispatchAdmin()
+  {
+    return $this->provideDifferentUserTypes(['salesrep', 'dispatchadmin']);
+  }
 
   protected function provideDifferentUserTypes(array $typesToSkip = [])
   {
@@ -49,8 +53,8 @@ trait ProvidesDifferentUserDataTypes
       'salesrep' => [
         fn () => [factory(OfficeBranch::class)->create(), factory(SalesRep::class)->create(['id' => 2])]
       ],
-      'admin' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(Admin::class)->create(['id' => 2])],
+      'auditor' => [
+        fn () => [factory(OfficeBranch::class)->create(), factory(Auditor::class)->create(['id' => 2])],
       ],
       'accountant' => [
         fn () => [factory(OfficeBranch::class)->create(), factory(Accountant::class)->create(['id' => 2])],

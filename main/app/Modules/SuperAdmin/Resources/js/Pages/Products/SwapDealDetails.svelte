@@ -103,7 +103,7 @@
               {/if}
             </th>
           </tr>
-          {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
+          {#if auth.user.isSuperAdmin || auth.user.isAuditor || auth.user.isAccountant}
             <tr>
               <td class="text-primary"><strong>Seller Details</strong></td>
               <th scope="row"><strong>{swapDeal.seller_details}</strong></th>
@@ -145,7 +145,7 @@
               <th scope="row"><strong>{swapDeal.buyer}</strong></th>
             </tr>
           {/if}
-          {#if auth.user.isSuperAdmin || auth.user.isQualityControl || auth.user.isAdmin || auth.user.isAccountant}
+          {#if auth.user.isSuperAdmin || auth.user.isQualityControl || auth.user.isAuditor || auth.user.isAccountant}
             <tr>
               <td class="text-primary"><strong>Total Expenses</strong></td>
               <th scope="row">

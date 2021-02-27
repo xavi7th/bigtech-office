@@ -106,7 +106,7 @@
 
 <Layout title="Manage Product Brands">
   <div class="row vertical-gap">
-    {#if auth.user.isAdmin}
+    {#if auth.user.isAuditor}
       <div class="col-lg-4 col-xl-4">
         <form class="#" on:submit|preventDefault={createProductBrand}>
           <div

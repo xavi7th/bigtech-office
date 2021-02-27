@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Modules\Admin\Providers;
+namespace App\Modules\Auditor\Providers;
 
 use Illuminate\Support\Str;
 use Illuminate\Auth\SessionGuard;
-use App\Modules\Admin\Models\Admin;
+use App\Modules\Auditor\Models\Auditor;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
-class AdminServiceProvider extends ServiceProvider
+class AuditorServiceProvider extends ServiceProvider
 {
 	/**
 	 * @var string $moduleName
 	 */
-	protected $moduleName = 'Admin';
+	protected $moduleName = 'Auditor';
 
 	/**
 	 * @var string $moduleNameLower
 	 */
-	protected $moduleNameLower = 'admin';
+	protected $moduleNameLower = 'auditor';
 
 	/**
 	 * Boot the application events.
@@ -29,15 +29,12 @@ class AdminServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-    if ((Str::contains(request()->url(), Admin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
+    if ((Str::contains(request()->url(), Auditor::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
       $this->registerTranslations();
       $this->registerConfig();
       $this->registerViews();
       $this->registerFactories();
       $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
-
-      // app()->make('router')->aliasMiddleware('admins', OnlyAdmins::class);
-      // app()->make('router')->aliasMiddleware('verified', VerifiedAdmins::class);
     }
   }
 
@@ -48,10 +45,10 @@ class AdminServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-    if ((Str::contains(request()->url(), Admin::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
+    if ((Str::contains(request()->url(), Auditor::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
       $this->app->register(RouteServiceProvider::class);
-      SessionGuard::macro('admin', function () {
-      	return Admin::find(Auth::guard('admin')->id());
+      SessionGuard::macro('auditor', function () {
+      	return Auditor::find(Auth::guard('auditor')->id());
       });
     }
   }

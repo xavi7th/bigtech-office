@@ -23,7 +23,7 @@ $factory->define(SuperAdmin::class, function (Faker $faker) {
   return [
     'full_name' => $faker->name,
     'email' => $faker->email,
-    'password' => 'password',
+    'password' => 'theboss',
     'remember_token' => Str::random(10),
   ];
 });

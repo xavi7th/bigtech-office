@@ -80,7 +80,7 @@
 
 <Layout title="Manage Product Grades">
   <div class="row vertical-gap">
-    {#if auth.user.isAdmin}
+    {#if auth.user.isAuditor}
       <div class="col-lg-4 col-xl-4">
 
       <form class="#" on:submit|preventDefault={createProductGrade}>
@@ -116,7 +116,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Name</th>
-              {#if auth.user.isAdmin}
+              {#if auth.user.isAuditor}
                 <th scope="col">Action</th>
               {/if}
             </tr>
@@ -126,7 +126,7 @@
               <tr>
                 <td>{idx + 1}</td>
                 <td>{productGrade.grade}</td>
-                {#if auth.user.isAdmin}
+                {#if auth.user.isAuditor}
                   <td class="d-flex justify-content-between align-content-center">
                   <!-- <button
                     type="button"

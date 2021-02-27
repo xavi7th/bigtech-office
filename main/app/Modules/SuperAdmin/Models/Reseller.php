@@ -24,45 +24,6 @@ use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-/**
- * App\Modules\SuperAdmin\Models\Reseller
- *
- * @property int $id
- * @property string $business_name
- * @property string $ceo_name
- * @property string $address
- * @property string $phone
- * @property string $img_url
- * @property string|null $email
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ResellerHistory[] $reseller_histories
- * @property-read int|null $reseller_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\SwapDeal[] $swap_deals
- * @property-read int|null $swap_deals_count
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller newQuery()
- * @method static \Illuminate\Database\Query\Builder|Reseller onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller query()
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereBusinessName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereCeoName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|Reseller withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Reseller withoutTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Reseller whereEmail($value)
- * @mixin \Eloquent
- */
 class Reseller extends BaseModel
 {
   use SoftDeletes, Notifiable;
@@ -169,7 +130,7 @@ class Reseller extends BaseModel
     try {
       $this->notify(new ProductUpdate($product));
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(request()->user(), $th, 'Reseller notification failed');
+      ErrLog::notifyAuditor(request()->user(), $th, 'Reseller notification failed');
     }
 
     DB::commit();
@@ -222,7 +183,7 @@ class Reseller extends BaseModel
     try {
       $this->notify(new ProductUpdate($product));
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin(request()->user(), $th, 'Reseller notification failed');
+      ErrLog::notifyAuditor(request()->user(), $th, 'Reseller notification failed');
     }
 
     DB::commit();
@@ -245,9 +206,9 @@ class Reseller extends BaseModel
   {
     Route::group(['prefix' => 'resellers'], function () {
       Route::name('multiaccess.resellers.')->group(function () {
-        Route::get('', [self::class, 'getResellers'])->name('resellers')->defaults('ex', __e('ss,a,ac', 'at-sign', false))->middleware('auth:admin,super_admin,accountant');
-        Route::get('products', [self::class, 'getResellersWithProducts'])->name('resellers_with_products')->defaults('ex', __e('ss,sk,a,ac', 'at-sign', false))->middleware('auth:stock_keeper,admin,super_admin,accountant');
-        Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name('products')->defaults('ex', __e('ss,sk,a,ac', 'at-sign', true))->middleware('auth:stock_keeper,super_admin,admin,accountant');
+        Route::get('', [self::class, 'getResellers'])->name('resellers')->defaults('ex', __e('ss,a,ac', 'at-sign', false))->middleware('auth:auditor,super_admin,accountant');
+        Route::get('products', [self::class, 'getResellersWithProducts'])->name('resellers_with_products')->defaults('ex', __e('ss,sk,a,ac', 'at-sign', false))->middleware('auth:stock_keeper,auditor,super_admin,accountant');
+        Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name('products')->defaults('ex', __e('ss,sk,a,ac', 'at-sign', true))->middleware('auth:stock_keeper,super_admin,auditor,accountant');
       });
     });
   }
@@ -300,7 +261,7 @@ class Reseller extends BaseModel
       if ($request->isApi()) return response()->json((new ResellerTransformer)->basic($reseller), 201);
       return back()->withFlash(['success'=>'Success']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Reseller not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Reseller not created');
       if ($request->isApi()) return response()->json(['err' => 'Reseller not created'], 500);
       return back()->withFlash(['error'=>['Error']]);
     }
@@ -323,7 +284,7 @@ class Reseller extends BaseModel
       if ($request->isApi()) return response()->json([], 204);
       return back()->withFlash(['success'=>'Success']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Reseller not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Reseller not updated');
       if ($request->isApi()) return response()->json(['err' => 'Reseller not updated'], 500);
       return back()->withFlash(['error'=>['Error']]);
     }
@@ -345,7 +306,7 @@ class Reseller extends BaseModel
         return generate_422_error('Error giving product to reseller');
       }
     } catch (QueryException $th) {
-      ErrLog::notifyAdminAndFail($request->user(), $th, 'Error giving product to reseller');
+      ErrLog::notifyAuditorAndFail($request->user(), $th, 'Error giving product to reseller');
       if ($th->errorInfo[1] == 1062) return generate_422_error($th->errorInfo[2]);
       return generate_422_error($th->getMessage());
     }
@@ -373,7 +334,7 @@ class Reseller extends BaseModel
         return generate_422_error('Error giving product to reseller');
       }
     } catch (QueryException $th) {
-      ErrLog::notifyAdminAndFail($request->user(), $th, 'Error giving product to reseller');
+      ErrLog::notifyAuditorAndFail($request->user(), $th, 'Error giving product to reseller');
       if ($th->errorInfo[1] == 1062) return generate_422_error($th->errorInfo[2]);
       return generate_422_error($th->getMessage());
     }
@@ -442,7 +403,7 @@ class Reseller extends BaseModel
         ]);
       }
     } catch (QueryException $th) {
-      ErrLog::notifyAdminAndFail($request->user(), $th, 'Error trying to mark product from a reseller as sold.');
+      ErrLog::notifyAuditorAndFail($request->user(), $th, 'Error trying to mark product from a reseller as sold.');
       if ($th->errorInfo[1] == 1062) {
         return generate_422_error($th->errorInfo[2]);
       }
@@ -474,7 +435,7 @@ class Reseller extends BaseModel
     try {
       $reseller->notify(new ProductUpdate($product));
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Reseller notification failed');
+      ErrLog::notifyAuditor($request->user(), $th, 'Reseller notification failed');
     }
 
     DB::commit();

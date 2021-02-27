@@ -87,7 +87,7 @@ class Handler extends ExceptionHandler
         /**
          * ! Report it if no other reporter
          */
-        ErrLog::notifyAdminAndFail(SuperAdmin::first(), $exception, $exception->getMessage());
+        ErrLog::notifyAuditorAndFail(SuperAdmin::first(), $exception, $exception->getMessage());
 
         if (getenv('APP_ENV') === 'local') {
           return response()->json(['Handler Error' => $exception->getMessage()], 500);

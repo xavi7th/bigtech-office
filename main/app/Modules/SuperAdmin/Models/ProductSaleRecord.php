@@ -341,7 +341,7 @@ class ProductSaleRecord extends BaseModel
     try {
       $receipt = $product->generateReceipt($productSaleRecord->selling_price);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Receipt generation failed');
+      ErrLog::notifyAuditorAndFail(auth()->user(), $th, 'Receipt generation failed');
       // if ($request->isApi()) return response()->json(['err' => 'Receipt generation failed'], 500);
       return back()->withFlash(['error' => ['Receipt generation failed because ' . $th->getMessage()]]);
     }
@@ -354,7 +354,7 @@ class ProductSaleRecord extends BaseModel
       $receiptOwner = $product->app_user->first_name == 'Not Sold' ? $product->reseller() : $product->app_user;
       $receiptOwner->notify(new ProductReceiptNotification($receipt));
     } catch (\Throwable $th) {
-      ErrLog::notifyAdminAndFail(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
+      ErrLog::notifyAuditorAndFail(auth()->user(), $th, 'Failed to send receipt to user', $product->app_user->email);
       // if ($request->isApi()) return response()->json(['err' => 'Failed to send receipt to user ' . $product->app_user->emai], 500);
       return back()->withFlash(['error' => ['Failed to send receipt to user because ' . $th->getMessage()]]);
     }
@@ -414,7 +414,7 @@ class ProductSaleRecord extends BaseModel
       try {
         $receipt = $newProduct->generateReceipt($productSaleRecord->selling_price);
       } catch (\Throwable $th) {
-        ErrLog::notifyAdminAndFail(auth()->user(), $th, 'New receipt generation failed');
+        ErrLog::notifyAuditorAndFail(auth()->user(), $th, 'New receipt generation failed');
         return back()->withFlash(['error' => ['New Receipt generation failed']]);
       }
     }
@@ -428,7 +428,7 @@ class ProductSaleRecord extends BaseModel
     try {
       $newProduct->app_user->notify(new ProductReceiptNotification($newProduct->productReceipt));
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Failed to resend receipt to user', $newProduct->app_user->email);
+      ErrLog::notifyAuditor($request->user(), $th, 'Failed to resend receipt to user', $newProduct->app_user->email);
     }
 
     $oldProductToReplace->save();

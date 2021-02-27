@@ -99,7 +99,7 @@ import { toCurrency } from '@public-shared/helpers';
                   <td>{toCurrency(product.selling_price)}</td>
                 {/if}
                 <td>
-                  {#if auth.user.isSuperAdmin || auth.user.isAdmin || auth.user.isAccountant}
+                  {#if auth.user.isSuperAdmin || auth.user.isAuditor || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
                       href={route(auth.user.user_type + '.multiaccess.products.view_product_details', product.uuid)}
@@ -115,7 +115,7 @@ import { toCurrency } from '@public-shared/helpers';
                     </InertiaLink>
                   {/if}
 
-                  {#if auth.user.isQualityControl || auth.user.isAdmin || auth.user.isSuperAdmin}
+                  {#if auth.user.isQualityControl || auth.user.isAuditor || auth.user.isSuperAdmin}
                     <InertiaLink
                       type="button"
                       href={route(auth.user.user_type + '.multiaccess.products.qa_test_results', product.uuid)}

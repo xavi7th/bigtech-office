@@ -6,12 +6,12 @@ return [
   /**
    * !Blacklist hidden routes from the general @routes call
    * ? Access the blacklisted routes using group routes
-   * * @routes('admin'), @routes(['admin', 'superadmin]), @routes('*')
+   * * @routes('auditor'), @routes(['auditor', 'superadmin]), @routes('*')
    */
-  'blacklist' => ['debugbar.*', 'horizon.*', 'ignition.*', 'admin.*', 'superadmin.*'],
+  'blacklist' => ['debugbar.*', 'horizon.*', 'ignition.*', 'auditor.*', 'superadmin.*'],
   'groups' => [
-    'admin' => [
-      'admin.*'
+    'auditor' => [
+      'auditor.*'
     ],
     'accountant' => [
       'accountant.*'
@@ -33,7 +33,7 @@ return [
     ],
     'superadmin' => [
       'superadmin.*',
-      'admin.*',
+      'auditor.*',
       'appuser.*',
       'app.*',
     ],

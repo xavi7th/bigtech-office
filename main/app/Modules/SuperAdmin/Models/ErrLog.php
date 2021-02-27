@@ -48,7 +48,7 @@ class ErrLog extends BaseModel
 {
   protected $fillable = [];
 
-  static function notifyAdmin(?User $user, Throwable $exception, string $message = null)
+  static function notifyAuditor(?User $user, Throwable $exception, string $message = null)
   {
     if ($exception instanceof TypeError) {
       Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class($user), 'exception' => $exception->getMessage()]);
@@ -56,7 +56,7 @@ class ErrLog extends BaseModel
     Log::error($message, ['userId' => optional($user)->id, 'userType' => get_class(optional($user) ?? (object)[]), 'exception' => $exception]);
   }
 
-  static function notifyAdminAndFail(?User $user, Throwable $exception, string $message = null)
+  static function notifyAuditorAndFail(?User $user, Throwable $exception, string $message = null)
   {
     if (DB::transactionLevel() > 0) {
       DB::rollBack();

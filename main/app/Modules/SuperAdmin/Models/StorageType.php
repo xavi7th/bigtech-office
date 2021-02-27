@@ -11,27 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\StorageTypeTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\StorageType
- *
- * @property int $id
- * @property string $type
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType newQuery()
- * @method static \Illuminate\Database\Query\Builder|StorageType onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType query()
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StorageType whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|StorageType withTrashed()
- * @method static \Illuminate\Database\Query\Builder|StorageType withoutTrashed()
- * @mixin \Eloquent
- */
 class StorageType extends BaseModel
 {
   use SoftDeletes;
@@ -45,9 +24,9 @@ class StorageType extends BaseModel
       $misc = function ($name) {
         return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getStorageTypes'])->name($misc('storage_types'))->defaults('ex', __e('ss,a', 'hard-drive', false))->middleware('auth:super_admin,admin');
-      Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,admin');
-      Route::put('{storageType}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,admin');
+      Route::get('', [self::class, 'getStorageTypes'])->name($misc('storage_types'))->defaults('ex', __e('ss,a', 'hard-drive', false))->middleware('auth:super_admin,auditor');
+      Route::post('create', [self::class, 'createStorageType'])->name($misc('create_storage_type'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,auditor');
+      Route::put('{storageType}/edit', [self::class, 'editStorageType'])->name($misc('edit_storage_type'))->defaults('ex', __e('ss,a', 'hard-drive', true))->middleware('auth:super_admin,auditor');
     });
   }
 
@@ -76,7 +55,7 @@ class StorageType extends BaseModel
       if ($request->isApi())       return response()->json((new StorageTypeTransformer)->basic($storageType), 201);
       return back()->withFlash(['success'=>'Storage type created. <br/> Products can now be created under this storage type']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Storage type not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Storage type not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Storage type not created'], 500);
       return back()->withFlash(['error'=>['Type creation failed']]);
@@ -97,7 +76,7 @@ class StorageType extends BaseModel
       if ($request->isApi()) return response()->json([], 204);
       return back()->withFlash(['success'=>'Storage type created. <br/> Products can now be created under this type']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Storage type not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Storage type not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Storage type not created'], 500);
       return back()->withFlash(['error'=>['Type creation failed']]);

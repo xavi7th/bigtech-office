@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Admin\Models\Admin;
+use App\Modules\Auditor\Models\Auditor;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\WebAdmin\Models\WebAdmin;
@@ -58,9 +58,9 @@ return [
       'driver' => 'session',
       'provider' => 'accountants',
     ],
-    'admin' => [
+    'auditor' => [
       'driver' => 'session',
-      'provider' => 'admins',
+      'provider' => 'auditors',
     ],
     'dispatch_admin' => [
       'driver' => 'session',
@@ -114,9 +114,9 @@ return [
       'driver' => 'eloquent',
       'model' => Accountant::class,
     ],
-    'admins' => [
+    'auditors' => [
       'driver' => 'eloquent',
-      'model' => Admin::class,
+      'model' => Auditor::class,
     ],
     'dispatch_admins' => [
       'driver' => 'eloquent',

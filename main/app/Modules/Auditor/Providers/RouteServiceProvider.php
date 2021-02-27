@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Admin\Providers;
+namespace App\Modules\Auditor\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -12,7 +12,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $moduleNamespace = 'App\Modules\Admin\Http\Controllers';
+    protected $moduleNamespace = 'App\Modules\Auditor\Http\Controllers';
 
     /**
      * Called before routes are registered.
@@ -49,7 +49,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
-            ->group(module_path('Admin', '/Routes/web.php'));
+            ->group(module_path('Auditor', '/Routes/web.php'));
     }
 
     /**
@@ -64,6 +64,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api')
             ->middleware('api')
             ->namespace($this->moduleNamespace)
-            ->group(module_path('Admin', '/Routes/api.php'));
+            ->group(module_path('Auditor', '/Routes/api.php'));
     }
 }

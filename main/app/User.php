@@ -3,8 +3,7 @@
 namespace App;
 
 use Inertia\Inertia;
-use App\Modules\Admin\Models\Admin;
-use Illuminate\Support\Facades\Auth;
+use App\Modules\Auditor\Models\Auditor;
 use App\Modules\AppUser\Models\AppUser;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -21,41 +20,8 @@ use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\DispatchAdmin\Models\DispatchAdmin;
 use App\Modules\QualityControl\Models\QualityControl;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-/**
- * App\User
- *
- * @property-read \Illuminate\Database\Eloquent\Collection|ActivityLog[] $activities
- * @property-read int|null $activities_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|OtherExpense[] $expenses
- * @property-read int|null $expenses_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductHistory[] $product_histories
- * @property-read int|null $product_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ResellerHistory[] $reseller_histories
- * @property-read int|null $reseller_histories_count
- * @property-write mixed $password
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Query\Builder|User onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Query\Builder|User withTrashed()
- * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
- * @mixin \Eloquent
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- */
 class User extends Authenticatable implements JWTSubject
 {
   use Notifiable, SoftDeletes, MakesComments;
@@ -118,9 +84,9 @@ class User extends Authenticatable implements JWTSubject
     return $this instanceof AppUser;
   }
 
-  public function isAdmin(): bool
+  public function isAuditor(): bool
   {
-    return $this instanceof Admin;
+    return $this instanceof Auditor;
   }
 
   public function isSuperAdmin(): bool
@@ -182,8 +148,8 @@ class User extends Authenticatable implements JWTSubject
   {
     if ($this->isAccountant()) {
       return ['isAccountant' => true, 'user_type' => strtolower($this->getType())];
-    } elseif ($this->isAdmin()) {
-      return ['isAdmin' => true, 'user_type' => strtolower($this->getType())];
+    } elseif ($this->isAuditor()) {
+      return ['isAuditor' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isSuperAdmin()) {
       return ['isSuperAdmin' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isSocialMediaRep()) {
@@ -229,7 +195,7 @@ class User extends Authenticatable implements JWTSubject
    */
   static function findUserByEmail(string $email): self
   {
-    return SalesRep::findByEmail($email) ?? StockKeeper::findByEmail($email) ??  DispatchAdmin::findByEmail($email) ?? QualityControl::findByEmail($email) ?? WebAdmin::findByEmail($email) ?? Accountant::findByEmail($email) ?? Admin::findByEmail($email);
+    return SalesRep::findByEmail($email) ?? StockKeeper::findByEmail($email) ??  DispatchAdmin::findByEmail($email) ?? QualityControl::findByEmail($email) ?? WebAdmin::findByEmail($email) ?? Accountant::findByEmail($email) ?? Auditor::findByEmail($email);
   }
 
   public function getType(): string

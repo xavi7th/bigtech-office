@@ -59,7 +59,7 @@
           <thead>
             <tr>
               <th class="p-0">
-               {#if auth.user.isAdmin}
+               {#if auth.user.isAuditor}
                   <InertiaLink
                   href={route(auth.user.user_type + '.multiaccess.product_models.create_product_model')}
                   class="btn btn-brand m-10">

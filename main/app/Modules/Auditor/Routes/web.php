@@ -1,6 +1,6 @@
 <?php
-use App\Modules\Admin\Models\Admin;
-use App\Modules\Admin\Http\Controllers\AdminController;
+use App\Modules\Auditor\Models\Auditor;
+use App\Modules\Auditor\Http\Controllers\AuditorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,4 +13,4 @@ use App\Modules\Admin\Http\Controllers\AdminController;
 |
 */
 
-AdminController::routes();
+AuditorController::routes();

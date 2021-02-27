@@ -11,27 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProcessorSpeedTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\ProcessorSpeed
- *
- * @property int $id
- * @property string $speed
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProcessorSpeed onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereSpeed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProcessorSpeed whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProcessorSpeed withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProcessorSpeed withoutTrashed()
- * @mixin \Eloquent
- */
 class ProcessorSpeed extends BaseModel
 {
   use SoftDeletes;
@@ -40,13 +19,13 @@ class ProcessorSpeed extends BaseModel
 
   public static function multiAccessRoutes()
   {
-    Route::group(['prefix' => 'processor-speeds', 'namespace' => '\App\Modules\Admin\Models'], function () {
+    Route::group(['prefix' => 'processor-speeds'], function () {
       $misc = function ($name) {
         return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProcessorSpeeds'])->name($misc('processor_speeds'))->defaults('ex', __e('ss,a', 'cpu', false))->middleware('auth:super_admin,admin');
-      Route::post('create', [self::class, 'createProcessorSpeed'])->name($misc('create_processor_speed'))->defaults('ex', __e('ss,a', 'cpu', true))->middleware('auth:super_admin,admin');
-      Route::put('{processorSpeed}/edit', [self::class, 'editProcessorSpeed'])->name($misc('edit_processor_speed'))->defaults('ex', __e('ss,a', 'cpu', true))->middleware('auth:super_admin,admin');
+      Route::get('', [self::class, 'getProcessorSpeeds'])->name($misc('processor_speeds'))->defaults('ex', __e('ss,a', 'cpu', false))->middleware('auth:super_admin,auditor');
+      Route::post('create', [self::class, 'createProcessorSpeed'])->name($misc('create_processor_speed'))->defaults('ex', __e('ss,a', 'cpu', true))->middleware('auth:super_admin,auditor');
+      Route::put('{processorSpeed}/edit', [self::class, 'editProcessorSpeed'])->name($misc('edit_processor_speed'))->defaults('ex', __e('ss,a', 'cpu', true))->middleware('auth:super_admin,auditor');
     });
   }
 
@@ -76,7 +55,7 @@ class ProcessorSpeed extends BaseModel
       if ($request->isApi()) return response()->json((new ProcessorSpeedTransformer)->basic($processor_speed), 201);
       return back()->withFlash(['success'=>'Processor speed created. <br/> Products can now be created under this processor speed']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Processor Speed not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Processor Speed not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Processor Speed not created'], 500);
       return back()->withFlash(['error'=>['Processor speed creation failed']]);
@@ -102,7 +81,7 @@ class ProcessorSpeed extends BaseModel
       }
       return back()->withFlash(['success'=>'Updated']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Processor Speed not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Processor Speed not updated');
       if ($request->isApi()) return response()->json(['err' => 'Processor Speed not updated'], 500);
       return back()->withFlash(['error'=>['Processor Speed update failed']]);
     }

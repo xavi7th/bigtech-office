@@ -13,35 +13,6 @@ use App\Modules\SuperAdmin\Transformers\ProductStatusTransformer;
 use Cache;
 use Str;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductStatus
- *
- * @property int $id
- * @property string $scope
- * @property string $status
- * @property string $status_slug
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus notSaleStatus()
- * @method static \Illuminate\Database\Query\Builder|ProductStatus onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereStatusSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductStatus withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductStatus withoutTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus whereScope($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductStatus qa()
- * @mixin \Eloquent
- */
 class ProductStatus extends BaseModel
 {
   use SoftDeletes;
@@ -146,7 +117,7 @@ class ProductStatus extends BaseModel
   {
     Route::group(['prefix' => 'product-statuses'], function () {
       Route::name('multiaccess.miscellaneous.')->group(function () {
-        Route::get('', [self::class, 'getProductStatuses'])->name('product_status')->defaults('ex', __e('ss,a', 'aperture', false))->middleware('auth:super_admin,admin');
+        Route::get('', [self::class, 'getProductStatuses'])->name('product_status')->defaults('ex', __e('ss,a', 'aperture', false))->middleware('auth:super_admin,auditor');
       });
     });
   }
@@ -176,7 +147,7 @@ class ProductStatus extends BaseModel
       if ($request->isApi()) return response()->json((new ProductStatusTransformer)->basic($productStatus), 201);
       return back()->withFlash(['success'=>'Product status created. <br/> Products can now be assigned this status']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product status not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Product status not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Product status not created'], 500);
       return back()->withFlash(['error'=>['Status creation failed']]);
@@ -202,7 +173,7 @@ class ProductStatus extends BaseModel
       if ($request->isApi())       return response()->json([], 204);
       return back()->withFlash(['success'=>'Product status updated. <br/> Products can now be assigned this status']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product status not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Product status not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Product status not created'], 500);
       return back()->withFlash(['error'=>['Status creation failed']]);

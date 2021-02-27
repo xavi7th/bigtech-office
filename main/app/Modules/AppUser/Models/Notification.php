@@ -37,10 +37,10 @@ class Notification extends DatabaseNotification
 {
   protected $fillable = [];
 
-  static function adminRoutes()
+  static function auditorRoutes()
   {
     Route::group(['namespace' => '\App\Modules\AppUser\Models'], function () {
-      // Route::get('loan-requests/{admin?}', 'Notification@showAllNotifications')->middleware('auth:admin');
+      // Route::get('loan-requests/{auditor?}', 'Notification@showAllNotifications')->middleware('auth:auditor');
     });
   }
 

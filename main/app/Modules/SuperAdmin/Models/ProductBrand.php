@@ -14,35 +14,6 @@ use App\Modules\SuperAdmin\Traits\Commentable;
 use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Transformers\ProductBrandTransformer;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductBrand
- *
- * @property int $id
- * @property string $name
- * @property string|null $logo_url
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\UserComment[] $comments
- * @property-read int|null $comments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductModel[] $product_models
- * @property-read int|null $product_models_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductBrand onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereLogoUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductBrand whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductBrand withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductBrand withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductBrand extends BaseModel
 {
   use SoftDeletes, Commentable;
@@ -65,10 +36,10 @@ class ProductBrand extends BaseModel
       $gen = function ($namespace, $name = null) {
         return 'multiaccess.product_' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getProductBrands'])->name($gen('brands.manage_product_brands'))->defaults('ex', __e('ss,a,w', 'feather', false))->middleware('auth:super_admin,admin,web_admin');
-      Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,admin');
-      Route::put('{productBrand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,admin,web_admin');
-      Route::delete('{productBrand}/delete', [self::class, 'deleteProductBrand'])->name($gen('brands', '.delete_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,admin');
+      Route::get('', [self::class, 'getProductBrands'])->name($gen('brands.manage_product_brands'))->defaults('ex', __e('ss,a,w', 'feather', false))->middleware('auth:super_admin,auditor,web_admin');
+      Route::post('create', [self::class, 'createProductBrand'])->name($gen('brands', '.create_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,auditor');
+      Route::put('{productBrand}/edit', [self::class, 'editProductBrand'])->name($gen('brands', '.edit_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,auditor,web_admin');
+      Route::delete('{productBrand}/delete', [self::class, 'deleteProductBrand'])->name($gen('brands', '.delete_product_brand'))->defaults('ex', __e('ss,a', 'feather', true))->middleware('auth:super_admin,auditor');
     });
   }
 
@@ -132,7 +103,7 @@ class ProductBrand extends BaseModel
 
       return back()->withFlash(['success'=>'Product brand updated. <br/> All products under this brand will reflect this new name']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Brand not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Brand not updated');
       if ($request->isApi())
 
         return response()->json(['err' => 'Brand not updated'], 500);

@@ -1,11 +1,11 @@
 {
-    "name": "Admin",
-    "alias": "admin",
+    "name": "Auditor",
+    "alias": "auditor",
     "description": "",
     "keywords": [],
     "order": 1,
     "providers": [
-        "App\\Modules\\Admin\\Providers\\AdminServiceProvider"
+        "App\\Modules\\Auditor\\Providers\\AuditorServiceProvider"
     ],
     "aliases": {},
     "files": [],

@@ -13,35 +13,6 @@ use App\Modules\SuperAdmin\Transformers\ProductHistoryTransformer;
 use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductHistory
- *
- * @property int $id
- * @property int $product_id
- * @property string $product_type
- * @property int $product_status_id
- * @property int $user_id
- * @property string $user_type
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $product
- * @property-read ProductStatus $product_status
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $user
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereProductStatusId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereProductType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductHistory whereUserType($value)
- * @mixin \Eloquent
- */
 class ProductHistory extends BaseModel
 {
   protected $fillable = [
@@ -73,9 +44,9 @@ class ProductHistory extends BaseModel
       $gen = function ($namespace, $name = null) {
         return 'multiaccess.miscellaneous.' . $namespace . $name;
       };
-      Route::get('', [self::class, 'getDetailedProductHistories'])->name($gen('product_histories', null))->defaults('ex', __e('ss,a,ac', 'rewind', true))->middleware('auth:super_admin,admin,accountant');
-      Route::get('product/{product:product_uuid}', [self::class, 'getSingleProductHistory'])->name($gen('view_product_history'))->defaults('ex', __e('ss,a,ac', 'rewind', true))->middleware('auth:super_admin,admin,accountant');
-      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealHistory'])->name($gen('view_swap_history'))->defaults('ex', __e('ss,a,ac', 'rewind', true))->middleware('auth:super_admin,admin,accountant');
+      Route::get('', [self::class, 'getDetailedProductHistories'])->name($gen('product_histories', null))->defaults('ex', __e('ss,a,ac', 'rewind', true))->middleware('auth:super_admin,auditor,accountant');
+      Route::get('product/{product:product_uuid}', [self::class, 'getSingleProductHistory'])->name($gen('view_product_history'))->defaults('ex', __e('ss,a,ac', 'rewind', true))->middleware('auth:super_admin,auditor,accountant');
+      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealHistory'])->name($gen('view_swap_history'))->defaults('ex', __e('ss,a,ac', 'rewind', true))->middleware('auth:super_admin,auditor,accountant');
     });
   }
 

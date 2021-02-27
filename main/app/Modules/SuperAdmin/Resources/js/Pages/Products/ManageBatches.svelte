@@ -107,7 +107,7 @@
                   {new Date(batch.order_date).toDateString()}
                 </td>
                 <td class="d-flex">
-                  {#if auth.user.isStockKeeper || auth.user.isQualityControl || auth.user.isAdmin || auth.user.isSuperAdmin || auth.user.isAccountant}
+                  {#if auth.user.isStockKeeper || auth.user.isQualityControl || auth.user.isAuditor || auth.user.isSuperAdmin || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
                       href={route(auth.user.user_type + '.multiaccess.products.by_batch', batch.batch_number)}

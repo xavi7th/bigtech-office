@@ -11,27 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\ProductGradeTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\ProductGrade
- *
- * @property int $id
- * @property string $grade
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductGrade onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereGrade($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductGrade whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|ProductGrade withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ProductGrade withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductGrade extends BaseModel
 {
   use SoftDeletes;
@@ -40,13 +19,13 @@ class ProductGrade extends BaseModel
 
   public static function multiAccessRoutes()
   {
-    Route::group(['prefix' => 'product-grades', 'namespace' => '\App\Modules\Admin\Models'], function () {
+    Route::group(['prefix' => 'product-grades'], function () {
       $gen = function ($name) {
         return 'multiaccess.miscellaneous.' . $name;
       };
-      Route::get('', [self::class, 'getProductGrades'])->name($gen('product_grades'))->defaults('ex', __e('ss,a', 'check-square', false))->middleware('auth:super_admin,admin');
-      Route::post('create', [self::class, 'createProductGrade'])->name($gen('create_product_grade'))->defaults('ex', __e('ss,a', 'check-square', true))->middleware('auth:super_admin,admin');
-      Route::put('{productGrade}/edit', [self::class, 'editProductGrade'])->name($gen('edit_product_grade'))->defaults('ex', __e('ss,a', 'check-square', true))->middleware('auth:super_admin,admin');
+      Route::get('', [self::class, 'getProductGrades'])->name($gen('product_grades'))->defaults('ex', __e('ss,a', 'check-square', false))->middleware('auth:super_admin,auditor');
+      Route::post('create', [self::class, 'createProductGrade'])->name($gen('create_product_grade'))->defaults('ex', __e('ss,a', 'check-square', true))->middleware('auth:super_admin,auditor');
+      Route::put('{productGrade}/edit', [self::class, 'editProductGrade'])->name($gen('edit_product_grade'))->defaults('ex', __e('ss,a', 'check-square', true))->middleware('auth:super_admin,auditor');
     });
   }
 
@@ -76,7 +55,7 @@ class ProductGrade extends BaseModel
       if ($request->isApi()) return response()->json((new ProductGradeTransformer)->basic($product_grade), 201);
       return back()->withFlash(['success'=>'Product grade created. <br/> Products can now be created under this grade']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product grade not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Product grade not created');
 
       if ($request->isApi()) return response()->json(['err' => 'Product grade not created'], 500);
       return back()->withFlash(['error'=>['Grade creation failed']]);
@@ -97,7 +76,7 @@ class ProductGrade extends BaseModel
       if ($request->isApi()) return response()->json([], 204);
       return back()->withFlash(['success'=>'Product grade updated. <br/> Products can now be created under this brand']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Product grade not updated');
+      ErrLog::notifyAuditor($request->user(), $th, 'Product grade not updated');
 
       if ($request->isApi()) return response()->json(['err' => 'Product grade not updated'], 500);
       return back()->withFlash(['error'=>['product grade update failed']]);

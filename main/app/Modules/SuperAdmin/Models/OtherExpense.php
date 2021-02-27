@@ -13,36 +13,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\OtherExpenseTransformer;
 use Cache;
 
-/**
- * App\Modules\SuperAdmin\Models\OtherExpense
- *
- * @property int $id
- * @property float $amount
- * @property string $purpose
- * @property int $recorder_id
- * @property string $recorder_type
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $recorder
- * @method static Builder|OtherExpense newModelQuery()
- * @method static Builder|OtherExpense newQuery()
- * @method static \Illuminate\Database\Query\Builder|OtherExpense onlyTrashed()
- * @method static Builder|OtherExpense query()
- * @method static Builder|OtherExpense today()
- * @method static Builder|OtherExpense whereAmount($value)
- * @method static Builder|OtherExpense whereCreatedAt($value)
- * @method static Builder|OtherExpense whereDeletedAt($value)
- * @method static Builder|OtherExpense whereId($value)
- * @method static Builder|OtherExpense wherePurpose($value)
- * @method static Builder|OtherExpense whereRecorderId($value)
- * @method static Builder|OtherExpense whereRecorderType($value)
- * @method static Builder|OtherExpense whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|OtherExpense withTrashed()
- * @method static \Illuminate\Database\Query\Builder|OtherExpense withoutTrashed()
- * @method static Builder|OtherExpense thisMonth()
- * @mixin \Eloquent
- */
 class OtherExpense extends BaseModel
 {
   use SoftDeletes;
@@ -67,9 +37,9 @@ class OtherExpense extends BaseModel
   {
     Route::group(['prefix' => 'other-expenses'], function () {
       Route::name('multiaccess.miscellaneous.')->group(function () {
-        Route::get('', [self::class, 'getAllExpenses'])->name('all_expenses')->defaults('ex', __e('ss,a,ac', 'clipboard', false))->middleware('auth:super_admin,admin,accountant');
-        Route::get('daily', [self::class, 'getDailyExpenses'])->name('daily_expense')->defaults('ex', __e('ss,a,ac', 'clipboard', false))->middleware('auth:super_admin,admin,accountant');
-        Route::get('{date}', [self::class, 'getExpensesByDate'])->name('daily_expenses')->defaults('ex', __e('ss,a,ac', 'clipboard', true))->middleware('auth:super_admin,admin,accountant');
+        Route::get('', [self::class, 'getAllExpenses'])->name('all_expenses')->defaults('ex', __e('ss,a,ac', 'clipboard', false))->middleware('auth:super_admin,auditor,accountant');
+        Route::get('daily', [self::class, 'getDailyExpenses'])->name('daily_expense')->defaults('ex', __e('ss,a,ac', 'clipboard', false))->middleware('auth:super_admin,auditor,accountant');
+        Route::get('{date}', [self::class, 'getExpensesByDate'])->name('daily_expenses')->defaults('ex', __e('ss,a,ac', 'clipboard', true))->middleware('auth:super_admin,auditor,accountant');
         // Route::put('{expense}/edit', [self::class, 'editExpense'])->name('edit_expense')->defaults('ex', __e('ss', 'clipboard', true))->middleware('auth:super_admin,accountant');
       });
     });
@@ -122,7 +92,7 @@ class OtherExpense extends BaseModel
       if ($request->isApi()) return response()->json((new OtherExpenseTransformer)->basic($expense), 201);
       return back()->withFlash(['success'=>'Expense Record created. ']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAdmin($request->user(), $th, 'Expense record not created');
+      ErrLog::notifyAuditor($request->user(), $th, 'Expense record not created');
       if ($request->isApi()) return response()->json(['err' => 'Expense record not created'], 500);
       return back()->withFlash(['error'=>['Could not create expense record. Try again']]);
     }
