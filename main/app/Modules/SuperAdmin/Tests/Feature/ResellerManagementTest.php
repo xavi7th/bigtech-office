@@ -62,9 +62,6 @@ class ResellerManagementTest extends TestCase
     $response = $this->actingAs($user, 'stock_keeper')->post(route('stockkeeper.resellers.return_product', [$reseller, $product->product_uuid]));
     $product->refresh();
 
-    // // ray($user);
-
-
     $response->assertRedirect();
     $response->assertSessionHasNoErrors();
     $response->assertSessionHas('flash.success', 'The product has been marked as returned and is back in the stock list');

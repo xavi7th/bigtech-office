@@ -55,6 +55,9 @@ Feat: Clear live transactions every 12am to prevent cache fixation
 Feat: Only paid for local_stock_products should be counted as part of stock count for view stock route
 Feat: On creating product select a checkbox to skip QA
 CHORE: clear ->defaults('ex', __e('ac', 'archive', true) fron non_GET routes cos they don´t need it
+Feat: Auditor to reset password
+Feat: Design the receipt
+Feat: Add Comments or multi input system for sales reps to enter multiple items per sale record even screen guard
 
 
 

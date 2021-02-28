@@ -97,9 +97,6 @@ class WebAdminManagementTest extends TestCase
 
     $page = $this->getResponseData($rsp);
 
-    // ray()->clearAll();
-    // ray((array)$page->props);
-
     $this->assertEquals('DispatchAdmin,ViewDispatchRequests', $page->component);
     $this->assertNull($page->props->errors);
     $this->assertArrayHasKey('dispatch_requests', (array)$page->props);

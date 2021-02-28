@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
-use App\Modules\Auditor\Models\Auditor;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\WebAdmin\Models\WebAdmin;
@@ -18,7 +17,6 @@ use App\Modules\SuperAdmin\Models\SuperAdmin;
 use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
-use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\SuperAdmin\Models\ProductBatch;
 use App\Modules\SuperAdmin\Models\ProductBrand;
 use App\Modules\SuperAdmin\Models\ProductColor;
@@ -30,10 +28,8 @@ use App\Modules\SuperAdmin\Models\ProcessorSpeed;
 use App\Modules\SuperAdmin\Models\ProductCategory;
 use App\Modules\SuperAdmin\Models\ProductSupplier;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\WebAdmin\Models\WebAdmin;
 use App\Modules\SuperAdmin\Models\LocalProductPrice;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
-use App\Modules\QualityControl\Models\QualityControl;
 use App\Modules\SalesRep\Models\ProductDispatchRequest;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -86,7 +82,6 @@ class ProductManagementTest extends TestCase
     // $this->expectException(AuthenticationException::class);
 
     [$location, $user] = $getDataSource();
-    ray([$location, $user]);
 
     $this->prepare_to_create_product();
 
@@ -241,8 +236,6 @@ class ProductManagementTest extends TestCase
    */
   public function a_product_cannot_be_marked_as_sold_without_correct_data_supplied($formInput, $formInputValue)
   {
-    ray($formInput, $formInputValue);
-
     $product = $this->create_product_in_stock();
     $response = $this->actingAs(factory(SalesRep::class)->create(), 'sales_rep')->post(route('salesrep.multiaccess.products.mark_as_sold', $product->product_uuid), is_array($formInputValue) ? $formInputValue : [$formInput => $formInputValue]);
     $response->assertSessionHasErrors($formInput);

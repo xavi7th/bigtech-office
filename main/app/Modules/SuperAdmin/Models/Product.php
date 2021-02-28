@@ -559,7 +559,6 @@ class Product extends BaseModel
       $products = fn () => collect([]);
     }
 
-    // ray($products());
     if ($request->isApi()) return  response()->json($products, 200);
     return Inertia::render('SuperAdmin,Products/ListLocalProducts', compact('products'));
   }

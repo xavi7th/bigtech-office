@@ -78,7 +78,7 @@ class GeneralUserTest extends TestCase
     [$location, $user] = $dataSource();
     $user->is_active = false;
     $user->save();
-    ray($user);
+
     $superAdmin = factory(SuperAdmin::class)->create();
 
     $response = $this->actingAs($superAdmin, 'super_admin')->put(route('superadmin.manage_staff.' . Str::of(class_basename(get_class(($user))))->snake()->plural() . '.reactivate', $user));

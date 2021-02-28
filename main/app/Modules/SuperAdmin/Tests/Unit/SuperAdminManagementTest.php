@@ -106,8 +106,6 @@ class SuperAdminManagementTest extends TestCase
 
     $page = $this->getResponseData($response);
 
-    // ray($page);
-
     $this->assertEquals('SuperAdmin,ManageStaff/ManageSalesReps', $page->component);
     $this->assertNull($page->props->errors);
     /** Asserting 19 because of the globalQueryScope */
