@@ -4154,25 +4154,21 @@ h6 {
 .rui-navbar-mobile {
 	position: fixed;
 	display: none;
-	-webkit-flex-wrap: wrap;
-	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
-	-webkit-box-align: start;
-	-webkit-align-items: flex-start;
-	-ms-flex-align: start;
 	align-items: flex-start;
 	top: 5px;
 	right: 5px;
 	left: 5px;
 	padding: 0;
 	margin-bottom: 5px;
-	background-color: #fff;
-	box-shadow: 0 0 0 5px #fff;
+	background-color: scale-color($color: $brand, $red: -20%);
+	box-shadow: 0 0 0 5px grey;
 	opacity: 0;
-	will-change: transform, opacity;
-	-o-transition: transform .15s ease-in-out, opacity .15s ease-in-out, box-shadow .15s ease-in-out, border-radius .15s ease-in-out;
+	will-change: transform,
+	opacity;
 	transition: transform .15s ease-in-out, opacity .15s ease-in-out, box-shadow .15s ease-in-out, border-radius .15s ease-in-out;
-	z-index: -1000
+	z-index: -1000;
+	color:#fff;
 }
 
 .rui-navbar-mobile+.rui-navbar-bg {
