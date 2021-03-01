@@ -30,6 +30,7 @@
                 only: ["flash", "errors", "resellerWithProducts"],
                 onSuccess: () =>{
                   sellingPrice = null;
+                  jQuery('#enterProductSellingPrice').modal('hide')
                 },
               }
             )

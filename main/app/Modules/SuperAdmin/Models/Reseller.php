@@ -347,8 +347,8 @@ class Reseller extends BaseModel
   {
     try {
       /**
-      * @var Product $product
-      */
+       * @var Product|SwapDeal $product
+       */
       $product = Product::whereProductUuid($product_uuid)->firstOr(fn () => SwapDeal::whereProductUuid($product_uuid)->firstOrFail());
     } catch (ModelNotFoundException $th) {
       return generate_422_error('The product you are trying to mark as sold does not exist');
@@ -419,12 +419,16 @@ class Reseller extends BaseModel
     /**
      * Create a sales record for the product
      */
-    $product->product_sales_record()->create([
-      'selling_price' => $request->selling_price,
-      'sales_rep_id' => $request->user()->id,
-      'online_rep_id' => null,
-      'sales_channel_id' => SalesChannel::resellerId(),
-    ]);
+    try {
+      $product->product_sales_record()->create([
+        'selling_price' => $request->selling_price,
+        'sales_rep_id' => $request->user()->id,
+        'online_rep_id' => null,
+        'sales_channel_id' => SalesChannel::resellerId(),
+      ]);
+    } catch (\Throwable $th) {
+      return generate_422_error('Error occured: ' . $th->getMessage());
+    }
 
     ActivityLog::notifySuperAdmins($request->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
     ActivityLog::notifyAccountants($request->user()->email . ' marked product with UUID: ' . $product->product_uuid . ' as sold.');
