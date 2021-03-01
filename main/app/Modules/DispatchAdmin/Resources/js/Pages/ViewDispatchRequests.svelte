@@ -36,7 +36,8 @@
             {
               preserveState: true,
               preserveScroll: true,
-              only: ["flash", "errors", "dispatch_requests"]
+              only: ["flash", "errors", "dispatch_requests"],
+              onSuccess: () => jQuery('#enterSalesDetails').modal('hide')
             }
           )
         }
