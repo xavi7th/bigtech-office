@@ -2,13 +2,11 @@
 
 namespace App\Modules\StockKeeper\Providers;
 
+use App\Modules\Accountant\Models\Accountant;
 use Illuminate\Support\Str;
-use Illuminate\Auth\SessionGuard;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
-use App\Modules\StockKeeper\Models\StockKeeper;
 
 class StockKeeperServiceProvider extends ServiceProvider
 {
@@ -29,15 +27,12 @@ class StockKeeperServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    if ((Str::contains(request()->url(), StockKeeper::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
-    $this->registerTranslations();
-    $this->registerConfig();
-    $this->registerViews();
-    $this->registerFactories();
-    $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
-
-    // app()->make('router')->aliasMiddleware('stockkeepers', OnlyStockKeepers::class);
-    // app()->make('router')->aliasMiddleware('verified', VerifiedStockKeepers::class);
+    if ((Str::contains(request()->url(), Accountant::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || App::runningInConsole()) {
+      $this->registerTranslations();
+      $this->registerConfig();
+      $this->registerViews();
+      $this->registerFactories();
+      $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
     }
   }
 
@@ -48,11 +43,8 @@ class StockKeeperServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    if ((Str::contains(request()->url(), StockKeeper::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
-    $this->app->register(RouteServiceProvider::class);
-    SessionGuard::macro('stockkeeper', function () {
-      return StockKeeper::find(Auth::guard('stockkeeper')->id());
-    });
+    if ((Str::contains(request()->url(), Accountant::DASHBOARD_ROUTE_PREFIX)) || Str::contains(request()->url(), 'login') || $this->app->runningInConsole()) {
+      $this->app->register(RouteServiceProvider::class);
     }
   }
 

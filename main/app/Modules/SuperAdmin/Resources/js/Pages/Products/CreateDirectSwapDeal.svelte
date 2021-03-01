@@ -9,21 +9,12 @@
         text: "Creating reseller ..."
       });
 
-      let formData = new FormData();
-
-      _.forEach(details, (val, key) => {
-        formData.append(key, val);
-      });
-
-      Inertia.post(route("stockkeeper.products.swap_deal.create"), formData, {
+      Inertia.post(route("accountant.products.swap_deal.create"), details, {
         preserveState: true,
         preserveScroll: true,
         only: ["flash", "errors"],
         onSuccess: () =>{
             details = {};
-        },
-        headers: {
-          "Content-Type": "multipart/form-data"
         }
       })
     }

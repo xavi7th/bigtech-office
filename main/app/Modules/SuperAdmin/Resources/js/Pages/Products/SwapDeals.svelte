@@ -166,7 +166,7 @@
                         </button>
                       {/if}
 
-                      {#if auth.user.isStockKeeper}
+                      {#if auth.user.isAccountant}
                         <button
                           type="button"
                           on:click={() => {

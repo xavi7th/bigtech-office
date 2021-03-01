@@ -191,13 +191,13 @@ class Reseller extends BaseModel
     return $product;
   }
 
-  public static function stockKeeperRoutes()
+  public static function accountantRoutes()
   {
     Route::group(['prefix' => 'resellers'], function () {
-      Route::name('stockkeeper.resellers.')->group(function () {
-        Route::post('{reseller}/{product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('sk', 'at-sign', true));
-        Route::post('{reseller}/{product_uuid}/return', [self::class, 'resellerReturnProduct'])->name('return_product')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
-        Route::post('{reseller}/give-product/{product_uuid}', [self::class, 'giveProductToReseller'])->name('give_product')->defaults('ex', __e('ss,sk', 'at-sign', true))->middleware('auth:stock_keeper');
+      Route::name('accountant.resellers.')->group(function () {
+        Route::post('{reseller}/{product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold');
+        Route::post('{reseller}/{product_uuid}/return', [self::class, 'resellerReturnProduct'])->name('return_product');
+        Route::post('{reseller}/give-product/{product_uuid}', [self::class, 'giveProductToReseller'])->name('give_product');
       });
     });
   }
@@ -207,8 +207,8 @@ class Reseller extends BaseModel
     Route::group(['prefix' => 'resellers'], function () {
       Route::name('multiaccess.resellers.')->group(function () {
         Route::get('', [self::class, 'getResellers'])->name('resellers')->defaults('ex', __e('ss,a,ac', 'at-sign', false))->middleware('auth:auditor,super_admin,accountant');
-        Route::get('products', [self::class, 'getResellersWithProducts'])->name('resellers_with_products')->defaults('ex', __e('ss,sk,a,ac', 'at-sign', false))->middleware('auth:stock_keeper,auditor,super_admin,accountant');
-        Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name('products')->defaults('ex', __e('ss,sk,a,ac', 'at-sign', true))->middleware('auth:stock_keeper,super_admin,auditor,accountant');
+        Route::get('products', [self::class, 'getResellersWithProducts'])->name('resellers_with_products')->defaults('ex', __e('ss,a,ac', 'at-sign', false))->middleware('auth:auditor,super_admin,accountant');
+        Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name('products')->defaults('ex', __e('ss,a,ac', 'at-sign', true))->middleware('auth:super_admin,auditor,accountant');
       });
     });
   }

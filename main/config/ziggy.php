@@ -22,9 +22,6 @@ return [
     'salesrep' => [
       'salesrep.*'
     ],
-    'stockkeeper' => [
-      'stockkeeper.*'
-    ],
     'webadmin' => [
       'webadmin.*'
     ],

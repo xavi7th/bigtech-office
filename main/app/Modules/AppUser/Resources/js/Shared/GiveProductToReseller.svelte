@@ -13,7 +13,7 @@
     });
 
     Inertia.post(
-      route("stockkeeper.resellers.give_product", [
+      route("accountant.resellers.give_product", [
         resellerToGiveProduct,
         productToGiveReseller
       ]),

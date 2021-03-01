@@ -4,8 +4,6 @@ namespace App\Modules\SuperAdmin\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use RachidLaasri\Travel\Travel;
-use Illuminate\Support\Facades\DB;
 use App\Modules\Auditor\Models\Auditor;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -24,7 +22,6 @@ use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
 use App\Modules\SuperAdmin\Models\UserComment;
-use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\ProductBatch;
@@ -62,7 +59,6 @@ class SuperAdminController extends Controller
         Accountant::superAdminRoutes();
         QualityControl::superAdminRoutes();
         WebAdmin::superAdminRoutes();
-        StockKeeper::superAdminRoutes();
         AppUser::superAdminRoutes();
         Product::superAdminRoutes();
         ProductSaleRecord::superAdminRoutes();

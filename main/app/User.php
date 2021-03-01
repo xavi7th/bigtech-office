@@ -13,7 +13,6 @@ use App\Modules\Accountant\Models\Accountant;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\ActivityLog;
-use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Traits\MakesComments;
 use App\Modules\SuperAdmin\Models\ProductHistory;
@@ -118,11 +117,6 @@ class User extends Authenticatable implements JWTSubject
     return $this->isSocialMediaRep() || $this->isCallCenterRep();
   }
 
-  public function isStockKeeper(): bool
-  {
-    return $this instanceof StockKeeper;
-  }
-
   public function isAccountant(): bool
   {
     return $this instanceof Accountant;
@@ -158,8 +152,6 @@ class User extends Authenticatable implements JWTSubject
         'isCallCenterRep' => true, 'user_type' => strtolower($this->getType()),
         'isOnlineSalesRep' => true, 'user_type' => strtolower($this->getType())
       ];
-    } elseif ($this->isStockKeeper()) {
-      return ['isStockKeeper' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isQualityControl()) {
       return ['isQualityControl' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isWebAdmin()) {
@@ -187,7 +179,7 @@ class User extends Authenticatable implements JWTSubject
    */
   static function findUserByEmail(string $email): self
   {
-    return SalesRep::findByEmail($email) ?? StockKeeper::findByEmail($email) ?? QualityControl::findByEmail($email) ?? WebAdmin::findByEmail($email) ?? Accountant::findByEmail($email) ?? Auditor::findByEmail($email);
+    return SalesRep::findByEmail($email) ?? QualityControl::findByEmail($email) ?? WebAdmin::findByEmail($email) ?? Accountant::findByEmail($email) ?? Auditor::findByEmail($email);
   }
 
   public function getType(): string

@@ -46,7 +46,7 @@
                     </ul>
                     <ul class="list-unstyled">
                       <li>
-                      {#if auth.user.isStockKeeper || auth.user.isSuperAdmin || auth.user.isAccountant}
+                      {#if auth.user.isSuperAdmin || auth.user.isAccountant}
                         <InertiaLink
                           href={route(auth.user.user_type + '.multiaccess.resellers.products', resellersWithProduct.id)}
                           class="btn btn-brand btn-sm">

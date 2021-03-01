@@ -51,7 +51,7 @@ class ProductEventSubscriber implements ShouldQueue
     Cache::forget('products');
     Cache::forget('currentStock');
     Cache::forget('webAdminProducts');
-    Cache::forget('stockKeeperProducts');
+    Cache::forget('accountantProducts');
     Cache::forget('salesRepProducts');
     Cache::forget('qualityControlProducts');
     Cache::forget('brandsWithProductCount');

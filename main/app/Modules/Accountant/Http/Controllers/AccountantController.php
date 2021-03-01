@@ -28,6 +28,7 @@ class AccountantController extends Controller
       Route::prefix(Accountant::DASHBOARD_ROUTE_PREFIX)->group(function () {
         Route::group(['middleware' => ['auth:accountant']], function () {
           Route::get('/', [self::class, 'index'])->name('accountant.dashboard')->defaults('ex', __e('ac', 'home', true));
+          Reseller::accountantRoutes();
           Product::accountantRoutes();
           OtherExpense::accountantRoutes();
           SwapDeal::accountantRoutes();

@@ -420,19 +420,12 @@ class Product extends BaseModel
     Route::group(['prefix' => 'products'], function () {
       Route::name('accountant.products.')->group(function () {
         Route::get('local-product/create', [self::class, 'showCreateLocalProductForm'])->name('create_local_product')->defaults('ex', __e('ac', 'archive'));
-        Route::post('local-product/create', [self::class, 'createLocalSupplierProduct'])->name('create_local')->defaults('ex', __e('ac', 'archive'));
-        Route::patch('local-product/{product:product_uuid}/update-price', [self::class, 'updateLocalSupplierProductPrice'])->name('local.edit_price')->defaults('ex', __e('ac', 'archive'));
-        Route::delete('local-product/{product:product_uuid}/delete', [self::class, 'deleteLocalSupplierProduct'])->name('delete_local_product')->defaults('ex', __e('ac', 'archive'));
-      });
-    });
-  }
+        Route::post('local-product/create', [self::class, 'createLocalSupplierProduct'])->name('create_local');
+        Route::patch('local-product/{product:product_uuid}/update-price', [self::class, 'updateLocalSupplierProductPrice'])->name('local.edit_price');
+        Route::delete('local-product/{product:product_uuid}/delete', [self::class, 'deleteLocalSupplierProduct'])->name('delete_local_product');
 
-  static function stockKeeperRoutes()
-  {
-    Route::group(['prefix' => 'products'], function () {
-      Route::name('stockkeeper.products.')->group(function () {
-        Route::get('create', [self::class, 'showCreateProductForm'])->name('create_product')->defaults('ex', __e('sk', 'archive'));
-        Route::post('create', [self::class, 'createProduct'])->name('create')->defaults('ex', __e('sk', 'archive'));
+        Route::get('create', [self::class, 'showCreateProductForm'])->name('create_product')->defaults('ex', __e('ac', 'archive'));
+        Route::post('create', [self::class, 'createProduct'])->name('create');
       });
     });
   }
@@ -460,20 +453,20 @@ class Product extends BaseModel
   static function multiAccessRoutes()
   {
     Route::name('multiaccess.products.')->prefix('products')->group(function () {
-      Route::get('', [self::class, 'getProducts'])->name('view_products')->defaults('ex', __e('ss,a,ac,sk,s,q,w', 'archive'))->middleware('auth:super_admin,stock_keeper,sales_rep,quality_control,auditor,web_admin,accountant');
+      Route::get('', [self::class, 'getProducts'])->name('view_products')->defaults('ex', __e('ss,a,ac,s,q,w', 'archive'))->middleware('auth:super_admin,sales_rep,quality_control,auditor,web_admin,accountant');
       Route::get('local-supplier-products', [self::class, 'getLocalProducts'])->name('pending_local_products')->defaults('ex', __e('ss,ac', 'box'))->middleware('auth:super_admin,accountant');
       Route::get('search', [self::class, 'findProduct'])->name('find_product')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
       Route::get('stock-list-aggregate', [self::class, 'viewStockList'])->name('view_stock')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
       Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
-      Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,sk,a,ac', 'archive'))->middleware('auth:super_admin,stock_keeper,auditor,accountant');
+      Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,a,ac', 'archive'))->middleware('auth:super_admin,auditor,accountant');
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac,w', 'archive', true))->middleware('auth:super_admin,auditor,web_admin,accountant');
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name('edit_product_location')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
       Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name('qa_test_results')->defaults('ex', __e('ss,q,a,w', null, true))->middleware('auth:quality_control,auditor,web_admin,super_admin,accountant');
       Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('ss,w', null, true))->middleware('auth:sales_rep,web_admin');
       Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name('update_product_status')->defaults('ex', __e('ss,q', null, true))->middleware('auth:super_admin,quality_control');
-      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->defaults('ex', __e('ss,a,ac,d,sk,w', null, true))->middleware('auth:super_admin,auditor,web_admin,accountant');
+      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->defaults('ex', __e('ss,a,ac,d,w', null, true))->middleware('auth:super_admin,auditor,web_admin,accountant');
       Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name('applicable_qa_tests')->defaults('ex', __e('ss,a,w', null, true))->middleware('auth:super_admin,auditor,web_admin');
-      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->defaults('ex', __e('ss,d,q,w,a', null, true))->middleware('auth:super_admin,stock_keeper,quality_control,web_admin,auditor');
+      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->defaults('ex', __e('ss,d,q,w,a', null, true))->middleware('auth:super_admin,accountant,quality_control,web_admin,auditor');
       Route::get('{product:product_uuid}/edit', [self::class, 'showEditProductForm'])->name('edit_product')->defaults('ex', __e('ac,ss', 'archive', true))->middleware('auth:accountant,super_admin');
       Route::put('{product:product_uuid}/edit', [self::class, 'updateProduct'])->name('update')->defaults('ex', __e('ac,ss', 'archive', true))->middleware('auth:accountant,super_admin');
     });
@@ -500,9 +493,7 @@ class Product extends BaseModel
      * ! Filter list based on logged in user.
      */
 
-    if ($request->user()->isStockKeeper()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
-    } elseif ($request->user()->isOnlineSalesRep()) {
+    if ($request->user()->isOnlineSalesRep()) {
       $products = fn () => ProductModel::with('product_brand:id,name')->get(['id', 'name', 'product_brand_id'])->transform(fn ($record) => ['model' => $record->name, 'brand' => $record->product_brand->name]);
     } elseif ($request->user()->isWalkInRep()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
@@ -511,7 +502,7 @@ class Product extends BaseModel
     } elseif ($request->user()->isWebAdmin()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->inStock()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price', 'dispatch_request'])->take(10)->get(), 'dispatchListing');
     } elseif ($request->user()->isAccountant()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->sold()->orWhere->saleConfirmed()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->where(fn ($query) => $query->sold()->orWhere->inStock()->orWhere->saleConfirmed()->orWhere->outForDelivery())->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isAuditor() || $request->user()->isSuperAdmin()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } else {
@@ -1174,16 +1165,6 @@ class Product extends BaseModel
 
     static::creating(function ($product) {
       $product->product_uuid = (string)Str::uuid();
-    });
-
-    static::saved(function ($product) {
-      Cache::forget($product->office_branch->city . 'officeBranchProducts');
-      Cache::forget('products');
-      Cache::forget('webAdminProducts');
-      Cache::forget('stockKeeperProducts');
-      Cache::forget('salesRepProducts');
-      Cache::forget('qualityControlProducts');
-      Cache::forget('brandsWithProductCount');
     });
 
     static::updating(function ($product) {

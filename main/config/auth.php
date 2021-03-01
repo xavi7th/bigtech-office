@@ -6,7 +6,6 @@ use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\WebAdmin\Models\WebAdmin;
 use App\Modules\Accountant\Models\Accountant;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
-use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\QualityControl\Models\QualityControl;
 
 return [
@@ -69,10 +68,6 @@ return [
       'driver' => 'session',
       'provider' => 'sales_reps',
     ],
-    'stock_keeper' => [
-      'driver' => 'session',
-      'provider' => 'stock_keepers',
-    ],
     'super_admin' => [
       'driver' => 'session',
       'provider' => 'super_admins',
@@ -120,10 +115,6 @@ return [
     'sales_reps' => [
       'driver' => 'eloquent',
       'model' => SalesRep::class,
-    ],
-    'stock_keepers' => [
-      'driver' => 'eloquent',
-      'model' => StockKeeper::class,
     ],
     'super_admins' => [
       'driver' => 'eloquent',

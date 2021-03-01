@@ -17,7 +17,7 @@
           confirmButtonText: "Yes, carry on!",
            preConfirm: () => {
             return Inertia.post(
-              route("stockkeeper.resellers.mark_as_sold", [
+              route("accountant.resellers.mark_as_sold", [
                 resellerWithProducts.id,
                 productToMarkAsSold
               ]),
@@ -123,9 +123,9 @@
                 <td>{product.identifier}</td>
                 <td>{product.collection_date}</td>
                 <td>
-                  {#if auth.user.isStockKeeper}
+                  {#if auth.user.isAccountant}
                     <InertiaLink
-                      href={route('stockkeeper.resellers.return_product', [
+                      href={route('accountant.resellers.return_product', [
                         resellerWithProducts.id,
                         product.uuid
                       ])}
@@ -174,7 +174,7 @@
   </div>
 
   <div slot="modals">
-    {#if auth.user.isStockKeeper}
+    {#if auth.user.isAccountant}
       <Modal modalId="enterProductSellingPrice" modalTitle="Enter Selling Price">
 
       <div class="row vertical-gap sm-gap">

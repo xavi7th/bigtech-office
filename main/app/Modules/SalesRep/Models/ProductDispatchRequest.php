@@ -37,6 +37,7 @@ class ProductDispatchRequest extends Model
 
   protected $dispatchesEvents = [
     'saved' => ProductDispatchRequestSaved::class,
+    'deleted' => ProductDispatchRequestDeleted::class,
   ];
 
   public function sales_channel()
@@ -209,20 +210,6 @@ class ProductDispatchRequest extends Model
       if (!$dispatchRequest->online_rep_id) {
         $dispatchRequest->online_rep_id = request()->user()->id;
       }
-    });
-
-    static::saved(function ($dispatchRequest) {
-      Cache::forget('dispatchRequests');
-    });
-
-    static::deleted(function ($dispatchRequest) {
-      Cache::forget('dispatchRequests');
-      Cache::forget('products');
-      Cache::forget('webAdminProducts');
-      Cache::forget('stockKeeperProducts');
-      Cache::forget('salesRepProducts');
-      Cache::forget('qualityControlProducts');
-      Cache::forget('brandsWithProductCount');
     });
   }
 }

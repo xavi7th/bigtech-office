@@ -553,7 +553,6 @@ if (!function_exists('get_related_routes')) {
         'ac' => 'Accountant',
         'q' => 'QualityControl',
         's' => 'SalesRep',
-        'sk' => 'StockKeeper',
         'w' => 'WebAdmin',
       ];
       $permittedUser = false;

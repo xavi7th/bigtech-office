@@ -77,9 +77,9 @@ class ProductBatch extends BaseModel
       $p = function ($name) {
         return 'multiaccess.products.' . $name;
       };
-      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,sk,q,a,ac', 'package', false))->middleware('auth:stock_keeper,quality_control,auditor,accountant,super_admin');
+      Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,q,a,ac', 'package', false))->middleware('auth:quality_control,auditor,accountant,super_admin');
       Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->middleware('auth:super_admin,auditor,accountant');
-      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->middleware('auth:stock_keeper,quality_control,auditor,accountant,super_admin');
+      Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->middleware('auth:quality_control,auditor,accountant,super_admin');
       Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss,ac', 'package', true))->middleware('auth:super_admin,accountant');
     });
   }
@@ -142,7 +142,7 @@ class ProductBatch extends BaseModel
 
   public function getBatchProducts(Request $request, ProductBatch $productBatch)
   {
-    if ($request->user()->isStockKeeper()) {
+    if ($request->user()->isAccountant()) {
       $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->justArrived(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));
     } elseif ($request->user()->isQualityControl()) {
       $batchWithProducts =  (new ProductBatchTransformer)->transformWithBasicProductDetails($productBatch->load(['products' => fn ($q) => $q->untested(), 'products.product_color', 'products.product_grade', 'products.product_model', 'products.product_supplier', 'products.storage_size', 'products.product_batch']));

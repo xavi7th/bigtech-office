@@ -266,16 +266,6 @@ class SwapDeal extends BaseModel
     }
   }
 
-  static function stockKeeperRoutes()
-  {
-    Route::group(['prefix' => 'swap-deals'], function () {
-      Route::name('stockkeeper.products.')->group(function () {
-        Route::get('create', [self::class, 'showCreateSwapDealForm'])->name('create_swap_deal')->defaults('ex', __e('sk', 'refresh-cw', false));
-        Route::post('create', [self::class, 'createSwapDeal'])->name('swap_deal.create')->defaults('ex', __e('sk', 'refresh-cw', true));
-      });
-    });
-  }
-
   static function qualityControlRoutes()
   {
     Route::group(['prefix' => 'swap-deals'], function () {
@@ -289,8 +279,11 @@ class SwapDeal extends BaseModel
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('accountant.products.')->group(function () {
-        Route::put('{swapDeal:product_uuid}/confirm-sale', [self::class, 'confirmSwapDealSale'])->name('confirm_swap_sale')->defaults('ex', __e('ac', null, true));
-        Route::put('{swapDeal:product_uuid}/update-price', [self::class, 'editSwapDealPrice'])->name('edit_swap_deal')->defaults('ex', __e('ac,ss', 'refresh-cw', true));
+        Route::put('{swapDeal:product_uuid}/confirm-sale', [self::class, 'confirmSwapDealSale'])->name('confirm_swap_sale');
+        Route::put('{swapDeal:product_uuid}/update-price', [self::class, 'editSwapDealPrice'])->name('edit_swap_deal');
+
+        Route::get('create', [self::class, 'showCreateSwapDealForm'])->name('create_swap_deal')->defaults('ex', __e('ac', 'refresh-cw', false));
+        Route::post('create', [self::class, 'createSwapDeal'])->name('swap_deal.create');
       });
     });
   }
@@ -308,10 +301,10 @@ class SwapDeal extends BaseModel
   {
     Route::group(['prefix' => 'swap-deals'], function () {
       Route::name('multiaccess.products.')->group(function () {
-        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('ss,sk,s,q,a,ac,w', 'refresh-cw', false))->middleware('auth:stock_keeper,sales_rep,quality_control,auditor,web_admin,accountant,super_admin');
-        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,sk,s,q,a,w,ac', 'refresh-cw', true))->middleware('auth:stock_keeper,sales_rep,quality_control,auditor,web_admin,accountant,super_admin');
-        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->middleware('auth:stock_keeper,sales_rep,quality_control,auditor,web_admin,accountant,super_admin');
-        Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->middleware('auth:stock_keeper,sales_rep,web_admin');
+        Route::get('', [self::class, 'getSwapDeals'])->name('swap_deals')->defaults('ex', __e('ss,s,q,a,ac,w', 'refresh-cw', false))->middleware('auth:sales_rep,quality_control,auditor,web_admin,accountant,super_admin');
+        Route::get('details/{swapDeal:product_uuid}', [self::class, 'getSwapDealDetails'])->name('swap_deal_details')->defaults('ex', __e('ss,s,q,a,w,ac', 'refresh-cw', true))->middleware('auth:sales_rep,quality_control,auditor,web_admin,accountant,super_admin');
+        Route::post('{swapDeal:product_uuid}/comment', [self::class, 'commentOnSwapDeal'])->name('comment_on_swap_deal')->middleware('auth:sales_rep,quality_control,auditor,web_admin,accountant,super_admin');
+        Route::post('{swapDeal:product_uuid}/sold', [self::class, 'markSwapDealAsSold'])->name('mark_swap_as_sold')->middleware('auth:accountant,sales_rep,web_admin');
 
         Route::get('{swapDeal:product_uuid}/edit', [self::class, 'showEditSwapDealPage'])->name('edit_swap_deal')->defaults('ex', __e('ac,ss', 'refresh-cw', true))->middleware('auth:accountant,super_admin');
         Route::put('{swapDeal:product_uuid}/edit', [self::class, 'editSwapDeal'])->name('swap_deal.update')->middleware('auth:accountant,super_admin');
@@ -323,8 +316,6 @@ class SwapDeal extends BaseModel
   {
     if ($request->user()->isSalesRep()) {
       $swapDeals = Cache::rememberForever('salesRepsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
-    } elseif ($request->user()->isStockKeeper()) {
-      $swapDeals = Cache::rememberForever('stockKeeoerSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } elseif ($request->user()->isQualityControl()) {
       $swapDeals = Cache::rememberForever('qualityControlsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } elseif ($request->user()->isWebAdmin()) {

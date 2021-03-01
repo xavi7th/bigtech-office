@@ -190,7 +190,7 @@
                         {/if}
                       {/if}
 
-                      {#if auth.user.isStockKeeper}
+                      {#if auth.user.isAccountant}
                         {#if product.status == 'in stock'}
                           <button
                             type="button"

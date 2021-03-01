@@ -2,13 +2,13 @@
 
 namespace App\Modules\SuperAdmin\Tests\Traits;
 
+use App\Modules\Accountant\Models\Accountant;
 use App\Modules\AppUser\Models\AppUser;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
-use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\ProductBatch;
 use App\Modules\SuperAdmin\Models\ProductBrand;
@@ -167,7 +167,7 @@ trait PreparesToCreateProduct
     factory(StorageSize::class)->create();
     factory(ProcessorSpeed::class)->create();
     factory(StorageType::class)->create();
-    factory(StockKeeper::class, 2)->create();
+    factory(Accountant::class, 2)->create();
     factory(SalesChannel::class)->create(['channel_name' => 'Instagram']);
     factory(SalesRep::class, 2)->create();
   }

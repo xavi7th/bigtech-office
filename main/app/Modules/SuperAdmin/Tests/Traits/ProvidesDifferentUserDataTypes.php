@@ -10,7 +10,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use App\Modules\Accountant\Models\Accountant;
 use App\Modules\SuperAdmin\Models\SuperAdmin;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
-use App\Modules\StockKeeper\Models\StockKeeper;
 use App\Modules\QualityControl\Models\QualityControl;
 
 /**
@@ -63,9 +62,6 @@ trait ProvidesDifferentUserDataTypes
       ],
       'qualitycontrol' => [
         fn () => [factory(OfficeBranch::class)->create(), factory(QualityControl::class)->create(['id' => 2])],
-      ],
-      'stockkeeper' => [
-        fn () => [factory(OfficeBranch::class)->create(), factory(StockKeeper::class)->create(['id' => 2])],
       ],
       'superadmin' => [
         fn () => [factory(OfficeBranch::class)->create(), factory(SuperAdmin::class)->create(['id' => 2])],

@@ -13,4 +13,4 @@ use App\Modules\StockKeeper\Http\Controllers\StockKeeperController;
 |
 */
 
-StockKeeperController::routes();
+// StockKeeperController::routes();
