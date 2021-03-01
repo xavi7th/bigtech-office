@@ -10,7 +10,7 @@
   }
 
   #page-loader {
-    background: #6997db;
+    background: #cb070b;
     overflow: hidden;
     position: fixed;
     top: 0;
