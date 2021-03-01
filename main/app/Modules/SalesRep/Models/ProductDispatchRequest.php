@@ -19,6 +19,7 @@ use App\Modules\SuperAdmin\Traits\Commentable;
 use Illuminate\Validation\ValidationException;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
+use App\Modules\SuperAdmin\Events\ProductDispatchRequestSaved;
 use App\Modules\SalesRep\Notifications\DispatchRequestDiscarded;
 use App\Modules\SalesRep\Http\Validations\SendDispatchRequestValidation;
 use App\Modules\DispatchAdmin\Transformers\ProductDispatcgRequestTransformer;
@@ -32,6 +33,10 @@ class ProductDispatchRequest extends Model
   protected $fillable = ['sales_channel_id', 'online_rep_id', 'product_description', 'product_id', 'product_type', 'proposed_selling_price', 'customer_first_name', 'customer_last_name', 'customer_phone', 'customer_email', 'customer_address', 'customer_city', 'customer_ig_handle'];
   protected $casts = [
     'sold_at' => 'datetime',
+  ];
+
+  protected $dispatchesEvents = [
+    'saved' => ProductDispatchRequestSaved::class,
   ];
 
   public function sales_channel()

@@ -5,6 +5,7 @@ namespace App\Modules\SuperAdmin\Providers;
 use App\Modules\SuperAdmin\Listeners\UserEventSubscriber;
 use App\Modules\SuperAdmin\Listeners\ProductEventSubscriber;
 use App\Modules\SuperAdmin\Listeners\ProductSaleRecordEventSubscriber;
+use App\Modules\SuperAdmin\Listeners\ProductDispatchRequestEventSubscriber;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class SuperAdminEventServiceProvider extends ServiceProvider
@@ -26,6 +27,7 @@ class SuperAdminEventServiceProvider extends ServiceProvider
   protected $subscribe = [
     UserEventSubscriber::class,
     ProductEventSubscriber::class,
-    ProductSaleRecordEventSubscriber::class
+    ProductSaleRecordEventSubscriber::class,
+    ProductDispatchRequestEventSubscriber::class,
   ];
 }
