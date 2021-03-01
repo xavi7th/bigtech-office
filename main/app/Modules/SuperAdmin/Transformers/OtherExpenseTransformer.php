@@ -21,7 +21,7 @@ class OtherExpenseTransformer
       'id' => (int)$expense->id,
       'amount' => (string)to_naira($expense->amount),
       'purpose' => (string)$expense->purpose,
-      'recorder' => (string)$expense->recorder->full_name,
+      'recorder' => (string)optional($expense->recorder)->full_name,
       'date' => (string)$expense->created_at->diffForHumans(),
     ];
   }
