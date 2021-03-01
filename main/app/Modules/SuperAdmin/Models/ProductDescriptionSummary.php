@@ -44,7 +44,11 @@ class ProductDescriptionSummary extends Model
   public function createProductDescriptionSummary(CreateProductDescriptionSummaryValidation $request)
   {
     try {
-      $product_desc_summary = self::create($request->validated());
+      $product_desc_summary = self::create([
+        'description_summary' => $request->description_summary,
+        'product_model_id' => $request->product_model_id
+      ]);
+
       if ($request->isApi())
         return response()->json((new ProductDescriptionSummaryTransformer)->basic($product_desc_summary), 201);
       return back()->withFlash(['success'=>'Product Model Description has been created']);
@@ -52,14 +56,12 @@ class ProductDescriptionSummary extends Model
       ErrLog::notifyAuditor($request->user(), $th, 'Product description summary not created');
       if ($request->isApi())
         return response()->json(['err' => 'Product description summary not created'], 500);
-      return back()->withFlash(['error'=>['Product description summary not created']]);
+      return back()->withFlash(['error' => ['Product description summary not created: ' . $th->getMessage()]]);
     }
   }
 
   public function editProductDescriptionSummary(CreateProductDescriptionSummaryValidation $request, ProductModel $productModel)
   {
-    dd($request->all());
-
     try {
       foreach ($request->validated() as $key => $value) {
         $productModel->product_description_summary->$key = $value;
@@ -67,14 +69,12 @@ class ProductDescriptionSummary extends Model
 
       $productModel->product_description_summary->save();
 
-      if ($request->isApi())
-        return response()->json([], 204);
+      if ($request->isApi()) return response()->json([], 204);
       return back()->withFlash(['success'=>'Product Model Description has been updated']);
     } catch (\Throwable $th) {
       ErrLog::notifyAuditor($request->user(), $th, 'Product description summary not updated');
-      if ($request->isApi())
-        return response()->json(['err' => 'Product description summary not updated'], 500);
-      return back()->withFlash(['success'=>'Product Model Description not updated']);
+      if ($request->isApi()) return response()->json(['err' => 'Product description summary not updated'], 500);
+      return back()->withFlash(['error' => 'Product Model Description not updated']);
     }
   }
 }

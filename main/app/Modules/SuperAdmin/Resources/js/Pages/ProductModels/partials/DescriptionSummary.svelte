@@ -13,10 +13,7 @@
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "productModel"],
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
+        only: ["flash", "errors", "productModel"]
       }
     );
   }
@@ -30,15 +27,11 @@
       route(userType + ".multiaccess.product_descriptions.edit_product_desc", id),
       {
         description_summary: desc,
-        _method:'PUT'
       },
       {
         preserveState: true,
         preserveScroll: true,
-        only: ["flash", "errors", "productModel"],
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
+        only: ["flash", "errors", "productModel"]
       }
     );
   }

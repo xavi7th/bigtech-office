@@ -17,7 +17,7 @@ class CreateProductDescriptionSummaryValidation extends FormRequest
   public function rules()
   {
     return [
-      // 'description_summary' => 'required|string',
+      'description_summary' => 'required|string'
     ];
   }
 
@@ -28,7 +28,6 @@ class CreateProductDescriptionSummaryValidation extends FormRequest
    */
   public function authorize()
   {
-    dd($this->all());
     return true;
   }
 

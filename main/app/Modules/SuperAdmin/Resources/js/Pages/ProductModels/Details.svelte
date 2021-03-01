@@ -146,6 +146,7 @@
         Add Comment
       </button>
     </Modal>
+
     <Modal modalId="addImage" modalTitle="Add Image to Product Model">
       <input type="file" bind:files accept="image/*" />
       <button
@@ -158,6 +159,7 @@
         Add Image
       </button>
     </Modal>
+
     <Modal
       modalId="createDescription"
       modalTitle="Add Description to Product Model">
@@ -169,7 +171,7 @@
         bind:value={description} />
 
       <span slot="footer-buttons">
-        {#if !description}
+        {#if !productModel.descriptionSummaryUpdated}
           <button
             class="btn btn-brand"
             on:click={() => {
