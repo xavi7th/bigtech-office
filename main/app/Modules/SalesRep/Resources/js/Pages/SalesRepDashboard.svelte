@@ -27,7 +27,7 @@
           </div>
         </div>
 
-        <div class="swiper-slide">
+        <!-- <div class="swiper-slide">
           <div class="rui-widget rui-widget-chart">
             <div class="rui-widget-chart-info">
               <div class="rui-widget-title h2">{auth.user.isOnlineSalesRep  ? toCurrency(salesStatistics.today_online_sales_bonus_amount) : toCurrency(salesStatistics.today_walk_in_sales_bonus_amount)}</div><small class="rui-widget-subtitle">Bonus Today</small>
@@ -37,7 +37,7 @@
                 data-chartist-series="2,8" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="swiper-slide">
           <div class="rui-widget rui-widget-chart">
@@ -51,7 +51,7 @@
           </div>
         </div>
 
-        <div class="swiper-slide">
+        <!-- <div class="swiper-slide">
           <div class="rui-widget rui-widget-chart">
             <div class="rui-widget-chart-info">
               <div class="rui-widget-title h2">{auth.user.isOnlineSalesRep  ? toCurrency(salesStatistics.monthly_online_sales_bonus_amount) : toCurrency(salesStatistics.monthly_walk_in_sales_bonus_amount)}</div><small class="rui-widget-subtitle">Monthly Bonus</small>
@@ -61,7 +61,7 @@
                 data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#8e9fff;#2bb7ef"></div>
             </div>
           </div>
-        </div>
+        </div> -->
 
       </div>
 
