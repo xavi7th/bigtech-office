@@ -1,8 +1,11 @@
 <script>
   import { toCurrency } from '@public-shared/helpers';
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
+  import AdminSwiperStatistics from "@superadmin-shared/partials/AdminSwiperStatistics.svelte";
+  import DailyPaymentBreakdown from "@superadmin-shared/partials/DailyPaymentBreakdown.svelte";
+  import RecentSoldItems from '@superadmin-shared/Partials/RecentSoldItems.svelte';
   import { onMount,  } from 'svelte';
-	import { InertiaLink, page } from '@inertiajs/inertia-svelte'
+import DailyExpenses from '@superadmin-shared/Partials/DailyExpenses.svelte';
 
   export let statistics = {};
 
@@ -34,27 +37,6 @@
 </svelte:head>
 
 <style lang="scss">
-  #breakdown-section{
-    .card-text{
-      font-size: 0.7em;
-    }
-
-    .card-title{
-      text-align: center;
-    }
-
-    .card-img-top{
-      max-height: 200px;
-      object-fit: cover;
-      object-position: center;
-      box-shadow: 0px 1px 5px 0px #ddd;
-    }
-  }
-
-  .rui-widget.rui-widget-chart .rui-widget-title{
-    margin-top: 10px !important;
-  }
-
   .rui-widget.rui-widget-chart:not(.rui-widget-total) .rui-widget-subtitle{
     max-width: 45%;
     word-break: break-word;
@@ -65,306 +47,17 @@
 
 <Layout title="Super Admin Dashboard">
   <!-- svelte-ignore missing-declaration -->
-  <div class="rui-swiper" use:initialiseDonutChart>
-    <!-- svelte-ignore missing-declaration -->
-    <div class="swiper-container" use:initialiseSwiper={{initialSlide:0, loop:true, grabcursor:true, center:false, slides:'auto', gap:30, speed:400}}>
-      <div class="swiper-wrapper">
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{statistics.total_daily_sale_count}</div><small class="rui-widget-subtitle">Daily Sales Count</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{statistics.total_daily_confirmed_sale_count}</div><small class="rui-widget-subtitle">Confirmed Sales Count</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_daily_confirmed_sale_amount)}</div><small class="rui-widget-subtitle">Confirmed Sales Amount</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{statistics.total_daily_unconfirmed_sale_count}</div><small class="rui-widget-subtitle">Pending Sales Count</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_daily_unconfirmed_sale_amount)}</div><small class="rui-widget-subtitle">Pending Sales Amount</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_daily_sales_proposed_selling_price)}</div><small class="rui-widget-subtitle">Proposed Selling Price</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_daily_profit)}</div><small class="rui-widget-subtitle">Profit Today</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,2" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide rui-swiper-slide-total">
-          <div class="rui-widget rui-widget-chart rui-widget-total">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h1">{toCurrency(statistics.total_daily_sales_selling_price)}</div>
-              <small class="rui-widget-subtitle">Total Daily Sales</small>
-            </div>
-            <div class="rui-widget-total-chart">
-              <canvas use:initialiseLineChart={{data: statistics.live_account_payments}} class="rui-chartjs rui-chartjs-line rui-chartjs-total" data-height="100" data-chartjs-interval="3000" data-chartjs-line-color="#fe070b">
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_daily_sales_stock)}</div><small class="rui-widget-subtitle">Stock Sales Today</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_daily_sales_local_suppliers)}</div><small class="rui-widget-subtitle">Supplier Sales Today</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_daily_repairs_cost)}</div><small class="rui-widget-subtitle">Repairs Cost Today</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{statistics.total_swap_deals_count}</div><small class="rui-widget-subtitle">Swap Deals Count</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_swap_deals_value)}</div><small class="rui-widget-subtitle">Swap Deals Today</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{statistics.total_local_purchases_count}</div><small class="rui-widget-subtitle">Local Supplies Today</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.balance_after_expenses)}</div><small class="rui-widget-subtitle">Cash After Expenses</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="8,1" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_monthly_expenses)}</div><small class="rui-widget-subtitle">Monthly Expenses</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_monthly_repairs_cost)}</div><small class="rui-widget-subtitle">Monthly Repairs</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{statistics.total_monthly_sale_count}</div><small class="rui-widget-subtitle">Monthly Sale Count</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="swiper-slide">
-          <div class="rui-widget rui-widget-chart">
-            <div class="rui-widget-chart-info">
-              <div class="rui-widget-title h4">{toCurrency(statistics.total_monthly_sale_profit)}</div><small class="rui-widget-subtitle">Monthly Sale Profit</small>
-            </div>
-            <div class="rui-chartjs-container">
-              <div class="rui-chartist rui-chartist-donut" data-width="150" data-height="150"
-                data-chartist-series="5,5" data-chartist-width="4" data-chartist-gradient="#fe070b;#ed1c24"></div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="swiper-button-prev">
-      <span data-feather="chevron-left" class="rui-icon rui-icon-stroke-1_5"></span>
-    </div>
-    <div class="swiper-button-next">
-      <span data-feather="chevron-right" class="rui-icon rui-icon-stroke-1_5"></span>
-    </div>
-    <div class="swiper-scrollbar"></div>
-
-  </div>
-  <div class="rui-gap-2"></div>
+  <AdminSwiperStatistics  {statistics} />
 
   <div class="row vertical-gap" id="breakdown-section">
     <div class="col-lg-4">
-      <div class="card">
-          <img src="/img/breeakdown.jpg" class="card-img-top" alt="">
-          <div class="card-body">
-              <h5 class="card-title h2">Daily Payments Breakdown</h5>
-              <p class="card-text">Breakdown of financial transactions confirmed by the accountant in realtime.</p>
-          </div>
-          <ul class="list-group list-group-flush">
-             {#each  Object.entries(statistics.payments_breakdown) as [bank, amount]}
-                <li class="list-group-item d-flex justify-content-between"><strong class="text-capitalize">{bank}: </strong> <h4 class="my-0 mr-15">{toCurrency(amount)}</h4></li>
-              {/each}
-          </ul>
-      </div>
+      <DailyPaymentBreakdown payments_breakdown={statistics.payments_breakdown}/>
     </div>
      <div class="col-lg-4">
-      <div class="card">
-          <img src="/img/sold.png" class="card-img-top" alt="">
-          <div class="card-body">
-              <h5 class="card-title h2">Last 5 sold items</h5>
-              <p class="card-text">This lists the latest sales records along with the sales rep that handled the sales.</p>
-          </div>
-          <ul class="list-group list-group-flush">
-               {#each  statistics.most_recent_sales as record}
-                <li class="list-group-item">
-                  <h4 class="my-0 text-capitalize">
-                    <InertiaLink href={route($page.props.auth.user.user_type + '.multiaccess.products.view_product_details', record.uuid)} >{record.desc}</InertiaLink> sold by {record.sales_rep}
-                  </h4>
-                </li>
-              {/each}
-          </ul>
-          <div class="card-body">
-              <div class="mnt-5 mnb-5">
-                  <a href="#" class="card-link">Card link</a>
-                  <a href="#" class="card-link">Another link</a>
-              </div>
-          </div>
-      </div>
+      <RecentSoldItems most_recent_sales={statistics.most_recent_sales}/>
     </div>
     <div class="col-lg-4" id="invoice">
-      <div class="card">
-          <img src="/img/expenses.jpg" class="card-img-top" alt="">
-          <div class="card-body">
-              <h5 class="card-title h2">Daily Expenes</h5>
-              <p class="card-text">List of expenses and monies spent in the office today.</p>
-          </div>
-          <ul class="list-group list-group-flush">
-              {#each  Object.entries(statistics.daily_expenses_list) as [idx, expense_details]}
-                <li class="list-group-item d-flex justify-content-between"><strong class="text-capitalize">{expense_details.purpose}: </strong> <h4 class="my-0">{toCurrency(expense_details.amount)}</h4></li>
-              {/each}
-          </ul>
-      </div>
+      <DailyExpenses daily_expenses_list={statistics.daily_expenses_list} />
     </div>
   </div>
 
