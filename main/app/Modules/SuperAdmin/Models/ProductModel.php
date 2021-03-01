@@ -157,12 +157,8 @@ class ProductModel extends BaseModel
     }
   }
 
-
   public function editProductModel(CreateProductModelValidation $request, self $productModel)
   {
-
-    // dd($request->validated());
-
     try {
       foreach (collect($request->validated())->except('img') as $key => $value) {
         $productModel->$key = $value;

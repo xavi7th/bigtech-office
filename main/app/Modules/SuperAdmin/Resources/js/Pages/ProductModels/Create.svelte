@@ -35,9 +35,6 @@
             name: null,
             img: null
           };
-        },
-        headers: {
-          "Content-Type": "multipart/form-data"
         }
       }
     )
