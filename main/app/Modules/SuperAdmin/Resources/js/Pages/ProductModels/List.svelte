@@ -4,7 +4,6 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import FlashMessage from "@usershared/FlashMessage";
 
-
   $: ({ auth, errors } = $page.props);
 
   export let productModels = [],
@@ -15,14 +14,13 @@
     files;
 
   let editModel = () => {
-    console.log(details);
     BlockToast.fire({
       text: "Updating product model details ..."
     });
 
-    details._method = "PUT";
+    details._method = 'PUT';
 
-    Inertia.put(
+    Inertia.post(
       route(auth.user.user_type + ".multiaccess.product_models.edit_product_model", details.id),
       details,
       {
@@ -38,15 +36,10 @@
             img: null
           };
         },
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
       }
     )
   };
 </script>
-
-<svelte:window on:popstate={ Inertia.reload() }></svelte:window>
 
 <Layout title="Product Models">
   <div class="row vertical-gap">
