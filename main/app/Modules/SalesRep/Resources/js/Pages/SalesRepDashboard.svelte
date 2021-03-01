@@ -1,7 +1,6 @@
 <script>
   import { page } from "@inertiajs/inertia-svelte";
   import Layout from "@salesrep-shared/SalesRepLayout.svelte";
-  import { toCurrency } from "@public-shared/helpers";
 
   $: ({ auth } = $page.props);
   export let salesStatistics = {}

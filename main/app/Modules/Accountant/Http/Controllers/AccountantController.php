@@ -18,6 +18,7 @@ use App\Modules\SuperAdmin\Models\ProductPrice;
 use App\Modules\SuperAdmin\Models\ProductExpense;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\SuperAdmin\Models\ProductStatus;
 
 class AccountantController extends Controller
 {
@@ -60,6 +61,12 @@ class AccountantController extends Controller
   public function index(Request $request)
   {
     // dd($request->user());
-    return Inertia::render('Accountant,AccountantDashboard');
+    return Inertia::render('Accountant,AccountantDashboard', [
+      'products_in_posession' => Product::whereProductStatusId(ProductStatus::justArrivedId())->count(),
+      'pending_confirmations' => Product::whereProductStatusId($sold_id = ProductStatus::soldId())->orWhere('product_status_id', ProductStatus::soldByResellerId())->count(),
+      'pending_local_products' => Product::whereIsLocal(true)->whereIsPaid(false)->count(),
+      'swap_deals_in_stock' => SwapDeal::whereProductStatusId($sold_id)->count(),
+      'products_with_resellers' => Product::whereProductStatusId(ProductStatus::withResellerId())->count(),
+    ]);
   }
 }
