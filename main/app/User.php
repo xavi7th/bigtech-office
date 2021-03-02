@@ -139,7 +139,7 @@ class User extends Authenticatable implements JWTSubject
     } elseif ($this->isAuditor()) {
       return ['isAuditor' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isSuperAdmin()) {
-      return ['isSuperAdmin' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType())];
+      return ['isSuperAdmin' => true, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isSocialMediaRep()) {
       return [ 'isSocialMediaRep' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType()), 'isOnlineSalesRep' => true ];
     } elseif ($this->isWalkInRep()) {
