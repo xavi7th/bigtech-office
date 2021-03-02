@@ -55,7 +55,8 @@ trait IsAStaff
   public function getAllStaff(Request $request)
   {
     return Inertia::render('SuperAdmin,ManageStaff/Manage' . Str::of(__CLASS__)->afterLast('\\')->plural(), [
-      (string)Str::of(class_basename(self::class))->snake()->plural() => (new StaffTransformer)->collectionTransformer(self::all(), 'transformForSuperAdminViewSalesReps')
+      (string)Str::of(class_basename(self::class))->snake()->plural() => (new StaffTransformer)->collectionTransformer(self::all(), 'transformForSuperAdminViewSalesReps'),
+      'officeBranches' => OfficeBranch::get(['id', 'city'])
     ]);
   }
 
@@ -66,23 +67,29 @@ trait IsAStaff
     $validated = $request->validate([
       'full_name' => 'required|string|max:20',
       'email' => 'required|email|max:50|unique:' . $userType . ',email',
+      'phone' => 'required|max:30|unique:' . $userType . ',phone',
       'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-      'password' => ''
+      'password' => '',
+      'office_branch_id' => 'required|exists:office_branches,id'
+    ], [
+      'office_branch_id.required' => 'Select an office branch for the ' . Str::of(class_basename(self::class)),
+      'office_branch_id.exists' => 'Invalid office branch selected'
     ]);
 
     $validated['password'] = $userType->slug();
+    $validated['is_active'] = true;
 
     if ($request->hasFile('avatar')) {
-      $validated['avatar'] = compress_image_upload('avatar', 'user-avatars/', 'user-avatars/thumbs/', 1400, true, 50)['img_url'];
+      $validated['avatar'] = compress_image_upload('avatar', 'user-avatars/', 'user-avatars/thumbs/', 600, true, 50)['img_url'];
     }
 
     try {
 
       $staff = self::create($validated);
 
-      ActivityLog::notifySuperAdmins($request->user()->full_name . ' created a ' . $userType->singular()->slug(' ') . ' account for ' . $staff->full_name);
+      ActivityLog::notifySuperAdmins($request->user()->full_name . ' created a ' . $userType->singular() . ' account for ' . $staff->full_name);
 
-      return back()->withFlash(['success' => $userType->singular()->slug(' ') . ' account created']);
+      return back()->withFlash(['success' => $userType->singular() . ' account created']);
     } catch (Throwable $e) {
       if (app()->environment() == 'local') {
         return back()->withFlash(['error' => $e->getMessage()]);
@@ -98,8 +105,13 @@ trait IsAStaff
 
     $validated = $request->validate([
       'full_name' => 'required|string|max:20',
+      'office_branch_id' => 'required|exists:office_branches,id',
       'email' => 'required|email|max:50|unique:' . $userType . ',email,' . $staff->id,
+      'phone' => 'required|max:30|unique:' . $userType . ',phone,'.$staff->phone.',phone',
       'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+    ],[
+      'office_branch_id.required' => 'Select an office branch for the ' . Str::of(class_basename(self::class)),
+      'office_branch_id.exists' => 'Invalid office branch selected'
     ]);
 
     if ($request->hasFile('avatar')) {

@@ -46,10 +46,12 @@ class StaffTransformer
       'id' => (int)$staff->id,
       'full_name' => (string)$staff->full_name,
       'email' => (string)$staff->email,
+      'phone' => (string)$staff->phone,
       'is_suspended' => (bool) !$staff->is_active,
       'is_deleted' => (bool) $staff->deleted_at,
       'is_online_sales_rep' => (bool) $staff->isOnlineSalesRep(),
-      'office_branch' => $staff->office_branch->city
+      'office_branch_id' => $staff->office_branch_id,
+      'office_branch' => $staff->office_branch->city,
     ];
   }
 }
