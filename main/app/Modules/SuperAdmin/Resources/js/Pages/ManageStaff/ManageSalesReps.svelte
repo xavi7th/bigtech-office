@@ -7,6 +7,8 @@
 
   $: ({ auth } = $page.props);
 
+  export let salesReps = [], officeBranches = [];
+
   let details = {},
     files, salesRepStatistics={};
 
@@ -117,7 +119,6 @@
       });
   };
 
-  export let salesReps = [];
 </script>
 
 <Layout title="Manage Sales Reps">
@@ -147,6 +148,16 @@
           </div>
 
           <div class="col-12">
+            <label for="phone">Phone</label>
+            <input
+              type="text"
+              class="form-control"
+              id="phone"
+              placeholder="Sales Rep Phone"
+              bind:value={details.phone} />
+          </div>
+
+          <div class="col-12">
             <label for="avatar">Rep's Avatar</label>
             <input
               type="file"
@@ -157,10 +168,24 @@
           </div>
 
           <div class="col-12">
+            <label for="office-branch">Office Branch</label>
+             <select
+                id="office-branch"
+                class="custom-select"
+                bind:value={details.office_branch_id}>
+                <option value={null}>Select</option>
+                {#each officeBranches as branch}
+                  <option value={branch.id}>{branch.city}</option>
+                {/each}
+              </select>
+          </div>
+
+
+
+          <div class="col-12">
             <button
               type="submit"
-              class="btn btn-success btn-long"
-              disabled={!details.email || !details.full_name || !files}>
+              class="btn btn-success btn-long">
               <span class="text">Create</span>
             </button>
           </div>
@@ -178,7 +203,7 @@
           <thead class="thead-dark">
             <tr>
               <th scope="col">S/No</th>
-              <th scope="col">Name/Email</th>
+              <th scope="col">Details</th>
               <!-- <th scope="col">Monthly Bonus</th> -->
               <th scope="col">Action</th>
             </tr>
@@ -191,6 +216,8 @@
                  {salesRep.full_name}
                  <br />
                   <span>{salesRep.email}</span>
+                 <br />
+                  <span>{salesRep.phone}</span>
                   {#if salesRep.is_deleted}
                     <span class="badge badge-pill badge-danger ml-5">Deleted</span>
                   {/if}
@@ -202,7 +229,7 @@
                      {(toCurrency(salesRep.statistics.monthly_walk_in_sales_bonus_amount))}
                   {/if}
                 </td> -->
-                <td class="d-flex justify-content-between align-content-center">
+                <td>
                   {#if !salesRep.is_deleted}
                     <!-- <button
                       type="button"
@@ -291,6 +318,16 @@
           </div>
 
           <div class="col-12">
+            <label for="phone">Phone</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-phone"
+              placeholder="Sales Rep Phone"
+              bind:value={details.phone} />
+          </div>
+
+          <div class="col-12">
             <label for="edit-avatar">Change Rep's Avatar</label>
             <input
               type="file"
@@ -299,6 +336,20 @@
               accept="image/*"
               class="form-control" />
           </div>
+
+          <div class="col-12">
+            <label for="office-branch">Office Branch</label>
+             <select
+                id="edit-office-branch"
+                class="custom-select"
+                bind:value={details.office_branch_id}>
+                <option value={null}>Select</option>
+                {#each officeBranches as branch}
+                  <option value={branch.id}>{branch.city}</option>
+                {/each}
+              </select>
+          </div>
+
         </div>
       </form>
 

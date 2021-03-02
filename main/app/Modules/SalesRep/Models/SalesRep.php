@@ -13,6 +13,7 @@ use App\Modules\SuperAdmin\Traits\IsAStaff;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
+use App\Modules\SuperAdmin\Models\OfficeBranch;
 
 /**
  * App\Modules\SalesRep\Models\SalesRep
@@ -85,7 +86,7 @@ class SalesRep extends User
   use IsAStaff;
 
   protected $fillable = [
-    'full_name', 'email', 'password', 'phone', 'avatar', 'gender', 'address',
+    'full_name', 'email', 'password', 'phone', 'avatar', 'gender', 'address', 'office_branch_id', 'is_active'
   ];
 
   protected $dates = ['dob'];
@@ -129,6 +130,7 @@ class SalesRep extends User
   /** Overide trait method */
   public function getAllStaff(Request $request)
   {
+    $officeBranches = OfficeBranch::get(['id', 'city']);
     $salesReps =
       // Cache::rememberForever('allSalesReps', fn() =>
       (new SalesRepTransformer)->collectionTransformer(
@@ -166,7 +168,7 @@ class SalesRep extends User
     // });
 
     if ($request->isApi())  return response()->json($salesReps, 200);
-    return Inertia::render('SuperAdmin,ManageStaff/ManageSalesReps', compact('salesReps'));
+    return Inertia::render('SuperAdmin,ManageStaff/ManageSalesReps', compact('salesReps', 'officeBranches'));
   }
 
 
