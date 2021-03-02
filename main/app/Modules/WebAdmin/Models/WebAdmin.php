@@ -54,7 +54,9 @@ class WebAdmin extends User
 {
   use IsAStaff;
 
-  protected $fillable = [];
+  protected $fillable = [
+    'full_name', 'email', 'password', 'phone', 'avatar', 'gender', 'address', 'office_branch_id', 'is_active'
+  ];
   const DASHBOARD_ROUTE_PREFIX = 'web-admins';
 
   static function superAdminRoutes()
