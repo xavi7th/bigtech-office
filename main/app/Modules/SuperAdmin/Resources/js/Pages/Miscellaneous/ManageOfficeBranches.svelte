@@ -1,9 +1,10 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { InertiaLink } from "@inertiajs/inertia-svelte";
+  import { InertiaLink,page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
 
+  $: ({ auth } = $page.props);
 
   let details = {};
 
@@ -78,41 +79,44 @@
 
 <Layout title="Manage Office Branches">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4">
 
-      <form class="#" on:submit|preventDefault={createOfficeBranch}>
+    {#if auth.user.isSuperAdmin}
+      <div class="col-lg-4 col-xl-4">
+        <form class="#" on:submit|preventDefault={createOfficeBranch}>
 
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="city">Branch City</label>
-            <input
-              type="text"
-              class="form-control"
-              id="city"
-              placeholder="Branch Designated City"
-              bind:value={details.city} />
-          </div>
-          <div class="col-12">
-            <label for="country">Country</label>
-            <input
-              type="text"
-              class="form-control"
-              id="country"
-              placeholder="Country"
-              bind:value={details.country} />
-          </div>
+          <div class="row vertical-gap sm-gap">
+            <div class="col-12">
+              <label for="city">Branch City</label>
+              <input
+                type="text"
+                class="form-control"
+                id="city"
+                placeholder="Branch Designated City"
+                bind:value={details.city} />
+            </div>
+            <div class="col-12">
+              <label for="country">Country</label>
+              <input
+                type="text"
+                class="form-control"
+                id="country"
+                placeholder="Country"
+                bind:value={details.country} />
+            </div>
 
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long"
-              disabled={!details.country || !details.city}>
-              <span class="text">Create</span>
-            </button>
+            <div class="col-12">
+              <button
+                type="submit"
+                class="btn btn-success btn-long"
+                disabled={!details.country || !details.city}>
+                <span class="text">Create</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+
+    {/if}
     <div class="col-lg-8 col-xl-8">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Available Office Branches</h2>
@@ -134,26 +138,28 @@
                 <td>{officeBranch.city}</td>
                 <td>{officeBranch.country}</td>
                 <td class="d-flex justify-content-between align-content-center">
-                  <!-- <button
-                    type="button"
-                    class="btn btn-danger btn-xs"
-                    on:click={() => {
-                      deleteOfficeBranch(officeBranch.id);
-                    }}>
-                    DELETE
-                  </button> -->
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-xs"
-                    data-toggle="modal"
-                    data-target="#updateOfficeBranch"
-                    on:click={() => {
-                      details = officeBranch;
-                    }}>
-                    EDIT
-                  </button>
+                  {#if auth.user.isSuperAdmin}
+                      <!-- <button
+                      type="button"
+                      class="btn btn-danger btn-xs"
+                      on:click={() => {
+                        deleteOfficeBranch(officeBranch.id);
+                      }}>
+                      DELETE
+                    </button> -->
+                    <button
+                      type="button"
+                      class="btn btn-warning btn-xs"
+                      data-toggle="modal"
+                      data-target="#updateOfficeBranch"
+                      on:click={() => {
+                        details = officeBranch;
+                      }}>
+                      EDIT
+                    </button>
+                  {/if}
                   <InertiaLink
-                    href={route('superadmin.miscellaneous.office_branches.view_products', officeBranch.id)}
+                    href={route(auth.user.user_type + '.miscellaneous.office_branches.view_products', officeBranch.id)}
                     class="btn btn-brand btn-xs text-nowrap">
                     PRODUCTS ({officeBranch.products_count})
                   </InertiaLink>

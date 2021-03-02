@@ -4,6 +4,9 @@
   import Modal from "@superadmin-shared/Partials/Modal";
   import SearchComponent from "@superadmin-shared/Partials/SearchComponent.svelte";
   import { toCurrency } from "@public-shared/helpers";
+	import { page } from '@inertiajs/inertia-svelte'
+
+  $: ({ auth } = $page.props);
 
   export let app_users = [];
 
@@ -28,7 +31,7 @@
     });
 
     Inertia.post(
-      route("superadmin.manage_staff.sales_rep.create"),
+      route(auth.user.user_type + ".manage_staff.sales_rep.create"),
       formData,
       {
         preserveState: true,
@@ -51,7 +54,7 @@
     });
 
     Inertia.put(
-      route("superadmin.appusers.update_user", details.id),
+      route(auth.user.user_type + ".appusers.update_user", details.id),
       details,
       {
         preserveState: true,
@@ -74,7 +77,7 @@
           confirmButtonText: "Yes, carry on!",
           preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.manage_staff.sales_rep.suspend", id),
+            route(auth.user.user_type + ".manage_staff.sales_rep.suspend", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -102,7 +105,7 @@
         confirmButtonText: "Yes, carry on!",
         preConfirm: () => {
           return Inertia.put(
-            route("superadmin.manage_staff.sales_rep.reactivate", id),
+            route(auth.user.user_type + ".manage_staff.sales_rep.reactivate", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -186,7 +189,7 @@
                     </button>
                   {/if} -->
                   <!-- <InertiaLink
-                    href={route('superadmin.product_sales_records.sales_rep.today', [appUser.id])}
+                    href={route(auth.user.user_type + '.product_sales_records.sales_rep.today', [appUser.id])}
                     class="btn btn-brand btn-xs text-nowrap">
                     Today's Transactions
                   </InertiaLink> -->

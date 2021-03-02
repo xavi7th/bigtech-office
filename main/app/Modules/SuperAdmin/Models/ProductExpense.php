@@ -15,9 +15,9 @@ use App\Modules\SuperAdmin\Transformers\ProductExpenseTransformer;
  *
  * @property int $id
  * @property int $product_id
- * @property string $product_type
  * @property float $amount
  * @property string $reason
+ * @property string $product_type
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $product
@@ -50,10 +50,11 @@ class ProductExpense extends BaseModel
   public static function qualityControlRoutes()
   {
     Route::name('qualitycontrol.products.')->group(function () {
-      Route::post('product/{product:product_uuid}/create', [self::class, 'createProductExpense'])->name('create_product_expense')->defaults('ex', __e('ss', null, true));
-      Route::post('swap-deal/{swapDeal:product_uuid}/create', [self::class, 'createSwapExpense'])->name('create_swap_expense')->defaults('ex', __e('ss', null, true));
+      Route::post('product/{product:product_uuid}/create', [self::class, 'createProductExpense'])->name('create_product_expense');
+      Route::post('swap-deal/{swapDeal:product_uuid}/create', [self::class, 'createSwapExpense'])->name('create_swap_expense');
     });
   }
+
   public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'product-expenses'], function () {
@@ -61,9 +62,9 @@ class ProductExpense extends BaseModel
         return 'multiaccess.products.' . $name;
       };
       // Route::get('', [self::class, 'getAllProductExpenses'])->name($p('create_expense'))->defaults('ex', __e('ss', 'credit-card', true));
-      Route::get('{date}', [self::class, 'getDailyProductExpenses'])->name($p('daily_expenses'))->defaults('ex', __e('ss,ac', 'credit-card', true))->middleware('auth:super_admin,accountant');
-      Route::get('product/{product:product_uuid}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss,q,ac', null, true))->middleware('auth:super_admin,quality_control,accountant');
-      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealExpenses'])->name($p('swap_expenses'))->defaults('ex', __e('ss,q,ac', null, true))->middleware('auth:super_admin,quality_control,accountant');
+      Route::get('{date}', [self::class, 'getDailyProductExpenses'])->name($p('daily_expenses'))->defaults('ex', __e('ss,a,ac', 'credit-card', true))->middleware('auth:super_admin,auditor,accountant');
+      Route::get('product/{product:product_uuid}', [self::class, 'getProductExpenses'])->name($p('expenses'))->defaults('ex', __e('ss,a,q,ac', null, true))->middleware('auth:super_admin,auditor,quality_control,accountant');
+      Route::get('swap-deal/{swapDeal:product_uuid}', [self::class, 'getSwapDealExpenses'])->name($p('swap_expenses'))->defaults('ex', __e('ss,a,q,ac', null, true))->middleware('auth:super_admin,auditor,quality_control,accountant');
     });
   }
 

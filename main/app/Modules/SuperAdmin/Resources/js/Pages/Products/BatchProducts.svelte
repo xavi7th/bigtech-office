@@ -2,7 +2,7 @@
   import { page, InertiaLink } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Layout from "@superadmin-shared/SuperAdminLayout";
-import { toCurrency } from '@public-shared/helpers';
+  import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
 
@@ -15,7 +15,7 @@ import { toCurrency } from '@public-shared/helpers';
           confirmButtonText: "Yes, carry on!",
           preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.products.delete_local_product", productUUID),
+            route(auth.user.user_type + ".products.delete_local_product", productUUID),
             {
               preserveState: true,
               preserveScroll: true
@@ -57,7 +57,7 @@ import { toCurrency } from '@public-shared/helpers';
               <th scope="col">#</th>
               <th scope="col">Model</th>
               <th scope="col">Expenses</th>
-              {#if auth.user.isSuperAdmin || auth.user.isAccountant}
+              {#if auth.user.isSuperAdmin || auth.user.isAuditor  || auth.user.isAccountant}
                 <th scope="col">Cost</th>
                 <th scope="col">Selling</th>
               {/if}
@@ -78,7 +78,7 @@ import { toCurrency } from '@public-shared/helpers';
                   <span
                     class:d-none={!batchWithProducts.is_local}>{product.supplier}</span>
                   <br />
-                  {#if $page.props.auth.user.isSuperAdmin && batchWithProducts.is_local && product.status !== 'sold' && product.status !== 'sale confirmed'}
+                  {#if (auth.user.isAuditor || auth.user.isSuperAdmin) && batchWithProducts.is_local && product.status !== 'sold' && product.status !== 'sale confirmed'}
                     <button
                       class="btn btn-danger btn-xs"
                       on:click={() => {
@@ -87,7 +87,7 @@ import { toCurrency } from '@public-shared/helpers';
                   {/if}
                 </td>
                 <td>{product.product_expenses_sum}</td>
-                {#if auth.user.isSuperAdmin || auth.user.isAccountant}
+                {#if auth.user.isAuditor || auth.user.isSuperAdmin || auth.user.isAccountant}
                   <td>
                     {toCurrency(product.cost_price)}
                     <span class="d-none">

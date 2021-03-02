@@ -215,12 +215,9 @@ class Reseller extends BaseModel
 
   public static function superAdminRoutes()
   {
-    Route::group(['prefix' => 'resellers'], function () {
-      $others = function ($name) {
-        return 'superadmin.' . $name;
-      };
-      Route::post('create', [self::class, 'createReseller'])->name($others('resellers.create_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
-      Route::put('{reseller}/edit', [self::class, 'editReseller'])->name($others('resellers.edit_reseller'))->defaults('ex', __e('ss', 'at-sign', true));
+    Route::name('resellers.')->prefix('resellers')->group(function () {
+      Route::post('create', [self::class, 'createReseller'])->name('create_reseller');
+      Route::put('{reseller}/edit', [self::class, 'editReseller'])->name('edit_reseller');
     });
   }
 

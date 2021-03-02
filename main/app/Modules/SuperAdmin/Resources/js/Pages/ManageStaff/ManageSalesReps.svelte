@@ -2,8 +2,10 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
-
+	import { page } from '@inertiajs/inertia-svelte'
   import { toCurrency } from "@public-shared/helpers";
+
+  $: ({ auth } = $page.props);
 
   let details = {},
     files, salesRepStatistics={};
@@ -13,19 +15,13 @@
       text: "Creating sales rep ..."
     });
 
-    let formData = new FormData();
-
     if (files) {
-      formData.append("avatar", files[0]);
+      details.avatar = files[0];
     }
 
-    _.forEach(details, (val, key) => {
-      formData.append(key, val);
-    });
-
     Inertia.post(
-      route("superadmin.manage_staff.sales_reps.create"),
-      formData,
+      route(auth.user.user_type + ".manage_staff.sales_reps.create"),
+      details,
       {
         preserveState: true,
         preserveScroll: true,
@@ -33,9 +29,6 @@
         onSuccess: () =>{
           details = {};
           files = undefined;
-        },
-        headers: {
-          "Content-Type": "multipart/form-data"
         }
       }
     )
@@ -46,20 +39,15 @@
       text: "Updating sales rep ..."
     });
 
-    let formData = new FormData();
-
     if (files) {
-      formData.append("avatar", files[0]);
+      details.avatar = files[0];
     }
 
-    _.forEach(details, (val, key) => {
-      formData.append(key, val);
-    });
-    formData.append("_method", "PUT");
+    details._method = "PUT";
 
     Inertia.post(
-      route("superadmin.manage_staff.sales_reps.edit", details.id),
-      formData,
+      route(auth.user.user_type + ".manage_staff.sales_reps.edit", details.id),
+      details,
       {
         preserveState: true,
         preserveScroll: true,
@@ -68,9 +56,6 @@
           jQuery('#updateSalesRep').modal('hide');
           details = {};
           files = undefined;
-        },
-        headers: {
-          "Content-Type": "multipart/form-data"
         }
       }
     )
@@ -83,8 +68,8 @@
           "This sales rep will no longer be able to login to their account. It can be restored at a later time",
           confirmButtonText: "Yes, carry on!",
           preConfirm: () => {
-            return Inertia.put(
-              route("superadmin.manage_staff.sales_reps.suspend", id),
+            Inertia.put(
+              route(auth.user.user_type + ".manage_staff.sales_reps.suspend", id),
               {
                 preserveState: true,
                 preserveScroll: true,
@@ -111,8 +96,8 @@
           "This sales rep will once again be ableto acces their accounts.",
         confirmButtonText: "Yes, carry on!",
         preConfirm: () => {
-          return Inertia.put(
-            route("superadmin.manage_staff.sales_reps.reactivate", id),
+          Inertia.put(
+            route(auth.user.user_type + ".manage_staff.sales_reps.reactivate", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -251,7 +236,7 @@
                       </button>
                     {/if}
                     <!-- <InertiaLink
-                      href={route('superadmin.product_sales_records.sales_reps.today', [salesRep.id])}
+                      href={route(auth.user.user_type + '.product_sales_records.sales_reps.today', [salesRep.id])}
                       class="btn btn-brand btn-xs text-nowrap">
                       Today's Transactions
                     </InertiaLink> -->

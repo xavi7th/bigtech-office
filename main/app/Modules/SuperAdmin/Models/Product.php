@@ -406,12 +406,10 @@ class Product extends BaseModel
 
   static function superAdminRoutes()
   {
-    Route::group(['prefix' => 'products'], function () {
-      Route::name('superadmin.products.')->group(function () {
-        Route::put('local-product/{product:product_uuid}/mark-paid', [self::class, 'markLocalProductSupplierPaid'])->name('mark_local_product_as_paid')->defaults('ex', __e('ss', 'archive'));
-        Route::put('{product:product_uuid}/reverse-sale', [self::class, 'returnSoldProductToStock'])->name('mark_as_sold.reverse')->defaults('ex', __e('ss', 'archive'));
-        Route::put('{product:product_uuid}/reverse-sale-confirmation', [self::class, 'returnConfirmedSoldProductToStock'])->name('confirm_sale.reverse')->defaults('ex', __e('ss', 'archive'));
-      });
+    Route::name('products.')->prefix('products')->group(function () {
+      Route::put('local-product/{product:product_uuid}/mark-paid', [self::class, 'markLocalProductSupplierPaid'])->name('mark_local_product_as_paid');
+      Route::put('{product:product_uuid}/reverse-sale', [self::class, 'returnSoldProductToStock'])->name('mark_as_sold.reverse');
+      Route::put('{product:product_uuid}/reverse-sale-confirmation', [self::class, 'returnConfirmedSoldProductToStock'])->name('confirm_sale.reverse');
     });
   }
 
@@ -434,8 +432,8 @@ class Product extends BaseModel
   {
     Route::group(['prefix' => 'products'], function () {
       Route::name('qualitycontrol.products.')->group(function () {
-        Route::put('{product:product_uuid}/qa-test-results', [self::class, 'updateProductQATestResults'])->name('update_qa_result')->defaults('ex', __e('ss,q', null, true));
-        Route::put('{product:product_uuid}/mark-undergoing-qa', [self::class, 'markProductAsUndergoingQA'])->name('undergoing_qa')->defaults('ex', __e('ss,q', null, true));
+        Route::put('{product:product_uuid}/qa-test-results', [self::class, 'updateProductQATestResults'])->name('update_qa_result');
+        Route::put('{product:product_uuid}/mark-undergoing-qa', [self::class, 'markProductAsUndergoingQA'])->name('undergoing_qa');
       });
     });
   }
@@ -454,21 +452,21 @@ class Product extends BaseModel
   {
     Route::name('multiaccess.products.')->prefix('products')->group(function () {
       Route::get('', [self::class, 'getProducts'])->name('view_products')->defaults('ex', __e('ss,a,ac,s,q,w', 'archive'))->middleware('auth:super_admin,sales_rep,quality_control,auditor,web_admin,accountant');
-      Route::get('local-supplier-products', [self::class, 'getLocalProducts'])->name('pending_local_products')->defaults('ex', __e('ss,ac', 'box'))->middleware('auth:super_admin,accountant');
-      Route::get('search', [self::class, 'findProduct'])->name('find_product')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
-      Route::get('stock-list-aggregate', [self::class, 'viewStockList'])->name('view_stock')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
-      Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac', 'archive'))->middleware('auth:super_admin,accountant');
+      Route::get('local-supplier-products', [self::class, 'getLocalProducts'])->name('pending_local_products')->defaults('ex', __e('ss,a,ac', 'box'))->middleware('auth:super_admin,auditor,accountant');
+      Route::get('search', [self::class, 'findProduct'])->name('find_product')->defaults('ex', __e('ss,ac,a', null, true))->middleware('auth:super_admin,auditor,accountant');
+      Route::get('stock-list-aggregate', [self::class, 'viewStockList'])->name('view_stock')->defaults('ex', __e('ss,ac,a', 'archive'))->middleware('auth:super_admin,auditor,accountant');
+      Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac,a', 'archive'))->middleware('auth:super_adminauditor,,accountant');
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,a,ac', 'archive'))->middleware('auth:super_admin,auditor,accountant');
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac,w', 'archive', true))->middleware('auth:super_admin,auditor,web_admin,accountant');
-      Route::put('{product}/location', [self::class, 'updateProductLocation'])->name('edit_product_location')->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
+      Route::put('{product}/location', [self::class, 'updateProductLocation'])->name('edit_product_location')->defaults('ex', __e('ss,a', null, true))->middleware('auth:super_admin,auditor');
       Route::get('{product:product_uuid}/qa-test-results', [self::class, 'getProductQATestResults'])->name('qa_test_results')->defaults('ex', __e('ss,q,a,w', null, true))->middleware('auth:quality_control,auditor,web_admin,super_admin,accountant');
-      Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->defaults('ex', __e('ss,w', null, true))->middleware('auth:sales_rep,web_admin');
-      Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name('update_product_status')->defaults('ex', __e('ss,q', null, true))->middleware('auth:super_admin,quality_control');
-      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->defaults('ex', __e('ss,a,ac,d,w', null, true))->middleware('auth:super_admin,auditor,web_admin,accountant');
+      Route::post('{product:product_uuid}/sold', [self::class, 'markProductAsSold'])->name('mark_as_sold')->middleware('auth:sales_rep,web_admin');
+      Route::put('{product:product_uuid}/status', [self::class, 'updateProductStatus'])->name('update_product_status')->middleware('auth:super_admin,auditor,quality_control');
+      Route::post('{product:product_uuid}/comment', [self::class, 'commentOnProduct'])->name('comment_on_product')->middleware('auth:super_admin,auditor,web_admin,accountant');
       Route::get('{product:product_uuid}/qa-tests', [self::class, 'getApplicableProductQATests'])->name('applicable_qa_tests')->defaults('ex', __e('ss,a,w', null, true))->middleware('auth:super_admin,auditor,web_admin');
-      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->defaults('ex', __e('ss,d,q,w,a', null, true))->middleware('auth:super_admin,accountant,quality_control,web_admin,auditor');
-      Route::get('{product:product_uuid}/edit', [self::class, 'showEditProductForm'])->name('edit_product')->defaults('ex', __e('ac,ss', 'archive', true))->middleware('auth:accountant,super_admin');
-      Route::put('{product:product_uuid}/edit', [self::class, 'updateProduct'])->name('update')->defaults('ex', __e('ac,ss', 'archive', true))->middleware('auth:accountant,super_admin');
+      Route::post('{product:product_uuid}/qa-tests/results/comment', [self::class, 'commentOnProductQATestResults'])->name('comment_on_qa_test')->middleware('auth:super_admin,accountant,quality_control,web_admin,auditor');
+      Route::get('{product:product_uuid}/edit', [self::class, 'showEditProductForm'])->name('edit_product')->defaults('ex', __e('ac,ss,a', 'archive', true))->middleware('auth:accountant,auditor,super_admin');
+      Route::put('{product:product_uuid}/edit', [self::class, 'updateProduct'])->name('update')->middleware('auth:accountant,auditor,super_admin');
     });
   }
 

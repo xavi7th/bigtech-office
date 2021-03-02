@@ -49,9 +49,9 @@ class SuperAdminController extends Controller
   {
     Route::group(['middleware' => ['web'], 'prefix' => SuperAdmin::DASHBOARD_ROUTE_PREFIX], function () {
 
-      Route::group(['middleware' => ['auth:super_admin']], function () {
+      Route::name('superadmin.')->middleware('auth:super_admin')->group(function () {
 
-        Route::get('/', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss', 'home', true));
+        Route::get('/', [self::class, 'index'])->name('dashboard')->defaults('ex', __e('ss', 'home', true));
         // Route::get('/dashboard-statistics/{date}', [self::class, 'index'])->name('superadmin.dashboard')->defaults('ex', __e('ss', 'home', true));
 
         SalesRep::superAdminRoutes();

@@ -22,7 +22,7 @@
       formData.append(key, val);
     });
 
-    Inertia.post(route("superadmin.resellers.create_reseller"), formData, {
+    Inertia.post(route(auth.user.user_type + ".resellers.create_reseller"), formData, {
       preserveState: true,
       preserveScroll: true,
       only: ["flash", "errors", "resellers"],
@@ -43,7 +43,7 @@
     currentReseller._method = 'PUT';
 
     Inertia.post(
-      route("superadmin.resellers.edit_reseller", currentReseller.id),
+      route(auth.user.user_type + ".resellers.edit_reseller", currentReseller.id),
       {...currentReseller},
       {
         preserveState: true,
@@ -64,7 +64,7 @@
           confirmButtonText: "Yes, carry on!",
           preConfirm: () => {
             return Inertia.delete(
-              route("superadmin.resellers.delete_reseller", id),
+              route(auth.user.user_type + ".resellers.delete_reseller", id),
               {
                 preserveState: true,
                 preserveScroll: true,
@@ -95,7 +95,7 @@
 
 <Layout title="Manage Resellers">
   <div class="row vertical-gap">
-    {#if auth.user.isSuperAdmin}
+    {#if auth.user.isSuperAdmin || auth.user.isAuditor }
       <div class="col-lg-4 col-xl-4">
         <form class="#" on:submit|preventDefault={createReseller}>
 
@@ -182,7 +182,7 @@
               <th scope="col">Address</th>
               <th scope="col">Phone</th>
               <th scope="col">Email</th>
-              {#if auth.user.isSuperAdmin}
+              {#if auth.user.isSuperAdmin || auth.user.isAuditor }
                 <th scope="col">Action</th>
               {/if}
             </tr>
@@ -202,7 +202,7 @@
                 <td>{reseller.address}</td>
                 <td>{reseller.phone}</td>
                 <td>{reseller.email}</td>
-                {#if auth.user.isSuperAdmin}
+                {#if auth.user.isSuperAdmin || auth.user.isAuditor }
                   <td
                     class="d-flex justify-content-between align-content-center">
                     <!-- <button

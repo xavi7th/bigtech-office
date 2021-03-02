@@ -3,6 +3,8 @@
   import { toCurrency } from "@public-shared/helpers";
   import Layout from "@superadmin-shared/SuperAdminLayout";
 
+  $: ({ auth } = $page.props);
+
   export let paymentRecords = [];
 </script>
 
@@ -36,7 +38,7 @@
                     <b class="text-capitalize mr-15">{bank}</b>
                     {toCurrency(amount)}
                     <InertiaLink
-                      href="{route('superadmin.miscellaneous.bank_payment_records', [bank, date])}"
+                      href="{route(auth.user.user_type + '.miscellaneous.bank_payment_records', [bank, date])}"
                       class="btn btn-dark mr-0 ml-auto btn-xs">
                       Details
                     </InertiaLink>

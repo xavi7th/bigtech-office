@@ -1,11 +1,13 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { InertiaLink } from "@inertiajs/inertia-svelte";
+  import { InertiaLink, page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
-
   import { toCurrency } from "@public-shared/helpers";
 
+  $: ({ auth } = $page.props);
+
+  export let bankAccounts = [];
   let details = {},
     files;
 
@@ -14,19 +16,13 @@
       text: "Creating bank account ..."
     });
 
-    let formData = new FormData();
-
     if (files) {
-      formData.append("img", files[0]);
+      details.img = files[0];
     }
-
-    _.forEach(details, (val, key) => {
-      formData.append(key, val);
-    });
 
     Inertia.post(
       route("superadmin.miscellaneous.create_bank_account"),
-      formData,
+      details,
       {
         preserveState: true,
         preserveScroll: true,
@@ -34,9 +30,6 @@
         onSuccess: () =>{
           details = {};
           files = undefined;
-        },
-        headers: {
-          "Content-Type": "multipart/form-data"
         }
       }
     )
@@ -47,20 +40,18 @@
       text: "Updating bank account ..."
     });
 
-    let formData = new FormData();
-
     if (files) {
-      formData.append("img", files[0]);
+      details.img = files[0];
     }
 
     _.forEach(details, (val, key) => {
-      formData.append(key, val);
+      details.append(key, val);
     });
-    formData.append("_method", "PUT");
+    details._method = "PUT";
 
     Inertia.post(
       route("superadmin.miscellaneous.edit_bank_account", details.id),
-      formData,
+      details,
       {
         preserveState: true,
         preserveScroll: true,
@@ -68,9 +59,6 @@
         onSuccess: () =>{
           details = {};
           files = undefined;
-        },
-        headers: {
-          "Content-Type": "multipart/form-data"
         }
       }
     )
@@ -83,7 +71,7 @@
           "This bank account will no longer be available as a payment option for users. It can be restored at a later time",
           confirmButtonText: "Yes, carry on!",
           preConfirm: () => {
-          return Inertia.delete(
+          Inertia.delete(
             route("superadmin.miscellaneous.suspend_bank_account", id),
             {
               preserveState: true,
@@ -111,7 +99,7 @@
           "This bank account will once again be available as a payment option for users.",
         confirmButtonText: "Yes, carry on!",
         preConfirm: () => {
-          return Inertia.delete(
+          Inertia.delete(
             route("superadmin.miscellaneous.restore_bank_account", id),
             {
               preserveState: true,
@@ -131,8 +119,6 @@
         }
       });
   };
-
-  export let bankAccounts = [];
 </script>
 
 <style>
@@ -146,90 +132,92 @@
 
 <Layout title="Manage Bank Accounts">
   <div class="row vertical-gap">
-    <div class="col-lg-4 col-xl-4 order-1 order-lg-0">
-      <form class="#" on:submit|preventDefault={createBankAccount}>
+   {#if auth.user.isSuperAdmin}
+      <div class="col-lg-4 col-xl-4 order-1 order-lg-0">
+        <form class="#" on:submit|preventDefault={createBankAccount}>
 
-        <div class="row vertical-gap sm-gap">
-          <div class="col-12">
-            <label for="bank-name">Bank Name</label>
-            <input
-              type="text"
-              class="form-control"
-              id="bank-name"
-              placeholder="Bank Name"
-              bind:value={details.bank} />
-          </div>
+          <div class="row vertical-gap sm-gap">
+            <div class="col-12">
+              <label for="bank-name">Bank Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="bank-name"
+                placeholder="Bank Name"
+                bind:value={details.bank} />
+            </div>
 
-          <div class="col-12">
-            <label for="acc-name">Account Name</label>
-            <input
-              type="text"
-              class="form-control"
-              id="acc-name"
-              placeholder="Bank Account Name"
-              bind:value={details.account_name} />
-          </div>
-          <div class="col-12">
-            <label for="acc-number">Account Number</label>
-            <input
-              type="text"
-              class="form-control"
-              id="acc-number"
-              placeholder="Bank Account Number"
-              bind:value={details.account_number} />
-          </div>
+            <div class="col-12">
+              <label for="acc-name">Account Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="acc-name"
+                placeholder="Bank Account Name"
+                bind:value={details.account_name} />
+            </div>
+            <div class="col-12">
+              <label for="acc-number">Account Number</label>
+              <input
+                type="text"
+                class="form-control"
+                id="acc-number"
+                placeholder="Bank Account Number"
+                bind:value={details.account_number} />
+            </div>
 
-          <div class="col-12">
-            <label for="acc-type">Account Type</label>
-            <select
-              name="acc-type"
-              class="form-control"
-              id="acc-type"
-              bind:value={details.account_type}>
-              <option>savings</option>
-              <option>current</option>
-              <option>third-party</option>
-            </select>
-          </div>
+            <div class="col-12">
+              <label for="acc-type">Account Type</label>
+              <select
+                name="acc-type"
+                class="form-control"
+                id="acc-type"
+                bind:value={details.account_type}>
+                <option>savings</option>
+                <option>current</option>
+                <option>third-party</option>
+              </select>
+            </div>
 
-          <div class="col-12">
-            <label for="acc-description">Account Description</label>
-            <textarea
-              bind:value={details.account_description}
-              class="form-control"
-              id="acc-description"
-              cols="30"
-              rows="10"
-              placeholder="Romzy's personal GTB account" />
-          </div>
+            <div class="col-12">
+              <label for="acc-description">Account Description</label>
+              <textarea
+                bind:value={details.account_description}
+                class="form-control"
+                id="acc-description"
+                cols="30"
+                rows="10"
+                placeholder="Romzy's personal GTB account" />
+            </div>
 
-          <div class="col-12">
-            <label for="bank-logo">Bank logo</label>
-            <input
-              type="file"
-              id="bank-logo"
-              bind:files
-              accept="image/*"
-              class="form-control" />
-          </div>
+            <div class="col-12">
+              <label for="bank-logo">Bank logo</label>
+              <input
+                type="file"
+                id="bank-logo"
+                bind:files
+                accept="image/*"
+                class="form-control" />
+            </div>
 
-          <div class="col-12">
-            <button
-              type="submit"
-              class="btn btn-success btn-long"
-              disabled={!details.account_number || !files}>
-              <span class="text">Create</span>
-            </button>
+            <div class="col-12">
+              <button
+                type="submit"
+                class="btn btn-success btn-long"
+                disabled={!details.account_number || !files}>
+                <span class="text">Create</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    {/if}
     <div class="col-lg-8 col-xl-8 order-0 order-lg-1">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">
           Available Bank Accounts
         </h2>
-          <InertiaLink href={route('superadmin.miscellaneous.bank_accounts_daily_transactions')} class="btn btn-brand ml-auto">
+          <InertiaLink href={route(auth.user.user_type + '.miscellaneous.bank_accounts_daily_transactions')} class="btn btn-info ml-auto">
             <span>Today's Transactions</span>
           </InertiaLink>
       </div>
@@ -260,40 +248,42 @@
                   (Total Today: {(toCurrency(bankAccount.total_payments_received))})
                 </td>
                 <td class="d-flex justify-content-between align-content-center">
-                  {#if bankAccount.is_suspended}
-                    <button
-                      type="button"
-                      class="btn btn-success btn-xs"
-                      on:click={() => {
-                        restoreBankAccount(bankAccount.id);
-                      }}>
-                      RESTORE
-                    </button>
-                  {:else}
-                    <button
-                      type="button"
-                      class="btn btn-danger btn-xs"
-                      on:click={() => {
-                        suspendBankAccount(bankAccount.id);
-                      }}>
-                      SUSPEND
-                    </button>
-                  {/if}
                   <InertiaLink
-                    href={route('superadmin.miscellaneous.bank_account_daily_transactions', bankAccount.account_number)}
-                    class="btn btn-brand btn-xs text-nowrap">
+                    href={route(auth.user.user_type + '.miscellaneous.bank_account_daily_transactions', bankAccount.account_number)}
+                    class="btn btn-info btn-xs text-nowrap">
                     Today's Transactions
                   </InertiaLink>
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-xs"
-                    data-toggle="modal"
-                    data-target="#updateBankAccount"
-                    on:click={() => {
-                      details = bankAccount;
-                    }}>
-                    EDIT
-                  </button>
+                  {#if auth.user.isSuperAdmin}
+                    {#if bankAccount.is_suspended}
+                      <button
+                        type="button"
+                        class="btn btn-success btn-xs"
+                        on:click={() => {
+                          restoreBankAccount(bankAccount.id);
+                        }}>
+                        RESTORE
+                      </button>
+                    {:else}
+                      <button
+                        type="button"
+                        class="btn btn-dark btn-xs"
+                        on:click={() => {
+                          suspendBankAccount(bankAccount.id);
+                        }}>
+                        SUSPEND
+                      </button>
+                    {/if}
+                    <button
+                      type="button"
+                      class="btn btn-warning btn-xs"
+                      data-toggle="modal"
+                      data-target="#updateBankAccount"
+                      on:click={() => {
+                        details = bankAccount;
+                      }}>
+                      EDIT
+                    </button>
+                  {/if}
                 </td>
               </tr>
             {:else}

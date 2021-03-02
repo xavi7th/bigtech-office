@@ -5,7 +5,7 @@
   import DailyPaymentBreakdown from "@superadmin-shared/partials/DailyPaymentBreakdown.svelte";
   import RecentSoldItems from '@superadmin-shared/Partials/RecentSoldItems.svelte';
   import { onMount,  } from 'svelte';
-import DailyExpenses from '@superadmin-shared/Partials/DailyExpenses.svelte';
+  import DailyExpenses from '@superadmin-shared/Partials/DailyExpenses.svelte';
 
   export let statistics = {};
 

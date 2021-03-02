@@ -65,8 +65,8 @@ class ProductBatch extends BaseModel
   {
     Route::group(['prefix' => 'product-batches'], function () {
       Route::name('accountant.products.')->group(function () {
-        Route::get('{productBatch:batch_number}/price/create', [self::class, 'createProductPricePage'])->name('create_batch_price')->defaults('ex', __e('ss,ac', 'package', true));
-        Route::post('create', [self::class, 'createProductBatch'])->name('create_batch')->defaults('ex', __e('ss,ac', 'package', true));
+        Route::get('{productBatch:batch_number}/price/create', [self::class, 'createProductPricePage'])->name('create_batch_price')->defaults('ex', __e('ss,a,ac', 'package', true));
+        Route::post('create', [self::class, 'createProductBatch'])->name('create_batch');
       });
     });
   }
@@ -80,7 +80,7 @@ class ProductBatch extends BaseModel
       Route::get('', [self::class, 'getProductBatches'])->name($p('batches'))->defaults('ex', __e('ss,q,a,ac', 'package', false))->middleware('auth:quality_control,auditor,accountant,super_admin');
       Route::post('{productBatch}/comment', [self::class, 'commentOnProductBatch'])->name($p('create_batch_comment'))->middleware('auth:super_admin,auditor,accountant');
       Route::get('{productBatch:batch_number}/products', [self::class, 'getBatchProducts'])->name($p('by_batch'))->middleware('auth:quality_control,auditor,accountant,super_admin');
-      Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss,ac', 'package', true))->middleware('auth:super_admin,accountant');
+      Route::get('{productBatch:batch_number}/prices', [self::class, 'getBatchPrices'])->name($p('prices_by_batch'))->defaults('ex', __e('ss,ac,a', 'package', true))->middleware('auth:super_admin,auditor,accountant');
     });
   }
 

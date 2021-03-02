@@ -20,6 +20,7 @@ class ProductSupplierTransformer
     return [
       'id' => (int)$product_supplier->id,
       'name' => (string)$product_supplier->name,
+      'is_local' => (bool)$product_supplier->is_local
     ];
   }
 

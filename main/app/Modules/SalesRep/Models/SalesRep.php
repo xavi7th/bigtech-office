@@ -126,9 +126,7 @@ class SalesRep extends User
 
   static function superAdminRoutes()
   {
-    // Route::name('superadmin.manage_staff.')->prefix('sales-reps')->group(function () {
     self::staffRoutes();
-    // });
   }
 
   /** Overide trait method */

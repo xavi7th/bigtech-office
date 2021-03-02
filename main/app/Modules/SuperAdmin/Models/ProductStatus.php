@@ -106,7 +106,7 @@ class ProductStatus extends BaseModel
   public static function superAdminRoutes()
   {
     Route::group(['prefix' => 'product-statuses'], function () {
-      Route::name('superadmin.miscellaneous.')->group(function () {
+      Route::name('miscellaneous.')->group(function () {
         Route::post('create', [self::class, 'createProductStatus'])->name('create_product_status')->defaults('ex', __e('ss', 'aperture', true));
         Route::put('{productStatus}/edit', [self::class, 'editProductStatus'])->name('edit_product_status')->defaults('ex', __e('ss', 'aperture', true));
       });

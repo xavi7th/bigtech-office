@@ -49,11 +49,8 @@ class ProductQATestResult extends Model
 
   public static function superAdminRoutes()
   {
-    Route::group(['prefix' => 'product-qa-test-results'], function () {
-      $p = function ($name) {
-        return 'superadmin.products.' . $name;
-      };
-      // Route::get('', [self::class, 'getProductQATestResults'])->name($p('all_qa_test_results'))->defaults('ex', __e('ss', 'file-text', false));
+    Route::name('products.')->prefix('product-qa-test-results')->group(function () {
+      // Route::get('', [self::class, 'getProductQATestResults'])->name('all_qa_test_results')->defaults('ex', __e('ss', 'file-text', false));
     });
   }
 

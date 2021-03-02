@@ -94,19 +94,16 @@ class CompanyBankAccount extends BaseModel
 
   public static function superAdminRoutes()
   {
-    Route::group(['prefix' => 'company-bank-accounts'], function () {
-      $misc = function ($name) {
-        return 'superadmin.miscellaneous.' . $name;
-      };
-      Route::get('', [self::class, 'getCompanyBankAccounts'])->name($misc('bank_accounts'))->defaults('ex', __e('ss', 'refresh-cw', false));
-      Route::get('daily-transactions', [self::class, 'getAllPaymentTransactionsToday'])->name($misc('bank_accounts_daily_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::get('{companyBankAccount:account_number}/daily-transactions', [self::class, 'getDailyPaymentTransactions'])->name($misc('bank_account_daily_transactions'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::get('transaction-history', [self::class, 'getPaymentTransactionsSummary'])->name($misc('payment_records'))->defaults('ex', __e('ss', 'layers', false));
-      Route::get('{companyBankAccount:bank}/{date}/transaction-history', [self::class, 'getBankPaymentTransactionsHistory'])->name($misc('bank_payment_records'))->defaults('ex', __e('ss', 'layers', true));
-      Route::post('create', [self::class, 'createCompanyBankAccount'])->name($misc('create_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::put('{companyBankAccount}/edit', [self::class, 'editCompanyBankAccount'])->name($misc('edit_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::delete('{companyBankAccount}/suspend', [self::class, 'suspendCompanyBankAccount'])->name($misc('suspend_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
-      Route::delete('{id}/restore', [self::class, 'restoreCompanyBankAccount'])->name($misc('restore_bank_account'))->defaults('ex', __e('ss', 'refresh-cw', true));
+    Route::name('miscellaneous.')->prefix('company-bank-accounts')->group(function () {
+      Route::get('', [self::class, 'getCompanyBankAccounts'])->name('bank_accounts')->defaults('ex', __e('ss,a', 'refresh-cw', false));
+      Route::get('daily-transactions', [self::class, 'getAllPaymentTransactionsToday'])->name('bank_accounts_daily_transactions')->defaults('ex', __e('ss,a', 'refresh-cw', true));
+      Route::get('{companyBankAccount:account_number}/daily-transactions', [self::class, 'getDailyPaymentTransactions'])->name('bank_account_daily_transactions')->defaults('ex', __e('ss,a', 'refresh-cw', true));
+      Route::get('transaction-history', [self::class, 'getPaymentTransactionsSummary'])->name('payment_records')->defaults('ex', __e('ss,a', 'layers', false));
+      Route::get('{companyBankAccount:bank}/{date}/transaction-history', [self::class, 'getBankPaymentTransactionsHistory'])->name('bank_payment_records')->defaults('ex', __e('ss,a', 'layers', true));
+      Route::post('create', [self::class, 'createCompanyBankAccount'])->name('create_bank_account');
+      Route::put('{companyBankAccount}/edit', [self::class, 'editCompanyBankAccount'])->name('edit_bank_account');
+      Route::delete('{companyBankAccount}/suspend', [self::class, 'suspendCompanyBankAccount'])->name('suspend_bank_account');
+      Route::delete('{id}/restore', [self::class, 'restoreCompanyBankAccount'])->name('restore_bank_account');
     });
   }
 

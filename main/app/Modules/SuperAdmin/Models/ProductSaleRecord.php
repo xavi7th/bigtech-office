@@ -168,11 +168,9 @@ class ProductSaleRecord extends BaseModel
 
   public static function superAdminRoutes()
   {
-    Route::group(['prefix' => 'product-sales-records/sales-reps'], function () {
-      Route::name('superadmin.product_sales_records.')->group(function () {
-        Route::get('{salesRep}', [self::class, 'getSalesRepSaleRecordsToday'])->name('sales_rep.today')->defaults('ex', __e('ss,ac', null, true));
-        Route::get('{salesRep}/{date}', [self::class, 'getSalesRepSaleRecordsToday'])->name('sales_rep.history')->defaults('ex', __e('ss,ac', null, true));
-      });
+    Route::name('product_sales_records.')->prefix('product-sales-records/sales-reps')->group(function () {
+      Route::get('{salesRep}', [self::class, 'getSalesRepSaleRecordsToday'])->name('sales_rep.today')->defaults('ex', __e('ss,a,ac', null, true));
+      Route::get('{salesRep}/{date}', [self::class, 'getSalesRepSaleRecordsToday'])->name('sales_rep.history')->defaults('ex', __e('ss,a,ac', null, true));
     });
   }
 
@@ -191,9 +189,9 @@ class ProductSaleRecord extends BaseModel
     Route::group(['prefix' => 'product-sales-records'], function () {
       Route::name('multiaccess.product_sales_records.')->group(function () {
         // Route::get('', [self::class, 'getProductSaleRecords'])->name($p('view_sales_records'))->defaults('ex', __e('ss', null, true))->middleware('auth:super_admin');
-        Route::get('/{date}', [self::class, 'getDailyProductSaleRecords'])->name('daily')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
-        Route::get('{product}/transactions', [self::class, 'getSaleRecordTransactions'])->name('view_sales_record_transactions')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
-        Route::get('{product}/swap-deal', [self::class, 'getSaleRecordSwapDeal'])->name('view_sales_record_swap_deal')->defaults('ex', __e('ss,ac', null, true))->middleware('auth:super_admin,accountant');
+        Route::get('/{date}', [self::class, 'getDailyProductSaleRecords'])->name('daily')->defaults('ex', __e('ss,a,ac', null, true))->middleware('auth:super_admin,auditor,accountant');
+        Route::get('{product}/transactions', [self::class, 'getSaleRecordTransactions'])->name('view_sales_record_transactions')->defaults('ex', __e('ss,a,ac', null, true))->middleware('auth:super_admin,auditor,accountant');
+        Route::get('{product}/swap-deal', [self::class, 'getSaleRecordSwapDeal'])->name('view_sales_record_swap_deal')->defaults('ex', __e('ss,a,ac', null, true))->middleware('auth:super_admin,auditor,accountant');
       });
     });
   }

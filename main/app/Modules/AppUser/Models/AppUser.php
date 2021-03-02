@@ -233,16 +233,12 @@ class AppUser extends User
 
   static function superAdminRoutes()
   {
-    Route::name('superadmin.appusers.')->prefix('app-users')->group(function () {
-      Route::get('', [self::class, 'getAllAppUsers'])->name('view_users')->defaults('ex', __e('ss', 'user', false));
-
-      Route::put('{appUser}/update', [self::class, 'updateAppUser'])->name('update_user')->defaults('ex', __e('ss', 'user', true));
-
-      Route::put('{app_user}/suspend', [self::class, 'suspendAppUser'])->name('suspend_users')->defaults('ex', __e('ss', 'user', true));
-
-      Route::put('{id}/restore', [self::class, 'unsuspendAppUser'])->name('restore_users')->defaults('ex', __e('ss', 'user', true));
-
-      Route::delete('{app_user}/delete', [self::class, 'deleteAppUserAccount'])->name('delete_user')->defaults('ex', __e('ss', 'user', true));
+    Route::name('appusers.')->prefix('app-users')->group(function () {
+      Route::get('', [self::class, 'getAllAppUsers'])->name('view_users')->defaults('ex', __e('ss,a', 'user', false));
+      Route::put('{appUser}/update', [self::class, 'updateAppUser'])->name('update_user');
+      Route::put('{app_user}/suspend', [self::class, 'suspendAppUser'])->name('suspend_users');
+      Route::put('{id}/restore', [self::class, 'unsuspendAppUser'])->name('restore_users');
+      Route::delete('{app_user}/delete', [self::class, 'deleteAppUserAccount'])->name('delete_user');
     });
   }
 

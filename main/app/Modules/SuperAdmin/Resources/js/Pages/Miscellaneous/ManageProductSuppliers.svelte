@@ -2,6 +2,9 @@
   import Layout from "@superadmin-shared/SuperAdminLayout";
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
+	import { page } from '@inertiajs/inertia-svelte'
+
+  $: ({ auth } = $page.props);
 
   let productSupplierObj = {
     is_local:false
@@ -13,7 +16,7 @@
     });
 
     Inertia.post(
-      route("superadmin.product_suppliers.create"),
+      route(auth.user.user_type + ".product_suppliers.create"),
       {
         name: productSupplierObj.name,
         is_local: productSupplierObj.is_local
@@ -35,7 +38,7 @@
     });
 
     Inertia.put(
-      route("superadmin.product_suppliers.edit", productSupplierObj.id),
+      route(auth.user.user_type + ".product_suppliers.edit", productSupplierObj.id),
       {
         name: productSupplierObj.name,
         is_local: productSupplierObj.is_local
@@ -60,7 +63,7 @@
         confirmButtonText: "Yes, carry on!",
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.miscellaneous.delete_product_supplier", id),
+            route(auth.user.user_type + ".miscellaneous.delete_product_supplier", id),
             {
               preserveState: true,
               preserveScroll: true,

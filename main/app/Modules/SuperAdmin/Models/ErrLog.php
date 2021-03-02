@@ -67,8 +67,8 @@ class ErrLog extends BaseModel
   static function superAdminRoutes()
   {
     Route::group([], function () {
-      Route::get('error-logs', [self::class, 'getErrorLogs'])->name('superadmin.logs.error_logs')->defaults('ex', __e('ss', 'activity', false));
-      Route::delete('error-logs', [self::class, 'pruneErrLogs'])->name('superadmin.logs.prune')->defaults('ex', __e('ss', 'activity', false));
+      Route::get('error-logs', [self::class, 'getErrorLogs'])->name('logs.error_logs')->defaults('ex', __e('ss,a', 'activity', false));
+      Route::delete('error-logs', [self::class, 'pruneErrLogs'])->name('logs.prune');
     });
   }
 
@@ -89,7 +89,7 @@ class ErrLog extends BaseModel
 
   public function scopeOld($query)
   {
-    return $query->whereDate('created_at', '<', now()->subDays(7));
+    return $query->whereDate('created_at', '<', now()->subDays(2));
   }
 
 }

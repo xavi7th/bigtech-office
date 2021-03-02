@@ -9,13 +9,20 @@ use RachidLaasri\Travel\Travel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use App\Modules\AppUser\Models\AppUser;
 use App\Modules\Auditor\Models\Auditor;
+use App\Modules\SalesRep\Models\SalesRep;
+use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\QATest;
+use App\Modules\WebAdmin\Models\WebAdmin;
 use App\Modules\SuperAdmin\Models\Product;
 use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
+use App\Modules\Accountant\Models\Accountant;
 use App\Modules\SuperAdmin\Models\StorageSize;
 use App\Modules\SuperAdmin\Models\StorageType;
+use App\Modules\SuperAdmin\Models\UserComment;
+use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\ProductBatch;
 use App\Modules\SuperAdmin\Models\ProductBrand;
@@ -28,7 +35,9 @@ use App\Modules\SuperAdmin\Models\ProcessorSpeed;
 use App\Modules\SuperAdmin\Models\ProductExpense;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ProductCategory;
+use App\Modules\SuperAdmin\Models\ProductSupplier;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
+use App\Modules\QualityControl\Models\QualityControl;
 use App\Modules\SuperAdmin\Models\CompanyBankAccount;
 use App\Modules\SuperAdmin\Models\SalesRecordBankAccount;
 use App\Modules\SuperAdmin\Models\ProductDescriptionSummary;
@@ -39,8 +48,22 @@ class AuditorController extends Controller
   {
     Route::group(['middleware' => ['web']], function () {
       Route::prefix(Auditor::DASHBOARD_ROUTE_PREFIX)->group(function () {
-        Route::group(['middleware' => ['auth:auditor']], function () {
-          Route::get('/', [self::class, 'index'])->name('auditor.dashboard')->defaults('ex', __e('a', 'home', true));
+        Route::name('auditor.')->middleware('auth:auditor')->group(function () {
+          Route::get('/', [self::class, 'index'])->name('dashboard')->defaults('ex', __e('a', 'home', true));
+
+          SalesRep::superAdminRoutes();
+          Accountant::superAdminRoutes();
+          QualityControl::superAdminRoutes();
+          WebAdmin::superAdminRoutes();
+          AppUser::superAdminRoutes();
+          ProductSaleRecord::superAdminRoutes();
+          ProductSupplier::superAdminRoutes();
+          ProductStatus::superAdminRoutes();
+          Reseller::superAdminRoutes();
+          UserComment::superAdminRoutes();
+          CompanyBankAccount::superAdminRoutes();
+          OfficeBranch::superAdminRoutes();
+          ErrLog::superAdminRoutes();
         });
 
         Route::name('auditor.')->group(function () {

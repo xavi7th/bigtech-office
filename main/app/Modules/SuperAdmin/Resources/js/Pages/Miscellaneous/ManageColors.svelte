@@ -58,7 +58,7 @@
           confirmButtonText: "Yes, carry on!",
           preConfirm: () => {
             return Inertia.delete(
-              route("superadmin.miscellaneous.delete_product_color", id),
+              route(auth.user.user_type + ".miscellaneous.delete_product_color", id),
               {
                 preserveState: true,
                 preserveScroll: true,

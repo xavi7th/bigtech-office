@@ -16,7 +16,7 @@
     });
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_product_status"),
+      route(auth.user.user_type + ".miscellaneous.create_product_status"),
       {
         status: productStatusName
       },
@@ -37,7 +37,7 @@
     });
 
     Inertia.put(
-      route("superadmin.miscellaneous.edit_product_status", productStatusId),
+      route(auth.user.user_type + ".miscellaneous.edit_product_status", productStatusId),
       {
         status: productStatusName
       },
@@ -60,7 +60,7 @@
         confirmButtonText: "Yes, carry on!",
         preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.miscellaneous.delete_product_status", id),
+            route(auth.user.user_type + ".miscellaneous.delete_product_status", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -83,7 +83,7 @@
 
 <Layout title="Manage Statuses">
   <div class="row vertical-gap">
-  {#if auth.user.isSuperAdmin}
+  {#if auth.user.isSuperAdmin || auth.user.isAuditor}
 
     <div class="col-lg-4 col-xl-4">
 
@@ -122,7 +122,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Name</th>
-              {#if auth.user.isSuperAdmin}
+              {#if auth.user.isSuperAdmin || auth.user.isAuditor}
                 <th scope="col">Action</th>
               {/if}
             </tr>
@@ -132,7 +132,7 @@
               <tr>
                 <td>{idx + 1}</td>
                 <td>{productStatus.status}</td>
-                {#if auth.user.isSuperAdmin}
+                {#if auth.user.isSuperAdmin || auth.user.isAuditor}
                   <td class="d-flex justify-content-between align-content-center">
                   <!-- <button
                     type="button"

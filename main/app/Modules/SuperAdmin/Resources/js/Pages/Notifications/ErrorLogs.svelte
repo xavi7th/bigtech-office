@@ -2,6 +2,9 @@
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal.svelte";
   import Layout from "@superadmin-shared/SuperAdminLayout";
+	import { page } from '@inertiajs/inertia-svelte'
+
+  $: ({ auth } = $page.props);
 
   export let errLogs = [];
   let fullErrorMessage;
@@ -12,7 +15,7 @@
         text: "This will delete all old error logs",
         confirmButtonText: "Delete",
         preConfirm: () => {
-          return Inertia.delete(route("superadmin.logs.prune"), {
+          Inertia.delete(route(auth.user.user_type + ".logs.prune"), {
             preserveState: true,
             preserveScroll: true,
             only: ["flash", "errors", "errLogs"]

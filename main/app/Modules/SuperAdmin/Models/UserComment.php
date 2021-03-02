@@ -62,8 +62,8 @@ class UserComment extends Model
   static function superAdminRoutes()
   {
     Route::group(['prefix' => 'user-comments'], function () {
-      Route::name('superadmin.user_comments.')->group(function () {
-        Route::delete('{userComment}/delete', [self::class, 'deleteUserComments'])->name('delete')->defaults('ex', __e('ss', 'message-circle', true));
+      Route::name('user_comments.')->group(function () {
+        Route::delete('{userComment}/delete', [self::class, 'deleteUserComments'])->name('delete');
       });
     });
   }
@@ -72,13 +72,10 @@ class UserComment extends Model
 
   static function routes()
   {
-    Route::group(['prefix' => 'user-comments', 'namespace' => '\App\Modules\Admin\Models'], function () {
-      $others = function ($name) {
-        return 'superadmin.' . $name;
-      };
-      Route::get('', [self::class, 'getUserComments'])->name($others('user_comments'))->defaults('ex', __e('ss', 'message-circle', false));
-      Route::get('product-batch/{batch}', [self::class, 'getProductBatchComments'])->name($others('user_comments.batch'))->defaults('ex', __e('ss', 'message-circle', true));
-      Route::get('product/{product}', [self::class, 'getProductComments'])->name($others('user_comments.product'))->defaults('ex', __e('ss', 'message-circle', true));
+    Route::name('user_comments')->prefix('user-comments')->group(function () {
+      Route::get('', [self::class, 'getUserComments'])->name('')->defaults('ex', __e('ss', 'message-circle', false));
+      Route::get('product-batch/{batch}', [self::class, 'getProductBatchComments'])->name('.batch')->defaults('ex', __e('ss', 'message-circle', true));
+      Route::get('product/{product}', [self::class, 'getProductComments'])->name('.product')->defaults('ex', __e('ss', 'message-circle', true));
     });
   }
 

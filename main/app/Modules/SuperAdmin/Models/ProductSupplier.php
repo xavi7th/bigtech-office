@@ -45,6 +45,8 @@ class ProductSupplier extends BaseModel
 
   protected $fillable = ['name', 'is_local'];
 
+  protected $casts = ['is_local' => 'bool'];
+
   public function returnedLocalProducts()
   {
     return $this->hasMany(ReturnedLocalProduct::class);
@@ -52,13 +54,10 @@ class ProductSupplier extends BaseModel
 
   public static function superAdminRoutes()
   {
-    Route::group(['prefix' => 'product-suppliers'], function () {
-      $gen = function ($namespace, $name = null) {
-        return 'superadmin.product_' . $namespace . $name;
-      };
-      Route::get('', [self::class, 'getProductSuppliers'])->name($gen('suppliers.manage_suppliers'))->defaults('ex', __e('ss', 'user-plus', false));
-      Route::post('create', [self::class, 'createProductSupplier'])->name($gen('suppliers', '.create'))->defaults('ex', __e('ss', 'user-plus', true));
-      Route::put('{productSupplier}/edit', [self::class, 'editProductSupplier'])->name($gen('suppliers', '.edit'))->defaults('ex', __e('ss', 'user-plus', true));
+    Route::name('product_suppliers.')->prefix('product-suppliers')->group(function () {
+      Route::get('', [self::class, 'getProductSuppliers'])->name('manage_suppliers')->defaults('ex', __e('ss,a', 'user-plus', false));
+      Route::post('create', [self::class, 'createProductSupplier'])->name('create');
+      Route::put('{productSupplier}/edit', [self::class, 'editProductSupplier'])->name('edit');
     });
   }
 

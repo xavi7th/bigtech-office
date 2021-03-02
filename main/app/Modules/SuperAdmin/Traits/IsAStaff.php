@@ -35,8 +35,8 @@ trait IsAStaff
   {
     // dd(Str::of(__CLASS__)->afterLast('\\')->plural());
     $userType = Str::of(class_basename(self::class))->snake()->plural();
-    Route::name('superadmin.manage_staff.')->prefix($userType->slug())->group(function () use ($userType) {
-      Route::get('', [self::class, 'getAllStaff'])->name($userType)->defaults('ex', __e('ss', 'aperture'));
+    Route::name('manage_staff.')->prefix($userType->slug())->group(function () use ($userType) {
+      Route::get('', [self::class, 'getAllStaff'])->name($userType)->defaults('ex', __e('ss,a', 'aperture'));
       Route::post('create', [self::class, 'createStaff'])->name($userType . '.create');
       Route::put('{staff}/edit', [self::class, 'editStaff'])->name($userType . '.edit');
       Route::put('{staff}/suspend', [self::class, 'suspendStaff'])->name($userType . '.suspend');
