@@ -179,7 +179,7 @@
             <tr>
               <th scope="col">S/No</th>
               <th scope="col">Name/Email</th>
-              <th scope="col">Monthly Bonus</th>
+              <!-- <th scope="col">Monthly Bonus</th> -->
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -195,16 +195,16 @@
                     <span class="badge badge-pill badge-danger ml-5">Deleted</span>
                   {/if}
                 </td>
-                <td class="text-nowrap">
+                <!-- <td class="text-nowrap">
                   {#if salesRep.is_online_sales_rep}
                     {(toCurrency(salesRep.statistics.monthly_online_sales_bonus_amount))}
                   {:else}
                      {(toCurrency(salesRep.statistics.monthly_walk_in_sales_bonus_amount))}
                   {/if}
-                </td>
+                </td> -->
                 <td class="d-flex justify-content-between align-content-center">
                   {#if !salesRep.is_deleted}
-                    <button
+                    <!-- <button
                       type="button"
                       class="btn btn-primary btn-xs"
                       data-toggle="modal"
@@ -215,7 +215,7 @@
                         salesRepStatistics.is_online_sales_rep = salesRep.is_online_sales_rep;
                       }}>
                       Statistics
-                    </button>
+                    </button> -->
                     {#if salesRep.is_suspended}
                       <button
                         type="button"
