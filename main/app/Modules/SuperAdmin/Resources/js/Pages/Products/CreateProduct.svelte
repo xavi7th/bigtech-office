@@ -20,7 +20,7 @@
 
   let createLocalProduct = () => {
     BlockToast.fire({
-      text: "Creating local supplier product ..."
+      text: "Creating product ..."
     });
 
     Inertia.post(route("accountant.products.create"), details, {
