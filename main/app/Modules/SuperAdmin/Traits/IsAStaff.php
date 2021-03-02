@@ -89,7 +89,7 @@ trait IsAStaff
 
       ActivityLog::notifySuperAdmins($request->user()->full_name . ' created a ' . $userType->singular() . ' account for ' . $staff->full_name);
 
-      return back()->withFlash(['success' => $userType->singular() . ' account created']);
+      return back()->withFlash(['success' => 'User account created']);
     } catch (Throwable $e) {
       if (app()->environment() == 'local') {
         return back()->withFlash(['error' => $e->getMessage()]);
@@ -124,7 +124,7 @@ trait IsAStaff
 
       ActivityLog::notifySuperAdmins($request->user()->full_name . ' updated the ' . $userType->slug(' ') . ' account for ' . $staff->full_name);
 
-      return back()->withFlash(['success' => $userType->slug(' ') . ' account updated']);
+      return back()->withFlash(['success' =>  'User account updated']);
     } catch (Throwable $e) {
       if (app()->environment() == 'local') {
         return back()->withFlash(['error' => $e->getMessage()]);
