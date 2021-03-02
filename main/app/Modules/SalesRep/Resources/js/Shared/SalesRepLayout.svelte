@@ -17,6 +17,8 @@
     isMounted = true;
   });
 
+  console.log(auth.user.office_branch);
+
 </script>
 
 <!-- svelte-ignore missing-declaration -->
@@ -35,7 +37,7 @@
       class="rui-page content-wrap"
       in:fly={{ x: -300, duration: 700, delay: 400 }}
       out:fly={{ y: 30, duration: 400, delay: 0 }}>
-      <PageTitle {title} appName={app.name} officeBranch={auth.user.office_branch} />
+      <PageTitle {title} appName={app.name} staffLocation={auth.user.office_branch} />
       <div class="rui-page-content">
         <div class="container-fluid">
           <slot />
