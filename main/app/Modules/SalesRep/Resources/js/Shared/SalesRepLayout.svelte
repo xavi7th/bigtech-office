@@ -2,13 +2,13 @@
   import { onMount } from "svelte";
   import { page } from "@inertiajs/inertia-svelte";
   import { fly } from "svelte/transition";
-  import Sidebar from "@superadmin-shared/Partials/Sidebar";
-  import Header from "@superadmin-shared/Partials/Header";
-  import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
-  import Footer from "@superadmin-shared/Partials/Footer";
+  import Sidebar from "@superadmin-shared/Partials/Sidebar.svelte";
+  import Header from "@superadmin-shared/Partials/Header.svelte";
+  import MobileHeader from "@superadmin-shared/Partials/MobileHeader.svelte";
+  import Footer from "@superadmin-shared/Partials/Footer.svelte";
   import PageTitle from "@superadmin-shared/Partials/PageTitle.svelte";
 
-  $: ({ app, routes } = $page.props);
+  $: ({ app, routes, auth } = $page.props);
 
   let isMounted = false;
   export let title;
@@ -35,7 +35,7 @@
       class="rui-page content-wrap"
       in:fly={{ x: -300, duration: 700, delay: 400 }}
       out:fly={{ y: 30, duration: 400, delay: 0 }}>
-      <PageTitle {title} appName={app.name} />
+      <PageTitle {title} appName={app.name} officeBranch={auth.user.office_branch} />
       <div class="rui-page-content">
         <div class="container-fluid">
           <slot />

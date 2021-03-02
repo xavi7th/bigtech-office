@@ -494,7 +494,7 @@ class Product extends BaseModel
     if ($request->user()->isOnlineSalesRep()) {
       $products = fn () => ProductModel::with('product_brand:id,name')->get(['id', 'name', 'product_brand_id'])->transform(fn ($record) => ['model' => $record->name, 'brand' => $record->product_brand->name]);
     } elseif ($request->user()->isWalkInRep()) {
-      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
+      $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->inStock()->inLocation($request->user()->office_branch_id)->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isQualityControl()) {
       $products = fn () => (new ProductTransformer)->collectionTransformer(self::search($searchKey, $searchQuery)->untested()->with(['product_color', 'product_status', 'storage_size', 'product_model', 'product_price'])->take(10)->get(), 'productsListing');
     } elseif ($request->user()->isWebAdmin()) {
@@ -1096,6 +1096,11 @@ class Product extends BaseModel
 
     if ($request->isApi()) return response()->json((new UserCommentTransformer)->detailed($comment), 201);
     return back()->withFlash(['success'=>'Product created']);
+  }
+
+  public function scopeInLocation($query, int $branch_id)
+  {
+    return $query->where('office_branch_id', $branch_id);
   }
 
   public function scopeInStock($query)

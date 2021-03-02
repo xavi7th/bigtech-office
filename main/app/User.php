@@ -135,27 +135,21 @@ class User extends Authenticatable implements JWTSubject
   public function getUserType()
   {
     if ($this->isAccountant()) {
-      return ['isAccountant' => true, 'user_type' => strtolower($this->getType())];
+      return ['isAccountant' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isAuditor()) {
-      return ['isAuditor' => true, 'user_type' => strtolower($this->getType())];
+      return ['isAuditor' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isSuperAdmin()) {
-      return ['isSuperAdmin' => true, 'user_type' => strtolower($this->getType())];
+      return ['isSuperAdmin' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isSocialMediaRep()) {
-      return [
-        'isSocialMediaRep' => true, 'user_type' => strtolower($this->getType()),
-        'isOnlineSalesRep' => true, 'user_type' => strtolower($this->getType())
-      ];
+      return [ 'isSocialMediaRep' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType()), 'isOnlineSalesRep' => true ];
     } elseif ($this->isWalkInRep()) {
-      return ['isWalkInRep' => true, 'user_type' => strtolower($this->getType())];
+      return ['isWalkInRep' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isCallCenterRep()) {
-      return [
-        'isCallCenterRep' => true, 'user_type' => strtolower($this->getType()),
-        'isOnlineSalesRep' => true, 'user_type' => strtolower($this->getType())
-      ];
+      return ['isCallCenterRep' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType()), 'isOnlineSalesRep' => true ];
     } elseif ($this->isQualityControl()) {
-      return ['isQualityControl' => true, 'user_type' => strtolower($this->getType())];
+      return ['isQualityControl' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType())];
     } elseif ($this->isWebAdmin()) {
-      return ['isWebAdmin' => true, 'user_type' => strtolower($this->getType())];
+      return ['isWebAdmin' => true, 'office_branch' => $this->office_branch->city, 'user_type' => strtolower($this->getType())];
     }
   }
 

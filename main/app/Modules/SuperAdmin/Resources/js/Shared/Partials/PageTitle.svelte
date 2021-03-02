@@ -1,5 +1,5 @@
 <script>
-  export let title, appName;
+  export let title, appName, officeBranch;
 </script>
 
 <div class="rui-page-title">
@@ -7,7 +7,7 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href>{appName}</a>
+          <a href>{appName} - {officeBranch} branch </a>
         </li>
       </ol>
     </nav>
