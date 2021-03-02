@@ -3,20 +3,16 @@
 namespace App\Modules\SalesRep\Models;
 
 use App\User;
-use Throwable;
 use Inertia\Inertia;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Traits\IsAStaff;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
-use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 
 /**
  * App\Modules\SalesRep\Models\SalesRep
@@ -52,7 +48,13 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $product_sales_record
  * @property-read int|null $product_sales_record_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\SuperAdmin\Models\ResellerHistory[] $reseller_histories
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $onlineSalesRecords
+ * @property-read int|null $online_sales_records_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $walkInSalesRecords
+ * @property-read int|null $walk_in_sales_records_count
  * @property-read int|null $reseller_histories_count
+ * @property-read string $receipt_thumb_url
+ * @property-read string $avatar_thumb_url
  * @method static Builder|SalesRep callCenter()
  * @method static Builder|SalesRep newModelQuery()
  * @method static Builder|SalesRep newQuery()
@@ -76,12 +78,6 @@ use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
  * @method static Builder|SalesRep whereUpdatedAt($value)
  * @method static Builder|SalesRep whereVerifiedAt($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $onlineSalesRecords
- * @property-read int|null $online_sales_records_count
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductSaleRecord[] $walkInSalesRecords
- * @property-read int|null $walk_in_sales_records_count
- * @property-read string $receipt_thumb_url
- * @property-read string $avatar_thumb_url
  */
 class SalesRep extends User
 {
@@ -89,8 +85,9 @@ class SalesRep extends User
   use IsAStaff;
 
   protected $fillable = [
-    'role_id', 'full_name', 'email', 'password', 'phone', 'avatar', 'gender', 'address',
+    'full_name', 'email', 'password', 'phone', 'avatar', 'gender', 'address',
   ];
+
   protected $dates = ['dob'];
   const DASHBOARD_ROUTE_PREFIX = 'sales-reps';
 

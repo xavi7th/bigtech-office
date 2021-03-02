@@ -9,12 +9,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
 use App\Modules\SuperAdmin\Models\ActivityLog;
+use App\Modules\SuperAdmin\Models\OfficeBranch;
+use App\Modules\SuperAdmin\Transformers\StaffTransformer;
 
 /**
  * A trait to make a model commentable
  */
 trait IsAStaff
 {
+
+  public function office_branch()
+  {
+    return $this->belongsTo(OfficeBranch::class);
+  }
 
   static function findByEmail(string $email)
   {
@@ -47,10 +54,9 @@ trait IsAStaff
 
   public function getAllStaff(Request $request)
   {
-    $salesReps = self::all();
-
-    if ($request->isApi())  return response()->json($salesReps, 200);
-    return Inertia::render('SuperAdmin,ManageStaff/Manage' . Str::of(__CLASS__)->afterLast('\\')->plural(), compact('salesReps')); # e.g. ManageSalesReps
+    return Inertia::render('SuperAdmin,ManageStaff/Manage' . Str::of(__CLASS__)->afterLast('\\')->plural(), [
+      (string)Str::of(class_basename(self::class))->snake()->plural() => (new StaffTransformer)->collectionTransformer(self::all(), 'transformForSuperAdminViewSalesReps')
+    ]);
   }
 
   public function createStaff(Request $request)
