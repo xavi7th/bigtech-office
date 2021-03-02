@@ -10,7 +10,8 @@
     suppliers,
     storage_sizes,
     storage_types,
-    processor_speeds;
+    processor_speeds,
+    office_branches;
 
   let details = {
     identification_type: "imei"
@@ -160,6 +161,7 @@
               </select>
             </div>
           </div>
+
           <div class="col-6">
             <label for="processorSpeed">Processor Speed</label>
             <div class="input-group">
@@ -176,8 +178,24 @@
             </div>
           </div>
 
+          <div class="col-6">
+            <label for="officeBranch">Office Branch</label>
+            <div class="input-group">
+              <select
+                class="custom-select"
+                bind:value={details.office_branch_id}>
+                <option value={null}>Select</option>
+                {#each office_branches as office_branch}
+                  <option value={office_branch.id}>
+                    {office_branch.city}
+                  </option>
+                {/each}
+              </select>
+            </div>
+          </div>
+
           {#if details.identification_type === 'imei'}
-            <div class="col-6">
+            <div class="col-12">
               <label for="imeiNo">Imei No.</label>
               <input
                 type="text"
@@ -186,7 +204,7 @@
                 placeholder="Enter Imei No." />
             </div>
           {:else if details.identification_type === 'serial_no'}
-            <div class="col-6">
+            <div class="col-12">
               <label for="serialNo">Serial No.</label>
               <input
                 type="text"
@@ -195,7 +213,7 @@
                 placeholder="Enter Serial No." />
             </div>
           {:else if details.identification_type === 'model_no'}
-            <div class="col-6">
+            <div class="col-12">
               <label for="modelNo">Model No.</label>
               <input
                 type="text"
@@ -255,7 +273,7 @@
               </label>
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-12 col-md-6">
             <label for="costPrice">Cost Price</label>
             <input
               type="text"
@@ -263,7 +281,7 @@
               bind:value={details.cost_price}
               placeholder="Enter cost price" />
           </div>
-          <div class="col-6">
+          <div class="col-12 col-md-6">
             <label for="sellingPrice">Proposed Selling Price</label>
             <input
               type="text"

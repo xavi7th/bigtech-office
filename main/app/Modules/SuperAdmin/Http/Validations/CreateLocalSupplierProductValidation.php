@@ -32,6 +32,7 @@ class CreateLocalSupplierProductValidation extends FormRequest
       'product_supplier_id' => $this->isMethod('PUT') ? 'exists:product_suppliers,id' : 'required|exists:product_suppliers,id',
       'product_brand_id' => $this->isMethod('PUT') ? 'exists:product_brands,id' : 'required|exists:product_brands,id',
       'product_model_id' => $this->isMethod('PUT') ? 'exists:product_models,id' : 'required|exists:product_models,id',
+      'office_branch_id' => 'required|exists:office_branches,id',
       'imei' => $this->isMethod('PUT') ? ['alpha_num',  Rule::unique('products')->ignore($this->route('product')->imei)] : 'nullable|required_without_all:model_no,serial_no|alpha_num|unique:products,imei',
       'serial_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('products')->ignore($this->route('product')->serial_no)] : 'nullable|required_without_all:imei,model_no|alpha_dash|unique:products,serial_no',
       'model_no' => $this->isMethod('PUT') ? ['alpha_dash',  Rule::unique('products')->ignore($this->route('product')->model_no)] : 'nullable|required_without_all:imei,serial_no|alpha_dash|unique:products,model_no',
@@ -61,6 +62,8 @@ class CreateLocalSupplierProductValidation extends FormRequest
       'imei.required_without_all' => 'A product must have either an IMEI, a Serial Number or a Model Number',
       'serial_no.required_without_all' => 'A product must have either an IMEI, a Serial Number or a Model Number',
       'model_no.required_without_all' => 'A product must have either an IMEI, a Serial Number or a Model Number',
+      'office_branch_id.required' => 'Select the branch where this product is located',
+      'office_branch_id.exists' => 'Invalid office branch selected',
     ];
   }
 

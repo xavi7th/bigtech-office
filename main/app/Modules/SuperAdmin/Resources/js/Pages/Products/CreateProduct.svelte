@@ -11,7 +11,8 @@
     suppliers,
     storage_sizes,
     storage_types,
-    processor_speeds;
+    processor_speeds,
+    office_branches;
 
   let details = {
     identification_type: "imei"
@@ -41,7 +42,7 @@
     <div class="col-lg-8 col-xl-6">
       <form class="#" on:submit|preventDefault={createLocalProduct}>
         <div class="row vertical-gap sm-gap">
-          <div class="col-4">
+          <div class="col-6 col-md-4">
             <label for="productBatch">Product Batch</label>
             <div class="input-group">
               <select
@@ -54,7 +55,7 @@
               </select>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-6 col-md-4">
             <label for="productCategory">Product Category</label>
             <div class="input-group">
               <select
@@ -67,7 +68,7 @@
               </select>
             </div>
           </div>
-           <div class="col-4">
+           <div class="col-6 col-md-4">
             <label for="productBrand">Product Brand</label>
             <div class="input-group">
               <select
@@ -81,7 +82,7 @@
             </div>
           </div>
 
-          <div class="col-4">
+          <div class="col-6 col-md-4">
             <label for="productModel">Product Model</label>
             <div class="input-group">
               <select
@@ -95,7 +96,7 @@
             </div>
           </div>
 
-          <div class="col-4">
+          <div class="col-6 col-md-4">
             <label for="productColor">Product Color</label>
             <div class="input-group">
               <select
@@ -108,7 +109,7 @@
               </select>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-6 col-md-4">
             <label for="productGrade">Product Grade</label>
             <div class="input-group">
               <select
@@ -134,7 +135,7 @@
               </select>
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-6 col-md-3">
             <label for="storageSize">Storage Size</label>
             <div class="input-group">
               <select
@@ -150,7 +151,7 @@
             </div>
           </div>
 
-          <div class="col-6">
+          <div class="col-6 col-md-3">
             <label for="ramSize">RAM Size</label>
             <div class="input-group">
               <select class="custom-select" bind:value={details.ram_size_id}>
@@ -163,7 +164,7 @@
               </select>
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-6 col-md-4">
             <label for="storageType">Storage Type</label>
             <div class="input-group">
               <select
@@ -176,7 +177,8 @@
               </select>
             </div>
           </div>
-          <div class="col-6">
+
+          <div class="col-6 col-md-4">
             <label for="processorSpeed">Processor Speed</label>
             <div class="input-group">
               <select
@@ -192,8 +194,24 @@
             </div>
           </div>
 
+          <div class="col-6 col-md-4">
+            <label for="officeBranch">Office Branch</label>
+            <div class="input-group">
+              <select
+                class="custom-select"
+                bind:value={details.office_branch_id}>
+                <option value={null}>Select</option>
+                {#each office_branches as office_branch}
+                  <option value={office_branch.id}>
+                    {office_branch.city}
+                  </option>
+                {/each}
+              </select>
+            </div>
+          </div>
+
           {#if details.identification_type === 'imei'}
-            <div class="col-6">
+            <div class="col-12">
               <label for="imeiNo">Imei No.</label>
               <input
                 type="text"
@@ -202,7 +220,7 @@
                 placeholder="Enter Imei No." />
             </div>
           {:else if details.identification_type === 'serial_no'}
-            <div class="col-6">
+            <div class="col-12">
               <label for="serialNo">Serial No.</label>
               <input
                 type="text"
@@ -211,7 +229,7 @@
                 placeholder="Enter Serial No." />
             </div>
           {:else if details.identification_type === 'model_no'}
-            <div class="col-6">
+            <div class="col-12">
               <label for="modelNo">Model No.</label>
               <input
                 type="text"

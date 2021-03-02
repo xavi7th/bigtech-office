@@ -30,6 +30,7 @@ class CreateProductValidation extends FormRequest
         'ram_size_id' => 'required|exists:storage_sizes,id',
         'product_grade_id' => 'required|exists:product_grades,id',
         'product_supplier_id' => 'required|exists:product_suppliers,id',
+        'office_branch_id' => 'required|exists:office_branches,id',
         'product_brand_id' => 'required|exists:product_brands,id',
         'product_model_id' => 'required|exists:product_models,id',
         'imei' => 'required_without_all:serial_no,model_no|nullable|alpha_num|unique:products,imei,' . $this->imei . ',imei',
@@ -47,6 +48,7 @@ class CreateProductValidation extends FormRequest
         'ram_size_id' => 'nullable|exists:storage_sizes,id',
         'product_grade_id' => 'required|exists:product_grades,id',
         'product_supplier_id' => 'required|exists:product_suppliers,id',
+        'office_branch_id' => 'required|exists:office_branches,id',
         'product_brand_id' => 'required|exists:product_brands,id',
         'product_model_id' => 'required|exists:product_models,id',
         'imei' => 'required_without_all:model_no,serial_no|alpha_num|unique:products,imei',
@@ -77,6 +79,8 @@ class CreateProductValidation extends FormRequest
       'imei.required_without_all' => 'A product must have either an IMEI, a Serial Number or a Model Number',
       'serial_no.required_without_all' => 'A product must have either an IMEI, a Serial Number or a Model Number',
       'model_no.required_without_all' => 'A product must have either an IMEI, a Serial Number or a Model Number',
+      'office_branch_id.required' => 'Select the branch where this product is located',
+      'office_branch_id.exists' => 'Invalid office branch selected',
     ];
   }
 

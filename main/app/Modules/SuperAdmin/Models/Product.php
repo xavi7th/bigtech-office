@@ -623,6 +623,7 @@ class Product extends BaseModel
       'storage_sizes' => fn () => Cache::rememberForever('storage_sizes', fn () => (new StorageSizeTransformer)->collectionTransformer(StorageSize::all(), 'basic')),
       'storage_types' => fn () => Cache::rememberForever('storage_types', fn () => (new StorageTypeTransformer)->collectionTransformer(StorageType::all(), 'basic')),
       'processor_speeds' => fn () => Cache::rememberForever('processor_speeds', fn () => (new ProcessorSpeedTransformer)->collectionTransformer(ProcessorSpeed::all(), 'basic')),
+      'office_branches' => fn() => Cache::rememberForever('office_branches', fn () => OfficeBranch::all()),
     ]);
   }
 
@@ -632,7 +633,6 @@ class Product extends BaseModel
       $product = self::create(collect($request->validated())->merge([
         'stocked_by' => auth()->id(),
         'stocker_type' => get_class(auth()->user()),
-        'office_branch_id' => OfficeBranch::head_office_id(),
         'product_status_id' => ProductStatus::justArrivedId()
       ])->all());
 
@@ -692,6 +692,7 @@ class Product extends BaseModel
       'storage_sizes' => fn () => Cache::rememberForever('storage_sizes', fn () => (new StorageSizeTransformer)->collectionTransformer(StorageSize::all(), 'basic')),
       'storage_types' => fn () => Cache::rememberForever('storage_types', fn () => (new StorageTypeTransformer)->collectionTransformer(StorageType::all(), 'basic')),
       'processor_speeds' => fn () => Cache::rememberForever('processor_speeds', fn () => (new ProcessorSpeedTransformer)->collectionTransformer(ProcessorSpeed::all(), 'basic')),
+      'office_branches' => fn() => Cache::rememberForever('office_branches', fn () => OfficeBranch::all()),
     ]);
   }
 
