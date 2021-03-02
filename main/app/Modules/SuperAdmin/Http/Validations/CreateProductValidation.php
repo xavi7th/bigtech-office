@@ -36,6 +36,7 @@ class CreateProductValidation extends FormRequest
         'imei' => 'required_without_all:serial_no,model_no|nullable|alpha_num|unique:products,imei,' . $this->imei . ',imei',
         'serial_no' => 'required_without_all:imei,model_no|nullable|alpha_num|unique:products,imei,' . $this->serial_no . ',serial_no',
         'model_no' => 'required_without_all:imei,serial_no|nullable|alpha_num|unique:products,imei,' . $this->model_no . ',model_no',
+        'skip_qa' => 'boolean'
       ];
     } else {
       return [
@@ -54,6 +55,7 @@ class CreateProductValidation extends FormRequest
         'imei' => 'required_without_all:model_no,serial_no|alpha_num|unique:products,imei',
         'serial_no' => 'required_without_all:imei,model_no|alpha_dash|unique:products,serial_no',
         'model_no' => 'required_without_all:imei,serial_no|alpha_dash|unique:products,model_no',
+        'skip_qa' => 'boolean'
     ];
    }
   }

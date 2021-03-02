@@ -629,19 +629,29 @@ class Product extends BaseModel
 
   public function createProduct(CreateProductValidation $request)
   {
+    DB::beginTransaction();
+
     try {
       $product = self::create(collect($request->validated())->merge([
         'stocked_by' => auth()->id(),
         'stocker_type' => get_class(auth()->user()),
-        'product_status_id' => ProductStatus::justArrivedId()
+        'product_status_id' => $request->skip_qa ? ProductStatus::inStockId() : ProductStatus::justArrivedId()
       ])->all());
+
+      if ($request->skip_qa) {
+        $product->qa_tests()->sync($product->product_model->qa_tests);
+        $product->qa_tests()->update(['is_qa_certified' => true]);
+     }
+
+      DB::commit();
 
       if ($request->isApi()) return response()->json($product, 201);
       return back()->withFlash(['success'=>'Product created']);
     } catch (\Throwable $th) {
-      ErrLog::notifyAuditor($request->user(), $th, 'Product not created');
+      ErrLog::notifySuperAdminAndFail($request->user(), $th, 'Product not created');
       return response()->json(['err' => 'Product not created'], 500);
     }
+
   }
 
   public function showEditProductForm(Request $request, self $product)
@@ -698,10 +708,16 @@ class Product extends BaseModel
 
   public function createLocalSupplierProduct(CreateLocalSupplierProductValidation $request)
   {
+
     DB::beginTransaction();
     try {
 
       $product = self::create($request->validated());
+
+     if ($request->skip_qa) {
+        $product->qa_tests()->sync($product->product_model->qa_tests);
+        $product->qa_tests()->update(['is_qa_certified' => true]);
+     }
 
       /** create the local product price record */
       $product->localProductPrice()->create($request->validated());

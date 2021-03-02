@@ -289,7 +289,19 @@
               </label>
             </div>
           </div>
-          <div class="col-12">
+           <div class="col-12 col-md-5">
+            <div class="custom-control custom-switch">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="skip-qa"
+                bind:checked={details.skip_qa} />
+              <label class="custom-control-label" for="skip-qa">
+                Skip QA
+              </label>
+            </div>
+          </div>
+          <div class="col-12 col-md-7">
             <button class="btn btn-primary btn-long">
               <span class="text">Create Product</span>
               <span class="icon">

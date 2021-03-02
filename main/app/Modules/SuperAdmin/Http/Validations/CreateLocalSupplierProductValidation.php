@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\ProductBatch;
+use App\Modules\SuperAdmin\Models\ProductStatus;
 use Illuminate\Auth\Access\AuthorizationException;
 use App\Modules\PublicPages\Exceptions\AxiosValidationExceptionBuilder;
 
@@ -73,6 +74,7 @@ class CreateLocalSupplierProductValidation extends FormRequest
       'stocked_by' => auth()->id(),
       'stocker_type' => get_class(auth()->user()),
       'office_branch_id' => $this->office_branch_id ?? 1,
+      'product_status_id' => $this->skip_qa ? ProductStatus::inStockId() : ProductStatus::justArrivedId(),
       'product_batch_id' => $this->localSupplierId = ProductBatch::local_supplied_id(),
       'is_local' => true,
       'is_paid' => false
