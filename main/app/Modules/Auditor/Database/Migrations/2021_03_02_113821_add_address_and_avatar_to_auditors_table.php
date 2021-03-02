@@ -14,9 +14,9 @@ class AddAddressAndAvatarToAuditorsTable extends Migration
   public function up()
   {
     Schema::table('auditors', function (Blueprint $table) {
-      $table->string('phone')->after('gender');
-      $table->string('address')->after('phone');
-      $table->string('avatar')->after('address');
+      $table->string('phone')->nullable()->after('gender');
+      $table->string('address')->nullable()->after('phone');
+      $table->string('avatar')->nullable()->after('address');
     });
   }
 
@@ -30,6 +30,7 @@ class AddAddressAndAvatarToAuditorsTable extends Migration
     Schema::table('auditors', function (Blueprint $table) {
       $table->dropColumn('address');
       $table->dropColumn('avatar');
+      $table->dropColumn('phone');
     });
   }
 }
