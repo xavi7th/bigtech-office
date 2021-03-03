@@ -14,7 +14,7 @@
     });
 
     Inertia.post(
-      route("superadmin.miscellaneous.create_office_branch"),
+      route("superadmin.office_branches.create"),
       details,
       {
         preserveState: true,
@@ -33,7 +33,7 @@
     });
 
     Inertia.put(
-      route("superadmin.miscellaneous.edit_office_branch", details.id),
+      route("superadmin.office_branches.edit", details.id),
       details,
       {
         preserveState: true,
@@ -54,7 +54,7 @@
           confirmButtonText: "Yes, carry on!",
           preConfirm: () => {
           return Inertia.delete(
-            route("superadmin.miscellaneous.delete_office_branch", id),
+            route("superadmin.office_branches.delete", id),
             {
               preserveState: true,
               preserveScroll: true,
@@ -157,14 +157,14 @@
                     </button>
                   {/if}
                   <InertiaLink
-                    href={route(auth.user.user_type + '.miscellaneous.office_branches.view_products', officeBranch.id)}
-                    class="btn btn-brand btn-xs text-nowrap">
+                    href={route(auth.user.user_type + '.office_branches.view_products', officeBranch.id)}
+                    class="btn btn-primary btn-xs text-nowrap">
                     PRODUCTS ({officeBranch.products_count})
                   </InertiaLink>
                   <InertiaLink
-                    href={route(auth.user.user_type + '.miscellaneous.office_branches.view_products', officeBranch.id)}
-                    class="btn btn-brand btn-xs text-nowrap">
-                    SALES RECORDS ({officeBranch.sales_records_count})
+                    href={route(auth.user.user_type + '.office_branches.sales_records', officeBranch.id)}
+                    class="btn btn-secondary btn-xs text-nowrap">
+                    SALES RECORDS ({officeBranch.product_sales_records_count}/{officeBranch.product_sales_records_count})
                   </InertiaLink>
                 </td>
               </tr>

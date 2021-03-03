@@ -455,7 +455,7 @@ class Product extends BaseModel
       Route::get('local-supplier-products', [self::class, 'getLocalProducts'])->name('pending_local_products')->defaults('ex', __e('ss,a,ac', 'box'))->middleware('auth:super_admin,auditor,accountant');
       Route::get('search', [self::class, 'findProduct'])->name('find_product')->defaults('ex', __e('ss,ac,a', null, true))->middleware('auth:super_admin,auditor,accountant');
       Route::get('stock-list-aggregate', [self::class, 'viewStockList'])->name('view_stock')->defaults('ex', __e('ss,ac,a', 'archive'))->middleware('auth:super_admin,auditor,accountant');
-      Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac,a', 'archive'))->middleware('auth:super_adminauditor,,accountant');
+      Route::get('daily-records', [self::class, 'showDailyRecordsPage'])->name('daily_records')->defaults('ex', __e('ss,ac,a', 'archive'))->middleware('auth:super_admin,auditor,,accountant');
       Route::get('resellers', [self::class, 'getProductsWithResellers'])->name('products_with_resellers')->defaults('ex', __e('ss,a,ac', 'archive'))->middleware('auth:super_admin,auditor,accountant');
       Route::get('/{product:product_uuid}', [self::class, 'getProductDetails'])->name('view_product_details')->defaults('ex', __e('ss,a,ac,w', 'archive', true))->middleware('auth:super_admin,auditor,web_admin,accountant');
       Route::put('{product}/location', [self::class, 'updateProductLocation'])->name('edit_product_location')->defaults('ex', __e('ss,a', null, true))->middleware('auth:super_admin,auditor');

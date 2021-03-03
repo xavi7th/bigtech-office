@@ -134,27 +134,27 @@ class OfficeBranch extends BaseModel
 
   public static function superAdminRoutes()
   {
-    Route::name('miscellaneous.')->prefix('office-branches')->group(function () {
-      Route::get('', [self::class, 'getOfficeBranches'])->name('office_branches')->defaults('ex', __e('ss,a', 'trello', false));
-      Route::post('create', [self::class, 'createOfficeBranch'])->name('create_office_branch');
-      Route::put('{officeBranch}/edit', [self::class, 'editOfficeBranch'])->name('edit_office_branch');
-      Route::get('{officeBranch}/products', [self::class, 'getProductsInBranch'])->name('office_branches.view_products')->defaults('ex', __e('ss,a', 'trello', true));
-      Route::get('{officeBranch}/product-expenses', [self::class, 'getBranchProductExpenses'])->name('office_branches.prod_expenses')->defaults('ex', __e('ss,a', 'trello', true));
-      Route::get('{officeBranch}/product-histories', [self::class, 'getBranchProductHistories'])->name('office_branches.prod_histories')->defaults('ex', __e('ss,a', 'trello', true));
-      Route::get('{officeBranch}/reseller-histories', [self::class, 'getBranchResellerHistories'])->name('office_branches.res_histories')->defaults('ex', __e('ss,a', 'trello', true));
-      Route::get('{officeBranch}/products-with-resellers', [self::class, 'getBranchProductWithResellers'])->name('office_branches.res_prod')->defaults('ex', __e('ss,a', 'trello', true));
-      Route::get('{officeBranch}/sales-records', [self::class, 'getBranchSalesRecords'])->name('office_branches.sales_records')->defaults('ex', __e('ss,a', 'trello', true));
-      Route::get('{officeBranch}/staff', [self::class, 'getStaffFromBranch'])->name('office_branches.view_staff')->defaults('ex', __e('ss,a', 'trello', true));
-      Route::get('{officeBranch}/staff/departments', [self::class, 'getStaffFromBranchByDept'])->name('office_branches.staff_by_depts')->defaults('ex', __e('ss,a', 'trello', true));
-      Route::get('{officeBranch}/staff/activities', [self::class, 'getStaffActivitiesFromBranch'])->name('office_branches.staff_acts')->defaults('ex', __e('ss,a', 'trello', true));
-      Route::get('{officeBranch}/sales-records', [self::class, 'getBranchSalesRecords'])->name('office_branches.staff_acts')->defaults('ex', __e('ss,a', 'trello', true));
+    Route::name('office_branches.')->prefix('office-branches')->group(function () {
+      Route::get('', [self::class, 'getOfficeBranches'])->name('branches')->defaults('ex', __e('ss,a', 'trello', false));
+      Route::post('create', [self::class, 'createOfficeBranch'])->name('create');
+      Route::put('{officeBranch}/edit', [self::class, 'editOfficeBranch'])->name('edit');
+      Route::get('{officeBranch}/products', [self::class, 'getProductsInBranch'])->name('view_products')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/product-expenses', [self::class, 'getBranchProductExpenses'])->name('prod_expenses')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/product-histories', [self::class, 'getBranchProductHistories'])->name('prod_histories')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/reseller-histories', [self::class, 'getBranchResellerHistories'])->name('res_histories')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/products-with-resellers', [self::class, 'getBranchProductWithResellers'])->name('res_prod')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/sales-records', [self::class, 'getBranchSalesRecords'])->name('sales_records')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/staff', [self::class, 'getStaffFromBranch'])->name('view_staff')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/staff/departments', [self::class, 'getStaffFromBranchByDept'])->name('staff_by_depts')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/staff/activities', [self::class, 'getStaffActivitiesFromBranch'])->name('staff_acts')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/sales-records', [self::class, 'getBranchSalesRecords'])->name('sales_records')->defaults('ex', __e('ss,a', 'trello', true));
     });
   }
 
   public function getOfficeBranches(Request $request)
   {
     $officeBranches = Cache::rememberForever('officeBranches', function () {
-      return (new OfficeBranchTransformer)->collectionTransformer(self::withCount('products', 'product_sales_records')->get(), 'basic');
+      return (new OfficeBranchTransformer)->collectionTransformer(self::withCount(['products', 'product_sales_records', 'product_sales_records as today_sales_count' => fn ($query) => $query->today()])->get(), 'basic');
     });
 
     if ($request->isApi())  return response()->json($officeBranches, 200);
@@ -250,11 +250,12 @@ class OfficeBranch extends BaseModel
     return response()->json((new OfficeBranchTransformer)->transformWithResellerAndProducts($results), 200);
   }
 
-  public function getBranchSalesRecords(self $office_branch)
+  public function getBranchSalesRecords(Request $request, self $officeBranch)
   {
-    $results = $office_branch->load(['sales_records' => function ($query) {
+    $branchSalesRecords = $officeBranch->load(['sales_records' => function ($query) {
       $query->with(
-        'product:id,product_model_id,imei,serial_no,model_no',
+        'product:id,product_model_id,imei,serial_no,model_no,product_supplier_id,product_uuid',
+        'product.product_supplier',
         'product.product_price',
         'product.product_model:id,name',
         'sales_rep:id,full_name,email',
@@ -264,7 +265,11 @@ class OfficeBranch extends BaseModel
         'bank_account_payments'
       );
     }]);
-    return response()->json((new OfficeBranchTransformer)->transformWithSalesRecords($results), 200);
+
+    if ($request->isApi()) return response()->json((new OfficeBranchTransformer)->transformWithSalesRecords($branchSalesRecords), 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/BranchSalesRecords', [
+      'branchSalesRecords' => (new OfficeBranchTransformer)->transformWithSalesRecords($branchSalesRecords)
+    ]);
   }
 
   public function getStaffActivitiesFromBranch(self $office_branch)

@@ -25,8 +25,9 @@ class OfficeBranchTransformer
     return [
       'id' => (int)$office_branch->id,
       'city' => (string)$office_branch->city,
-      'country' => (string)$office_branch->country,
-      'products_count' => (string)$office_branch->products_count,
+      'products_count' => (int)$office_branch->products_count,
+      'product_sales_records_count' => (int)$office_branch->product_sales_records_count,
+      'today_sales_count' => (int)$office_branch->today_sales_count,
     ];
   }
 
@@ -77,7 +78,8 @@ class OfficeBranchTransformer
     return [
       'branch' => (string)$office_branch->city,
       'total_sales' => $office_branch->sales_records->count(),
-      'total_confirmed_sales' => $office_branch->sales_records->where('is_confirmed', true)->count(),
+      'total_confirmed_sales' => $office_branch->sales_records->whereNotNull('sale_confirmed_by')->count(),
+      'total_confirmed_sales_amoumt' => $office_branch->sales_records->whereNotNull('sale_confirmed_by')->sum('selling_price'),
       'total_selling_price' => $office_branch->sales_records->sum('selling_price'),
       'total_bank_payments' => $office_branch->sales_records->sum('total_bank_payments_amount'),
       'total_swap_deals' => $office_branch->sales_records->where('is_swap_transaction', true)->count(),
