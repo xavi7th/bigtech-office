@@ -1,8 +1,8 @@
 <script>
   import Layout from "@auditor-shared/AuditorLayout";
-  import AdminSwiperStatistics from '@superadmin-shared/partials/AdminSwiperStatistics.svelte';
+  import AdminSwiperStatistics from '@superadmin-shared/Partials/AdminSwiperStatistics.svelte';
   import DailyExpenses from '@superadmin-shared/Partials/DailyExpenses.svelte';
-  import DailyPaymentBreakdown from '@superadmin-shared/partials/DailyPaymentBreakdown.svelte';
+  import DailyPaymentBreakdown from '@superadmin-shared/Partials/DailyPaymentBreakdown.svelte';
   import RecentSoldItems from '@superadmin-shared/Partials/RecentSoldItems.svelte';
 
   export let statistics = {};

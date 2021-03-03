@@ -208,7 +208,7 @@ new App({
 			let [section, module] = _.split(str, ',');
 
 			return import(
-					/* webpackChunkName: "js/[request]" */
+					/* webpackChunkName: "js/[index]" */
 					/* webpackPrefetch: true */
 					`../../../${section}/Resources/js/Pages/${module}.svelte`)
 		},

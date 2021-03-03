@@ -1,8 +1,7 @@
 <script>
-  import { toCurrency } from '@public-shared/helpers';
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
-  import AdminSwiperStatistics from "@superadmin-shared/partials/AdminSwiperStatistics.svelte";
-  import DailyPaymentBreakdown from "@superadmin-shared/partials/DailyPaymentBreakdown.svelte";
+  import AdminSwiperStatistics from "@superadmin-shared/Partials/AdminSwiperStatistics.svelte";
+  import DailyPaymentBreakdown from "@superadmin-shared/Partials/DailyPaymentBreakdown.svelte";
   import RecentSoldItems from '@superadmin-shared/Partials/RecentSoldItems.svelte';
   import { onMount,  } from 'svelte';
   import DailyExpenses from '@superadmin-shared/Partials/DailyExpenses.svelte';
@@ -46,7 +45,6 @@
 </style>
 
 <Layout title="Super Admin Dashboard">
-  <!-- svelte-ignore missing-declaration -->
   <AdminSwiperStatistics  {statistics} />
 
   <div class="row vertical-gap" id="breakdown-section">

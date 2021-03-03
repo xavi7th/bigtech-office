@@ -1,5 +1,4 @@
 <script>
-  import { InertiaLink, page } from "@inertiajs/inertia-svelte";
   import { toCurrency } from '@public-shared/helpers';
 
   export let statistics;
