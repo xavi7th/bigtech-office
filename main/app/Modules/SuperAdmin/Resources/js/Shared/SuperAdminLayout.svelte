@@ -8,19 +8,23 @@
   import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
   import PageTitle from "@superadmin-shared/Partials/PageTitle";
   import Footer from "@superadmin-shared/Partials/Footer";
+  import { Inertia } from '@inertiajs/inertia';
 
   $: ({ app, routes, auth } = $page.props);
 
   let isMounted = false;
   export let title;
 
-  onMount(async () => {
+
+  onMount(() => {
+    setTimeout(() => {
+      jQuery('#page-loader').fadeOut()
+    }, 1000);
     isMounted = true;
   });
 
 </script>
 
-<!-- svelte-ignore missing-declaration -->
 <div
   data-spy="scroll"
   data-target=".rui-page-sidebar"

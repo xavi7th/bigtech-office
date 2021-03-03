@@ -101,6 +101,12 @@ InertiaProgress.init({
   showSpinner: true,
 })
 
+Inertia.on('start', (event) => {
+	console.log(event);
+	jQuery('#page-loader')
+		.fadeIn()
+})
+
 Inertia.on('progress', (event) => {
   console.log(event);
 })
@@ -155,6 +161,8 @@ Inertia.on('exception', (event) => {
 
 Inertia.on('finish', (e) => {
   // console.log(e);
+  // jQuery('#page-loader')
+  // 	.fadeOut()
 })
 
 /**
