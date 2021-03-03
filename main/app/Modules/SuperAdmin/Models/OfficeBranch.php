@@ -143,6 +143,7 @@ class OfficeBranch extends BaseModel
       Route::get('{officeBranch}/staff', [self::class, 'getStaffFromBranch'])->name('office_branches.view_staff')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/staff/departments', [self::class, 'getStaffFromBranchByDept'])->name('office_branches.staff_by_depts')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/staff/activities', [self::class, 'getStaffActivitiesFromBranch'])->name('office_branches.staff_acts')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/sales-records', [self::class, 'getBranchSalesRecords'])->name('office_branches.staff_acts')->defaults('ex', __e('ss,a', 'trello', true));
     });
   }
 

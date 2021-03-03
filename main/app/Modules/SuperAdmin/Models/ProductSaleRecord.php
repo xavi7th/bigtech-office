@@ -504,6 +504,7 @@ class ProductSaleRecord extends BaseModel
     static::creating(function ($productSaleRecord) {
       if (!$productSaleRecord->sales_rep_type) {
         $productSaleRecord->sales_rep_type = get_class(request()->user());
+        $productSaleRecord->office_branch_id = request()->user()->office_branch_id;
       }
     });
   }
