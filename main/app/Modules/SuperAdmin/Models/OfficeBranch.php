@@ -2,13 +2,13 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
-use Cache;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Modules\Auditor\Models\Auditor;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use App\Modules\Auditor\Models\Auditor;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
@@ -19,7 +19,6 @@ use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
-use App\Modules\SuperAdmin\Transformers\AdminUserTransformer;
 use App\Modules\SuperAdmin\Transformers\OfficeBranchTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 
@@ -72,6 +71,11 @@ class OfficeBranch extends BaseModel
   public function products()
   {
     return $this->hasMany(Product::class);
+  }
+
+  public function product_sales_records()
+  {
+    return $this->hasMany(ProductSaleRecord::class);
   }
 
   // public function sales_reps()
@@ -150,7 +154,7 @@ class OfficeBranch extends BaseModel
   public function getOfficeBranches(Request $request)
   {
     $officeBranches = Cache::rememberForever('officeBranches', function () {
-      return (new OfficeBranchTransformer)->collectionTransformer(self::withCount('products')->get(), 'basic');
+      return (new OfficeBranchTransformer)->collectionTransformer(self::withCount('products', 'product_sales_records')->get(), 'basic');
     });
 
     if ($request->isApi())  return response()->json($officeBranches, 200);
@@ -208,12 +212,11 @@ class OfficeBranch extends BaseModel
 
   public function getProductsInBranch(Request $request, self $officeBranch)
   {
-    // Cache::forget('officeBranchProducts');
     $officeBranch = Cache::rememberForever($officeBranch->city . 'officeBranchProducts', function () use ($officeBranch) {
-      return (new OfficeBranchTransformer)->transformWithProducts($officeBranch->load('products'));
+      return (new OfficeBranchTransformer)->transformWithProducts($officeBranch->load(['products' => fn($query) => $query->inStock(), 'products.product_model', 'products.product_color', 'products.storage_size', 'products.product_status', 'products.product_supplier', 'products.product_expenses_amount', 'products.product_price']));
     });
     $onlineReps = Cache::rememberForever('onlineReps', function () {
-      return (new SalesRepTransformer)->collectionTransformer(SalesRep::socialMedia()->get(), 'transformBasic');
+      return (new SalesRepTransformer)->collectionTransformer(SalesRep::onlineReps()->get(), 'transformBasic');
     });
 
     $salesChannel = Cache::rememberForever('salesChannel', function () {

@@ -44,12 +44,11 @@ class ProductSaleRecordEventSubscriber implements ShouldQueue
 
   static function onProductSaleRecordSaved(ProductSaleRecordSaved $event)
   {
-    // dd('heretr');
+    Cache::forget('officeBranches');
   }
 
   static function onProductSaleRecordConfirmed(ProductSaleRecordConfirmed $event)
   {
-    dd($event);
     Cache::forget('bank_payments');
 
     ActivityLog::notifySuperAdmins(auth()->user()->email . ' confirmed the sale of product with ' . $$event->product_sale_record->product->primary_identifier() . '.');

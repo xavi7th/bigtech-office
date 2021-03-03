@@ -49,6 +49,7 @@ class ProductEventSubscriber implements ShouldQueue
   {
     Cache::forget($event->product->office_branch->city . 'officeBranchProducts');
     Cache::forget('products');
+    Cache::forget('officeBranches');
     Cache::forget('currentStock');
     Cache::forget('webAdminProducts');
     Cache::forget('accountantProducts');

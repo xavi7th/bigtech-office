@@ -172,6 +172,12 @@ class SalesRep extends User
   }
 
 
+  public function scopeOnlineReps($query)
+  {
+    return $query->socialMedia()->orWhere->walkIn();
+  }
+
+
   public function scopeSocialMedia($query)
   {
     return $query->where('unit', 'social-media');
