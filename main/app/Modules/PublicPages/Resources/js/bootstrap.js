@@ -151,18 +151,20 @@ Inertia.on('invalid', (event) => {
     text: event.detail.response.statusText,
     icon:'error'
   })
+  jQuery('#page-loader')
+  	.fadeOut()
 })
 
 Inertia.on('exception', (event) => {
   console.log(event);
   console.log(`An unexpected error occurred during an Inertia visit.`)
   console.log(event.detail.error)
+  jQuery('#page-loader')
+  	.fadeOut()
 })
 
 Inertia.on('finish', (e) => {
   // console.log(e);
-  // jQuery('#page-loader')
-  // 	.fadeOut()
 })
 
 /**
