@@ -320,10 +320,10 @@ class SwapDeal extends BaseModel
       $swapDeals = Cache::rememberForever('qualityControlsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } elseif ($request->user()->isWebAdmin()) {
       $swapDeals = Cache::rememberForever('webAdminsSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->with('swapped_with', 'product_status', 'app_user', 'dispatch_request')->get(), 'basicDispatch'));
-    } elseif ($request->user()->isAccountant() || $request->user()->isSuperAdmin()) {
-      $swapDeals = Cache::rememberForever('accountantSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->orWhere->untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
-    } elseif ($request->user()->isAuditor()) {
-      $swapDeals = Cache::rememberForever('auditorSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->orWhere->untested()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
+    } elseif ($request->user()->isAccountant()) {
+      $swapDeals = Cache::rememberForever('accountantSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->justArrived()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
+    } elseif ($request->user()->isAuditor() || $request->user()->isSuperAdmin()) {
+      $swapDeals = Cache::rememberForever('auditorSwapDeals', fn () => (new SwapDealTransformer)->collectionTransformer(self::inStock()->orWhere->outForDelivery()->orWhere->untested()->orWhere->justArrived()->with('swapped_with', 'product_status', 'app_user')->get(), 'basic'));
     } else {
       $swapDeals = collect([]);
     }
@@ -682,6 +682,11 @@ class SwapDeal extends BaseModel
 
     if ($request->isApi()) return response()->json([], 204);
     return back()->withFlash(['success'=>'Status updated']);
+  }
+
+  public function scopeJustArrived($query)
+  {
+    return $query->where('product_status_id', ProductStatus::justArrivedId());
   }
 
   public function scopeUntested($query)
