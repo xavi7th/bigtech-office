@@ -25,6 +25,7 @@
         onSuccess: () => {
           resellerToGiveProduct = null;
           productToGiveReseller = null;
+          jQuery('#giveProductToReseller').modal('hide')
         }
       }
     );
