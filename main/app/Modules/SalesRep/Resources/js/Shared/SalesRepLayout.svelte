@@ -17,8 +17,6 @@
     isMounted = true;
   });
 
-  console.log(auth.user.office_branch);
-
 </script>
 
 <!-- svelte-ignore missing-declaration -->
