@@ -20,7 +20,7 @@ class ProductSuppliersTableSeeder extends Seeder
     \DB::table('product_suppliers')->insert(array(
       0 =>
       array(
-        'name' => 'WeSell Cellular',
+        'name' => 'SupplierX',
         'is_local' => 0,
         'created_at' => '2020-03-20 13:01:41',
         'updated_at' => '2020-03-20 13:03:16',
@@ -28,7 +28,7 @@ class ProductSuppliersTableSeeder extends Seeder
       ),
       1 =>
       array(
-        'name' => 'Ontronics',
+        'name' => 'Supplier A',
         'is_local' => 0,
         'created_at' => '2020-03-20 13:01:48',
         'updated_at' => '2020-03-20 13:01:48',

@@ -22,8 +22,6 @@ class WebAdminDatabaseSeeder extends Seeder
       'email' => 'webadmins@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
       'password' => 'web-admins',
     ]);
-    factory(WebAdmin::class, 5)->create();
-
-    // $this->call("OthersTableSeeder");
+    factory(WebAdmin::class, 1)->create();
   }
 }

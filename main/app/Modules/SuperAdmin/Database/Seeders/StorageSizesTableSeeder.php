@@ -90,7 +90,7 @@ class StorageSizesTableSeeder extends Seeder
       ),
       10 =>
       array(
-        'size' => '12',
+        'size' => 'skip',
         'created_at' => '2020-03-21 08:18:32',
         'updated_at' => '2020-03-21 08:18:32',
         'deleted_at' => NULL,

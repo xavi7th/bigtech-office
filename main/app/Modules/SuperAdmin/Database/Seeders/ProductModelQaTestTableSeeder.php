@@ -13,8 +13,6 @@ class ProductModelQaTestTableSeeder extends Seeder
    */
   public function run()
   {
-
-
     \DB::table('product_model_qa_test')->delete();
 
     \DB::table('product_model_qa_test')->insert(array(

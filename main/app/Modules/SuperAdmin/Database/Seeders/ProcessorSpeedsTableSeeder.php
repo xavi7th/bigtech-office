@@ -84,7 +84,7 @@ class ProcessorSpeedsTableSeeder extends Seeder
       ),
       9 =>
       array(
-        'speed' => 'Core i5 9th gen',
+        'speed' => 'skip',
         'created_at' => '2020-03-21 12:15:56',
         'updated_at' => '2020-03-21 12:15:56',
         'deleted_at' => NULL,

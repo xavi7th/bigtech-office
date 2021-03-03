@@ -15,7 +15,7 @@ class CreateSalesChannelsTable extends Migration
 	{
 		Schema::create('sales_channels', function (Blueprint $table) {
 			$table->bigIncrements('id');
-			$table->string('channel_name');
+      $table->string('channel_name')->unique();
 
 			$table->timestamps();
 			$table->softDeletes();

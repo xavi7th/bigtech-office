@@ -7,7 +7,7 @@ use App\Modules\Accountant\Models\Accountant;
 
 $factory->define(Accountant::class, function (Faker $faker) {
   return [
-    'full_name' => $faker->name,
+    'full_name' => $faker->randomElement(['Ola', 'John', 'Sammy', 'Eddie']),
     'email' => $faker->email,
     'password' => 'accountants',
     'is_active' =>true,

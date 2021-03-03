@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(CompanyBankAccount::class, function (Faker $faker) {
   return [
-    'bank' => $faker->company,
+    'bank' => $faker->randomElement(['UBA', 'GTB', 'Zenith', 'Access', 'BankPHP', 'Sterling', 'FCMB']),
     'account_name' => $faker->name,
     'account_number' => $faker->bankAccountNumber,
     'account_type' => $faker->companySuffix,

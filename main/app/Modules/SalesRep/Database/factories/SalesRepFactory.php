@@ -12,3 +12,23 @@ $factory->define(SalesRep::class, function (Faker $faker) {
     'is_active' =>true
   ];
 });
+
+$factory->state(SalesRep::class, 'socialMedia', [
+  'unit' => 'social-media',
+]);
+
+$factory->state(SalesRep::class, 'walkIn', [
+  'unit' => 'walk-in',
+]);
+
+$factory->state(SalesRep::class, 'callCenter', [
+  'unit' => 'call-center',
+]);
+
+$factory->state(SalesRep::class, 'inactive', [
+  'is_active' => false,
+]);
+
+$factory->state(SalesRep::class, 'verified', [
+  'verified_at' => now()->subDays(3),
+]);

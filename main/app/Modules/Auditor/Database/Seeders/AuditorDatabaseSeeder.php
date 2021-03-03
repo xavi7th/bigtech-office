@@ -26,9 +26,6 @@ class AuditorDatabaseSeeder extends Seeder
       'password' => 'auditor@bigtech',
     ]);
 
-
-    factory(Auditor::class, 5)->create();
-
-		// $this->call("OthersTableSeeder");
+    factory(Auditor::class, 1)->create();
 	}
 }

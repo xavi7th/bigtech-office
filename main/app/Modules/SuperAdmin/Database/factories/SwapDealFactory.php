@@ -11,7 +11,7 @@ $factory->define(SwapDeal::class, function (Faker $faker) {
     'owner_details' => $faker->name,
     'id_url' => $faker->imageUrl(),
     'receipt_url' => $faker->imageUrl(),
-    'imei' => $faker->bankAccountNumber,
+    'imei' => $faker->unique()->bankAccountNumber,
     'swap_value' => $faker->randomNumber(5),
     'selling_price' => $faker->randomNumber(6),
   ];

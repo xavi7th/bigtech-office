@@ -46,9 +46,12 @@ class SuperAdminDatabaseSeeder extends Seeder
       'email' => 'biggie@' . strtolower(str_replace(" ", "", config('app.name'))) . '.website',
       'password' => 'theboss',
     ]);
-    factory(SuperAdmin::class, 3)->create();
+    factory(SuperAdmin::class, 1)->create();
 
-    factory(OtherExpense::class, 50)->create();
+    factory(OtherExpense::class, 1)->create();
+    $this->call(ProductStatusesTableSeeder::class);
+    $this->call(QaTestsTableSeeder::class);
+    $this->call(SalesChannelsTableSeeder::class);
     $this->call(ProductBatchesTableSeeder::class);
     $this->call(ProductBrandsTableSeeder::class);
     $this->call(ProductCategoriesTableSeeder::class);
@@ -60,18 +63,13 @@ class SuperAdminDatabaseSeeder extends Seeder
     $this->call(StorageSizesTableSeeder::class);
     $this->call(StorageTypesTableSeeder::class);
     $this->call(ProcessorSpeedsTableSeeder::class);
-    $this->call(ProductPricesTableSeeder::class);
     $this->call(ProductDescriptionSummariesTableSeeder::class);
-    $this->call(ProductStatusesTableSeeder::class);
     $this->call(ProductsTableSeeder::class);
     $this->call(UserCommentsTableSeeder::class);
-    $this->call(QaTestsTableSeeder::class);
     $this->call(ProductModelQaTestTableSeeder::class);
     $this->call(ProductQaTestResultsTableSeeder::class);
     $this->call(ProductModelImagesTableSeeder::class);
     $this->call(ProductExpensesTableSeeder::class);
-    $this->call(SalesChannelsTableSeeder::class);
-    $this->call(ProductSaleRecordsTableSeeder::class);
-    $this->call(CompanyBankAccountsTableSeeder::class);
+    // $this->call(ProductSaleRecordsTableSeeder::class);
   }
 }

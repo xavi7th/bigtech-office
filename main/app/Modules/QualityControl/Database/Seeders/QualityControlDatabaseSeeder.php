@@ -16,11 +16,11 @@ class QualityControlDatabaseSeeder extends Seeder
   public function run()
   {
     Model::unguard();
-    QualityControl::create([
-      'full_name' => 'SysDef Quality Control',
-      'email' => 'qualitycontrol@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
-      'password' => 'quality-controls',
-    ]);
-    factory(QualityControl::class, 10)->create();
+    // QualityControl::create([
+    //   'full_name' => 'SysDef Quality Control',
+    //   'email' => 'qualitycontrol@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
+    //   'password' => 'quality-controls',
+    // ]);
+    // factory(QualityControl::class, 1)->create();
   }
 }

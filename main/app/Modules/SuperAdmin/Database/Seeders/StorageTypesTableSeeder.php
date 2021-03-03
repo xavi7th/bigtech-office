@@ -34,7 +34,7 @@ class StorageTypesTableSeeder extends Seeder
       ),
       2 =>
       array(
-        'type' => 'NVMe',
+        'type' => 'skip',
         'created_at' => '2020-03-20 12:51:11',
         'updated_at' => '2020-03-20 12:51:11',
         'deleted_at' => NULL,
