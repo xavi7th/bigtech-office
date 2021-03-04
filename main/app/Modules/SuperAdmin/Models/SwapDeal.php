@@ -40,7 +40,7 @@ class SwapDeal extends BaseModel
 
   protected $fillable = [
     'description', 'owner_details', 'id_url', 'receipt_url', 'imei', 'serial_no', 'model_no',
-    'swap_value', 'swapped_with_id', 'swapped_with_type', 'product_status_id', 'app_user_id'
+    'swap_value', 'swapped_with_id', 'swapped_with_type', 'product_status_id', 'app_user_id', 'selling_price'
   ];
 
   protected $apennds = ['id_thumb_url', 'receipt_thumb_url'];
@@ -252,6 +252,7 @@ class SwapDeal extends BaseModel
         'serial_no' => $request->serial_no ?? null,
         'model_no' => $request->model_no ?? null,
         'swap_value' => $request->swap_value,
+        'selling_price' => $request->selling_price,
         'swapped_with_id' => $request->swapped_with_id ?? null,
         'swapped_with_type' => $request->swapped_with_type ?? null,
         'app_user_id' => $request->app_user_id ?? null,

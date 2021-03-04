@@ -158,6 +158,18 @@
                                 placeholder="The amount the device was valued for" />
                         </div>
                     </div>
+                     <div class="col-12">
+                        <label for="sellingPrice">Selling Price</label>
+                        <div class="input-group">
+                            <input
+                              type="number"
+                                name="sellingPrice"
+                                id="sellingPrice"
+                                bind:value="{details.selling_price}"
+                                class="form-control"
+                                placeholder="The amount we want to sell the device for" />
+                        </div>
+                    </div>
                     <div class="col-12">
                         <button class="btn btn-primary btn-long">
                             <span class="text">Create Swap Deal</span>
