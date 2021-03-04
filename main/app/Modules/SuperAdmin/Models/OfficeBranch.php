@@ -3,6 +3,7 @@
 namespace App\Modules\SuperAdmin\Models;
 
 use App\BaseModel;
+use App\Modules\Accountant\Models\Accountant;
 use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
 use App\Modules\SuperAdmin\Transformers\OfficeBranchTransformer;
+use App\Modules\SuperAdmin\Transformers\OtherExpenseTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 
 /**
@@ -98,6 +100,13 @@ class OfficeBranch extends BaseModel
     return $this->hasManyThrough(ProductExpense::class, Product::class);
   }
 
+
+  public function other_expenses()
+  {
+    return $this->hasManyThrough(OtherExpense::class, Accountant::class, null, 'recorder_id')
+    ->where('recorder_type', Accountant::class);
+  }
+
   public function product_histories()
   {
     return $this->hasManyThrough(ProductHistory::class, Product::class);
@@ -142,6 +151,7 @@ class OfficeBranch extends BaseModel
       Route::post('create', [self::class, 'createOfficeBranch'])->name('create');
       Route::put('{officeBranch}/edit', [self::class, 'editOfficeBranch'])->name('edit');
       Route::get('{officeBranch}/product-expenses', [self::class, 'getBranchProductExpenses'])->name('prod_expenses')->defaults('ex', __e('ss,a', 'trello', true));
+      Route::get('{officeBranch}/other-expenses', [self::class, 'getBranchOtherExpenses'])->name('other_expenses')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/product-histories', [self::class, 'getBranchProductHistories'])->name('prod_histories')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/reseller-histories', [self::class, 'getBranchResellerHistories'])->name('res_histories')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/products-with-resellers', [self::class, 'getBranchProductWithResellers'])->name('res_prod')->defaults('ex', __e('ss,a', 'trello', true));
@@ -241,7 +251,6 @@ class OfficeBranch extends BaseModel
 
   public function getBranchProductExpenses(self $officeBranch)
   {
-    // return (new OfficeBranchTransformer)->transformWithProductExpenses($officeBranch->load('product_expenses.product'));
     // return response()->json((new OfficeBranchTransformer)->transformWithProductExpenses($officeBranch->load('product_expenses')), 200);
     return Inertia::render('SuperAdmin,Miscellaneous/BranchDailyProductExpenses', [
       'branchWithExpenses' => (new OfficeBranchTransformer)
@@ -255,6 +264,14 @@ class OfficeBranch extends BaseModel
             'product_expenses.product.product_model',
             'product_expenses.product.product_expenses_amount',
           ))
+    ]);
+  }
+
+  public function getBranchOtherExpenses(self $officeBranch)
+  {
+    return Inertia::render('SuperAdmin,Miscellaneous/BranchDailyOtherExpenses', [
+      'branchWithExpenses' => (new OfficeBranchTransformer)
+        ->transformWithOtherExpenses($officeBranch->load('other_expenses.recorder'))
     ]);
   }
 

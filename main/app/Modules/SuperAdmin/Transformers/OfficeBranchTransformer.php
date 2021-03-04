@@ -40,6 +40,14 @@ class OfficeBranchTransformer
     ];
   }
 
+  public function transformWithOtherExpenses(OfficeBranch $office_branch)
+  {
+    return [
+      'branch' => (string)$office_branch->city,
+      'expenses' => (new OtherExpenseTransformer)->collectionTransformer($office_branch->other_expenses, 'basic'),
+    ];
+  }
+
   public function transformWithProductExpenses(OfficeBranch $office_branch)
   {
     return [

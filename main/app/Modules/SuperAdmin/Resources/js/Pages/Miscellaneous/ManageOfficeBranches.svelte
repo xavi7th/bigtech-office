@@ -177,6 +177,11 @@
                       class="btn btn-outline-dark btn-xs text-nowrap">
                       Product Expenses
                     </InertiaLink>
+                    <InertiaLink
+                      href={route(auth.user.user_type + '.office_branches.other_expenses', officeBranch.id)}
+                      class="btn btn-outline-info btn-xs text-nowrap">
+                      Other Expenses
+                    </InertiaLink>
                   {/if}
                 </td>
               </tr>
