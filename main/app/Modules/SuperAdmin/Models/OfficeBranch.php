@@ -241,7 +241,21 @@ class OfficeBranch extends BaseModel
 
   public function getBranchProductExpenses(self $officeBranch)
   {
-    return response()->json((new OfficeBranchTransformer)->transformWithProductExpenses($officeBranch->load('product_expenses')), 200);
+    // return (new OfficeBranchTransformer)->transformWithProductExpenses($officeBranch->load('product_expenses.product'));
+    // return response()->json((new OfficeBranchTransformer)->transformWithProductExpenses($officeBranch->load('product_expenses')), 200);
+    return Inertia::render('SuperAdmin,Miscellaneous/BranchDailyProductExpenses', [
+      'branchWithExpenses' => (new OfficeBranchTransformer)
+        ->transformWithProductExpenses($officeBranch
+          ->load(
+            'product_expenses.product.product_price',
+            'product_expenses.product.product_color',
+            'product_expenses.product.storage_size',
+            'product_expenses.product.product_grade',
+            'product_expenses.product.product_status',
+            'product_expenses.product.product_model',
+            'product_expenses.product.product_expenses_amount',
+          ))
+    ]);
   }
 
   public function getBranchProductHistories(self $officeBranch)

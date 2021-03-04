@@ -57,7 +57,8 @@ class ProductTransformer
       'uuid' => (string)$product->product_uuid,
       'full_name' => (string)$product->full_name,
       'identifier' => (string)$product->primary_identifier(),
-      'selling_price' => $product->proposed_selling_price,
+      'selling_price' => (float)$product->proposed_selling_price,
+      'cost_price' => (float)$product->cost_price,
       'status' => $product->product_status->status,
     ];
   }

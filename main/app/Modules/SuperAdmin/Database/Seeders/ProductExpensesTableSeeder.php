@@ -17,6 +17,6 @@ class ProductExpensesTableSeeder extends Seeder
   public function run()
   {
     factory(ProductExpense::class, 5)->create();
-    factory(ProductExpense::class, 5)->states('swapDeal')->create();
+    // factory(ProductExpense::class, 5)->states('swapDeal')->create();
   }
 }

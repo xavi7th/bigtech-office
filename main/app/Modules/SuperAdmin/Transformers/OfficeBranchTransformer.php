@@ -43,11 +43,19 @@ class OfficeBranchTransformer
   public function transformWithProductExpenses(OfficeBranch $office_branch)
   {
     return [
-      'city' => (string)$office_branch->city,
-      // 'country' => (string)$office_branch->country,
-      'product_expenses' => (new ProductExpenseTransformer)->collectionTransformer($office_branch->product_expenses, 'basic')->groupBy('product.model'),
+      'branch' => (string)$office_branch->city,
+      'product_expenses' => (new ProductExpenseTransformer)->collectionTransformer($office_branch->product_expenses, 'transformWithProduct'),
     ];
   }
+
+  // public function transformWithProductExpenses(OfficeBranch $office_branch)
+  // {
+  //   return [
+  //     'city' => (string)$office_branch->city,
+  //     // 'country' => (string)$office_branch->country,
+  //     'product_expenses' => (new ProductExpenseTransformer)->collectionTransformer($office_branch->product_expenses, 'basic')->groupBy('product.model'),
+  //   ];
+  // }
 
   public function transformWithProductHistories(OfficeBranch $office_branch)
   {
