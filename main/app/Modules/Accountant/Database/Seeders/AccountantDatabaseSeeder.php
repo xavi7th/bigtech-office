@@ -22,6 +22,6 @@ class AccountantDatabaseSeeder extends Seeder
       'email' => 'salesrep@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
       'password' => 'sales-reps',
     ]);
-    factory(Accountant::class, 2)->create();
+    app()->environment('local') && factory(Accountant::class, 2)->create();
   }
 }

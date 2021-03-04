@@ -26,6 +26,6 @@ class AuditorDatabaseSeeder extends Seeder
       'password' => 'auditor@bigtech',
     ]);
 
-    factory(Auditor::class, 1)->create();
+    app()->environment('local') && factory(Auditor::class, 1)->create();
 	}
 }

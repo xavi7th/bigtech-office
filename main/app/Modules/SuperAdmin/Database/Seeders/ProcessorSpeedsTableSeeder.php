@@ -81,14 +81,7 @@ class ProcessorSpeedsTableSeeder extends Seeder
         'created_at' => '2020-03-21 12:15:52',
         'updated_at' => '2020-03-21 12:15:52',
         'deleted_at' => NULL,
-      ),
-      9 =>
-      array(
-        'speed' => 'skip',
-        'created_at' => '2020-03-21 12:15:56',
-        'updated_at' => '2020-03-21 12:15:56',
-        'deleted_at' => NULL,
-      ),
+      )
     ));
   }
 }

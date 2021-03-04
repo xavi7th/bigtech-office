@@ -21,7 +21,7 @@ class ProductCategoriesTableSeeder extends Seeder
       0 =>
       array(
         'name' => 'desktops',
-        'img_url' => 'http://lorempixel.com/640/480/nightlife',
+        'img_url' => null,
         'created_at' => '2020-03-29 16:44:34',
         'updated_at' => '2020-03-29 16:44:34',
         'deleted_at' => NULL,
@@ -29,7 +29,7 @@ class ProductCategoriesTableSeeder extends Seeder
       1 =>
       array(
         'name' => 'phones',
-        'img_url' => 'http://lorempixel.com/640/480/nightlife',
+        'img_url' => null,
         'created_at' => '2020-03-29 16:44:41',
         'updated_at' => '2020-03-29 16:44:41',
         'deleted_at' => NULL,
@@ -37,7 +37,7 @@ class ProductCategoriesTableSeeder extends Seeder
       2 =>
       array(
         'name' => 'laptops',
-        'img_url' => 'http://lorempixel.com/640/480/nightlife',
+        'img_url' => null,
         'created_at' => '2020-03-29 16:44:47',
         'updated_at' => '2020-03-29 16:44:47',
         'deleted_at' => NULL,
@@ -45,7 +45,7 @@ class ProductCategoriesTableSeeder extends Seeder
       3 =>
       array(
         'name' => 'tablets',
-        'img_url' => 'http://lorempixel.com/640/480/nightlife',
+        'img_url' => null,
         'created_at' => '2020-03-29 16:44:51',
         'updated_at' => '2020-03-29 16:44:51',
         'deleted_at' => NULL,
@@ -53,7 +53,7 @@ class ProductCategoriesTableSeeder extends Seeder
       4 =>
       array(
         'name' => 'watches',
-        'img_url' => 'http://lorempixel.com/640/480/nightlife',
+        'img_url' => null,
         'created_at' => '2020-03-29 16:44:55',
         'updated_at' => '2020-03-29 16:44:55',
         'deleted_at' => NULL,
@@ -61,7 +61,7 @@ class ProductCategoriesTableSeeder extends Seeder
       5 =>
       array(
         'name' => 'consoles',
-        'img_url' => 'http://lorempixel.com/640/480/nightlife',
+        'img_url' => null,
         'created_at' => '2020-03-29 16:44:59',
         'updated_at' => '2020-03-29 16:44:59',
         'deleted_at' => NULL,
@@ -69,7 +69,7 @@ class ProductCategoriesTableSeeder extends Seeder
       6 =>
       array(
         'name' => 'accessories',
-        'img_url' => 'http://lorempixel.com/640/480/nightlife',
+        'img_url' => null,
         'created_at' => '2020-03-29 16:45:13',
         'updated_at' => '2020-03-29 16:45:13',
         'deleted_at' => NULL,

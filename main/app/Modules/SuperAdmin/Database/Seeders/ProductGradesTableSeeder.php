@@ -52,7 +52,7 @@ class ProductGradesTableSeeder extends Seeder
       ),
       8 =>
       array(
-        'grade' => 'New',
+        'grade' => 'Brand New',
       ),
       9 =>
       array(

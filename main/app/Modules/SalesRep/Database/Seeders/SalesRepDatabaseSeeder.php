@@ -34,10 +34,10 @@ class SalesRepTableSeeder extends Seeder
       'email' => 'salesrep@' . strtolower(str_replace(" ", "", config('app.name'))) . '.com',
       'password' => 'sales-reps',
     ]);
-    factory(SalesRep::class, 1)->create();
-    factory(SalesRep::class, 1)->states('verified')->create();
-    factory(SalesRep::class, 1)->states('inactive')->create();
-    factory(SalesRep::class, 1)->states('callCenter')->create();
+    app()->environment('local') && factory(SalesRep::class, 1)->create();
+    app()->environment('local') && factory(SalesRep::class, 1)->states('verified')->create();
+    app()->environment('local') && factory(SalesRep::class, 1)->states('inactive')->create();
+    app()->environment('local') && factory(SalesRep::class, 1)->states('callCenter')->create();
     // factory(SalesRep::class, 1)->states('walkIn')->create();
     // factory(SalesRep::class, 1)->states('socialMedia')->create();
   }

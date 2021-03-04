@@ -17,7 +17,7 @@ class AppUserDatabaseSeeder extends Seeder
   {
     Model::unguard();
 
-    factory(AppUser::class, 3)->create()->each(function ($user) {
+    app()->environment('local') && factory(AppUser::class, 3)->create()->each(function ($user) {
       // $user->transactions()->saveMany(factory(Transaction::class, 31)->make());
       // $user->transactions()->save(factory(Transaction::class)->make());
     });

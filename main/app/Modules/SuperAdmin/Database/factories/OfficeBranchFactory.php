@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(OfficeBranch::class, function (Faker $faker) {
   return [
-    'city' => $faker->city,
-    'country' => $faker->country,
+    'city' => $faker->randomElement(['Lagos', 'Abuja']),
+    'country' => 'Nigeria',
   ];
 });
