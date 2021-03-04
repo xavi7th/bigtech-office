@@ -19,6 +19,7 @@ use App\Modules\AppUser\Models\ProductReceipt;
 use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Traits\Commentable;
 use Illuminate\Validation\ValidationException;
+use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ProductHistory;
@@ -151,6 +152,12 @@ class SwapDeal extends BaseModel
   {
     return $this->belongsTo(AppUser::class);
   }
+
+  public function office_branch()
+  {
+    return $this->belongsTo(OfficeBranch::class);
+  }
+
 
   public function total_product_expenses(): float
   {
@@ -735,6 +742,11 @@ class SwapDeal extends BaseModel
     return $query->where('product_status_id', ProductStatus::soldByResellerId());
   }
 
+  public function scopeInLocation($query, int $branch_id)
+  {
+    return $query->where('office_branch_id', $branch_id);
+  }
+
   public function scopeToday($query)
   {
     return $query->whereDay('created_at', today());
@@ -751,6 +763,7 @@ class SwapDeal extends BaseModel
 
     static::creating(function ($swapDeal) {
       $swapDeal->product_uuid = (string)Str::uuid();
+      $swapDeal->office_branch_id = optional(request()->user())->office_branch_id ?? OfficeBranch::head_office_id();
     });
 
     static::saved(function ($swapDeal) {

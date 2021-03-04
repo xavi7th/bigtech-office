@@ -3,16 +3,18 @@
   import Layout from "@superadmin-shared/SuperAdminLayout.svelte";
   import Icon from "@superadmin-shared/Partials/TableSortIcon.svelte";
   import MarkAsSoldModal from "@usershared/MarkAsSoldModal.svelte";
+  import GiveProductToReseller from "@usershared/GiveProductToReseller.svelte";
   import { toCurrency } from '@public-shared/helpers';
 
   $: ({ auth } = $page.props);
   export let onlineReps = [],
     salesChannel = [],
+    resellers = [],
     officeBranch = {
       branchProducts: []
     };
 
-  let productToMarkAsSold;
+  let productToMarkAsSold, productToGiveReseller;
 
 </script>
 
@@ -57,13 +59,27 @@
                 <td>{toCurrency(product.cost_price)}</td>
                 <td>{toCurrency(product.selling_price)}</td>
                 <td>
-                  {#if auth.user.isSuperAdmin}
+                  {#if auth.user.isAccountant}
+                    <button
+                      type="button"
+                      on:click={() => {
+                        productToGiveReseller = product.uuid;
+                      }}
+                      data-toggle="modal"
+                      data-target="#giveProductToReseller"
+                      class="btn btn-warning btn-xs btn-sm text-nowrap">
+                      Give Reseller
+                    </button>
+                  {/if}
+                  {#if auth.user.isSuperAdmin || auth.user.isAuditor || auth.user.isAccountant}
                     <InertiaLink
                       type="button"
                       href={route(auth.user.user_type + '.multiaccess.products.view_product_details', product.uuid)}
                       class="btn btn-primary btn-xs btn-sm">
                       Details
                     </InertiaLink>
+                  {/if}
+                  {#if auth.user.isSuperAdmin || auth.user.isAuditor}
                     <InertiaLink
                       type="button"
                       preserve-scroll
@@ -98,5 +114,7 @@
   </div>
   <div slot="modals">
     <MarkAsSoldModal {salesChannel} {onlineReps} {productToMarkAsSold} />
+
+    <GiveProductToReseller {resellers} {productToGiveReseller} />
   </div>
 </Layout>

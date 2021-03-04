@@ -12,6 +12,7 @@ use App\Modules\Auditor\Models\Auditor;
 use App\Modules\SalesRep\Models\SalesRep;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use App\Modules\SuperAdmin\Models\Product;
+use App\Modules\SuperAdmin\Models\Reseller;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Models\SalesChannel;
 use App\Modules\SuperAdmin\Models\ProductExpense;
@@ -19,6 +20,9 @@ use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
+use App\Modules\SuperAdmin\Transformers\ProductTransformer;
+use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
+use App\Modules\SuperAdmin\Transformers\SwapDealTransformer;
 use App\Modules\SuperAdmin\Transformers\OfficeBranchTransformer;
 use App\Modules\SuperAdmin\Transformers\SalesChannelTransformer;
 
@@ -229,31 +233,50 @@ class OfficeBranch extends BaseModel
       return (new SalesChannelTransformer)->collectionTransformer(SalesChannel::all(), 'basic');
     });
 
+    $resellers = fn () => Cache::rememberForever('resellers', fn () => (new ResellerTransformer)->collectionTransformer(Reseller::all(), 'basic'));
+
     if ($request->isApi()) return response()->json($officeBranch, 200);
-    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranchProducts', compact('officeBranch', 'onlineReps', 'salesChannel'));
+    return Inertia::render('SuperAdmin,Miscellaneous/ManageOfficeBranchProducts', compact('officeBranch', 'onlineReps', 'salesChannel', 'resellers'));
   }
 
-  public function getBranchProductExpenses(self $office_branch)
+  public function getBranchProductExpenses(self $officeBranch)
   {
-    return response()->json((new OfficeBranchTransformer)->transformWithProductExpenses($office_branch->load('product_expenses')), 200);
+    return response()->json((new OfficeBranchTransformer)->transformWithProductExpenses($officeBranch->load('product_expenses')), 200);
   }
 
-  public function getBranchProductHistories(self $office_branch)
+  public function getBranchProductHistories(self $officeBranch)
   {
-    return response()->json((new OfficeBranchTransformer)->transformWithProductHistories($office_branch->load('product_histories')), 200);
+    return response()->json((new OfficeBranchTransformer)->transformWithProductHistories($officeBranch->load('product_histories')), 200);
   }
 
-  public function getBranchResellerHistories(self $office_branch)
+  public function getBranchResellerHistories(self $officeBranch)
   {
-    return response()->json((new OfficeBranchTransformer)->transformWithResellerHistories($office_branch->load('reseller_histories')), 200);
+    return response()->json((new OfficeBranchTransformer)->transformWithResellerHistories($officeBranch->load('reseller_histories')), 200);
   }
 
-  public function getBranchProductWithResellers(self $office_branch)
+  public function getBranchProductWithResellers(Request $request, self $officeBranch)
   {
-    $results = $office_branch->load(['products' => function ($query) {
-      $query->has('with_resellers')->with('with_resellers');
-    }]);
-    return response()->json((new OfficeBranchTransformer)->transformWithResellerAndProducts($results), 200);
+    // $results = $officeBranch->load(['products' => function ($query) {
+    //   $query->has('with_resellers')->with('with_resellers');
+    // }]);
+    // if ($request->isApi()) return response()->json((new OfficeBranchTransformer)->transformWithResellerAndProducts($results), 200);
+
+    $productsWithResellers = (new ProductTransformer)->collectionTransformer(Product::inLocation($officeBranch->id)->has('with_resellers')->with('with_resellers', 'product_color', 'product_model', 'storage_size')->get(), 'transformWithResellerDetails');
+    $swapDealsWithResellers = (new SwapDealTransformer)->collectionTransformer(SwapDeal::inLocation($officeBranch->id)->has('with_resellers')->with('with_resellers')->get(), 'transformWithResellerDetails');
+
+    /**
+     * ! Fix: Call to a member function getKey() on array error when the first collection is empty.
+     * @after Update?
+     */
+    if ($productsWithResellers->isEmpty()) {
+      $productsWithResellers = $swapDealsWithResellers->merge($productsWithResellers);
+    } else {
+      $productsWithResellers = $productsWithResellers->merge($swapDealsWithResellers);
+    }
+
+    return Inertia::render('SuperAdmin,Miscellaneous/BranchProductsWithResellers', [
+      'productsWithResellers' => $productsWithResellers
+    ]);
   }
 
   public function getBranchSalesRecords(Request $request, self $officeBranch)
@@ -278,18 +301,18 @@ class OfficeBranch extends BaseModel
     ]);
   }
 
-  public function getStaffActivitiesFromBranch(self $office_branch)
+  public function getStaffActivitiesFromBranch(self $officeBranch)
   {
-    return response()->json(Arr::collapse($office_branch->staff_activities()), 200);
+    return response()->json(Arr::collapse($officeBranch->staff_activities()), 200);
   }
 
-  public function getStaffFromBranch(self $office_branch)
+  public function getStaffFromBranch(self $officeBranch)
   {
-    return Arr::collapse($office_branch->staff());
+    return Arr::collapse($officeBranch->staff());
   }
 
-  public function getStaffFromBranchByDept(self $office_branch)
+  public function getStaffFromBranchByDept(self $officeBranch)
   {
-    return $office_branch->staff();
+    return $officeBranch->staff();
   }
 }

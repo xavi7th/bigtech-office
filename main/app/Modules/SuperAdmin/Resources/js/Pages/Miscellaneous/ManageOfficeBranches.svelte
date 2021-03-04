@@ -161,11 +161,18 @@
                     class="btn btn-primary btn-xs text-nowrap">
                     PRODUCTS ({officeBranch.products_count})
                   </InertiaLink>
-                  <InertiaLink
-                    href={route(auth.user.user_type + '.office_branches.sales_records', officeBranch.id)}
-                    class="btn btn-secondary btn-xs text-nowrap">
-                    SALES RECORDS ({officeBranch.product_sales_records_count}/{officeBranch.product_sales_records_count})
-                  </InertiaLink>
+                  {#if auth.user.isSuperAdmin || auth.user.isAuditor}
+                    <InertiaLink
+                      href={route(auth.user.user_type + '.office_branches.sales_records', officeBranch.id)}
+                      class="btn btn-secondary btn-xs text-nowrap">
+                      SALES RECORDS ({officeBranch.product_sales_records_count}/{officeBranch.product_sales_records_count})
+                    </InertiaLink>
+                    <InertiaLink
+                      href={route(auth.user.user_type + '.office_branches.res_prod', officeBranch.id)}
+                      class="btn btn-outline-primary btn-xs text-nowrap">
+                      Products with Resellers
+                    </InertiaLink>
+                  {/if}
                 </td>
               </tr>
             {:else}

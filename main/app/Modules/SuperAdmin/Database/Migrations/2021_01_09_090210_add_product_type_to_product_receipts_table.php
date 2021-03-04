@@ -29,7 +29,7 @@ class AddProductTypeToProductReceiptsTable extends Migration
   public function down()
   {
     Schema::table('product_receipts', function (Blueprint $table) {
-      $table->foreignId('product_id')->constrained();
+      $table->foreign('product_id')->references('id')->on('products');
       $table->dropIndex(['product_id', 'product_type']);
       $table->dropColumn('product_type');
     });

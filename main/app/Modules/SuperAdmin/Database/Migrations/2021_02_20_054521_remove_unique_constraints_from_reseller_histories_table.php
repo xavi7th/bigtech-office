@@ -28,6 +28,7 @@ class RemoveUniqueConstraintsFromResellerHistoriesTable extends Migration
   {
     Schema::table('reseller_histories', function (Blueprint $table) {
       $table->unique(['reseller_id', 'product_id', 'product_status'], 'reseller_histories_unique');
+      $table->dropIndex('reseller_id_foreign');
     });
   }
 }
