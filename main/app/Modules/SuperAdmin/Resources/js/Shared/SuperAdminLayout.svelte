@@ -14,13 +14,10 @@
   let isMounted = false;
   export let title;
 
-
   onMount(() => {
     setTimeout(() => {
-      console.log(jQuery('#page-loader'));
       jQuery('#page-loader').fadeOut()
     }, 1000);
-    console.log('here');
     isMounted = true;
   });
 
