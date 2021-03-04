@@ -8,18 +8,20 @@
   import Footer from "@superadmin-shared/Partials/Footer";
   import PageTitle from "@superadmin-shared/Partials/PageTitle.svelte";
 
-  $: ({ app, routes } = $page.props);
+  $: ({ app, routes, auth } = $page.props);
 
   let isMounted = false;
   export let title;
 
-  onMount(async () => {
+  onMount(() => {
+    setTimeout(() => {
+      jQuery('#page-loader').fadeOut()
+    }, 1000);
     isMounted = true;
   });
 
 </script>
 
-<!-- svelte-ignore missing-declaration -->
 <div
   data-spy="scroll"
   data-target=".rui-page-sidebar"

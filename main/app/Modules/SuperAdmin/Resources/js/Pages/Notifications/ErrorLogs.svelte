@@ -9,13 +9,37 @@
   export let errLogs = [];
   let fullErrorMessage;
 
-  let pruneErrLogs = product => {
+  let pruneErrLogs = () => {
     swalPreconfirm
       .fire({
         text: "This will delete all old error logs",
         confirmButtonText: "Delete",
         preConfirm: () => {
           Inertia.delete(route(auth.user.user_type + ".logs.prune"), {
+            preserveState: true,
+            preserveScroll: true,
+            only: ["flash", "errors", "errLogs"]
+          })
+        }
+      })
+      .then(result => {
+        if (result.dismiss && result.dismiss == "cancel") {
+          swal.fire(
+            "Canceled!",
+            "You canceled the action. Nothing was changed",
+            "info"
+          );
+        }
+      });
+  };
+
+  let flushErrLogs = () => {
+    swalPreconfirm
+      .fire({
+        text: "This will delete all old error logs",
+        confirmButtonText: "Delete",
+        preConfirm: () => {
+          Inertia.delete(route(auth.user.user_type + ".logs.flush"), {
             preserveState: true,
             preserveScroll: true,
             only: ["flash", "errors", "errLogs"]
@@ -51,7 +75,9 @@
             <tr>
               <th scope="col">
                 Errors <button type="button" on:click={pruneErrLogs} class="btn
-                    btn-danger btn-xs ml-50"> Prune Logs </button>
+                    btn-warning btn-xs ml-50"> Prune Logs </button>
+                <button type="button" on:click={flushErrLogs} class="btn
+                    btn-danger btn-xs ml-50"> Flush Logs </button>
               </th>
             </tr>
           </thead>
@@ -72,7 +98,7 @@
                           fullErrorMessage = log.context;
                         }}
                         data-toggle="modal"
-                        data-target="#enterSalesDetails"
+                        data-target="#viewErrorDetails"
                         class="btn btn-danger btn-xs btn-sm">
                         View Details
                       </button></b>
@@ -90,7 +116,7 @@
   </div>
 
   <div slot="modals">
-    <Modal modalId="enterSalesDetails" modalTitle="Enter Sales Details">
+    <Modal modalId="viewErrorDetails" modalTitle="Error Details">
       <div class="row vertical-gap sm-gap">
         <div class="col-12">
           {#if fullErrorMessage}
@@ -99,7 +125,5 @@
         </div>
       </div>
     </Modal>
-
-    Object.entries(cats) as as [cat_name, cat_number], index
   </div>
 </Layout>

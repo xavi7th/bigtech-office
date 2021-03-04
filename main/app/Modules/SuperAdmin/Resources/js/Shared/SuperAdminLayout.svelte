@@ -8,7 +8,6 @@
   import MobileHeader from "@superadmin-shared/Partials/MobileHeader";
   import PageTitle from "@superadmin-shared/Partials/PageTitle";
   import Footer from "@superadmin-shared/Partials/Footer";
-  import { Inertia } from '@inertiajs/inertia';
 
   $: ({ app, routes, auth } = $page.props);
 
@@ -18,8 +17,10 @@
 
   onMount(() => {
     setTimeout(() => {
+      console.log(jQuery('#page-loader'));
       jQuery('#page-loader').fadeOut()
     }, 1000);
+    console.log('here');
     isMounted = true;
   });
 

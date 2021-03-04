@@ -69,6 +69,7 @@ class ErrLog extends BaseModel
     Route::group([], function () {
       Route::get('error-logs', [self::class, 'getErrorLogs'])->name('logs.error_logs')->defaults('ex', __e('ss,a', 'activity', false));
       Route::delete('error-logs', [self::class, 'pruneErrLogs'])->name('logs.prune');
+      Route::delete('error-logs/flush', [self::class, 'flushErrLogs'])->name('logs.flush');
     });
   }
 
@@ -87,9 +88,21 @@ class ErrLog extends BaseModel
     return back()->withFlash(['success'=>'Error logs cleared']);
   }
 
+  public function flushErrLogs(Request $request)
+  {
+    self::exceptLatest(optional(self::latest('id')->first())->id ?? 1)->delete();
+
+    return back()->withFlash(['success' => 'Error logs cleared']);
+  }
+
   public function scopeOld($query)
   {
     return $query->whereDate('created_at', '<', now()->subDays(2));
+  }
+
+  public function scopeExceptLatest($query, $id)
+  {
+    return $query->where('id', '<', $id);
   }
 
 }

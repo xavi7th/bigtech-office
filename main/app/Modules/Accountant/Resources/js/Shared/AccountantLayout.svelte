@@ -16,6 +16,9 @@
   export let title;
 
   onMount(() => {
+    setTimeout(() => {
+      jQuery('#page-loader').fadeOut()
+    }, 1000);
     isMounted = true;
   });
 

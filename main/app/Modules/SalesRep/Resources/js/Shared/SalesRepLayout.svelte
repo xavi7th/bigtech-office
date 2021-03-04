@@ -14,12 +14,14 @@
   export let title;
 
   onMount(() => {
+    setTimeout(() => {
+      jQuery('#page-loader').fadeOut()
+    }, 1000);
     isMounted = true;
   });
 
 </script>
 
-<!-- svelte-ignore missing-declaration -->
 <div
   data-spy="scroll"
   data-target=".rui-page-sidebar"
