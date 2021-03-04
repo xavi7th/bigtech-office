@@ -10,7 +10,7 @@ use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Events\ProductSaved;
 use App\Modules\SuperAdmin\Events\ProductUpdated;
 
-class ProductEventSubscriber implements ShouldQueue
+class ProductEventSubscriber //implements ShouldQueue
 {
 
   private $request;
