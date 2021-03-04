@@ -2,6 +2,7 @@
 namespace App\Modules\SuperAdmin\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Modules\SuperAdmin\Models\ProductBatch;
 
 class ProductBatchesTableSeeder extends Seeder
 {
