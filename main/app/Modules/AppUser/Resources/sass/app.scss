@@ -99,6 +99,22 @@ dl.phpdebugbar-widgets-kvlist dt {
 	overflow-x: auto;
 }
 
+.dataTables_filter input {
+	margin-left: 0 !important;
+}
+
+.dataTables_length {
+	min-width: 145px;
+
+	&>label {
+		width: 90% !important;
+	}
+}
+
+.dataTables_wrapper {
+	padding: 0 !important;
+}
+
 // * {
 //     user-select: none !important;
 // }

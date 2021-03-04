@@ -23,6 +23,11 @@ trait IsAStaff
     return $this->belongsTo(OfficeBranch::class);
   }
 
+  public function recorded_reseller_transactions()
+  {
+    return $this->morphMany(ResellerTransaction::class, 'recorder');
+  }
+
   static function findByEmail(string $email)
   {
     return self::whereEmail($email)->first();

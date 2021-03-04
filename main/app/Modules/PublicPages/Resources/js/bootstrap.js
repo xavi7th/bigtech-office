@@ -124,11 +124,15 @@ Inertia.on('success', (e) => {
   else {
     swal.close();
   }
+  jQuery('#page-loader')
+  	.fadeOut()
 })
 
 Inertia.on('error', (e) => {
   console.log(`There were errors on your visit`)
   console.log(e)
+  jQuery('#page-loader')
+  	.fadeOut()
   ToastLarge.fire( {
     title: "Error",
     html: getErrorString( e.detail.errors ),

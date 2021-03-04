@@ -2,11 +2,11 @@
 
 namespace App\Modules\SuperAdmin\Models;
 
-use Cache;
 use App\BaseModel;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\QueryException;
 use Illuminate\Notifications\Notifiable;
@@ -19,10 +19,10 @@ use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ResellerHistory;
 use App\Modules\SuperAdmin\Models\ResellerProduct;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\SuperAdmin\Transformers\ProductTransformer;
 use App\Modules\SuperAdmin\Transformers\ResellerTransformer;
 use App\Modules\SuperAdmin\Http\Validations\CreateResellerValidation;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Reseller extends BaseModel
 {
@@ -38,6 +38,11 @@ class Reseller extends BaseModel
   ];
 
   protected $touches = ['products'];
+
+  public function reseller_transactions()
+  {
+    return $this->hasMany(ResellerTransaction::class);
+  }
 
   public function products()
   {
@@ -209,6 +214,8 @@ class Reseller extends BaseModel
         Route::get('', [self::class, 'getResellers'])->name('resellers')->defaults('ex', __e('ss,a,ac', 'at-sign', false))->middleware('auth:auditor,super_admin,accountant');
         Route::get('products', [self::class, 'getResellersWithProducts'])->name('resellers_with_products')->defaults('ex', __e('ss,a,ac', 'at-sign', false))->middleware('auth:auditor,super_admin,accountant');
         Route::get('{reseller}/products', [self::class, 'getProductsWithReseller'])->name('products')->defaults('ex', __e('ss,a,ac', 'at-sign', true))->middleware('auth:super_admin,auditor,accountant');
+
+        Route::get('{reseller:business_name}/financial-records', [self::class, 'getResellerFinancialRecord'])->name('finances')->middleware('auth:auditor,super_admin');
       });
     });
   }
@@ -216,9 +223,37 @@ class Reseller extends BaseModel
   public static function superAdminRoutes()
   {
     Route::name('resellers.')->prefix('resellers')->group(function () {
-      Route::post('create', [self::class, 'createReseller'])->name('create_reseller');
       Route::put('{reseller}/edit', [self::class, 'editReseller'])->name('edit_reseller');
+      Route::post('create', [self::class, 'createReseller'])->name('create_reseller');
+
+      Route::post('{reseller:business_name}/financial-records/create', [self::class, 'createResellerTransaction'])->name('finances.create');
     });
+  }
+
+  public function getResellerFinancialRecord(Request $request, self $reseller)
+  {
+    // dd($reseller->reseller_transactions);
+
+    return Inertia::render('SuperAdmin,Resellers/ManageResellerTransactions', [
+      'resellerWithTransactions' => $reseller->load('reseller_transactions.recorder:id,full_name')
+    ]);
+  }
+
+  public function createResellerTransaction(Request $request, self $reseller)
+  {
+
+    $validated = $request->validate([
+      'amount' => 'required|numeric|gt:0',
+      'purpose' => 'required|string',
+      'trans_type' => 'required|in:credit,debit',
+    ], [
+      'trans_type.required' => 'Enter the transaction type',
+      'trans_type.in' => 'Invalid transaction type selected',
+    ]);
+
+    $reseller->reseller_transactions()->create($validated);
+
+    return back()->withFlash(['success' => 'Transaction successfully created']);
   }
 
   public function getResellers(Request $request)
@@ -444,7 +479,6 @@ class Reseller extends BaseModel
     if ($request->isApi()) return response()->json((new ProductTransformer)->basic($product), 201);
     return back()->withFlash(['success'=>'Product marked as sold to reseller']);
   }
-
 
   protected static function boot()
   {

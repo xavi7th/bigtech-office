@@ -14,34 +14,30 @@ const displayTableSum = (tableColumn) => {
 		var intVal = function(i) {
 			return typeof i === "string" ? // ? i.replace(/[\$,]/g, "") * 1
 				i.substring(0, i.lastIndexOf("."))
-				.replace(/\D/g, "") * 1 :
+				.replace(/[^0-9\.\-]+/g, "") * 1:
 				typeof i === "number" ?
 				i :
 				0;
-		};
-
+    };
 		// Total over all pages
 		let total = api
 			.column(tableColumn)
 			.data()
-			.reduce(function(a, b) {
-				return intVal(a) + intVal(b);
-			}, 0);
+      .reduce((a, b) => intVal(a) + intVal(b), 0);
 
 		// Total over this page
 		let pageTotal = api
 			.column(tableColumn, { page: "current" })
 			.data()
-			.reduce(function(a, b) {
-				return intVal(a) + intVal(b);
-			}, 0);
+			.reduce((a, b) => intVal(a) + intVal(b), 0);
 
 		// Update footer
 		jQuery(api.column(2)
 				.footer())
 			.html(
 				toCurrency(pageTotal) + " (" + toCurrency(total) + " total)"
-			);
+			)
+			.addClass(() => total < 0 ? 'text-danger' : total > 0 ? 'text-success' : null)
 	}
 }
 

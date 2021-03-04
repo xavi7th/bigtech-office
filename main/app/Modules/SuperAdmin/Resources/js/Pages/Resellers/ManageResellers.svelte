@@ -1,6 +1,6 @@
 <script>
   import Layout from "@superadmin-shared/SuperAdminLayout";
-  import { page } from "@inertiajs/inertia-svelte";
+  import { InertiaLink, page } from "@inertiajs/inertia-svelte";
   import { Inertia } from "@inertiajs/inertia";
   import Modal from "@superadmin-shared/Partials/Modal";
 
@@ -15,22 +15,12 @@
       text: "Creating reseller ..."
     });
 
-    let formData = new FormData();
-
-    // formData.append("_method", "PUT");
-    _.forEach(details, (val, key) => {
-      formData.append(key, val);
-    });
-
-    Inertia.post(route(auth.user.user_type + ".resellers.create_reseller"), formData, {
+    Inertia.post(route(auth.user.user_type + ".resellers.create_reseller"), details, {
       preserveState: true,
       preserveScroll: true,
       only: ["flash", "errors", "resellers"],
       onSuccess: () =>{
           details = {};
-      },
-      headers: {
-        "Content-Type": "multipart/form-data"
       }
     })
   };
@@ -215,7 +205,7 @@
                   </button> -->
                     <button
                       type="button"
-                      class="btn btn-warning btn-xs"
+                      class="btn btn-warning btn-xs ml-5"
                       data-toggle="modal"
                       data-target="#updateReseller"
                       on:click={() => {
@@ -223,6 +213,9 @@
                       }}>
                       EDIT
                     </button>
+                    <InertiaLink class="btn btn-outline-primary btn-xs ml-5" href={route(auth.user.user_type + '.multiaccess.resellers.finances', reseller.business_name)}>
+                      LEDGER
+                    </InertiaLink>
                   </td>
                 {/if}
               </tr>
