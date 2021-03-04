@@ -12,13 +12,14 @@ use App\Modules\SuperAdmin\Models\Reseller;
 use App\Modules\SuperAdmin\Models\SwapDeal;
 use App\Modules\Accountant\Models\Accountant;
 use App\Modules\AppUser\Models\ProductReceipt;
+use App\Modules\SuperAdmin\Models\OfficeBranch;
 use App\Modules\SuperAdmin\Models\OtherExpense;
 use App\Modules\SuperAdmin\Models\ProductBatch;
 use App\Modules\SuperAdmin\Models\ProductPrice;
+use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ProductExpense;
 use App\Modules\SuperAdmin\Models\ProductHistory;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
-use App\Modules\SuperAdmin\Models\ProductStatus;
 
 class AccountantController extends Controller
 {
@@ -48,6 +49,7 @@ class AccountantController extends Controller
           OtherExpense::multiAccessRoutes();
           Reseller::multiAccessRoutes();
           ProductReceipt::multiAccessRoutes();
+          OfficeBranch::multiAccessRoutes();
         });
       });
     });

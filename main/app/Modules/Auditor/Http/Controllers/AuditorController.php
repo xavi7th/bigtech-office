@@ -85,6 +85,7 @@ class AuditorController extends Controller
           StorageType::multiAccessRoutes();
           OtherExpense::multiAccessRoutes();
           ProductDescriptionSummary::multiAccessRoutes();
+          OfficeBranch::multiAccessRoutes();
         });
       });
     });

@@ -94,6 +94,7 @@ class SuperAdminController extends Controller
         QATest::multiAccessRoutes();
         ProductDescriptionSummary::multiAccessRoutes();
         ProductReceipt::multiAccessRoutes();
+        OfficeBranch::multiAccessRoutes();
       });
     });
   }

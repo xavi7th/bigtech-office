@@ -135,10 +135,8 @@ class OfficeBranch extends BaseModel
   public static function superAdminRoutes()
   {
     Route::name('office_branches.')->prefix('office-branches')->group(function () {
-      Route::get('', [self::class, 'getOfficeBranches'])->name('branches')->defaults('ex', __e('ss,a', 'trello', false));
       Route::post('create', [self::class, 'createOfficeBranch'])->name('create');
       Route::put('{officeBranch}/edit', [self::class, 'editOfficeBranch'])->name('edit');
-      Route::get('{officeBranch}/products', [self::class, 'getProductsInBranch'])->name('view_products')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/product-expenses', [self::class, 'getBranchProductExpenses'])->name('prod_expenses')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/product-histories', [self::class, 'getBranchProductHistories'])->name('prod_histories')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/reseller-histories', [self::class, 'getBranchResellerHistories'])->name('res_histories')->defaults('ex', __e('ss,a', 'trello', true));
@@ -148,6 +146,14 @@ class OfficeBranch extends BaseModel
       Route::get('{officeBranch}/staff/departments', [self::class, 'getStaffFromBranchByDept'])->name('staff_by_depts')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/staff/activities', [self::class, 'getStaffActivitiesFromBranch'])->name('staff_acts')->defaults('ex', __e('ss,a', 'trello', true));
       Route::get('{officeBranch}/sales-records', [self::class, 'getBranchSalesRecords'])->name('sales_records')->defaults('ex', __e('ss,a', 'trello', true));
+    });
+  }
+
+  public static function multiAccessRoutes()
+  {
+    Route::name('office_branches.')->prefix('office-branches')->group(function () {
+      Route::get('', [self::class, 'getOfficeBranches'])->name('branches')->defaults('ex', __e('ss,a,ac', 'trello', false))->middleware('auth:super_admin,auditor,accountant');
+      Route::get('{officeBranch}/products', [self::class, 'getProductsInBranch'])->name('view_products')->defaults('ex', __e('ss,a,ac', 'trello', true))->middleware('auth:super_admin,auditor,accountant');
     });
   }
 
