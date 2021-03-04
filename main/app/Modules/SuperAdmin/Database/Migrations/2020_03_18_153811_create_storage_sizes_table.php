@@ -14,7 +14,7 @@ class CreateStorageSizesTable extends Migration
 	public function up()
 	{
 		Schema::create('storage_sizes', function (Blueprint $table) {
-			$table->bigIncrements('id');
+      $table->id();
 			$table->string('size')->unique();
 
 			$table->timestamps();

@@ -22,7 +22,7 @@ class CreateSuperAdminsTable extends Migration
       $table->string('avatar')->nullable();
       $table->string('gender')->enum(['male', 'female'])->nullable();
       $table->string('address')->nullable();
-      $table->foreignId('office_branch_id')->default(1)->constrained()->onDelete('cascade');
+      $table->foreignId('office_branch_id')->default(1)->constrained();
       $table->timestamp('verified_at')->nullable();
 
       $table->rememberToken();

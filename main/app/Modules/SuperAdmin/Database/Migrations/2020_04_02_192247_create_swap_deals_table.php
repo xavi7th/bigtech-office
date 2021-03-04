@@ -14,9 +14,8 @@ class CreateSwapDealsTable extends Migration
   public function up()
   {
     Schema::create('swap_deals', function (Blueprint $table) {
-      $table->bigIncrements('id');
-      $table->unsignedBigInteger('app_user_id')->nullable();
-      $table->foreign('app_user_id')->references('id')->on('app_users')->onDelete('cascade');
+      $table->id();
+      $table->foreignId('app_user_id')->nullable()->constrained();
       $table->string('description');
       $table->string('owner_details');
       $table->string('id_url')->nullable();
@@ -29,8 +28,7 @@ class CreateSwapDealsTable extends Migration
       $table->timestamp('sold_at')->nullable();
       $table->unsignedBigInteger('swapped_with_id')->nullable();
       $table->string('swapped_with_type')->nullable();
-      $table->unsignedBigInteger('product_status_id')->default(1);
-      $table->foreign('product_status_id')->references('id')->on('product_statuses')->onDelete('cascade');
+      $table->foreignId('product_status_id')->default(1)->constrained();
       $table->uuid('product_uuid');
 
       $table->timestamps();

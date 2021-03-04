@@ -15,8 +15,8 @@ class CreateProductDispatchRequestsTable extends Migration
   {
     Schema::create('product_dispatch_requests', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('sales_channel_id')->nullable()->constrained()->onDelete('cascade');
-      $table->foreignId('online_rep_id')->constrained('sales_reps')->onDelete('cascade');
+      $table->foreignId('sales_channel_id')->nullable()->constrained();
+      $table->foreignId('online_rep_id')->constrained('sales_reps');
       $table->longText('product_description');
       $table->unsignedBigInteger('product_id')->nullable();
       $table->string('product_type')->nullable();

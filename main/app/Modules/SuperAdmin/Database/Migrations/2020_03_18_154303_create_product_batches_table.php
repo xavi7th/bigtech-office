@@ -14,7 +14,7 @@ class CreateProductBatchesTable extends Migration
 	public function up()
 	{
 		Schema::create('product_batches', function (Blueprint $table) {
-			$table->bigIncrements('id');
+      $table->id();
 			$table->string('batch_number')->unique();
 			$table->timestamp('order_date')->useCurrent();
 

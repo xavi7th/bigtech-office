@@ -14,10 +14,10 @@ class CreateProductHistoriesTable extends Migration
 	public function up()
 	{
 		Schema::create('product_histories', function (Blueprint $table) {
-			$table->bigIncrements('id');
+      $table->id();
 			$table->unsignedBigInteger('product_id');
       $table->string('product_type');
-      $table->foreignId('product_status_id')->constrained('product_statuses')->onDelete('cascade');
+      $table->foreignId('product_status_id')->constrained('product_statuses');
       $table->unsignedBigInteger('user_id');
 			$table->string('user_type');
 

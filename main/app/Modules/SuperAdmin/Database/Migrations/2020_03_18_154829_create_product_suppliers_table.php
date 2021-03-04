@@ -14,7 +14,7 @@ class CreateProductSuppliersTable extends Migration
 	public function up()
 	{
 		Schema::create('product_suppliers', function (Blueprint $table) {
-			$table->bigIncrements('id');
+      $table->id();
 			$table->string('name')->unique();
       $table->boolean('is_local')->default(false);
 

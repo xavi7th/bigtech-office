@@ -14,8 +14,8 @@ class CreateResellerProductTable extends Migration
 	public function up()
 	{
 		Schema::create('reseller_product', function (Blueprint $table) {
-			$table->bigIncrements('id');
-      $table->foreignId('reseller_id')->constrained('resellers')->onDelete('cascade');
+      $table->id();
+      $table->foreignId('reseller_id')->constrained('resellers');
 			$table->unsignedBigInteger('product_id');
       $table->string('product_type');
 			$table->enum('status', ['sold', 'returned', 'tenured'])->default('tenured');

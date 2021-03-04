@@ -14,7 +14,7 @@ class CreateProductStatusesTable extends Migration
 	public function up()
 	{
 		Schema::create('product_statuses', function (Blueprint $table) {
-			$table->bigIncrements('id');
+      $table->id();
 			$table->string('status');
       $table->string('status_slug');
       $table->string('scope')->default('general');

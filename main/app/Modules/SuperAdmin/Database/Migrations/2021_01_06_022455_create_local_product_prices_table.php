@@ -15,7 +15,7 @@ class CreateLocalProductPricesTable extends Migration
   {
     Schema::create('local_product_prices', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('product_id')->constrained()->onDelete('cascade');
+      $table->foreignId('product_id')->constrained();
       $table->double('cost_price');
       $table->double('proposed_selling_price');
 

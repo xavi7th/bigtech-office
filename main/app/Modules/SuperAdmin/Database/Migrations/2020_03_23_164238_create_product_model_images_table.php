@@ -14,8 +14,8 @@ class CreateProductModelImagesTable extends Migration
   public function up()
   {
     Schema::create('product_model_images', function (Blueprint $table) {
-      $table->bigIncrements('id');
-      $table->foreignId('product_model_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+      $table->id();
+      $table->foreignId('product_model_id')->constrained();
       $table->string('img_url');
       $table->string('thumb_url')->nullable();
 

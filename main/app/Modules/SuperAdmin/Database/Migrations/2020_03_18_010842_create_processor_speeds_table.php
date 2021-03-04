@@ -14,7 +14,7 @@ class CreateProcessorSpeedsTable extends Migration
 	public function up()
 	{
 		Schema::create('processor_speeds', function (Blueprint $table) {
-			$table->bigIncrements('id');
+      $table->id();
 			$table->string('speed')->unique();
 
 			$table->timestamps();

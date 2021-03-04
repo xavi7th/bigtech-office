@@ -14,11 +14,9 @@ class CreateSalesRecordBankAccountsTable extends Migration
 	public function up()
 	{
 		Schema::create('sales_record_bank_accounts', function (Blueprint $table) {
-			$table->bigIncrements('id');
-			$table->unsignedBigInteger('product_sale_record_id')->index();
-			$table->foreign('product_sale_record_id')->references('id')->on('product_sale_records')->onDelete('cascade');
-			$table->unsignedBigInteger('company_bank_account_id')->index();
-			$table->foreign('company_bank_account_id')->references('id')->on('company_bank_accounts')->onDelete('cascade');
+      $table->id();
+      $table->foreignId('product_sale_record_id')->index()->constrained();
+      $table->foreignId('company_bank_account_id')->index()->constrained();
 			$table->double('amount');
 
 			$table->timestamps();

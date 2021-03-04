@@ -14,9 +14,8 @@ class CreateProductDescriptionSummariesTable extends Migration
 	public function up()
 	{
 		Schema::create('product_description_summaries', function (Blueprint $table) {
-			$table->bigIncrements('id');
-			$table->unsignedBigInteger('product_model_id')->unique();
-			$table->foreign('product_model_id')->references('id')->on('product_models')->onDelete('cascade');
+      $table->id();
+      $table->foreignId('product_model_id')->unique()->constrained();
 			$table->longText('description_summary');
 
 			$table->timestamps();

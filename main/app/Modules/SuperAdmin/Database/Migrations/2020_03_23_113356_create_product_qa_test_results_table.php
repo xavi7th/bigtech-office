@@ -14,11 +14,9 @@ class CreateProductQATestResultsTable extends Migration
 	public function up()
 	{
 		Schema::create('product_qa_test_results', function (Blueprint $table) {
-			$table->bigIncrements('id');
-			$table->unsignedBigInteger('product_id');
-			$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-			$table->unsignedBigInteger('qa_test_id');
-			$table->foreign('qa_test_id')->references('id')->on('qa_tests')->onDelete('cascade');
+      $table->id();
+      $table->foreignId('product_id')->constrained();
+      $table->foreignId('qa_test_id')->constrained();
 			$table->boolean('is_qa_certified')->default(false);
 			$table->unique(['product_id', 'qa_test_id']);
 

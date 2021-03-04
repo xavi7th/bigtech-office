@@ -14,14 +14,14 @@ class CreateProductPricesTable extends Migration
 	public function up()
 	{
 		Schema::create('product_prices', function (Blueprint $table) {
-			$table->bigIncrements('id');
-      $table->foreignId('product_batch_id')->constrained()->onDelete('cascade');
-      $table->unsignedBigInteger('product_brand_id')->constrained()->onDelete('cascade');
-      $table->unsignedBigInteger('product_model_id')->constrained()->onDelete('cascade');
-      $table->unsignedBigInteger('product_color_id')->constrained()->onDelete('cascade');
-      $table->unsignedBigInteger('storage_size_id')->constrained()->onDelete('cascade');
-      $table->unsignedBigInteger('product_grade_id')->constrained()->onDelete('cascade');
-      $table->unsignedBigInteger('product_supplier_id')->constrained()->onDelete('cascade');
+      $table->id();
+      $table->foreignId('product_batch_id')->constrained();
+      $table->foreignId('product_brand_id')->constrained();
+      $table->foreignId('product_model_id')->constrained();
+      $table->foreignId('product_color_id')->constrained();
+      $table->foreignId('storage_size_id')->constrained();
+      $table->foreignId('product_grade_id')->constrained();
+      $table->foreignId('product_supplier_id')->constrained();
 			$table->double('cost_price');
 			$table->double('proposed_selling_price')->nullable();
 			$table->unique(['product_batch_id', 'product_brand_id', 'product_model_id', 'product_color_id', 'storage_size_id', 'product_grade_id', 'product_supplier_id'], 'unique_product_price');

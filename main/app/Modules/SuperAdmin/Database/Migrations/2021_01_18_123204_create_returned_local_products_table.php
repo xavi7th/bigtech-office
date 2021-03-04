@@ -15,7 +15,7 @@ class CreateReturnedLocalProductsTable extends Migration
   {
     Schema::create('returned_local_products', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('product_supplier_id')->constrained()->onDelete('cascade');
+      $table->foreignId('product_supplier_id')->constrained();
       $table->string('product_description');
 
       $table->timestamps();

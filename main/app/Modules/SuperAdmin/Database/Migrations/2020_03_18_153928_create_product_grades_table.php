@@ -14,7 +14,7 @@ class CreateProductGradesTable extends Migration
 	public function up()
 	{
 		Schema::create('product_grades', function (Blueprint $table) {
-			$table->bigIncrements('id');
+      $table->id();
 			$table->string('grade')->unique();
 
 			$table->timestamps();

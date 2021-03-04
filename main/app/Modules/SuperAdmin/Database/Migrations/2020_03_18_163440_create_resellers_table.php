@@ -14,7 +14,7 @@ class CreateResellersTable extends Migration
   public function up()
   {
     Schema::create('resellers', function (Blueprint $table) {
-      $table->bigIncrements('id');
+      $table->id();
       $table->string('business_name')->unique();
       $table->string('ceo_name');
       $table->string('address');

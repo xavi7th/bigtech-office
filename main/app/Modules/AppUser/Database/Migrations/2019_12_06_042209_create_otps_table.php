@@ -14,9 +14,8 @@ class CreateOTPsTable extends Migration
 	public function up()
 	{
 		Schema::create('otps', function (Blueprint $table) {
-			$table->bigIncrements('id');
-			$table->bigInteger('app_user_id')->unsigned();
-			$table->foreign('app_user_id')->references('id')->on('app_users')->onDelete('cascade');
+      $table->id();
+      $table->foreignId('app_user_id')->constrained()->onDelete('cascade');
 			$table->integer('code')->unique();
 
 			$table->timestamps();

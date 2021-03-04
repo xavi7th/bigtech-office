@@ -14,7 +14,7 @@ class CreateProductExpensesTable extends Migration
 	public function up()
 	{
 		Schema::create('product_expenses', function (Blueprint $table) {
-			$table->bigIncrements('id');
+      $table->id();
 			$table->unsignedBigInteger('product_id');
       $table->string('product_type');
 			$table->double('amount');
