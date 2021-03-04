@@ -32,7 +32,6 @@ class AccountantController extends Controller
           Route::get('/', [self::class, 'index'])->name('accountant.dashboard')->defaults('ex', __e('ac', 'home', true));
           Reseller::accountantRoutes();
           Product::accountantRoutes();
-          OtherExpense::accountantRoutes();
           SwapDeal::accountantRoutes();
           ProductSaleRecord::accountantRoutes();
           ProductPrice::accountantRoutes();

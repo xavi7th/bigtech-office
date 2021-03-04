@@ -6,12 +6,12 @@ use App\BaseModel;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Modules\SuperAdmin\Models\ErrLog;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\SuperAdmin\Transformers\OtherExpenseTransformer;
-use Cache;
 
 class OtherExpense extends BaseModel
 {
@@ -24,21 +24,13 @@ class OtherExpense extends BaseModel
     return $this->morphTo();
   }
 
-  public static function accountantRoutes()
-  {
-    Route::group(['prefix' => 'other-expenses'], function () {
-      Route::name('accountant.miscellaneous.')->group(function () {
-        Route::post('daily', [self::class, 'createExpense'])->name('create_daily_expense')->defaults('ex', __e('ac', 'clipboard', true));
-      });
-    });
-  }
-
   public static function multiAccessRoutes()
   {
     Route::group(['prefix' => 'other-expenses'], function () {
       Route::name('multiaccess.miscellaneous.')->group(function () {
         Route::get('', [self::class, 'getAllExpenses'])->name('all_expenses')->defaults('ex', __e('ss,a,ac', 'clipboard', false))->middleware('auth:super_admin,auditor,accountant');
-        Route::get('daily', [self::class, 'getDailyExpenses'])->name('daily_expense')->defaults('ex', __e('ss,a,ac', 'clipboard', false))->middleware('auth:super_admin,auditor,accountant');
+        Route::get('daily', [self::class, 'getDailyExpenses'])->name('daily_expense')->defaults('ex', __e('ss,a,ac,s', 'clipboard', false))->middleware('auth:super_admin,auditor,accountant,sales_rep');
+        Route::post('daily', [self::class, 'createExpense'])->name('create_daily_expense')->middleware('auth:sales_rep,accountant');
         Route::get('{date}', [self::class, 'getExpensesByDate'])->name('daily_expenses')->defaults('ex', __e('ss,a,ac', 'clipboard', true))->middleware('auth:super_admin,auditor,accountant');
         // Route::put('{expense}/edit', [self::class, 'editExpense'])->name('edit_expense')->defaults('ex', __e('ss', 'clipboard', true))->middleware('auth:super_admin,accountant');
       });
@@ -47,9 +39,11 @@ class OtherExpense extends BaseModel
 
   public function getDailyExpenses(Request $request)
   {
-    $dailyExpenses = Cache::rememberForever('dailyExpenses', function () {
-      return (new OtherExpenseTransformer)->collectionTransformer(self::today()->with('recorder')->get(), 'basic');
-    });
+    if ($request->user()->isSalesRep()) {
+      $dailyExpenses = Cache::rememberForever($request->user()->full_name . 'DailyExpenses', fn () => (new OtherExpenseTransformer)->collectionTransformer($request->user()->other_expenses->load('recorder'), 'basic'));
+    } else {
+      $dailyExpenses = Cache::rememberForever('dailyExpenses', fn () => (new OtherExpenseTransformer)->collectionTransformer(self::today()->with('recorder')->get(), 'basic'));
+    }
 
     if ($request->isApi()) return response()->json($dailyExpenses, 200);
     return Inertia::render('SuperAdmin,Miscellaneous/CreateExpense', compact('dailyExpenses'));
@@ -125,6 +119,7 @@ class OtherExpense extends BaseModel
     parent::boot();
 
     static::saved(function () {
+      request()->user() && Cache::forget(request()->user()->full_name . 'DailyExpenses');
       Cache::forget('dailyExpenses');
       Cache::forget('allExpenses');
     });

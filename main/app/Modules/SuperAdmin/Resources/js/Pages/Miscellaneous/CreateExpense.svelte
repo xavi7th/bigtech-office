@@ -14,7 +14,7 @@
     });
 
     Inertia.post(
-      route("accountant.miscellaneous.create_daily_expense"),
+      route(auth.user.user_type +".multiaccess.miscellaneous.create_daily_expense"),
       details,
       {
         preserveState: true,
@@ -68,7 +68,7 @@
 
 <Layout title="Manage Daily Expenses">
   <div class="row vertical-gap">
-    {#if auth.user.isAccountant}
+    {#if auth.user.isAccountant || auth.user.isWalkInRep}
       <div class="col-lg-4 col-xl-4">
         <form class="#" on:submit|preventDefault={createDailyExpense}>
 
@@ -113,6 +113,7 @@
               <th scope="col">#</th>
               <th scope="col">Amount</th>
               <th scope="col">Purpose</th>
+              <th scope="col">Recorder</th>
               <!-- <th scope="col">Action</th> -->
             </tr>
           </thead>
@@ -122,6 +123,7 @@
                 <td>{idx + 1}</td>
                 <td>{dailyExpense.amount}</td>
                 <td>{dailyExpense.purpose}</td>
+                <td>{dailyExpense.recorder}</td>
                 <!-- <td class="d-flex justify-content-between align-content-center">
                   <button
                     type="button"

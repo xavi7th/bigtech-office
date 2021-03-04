@@ -14,6 +14,7 @@ use App\Modules\SuperAdmin\Models\ActivityLog;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 use App\Modules\SalesRep\Transformers\SalesRepTransformer;
 use App\Modules\SuperAdmin\Models\OfficeBranch;
+use App\Modules\SuperAdmin\Models\OtherExpense;
 
 /**
  * App\Modules\SalesRep\Models\SalesRep
@@ -95,6 +96,11 @@ class SalesRep extends User
   static function defaultSystemAccountId(): int
   {
     return 1;
+  }
+
+  public function other_expenses()
+  {
+    return $this->morphMany(OtherExpense::class, 'recorder');
   }
 
   public function walkInSalesRecords()
