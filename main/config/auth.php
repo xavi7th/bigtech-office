@@ -60,10 +60,6 @@ return [
       'driver' => 'session',
       'provider' => 'auditors',
     ],
-    'quality_control' => [
-      'driver' => 'session',
-      'provider' => 'quality_controls',
-    ],
     'sales_rep' => [
       'driver' => 'session',
       'provider' => 'sales_reps',

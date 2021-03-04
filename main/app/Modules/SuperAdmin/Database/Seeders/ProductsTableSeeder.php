@@ -24,5 +24,6 @@ class ProductsTableSeeder extends Seeder
     factory(Product::class, 15)->states('sold')->create();
     factory(Product::class, 10)->states('confirmed')->create();
     factory(Product::class, 10)->states('confirmedSwapTransactions')->create();
+    // factory(Product::class, 20)->states('inStockWithExpenses')->create();
   }
 }

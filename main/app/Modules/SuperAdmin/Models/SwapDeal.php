@@ -763,7 +763,7 @@ class SwapDeal extends BaseModel
 
     static::creating(function ($swapDeal) {
       $swapDeal->product_uuid = (string)Str::uuid();
-      $swapDeal->office_branch_id = optional(request()->user())->office_branch_id ?? OfficeBranch::head_office_id();
+      $swapDeal->office_branch_id = $swapDeal->office_branch_id ?? optional(request()->user())->office_branch_id ?? OfficeBranch::head_office_id();
     });
 
     static::saved(function ($swapDeal) {

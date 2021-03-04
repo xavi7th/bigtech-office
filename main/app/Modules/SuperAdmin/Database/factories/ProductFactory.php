@@ -17,6 +17,7 @@ use App\Modules\SuperAdmin\Models\ProductModel;
 use App\Modules\SuperAdmin\Models\ProductStatus;
 use App\Modules\SuperAdmin\Models\ProcessorSpeed;
 use App\Modules\SuperAdmin\Models\ProductCategory;
+use App\Modules\SuperAdmin\Models\ProductExpense;
 use App\Modules\SuperAdmin\Models\ProductSupplier;
 use App\Modules\SuperAdmin\Models\ProductSaleRecord;
 
@@ -101,4 +102,12 @@ $factory->state(Product::class, 'confirmedSwapTransactions', fn () => [
 
 $factory->afterCreatingState(Product::class, 'confirmedSwapTransactions', function ($product, $faker) {
   $product->product_sales_record()->save(factory(ProductSaleRecord::class)->states('confirmed', 'swap_transaction')->create());
+});
+
+$factory->state(Product::class, 'inStockWithExpenses', fn () => [
+  'product_status_id' => ProductStatus::inStockId(),
+]);
+
+$factory->afterCreatingState(Product::class, 'inStockWithExpenses', function ($product, $faker) {
+  $product->product_expenses()->create(factory(ProductExpense::class)->make()->toArray());
 });

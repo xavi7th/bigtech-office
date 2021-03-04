@@ -2,8 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Modules\SuperAdmin\Models\SwapDeal;
 use Faker\Generator as Faker;
+use App\Modules\SuperAdmin\Models\SwapDeal;
+use App\Modules\SuperAdmin\Models\OfficeBranch;
 
 $factory->define(SwapDeal::class, function (Faker $faker) {
   return [
@@ -14,5 +15,6 @@ $factory->define(SwapDeal::class, function (Faker $faker) {
     'imei' => $faker->unique()->bankAccountNumber,
     'swap_value' => $faker->randomNumber(5),
     'selling_price' => $faker->randomNumber(6),
+    'office_branch_id' => OfficeBranch::inRandomOrder()->first()->id,
   ];
 });

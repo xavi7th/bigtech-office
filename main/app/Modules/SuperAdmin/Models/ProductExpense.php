@@ -167,7 +167,7 @@ class ProductExpense extends BaseModel
     parent::boot();
 
     static::creating(function (self $productExpense) {
-      request()->user()->activities()->create([
+      request()->user() && request()->user()->activities()->create([
         'activity' => 'Recorded an expense for ' . $productExpense->product->primary_identifier() . ' of ' . to_naira($productExpense->amount),
       ]);
     });

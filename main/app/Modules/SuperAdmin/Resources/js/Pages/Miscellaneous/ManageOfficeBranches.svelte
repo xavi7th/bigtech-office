@@ -81,7 +81,7 @@
   <div class="row vertical-gap">
 
     {#if auth.user.isSuperAdmin}
-      <div class="col-lg-4 col-xl-4 order-2 order-md-1">
+      <div class="col-lg-3 col-xl-3 order-2 order-md-1">
         <form class="#" on:submit|preventDefault={createOfficeBranch}>
 
           <div class="row vertical-gap sm-gap">
@@ -117,7 +117,7 @@
       </div>
     {/if}
 
-    <div class="col-lg-8 col-xl-8 order-1 order-md-2">
+    <div class="col-lg-9 col-xl-9 order-1 order-md-2">
       <div class="d-flex align-items-center justify-content-between mb-25">
         <h2 class="mnb-2" id="formBase">Available Office Branches</h2>
       </div>
@@ -171,6 +171,11 @@
                       href={route(auth.user.user_type + '.office_branches.res_prod', officeBranch.id)}
                       class="btn btn-outline-primary btn-xs text-nowrap">
                       Products with Resellers
+                    </InertiaLink>
+                    <InertiaLink
+                      href={route(auth.user.user_type + '.office_branches.prod_expenses', officeBranch.id)}
+                      class="btn btn-outline-dark btn-xs text-nowrap">
+                      Product Expenses
                     </InertiaLink>
                   {/if}
                 </td>

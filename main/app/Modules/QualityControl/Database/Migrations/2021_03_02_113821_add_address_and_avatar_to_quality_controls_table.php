@@ -13,11 +13,11 @@ class AddAddressAndAvatarToQualityControlsTable extends Migration
    */
   public function up()
   {
-    Schema::table('quality_controls', function (Blueprint $table) {
-      $table->string('phone')->nullable()->after('gender');
-      $table->string('address')->nullable()->after('phone');
-      $table->string('avatar')->nullable()->after('address');
-    });
+    // Schema::table('quality_controls', function (Blueprint $table) {
+    //   $table->string('phone')->nullable()->after('gender');
+    //   $table->string('address')->nullable()->after('phone');
+    //   $table->string('avatar')->nullable()->after('address');
+    // });
   }
 
   /**
@@ -27,10 +27,10 @@ class AddAddressAndAvatarToQualityControlsTable extends Migration
    */
   public function down()
   {
-    Schema::table('quality_controls', function (Blueprint $table) {
-      $table->dropColumn('address');
-      $table->dropColumn('avatar');
-      $table->dropColumn('phone');
-    });
+    // Schema::table('quality_controls', function (Blueprint $table) {
+    //   $table->dropColumn('address');
+    //   $table->dropColumn('avatar');
+    //   $table->dropColumn('phone');
+    // });
   }
 }
