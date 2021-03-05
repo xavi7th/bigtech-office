@@ -17,7 +17,7 @@
     Inertia.post(route(auth.user.user_type + ".resellers.finances.create", resellerWithTransactions.business_name), details, {
       preserveState: true,
       preserveScroll: true,
-      only: ["flash", "errors", "resellers"],
+      only: ["flash", "errors", "resellerWithTransactions"],
       onSuccess: () =>{
           details = {};
       }
