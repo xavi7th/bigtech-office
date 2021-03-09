@@ -173,7 +173,7 @@ class User extends Authenticatable implements JWTSubject
    */
   static function findUserByEmail(string $email): self
   {
-    return SalesRep::findByEmail($email) ?? WebAdmin::findByEmail($email) ?? Accountant::findByEmail($email) ?? Auditor::findByEmail($email);
+    return SalesRep::findByEmail($email) ?? QualityControl::findByEmail($email) ?? WebAdmin::findByEmail($email) ?? Accountant::findByEmail($email) ?? Auditor::findByEmail($email);
   }
 
   public function getType(): string
