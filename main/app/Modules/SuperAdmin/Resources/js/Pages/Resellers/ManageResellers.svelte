@@ -219,10 +219,6 @@
                   </td>
                 {/if}
               </tr>
-            {:else}
-              <tr>
-                <td colspan="7" class="text-center">NONE AVAILABLE</td>
-              </tr>
             {/each}
           </tbody>
         </table>
