@@ -115,7 +115,6 @@
 
   <button
     on:click={() => ++numOfBanks}
-    slot="footer-buttons"
     class="btn btn-dark btn-long">
     <span class="text">Add Another Bank</span>
   </button>

@@ -221,7 +221,7 @@
               </tr>
             {:else}
               <tr>
-                <td colspan="5" class="text-center">NONE AVAILABLE</td>
+                <td colspan="7" class="text-center">NONE AVAILABLE</td>
               </tr>
             {/each}
           </tbody>
