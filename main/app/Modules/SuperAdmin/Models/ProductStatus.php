@@ -26,7 +26,12 @@ class ProductStatus extends BaseModel
 
   static function justArrivedId(): int
   {
-    return self::where('status', 'just arrived')->first()->id;
+    static $id =  null;
+    if (is_null($id)) {
+      $id = self::where('status', 'just arrived')->first()->id;
+    }
+
+    return $id;
   }
 
   /**

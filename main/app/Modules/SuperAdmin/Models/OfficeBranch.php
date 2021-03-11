@@ -232,7 +232,7 @@ class OfficeBranch extends BaseModel
   public function getProductsInBranch(Request $request, self $officeBranch)
   {
     $officeBranch = Cache::rememberForever($officeBranch->city . 'officeBranchProducts', function () use ($officeBranch) {
-      return (new OfficeBranchTransformer)->transformWithProducts($officeBranch->load(['products' => fn($query) => $query->inStock(), 'products.product_model', 'products.product_color', 'products.storage_size', 'products.product_status', 'products.product_supplier', 'products.product_expenses_amount', 'products.product_price']));
+      return (new OfficeBranchTransformer)->transformWithProducts($officeBranch->load(['products' => fn ($query) => $query->inStock()->orWhere(fn ($q) => $q->justArrived())->orWhere(fn ($q) => $q->untested()), 'products.product_model', 'products.product_color', 'products.storage_size', 'products.product_status', 'products.product_supplier', 'products.product_expenses_amount', 'products.product_price', 'products.localProductPrice']));
     });
     $onlineReps = Cache::rememberForever('onlineReps', function () {
       return (new SalesRepTransformer)->collectionTransformer(SalesRep::onlineReps()->get(), 'transformBasic');
