@@ -32,11 +32,7 @@
                 <Icon />
               </th>
               <th scope="col">
-                Model
-                <Icon />
-              </th>
-              <th scope="col">
-                Product ID
+                Product Description
                 <Icon />
               </th>
               <th scope="col">
@@ -54,8 +50,10 @@
             {#each officeBranch.branchProducts as product, idx}
               <tr>
                 <th scope="row">{idx + 1}</th>
-                <td>{product.model}</td>
-                <td>{product.identifier}</td>
+                <td class="text-capitalize">
+                  {product.description}
+                  <span class="badge badge-pill badge-dark">{product.status}</span>
+                </td>
                 <td>{toCurrency(product.cost_price)}</td>
                 <td>{toCurrency(product.selling_price)}</td>
                 <td>

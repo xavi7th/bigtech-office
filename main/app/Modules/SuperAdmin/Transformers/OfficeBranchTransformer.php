@@ -36,7 +36,7 @@ class OfficeBranchTransformer
     return [
       'city' => (string)$office_branch->city,
       'country' => (string)$office_branch->country,
-      'branchProducts' => (new ProductTransformer)->collectionTransformer($office_branch->products, 'basic'),
+      'branchProducts' => (new ProductTransformer)->collectionTransformer($office_branch->products, 'transformForBranchList'),
     ];
   }
 

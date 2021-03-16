@@ -185,4 +185,17 @@ class ProductTransformer
       'product_histories' => (new ProductHistoryTransformer)->collectionTransformer($product->product_histories, 'detailed'),
     ];
   }
+
+  public function transformForBranchList(Product $product)
+  {
+    return [
+      'id' => (int)$product->id,
+      'description' => (string)$product->shortDescription(),
+      'identifier' => (string)$product->primary_identifier(),
+      'status' => (string)$product->product_status->status,
+      'uuid' => (string)$product->product_uuid,
+      'cost_price' => $product->product_price->cost_price,
+      'selling_price' => $product->product_price->proposed_selling_price,
+    ];
+  }
 }
